@@ -656,6 +656,15 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .score-rank-marker{position:absolute;top:-4px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--accent);transform:translateX(-50%);transition:left 1.5s cubic-bezier(.25,.8,.25,1);box-shadow:0 0 10px rgba(var(--ar),var(--ag),var(--ab),.5);}
 .score-rank-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:9px;color:var(--dim);}
 
+/* ══ RISK TREND CHART ══ */
+.trend-card{background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;overflow:hidden;}
+.trend-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.trend-title{font-size:13px;font-weight:600;color:#ccc;}
+.trend-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:100px;background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.15);}
+.trend-badge.down{background:rgba(52,211,153,.08);color:#34d399;border-color:rgba(52,211,153,.15);}
+.trend-svg{width:100%;height:auto;}
+.trend-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-top:8px;}
+
 @media(max-width:520px){
   .wrap{padding:24px 16px calc(40px + env(safe-area-inset-bottom));}
   .card{padding:24px 18px;}
@@ -847,11 +856,13 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
     <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v7.4 · AUTOMATED REPORT</div></div></div>
     <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#f59e0b;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
+    <div class="rs" id="rs9b"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 风险趋势模拟</div><div class="trend-card"><div class="trend-header"><span class="trend-title">如果维持当前生活方式</span><span class="trend-badge" id="trend-badge">↗ 上升</span></div><svg class="trend-svg" id="trend-svg" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="trend-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><line x1="0" y1="30" x2="400" y2="30" stroke="rgba(239,68,68,.08)" stroke-dasharray="4,4"/><line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,.04)" stroke-dasharray="4,4"/><line x1="0" y1="90" x2="400" y2="90" stroke="rgba(52,211,153,.08)" stroke-dasharray="4,4"/><text x="395" y="28" text-anchor="end" fill="rgba(239,68,68,.2)" font-size="8">高危</text><text x="395" y="88" text-anchor="end" fill="rgba(52,211,153,.2)" font-size="8">安全</text><path id="trend-area" fill="url(#trend-grad)" d=""/><path id="trend-line" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" d=""/><g id="trend-dots"></g></svg><div class="trend-labels"><span>现在</span><span>3个月</span><span>6个月</span><span>1年</span><span>2年</span></div></div></div>
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
     <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
     <div class="rs" id="rs11"><div class="sec-label" style="color:var(--dim);margin-bottom:10px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px">// 七维分析 · 点击展开建议</div><div class="dims-grid" id="dims-grid"></div></div>
     <div class="rs" id="rs12"><div class="advice-card"><div class="sec-label" style="color:var(--accent);margin-bottom:12px">// 综合改善建议</div><ul class="advice-list" id="advice-list"></ul></div></div>
     <div class="rs" id="rs12b"><div style="text-align:center;padding:16px 20px;margin-bottom:14px;background:rgba(var(--ar),var(--ag),var(--ab),.03);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.08);border-radius:16px;"><div style="font-size:22px;margin-bottom:6px;">🔮</div><div id="health-fortune" style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.7;"></div></div><div class="daily-tip" id="daily-tip" style="background:rgba(var(--ar),var(--ag),var(--ab),.04);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:8px;text-transform:uppercase">// 今日一句</div><div id="daily-tip-text" style="font-size:14px;line-height:1.8;color:#c8c8c8;font-style:italic;"></div></div></div>
+    <div class="rs" id="rs12c"><div style="background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 如果你是……</div><div id="what-if-items" style="display:flex;flex-direction:column;gap:10px;"></div></div></div>
     <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-share" onclick="encodeResultToURL()">🔗 分享链接</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
   </div>
 </section>
@@ -1523,6 +1534,9 @@ const ACHIEVEMENTS=[
   {id:'fullhouse',icon:'🃏',name:'满贯收集者',col:'#f472b6',bg:'rgba(244,114,182,.08)',border:'rgba(244,114,182,.25)',rare:'SSR',match:()=>{const d=calcDims();return d.every(x=>x.pct>=50);},desc:'所有7个维度风险都超过50%'},
   {id:'paradox',icon:'🔮',name:'薛定谔的健康',col:'#a78bfa',bg:'rgba(167,139,250,.08)',border:'rgba(167,139,250,.25)',rare:'R',match:()=>ans[27]>=3&&ans[28]>=3,desc:'不做体检+忽略身体信号'},
   {id:'nocturnal',icon:'🦇',name:'夜行动物',col:'#818cf8',bg:'rgba(129,140,248,.08)',border:'rgba(129,140,248,.25)',rare:'R',match:()=>ans[0]>=3&&ans[2]>=3,desc:'睡得晚+睡眠质量差'},
+  {id:'survivor',icon:'🛡️',name:'钢铁幸存者',col:'#34d399',bg:'rgba(52,211,153,.08)',border:'rgba(52,211,153,.25)',rare:'SSR',match:()=>{const s=calcScore();return s>=70&&Object.values(ans).some(v=>v===0);},desc:'总分超高却有完全健康的维度'},
+  {id:'extremist',icon:'🎲',name:'极端主义者',col:'#f43f5e',bg:'rgba(244,63,94,.08)',border:'rgba(244,63,94,.25)',rare:'SR',match:()=>{const vals=Object.values(ans);return vals.filter(v=>v>=4).length>=3&&vals.filter(v=>v<=1).length>=3;},desc:'同时有3个极高危和3个极安全的选项'},
+  {id:'speedster',icon:'🏎️',name:'答题闪电侠',col:'#06b6d4',bg:'rgba(6,182,212,.08)',border:'rgba(6,182,212,.25)',rare:'R',match:()=>quizStartTime&&(Date.now()-quizStartTime)<90000,desc:'90秒内完成全部测试'},
 ];
 
 // ════ OBITUARY / LAST WORDS / SURVIVAL ════
@@ -2225,7 +2239,50 @@ function showResult(){
   document.getElementById('priority-main').textContent=p.main;document.getElementById('priority-sub').textContent=p.sub;
   const grid=document.getElementById('dims-grid');grid.innerHTML='';
   dims.forEach(d=>{const col=dimCol(d.pct);const tier=d.pct>=65?'high':d.pct>=30?'mid':'low';const desc=DIM_DESC[d.key]?.[tier]||'';const el=document.createElement('div');el.className='dim-item';el.innerHTML=`<div class="dim-name">${d.name}</div><div class="dim-bar-bg"><div class="dim-bar" style="width:0%;background:${col}" data-pct="${d.pct}"></div></div><div class="dim-footer"><span class="dim-pct" style="color:${col}">${d.pct}%</span><span class="dim-status">${dimStatus(d.pct)}</span></div><div class="dim-expand">${desc?`<div class="dim-desc">${desc}</div>`:''}<ul class="dim-tips">${(d.tips||[]).map(t=>`<li>${t}</li>`).join('')}</ul></div>`;el.onclick=()=>el.classList.toggle('expanded');grid.appendChild(el);});
+  // Risk trend chart
+  (function drawTrend(){
+    const pts=[],steps=5,W=400,H=120,padY=15;
+    let cur=score;
+    for(let i=0;i<steps;i++){
+      const grow=score>=60?Math.random()*5+2:score>=35?Math.random()*3:-(Math.random()*3+1);
+      cur=Math.max(5,Math.min(98,cur+grow));
+      pts.push(cur);
+    }
+    pts.unshift(score);
+    const xs=pts.map((_,i)=>i/(pts.length-1)*W);
+    const ys=pts.map(v=>padY+(1-v/100)*(H-padY*2));
+    const lineD=xs.map((x,i)=>`${i===0?'M':'L'}${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
+    const areaD=lineD+` L${W},${H} L0,${H} Z`;
+    document.getElementById('trend-line').setAttribute('d',lineD);
+    document.getElementById('trend-area').setAttribute('d',areaD);
+    const dotsG=document.getElementById('trend-dots');dotsG.innerHTML='';
+    const ns='http://www.w3.org/2000/svg';
+    pts.forEach((v,i)=>{
+      const col=v<30?'#34d399':v<55?'#fbbf24':v<75?'#f59e0b':'#ef4444';
+      const c=document.createElementNS(ns,'circle');
+      c.setAttribute('cx',xs[i].toFixed(1));c.setAttribute('cy',ys[i].toFixed(1));
+      c.setAttribute('r','4');c.setAttribute('fill',col);c.setAttribute('stroke','#fff');c.setAttribute('stroke-width','1.5');
+      dotsG.appendChild(c);
+      if(i>0){const t=document.createElementNS(ns,'text');t.setAttribute('x',xs[i].toFixed(1));t.setAttribute('y',(ys[i]-10).toFixed(1));t.setAttribute('text-anchor','middle');t.setAttribute('fill',col);t.setAttribute('font-size','9');t.setAttribute('font-weight','bold');t.textContent=Math.round(v);dotsG.appendChild(t);}
+    });
+    const last=pts[pts.length-1];const badge=document.getElementById('trend-badge');
+    if(last<=score){badge.textContent='↘ 下降';badge.classList.add('down');}
+    else{badge.textContent='↗ 上升';badge.classList.remove('down');}
+  })();
   document.getElementById('advice-list').innerHTML=level.advice.map(a=>`<li>${a}</li>`).join('');
+  // What-if scenarios
+  const whatIfs=[
+    {cond:score>=60,icon:'🏃',title:'每天运动30分钟',effect:`你的指数可能降低 ${Math.round(score*.15)} 分，身体年龄年轻 ${Math.round(score*.06)} 岁`},
+    {cond:score>=40,icon:'😴',title:'每晚11点前入睡',effect:`睡眠维度风险降低约 ${Math.round((dimObj.sleep||0)*.3)}%，恢复力显著提升`},
+    {cond:score>=30,icon:'🥗',title:'规律三餐+减少外卖',effect:`饮食维度改善 ${Math.round((dimObj.diet||0)*.25)}%，代谢系统负担减轻`},
+    {cond:score>=50,icon:'🧘',title:'每天10分钟冥想/深呼吸',effect:`压力维度可降低 ${Math.round((dimObj.stress||0)*.2)}%，神经系统紧张度下降`},
+    {cond:dimObj.work>=50,icon:'⏰',title:'严格执行下班时间',effect:`工作维度风险减少约 ${Math.round((dimObj.work||0)*.3)}%，心血管负荷改善`},
+    {cond:score<25,icon:'🏆',title:'保持现有生活方式',effect:'你已经做得很好了！保持下去，你是别人羡慕的对象'},
+  ].filter(w=>w.cond).slice(0,4);
+  const wifEl=document.getElementById('what-if-items');wifEl.innerHTML='';
+  whatIfs.forEach(w=>{
+    wifEl.innerHTML+=`<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);"><span style="font-size:24px;flex-shrink:0;">${w.icon}</span><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:#e0e0e0;margin-bottom:3px;">${w.title}</div><div style="font-size:12px;color:var(--dim);line-height:1.6;">${w.effect}</div></div></div>`;
+  });
   // Health fortune based on score
   const fortunes={
     low:['今日健康运势：★★★★★ 你的器官在开派对','签曰：生命力旺盛，阎王看了都皱眉','运势提示：今天适合跑步、吃沙拉、和朋友出去玩','健康签：你是养生界的天选之人，继续保持'],
@@ -2240,7 +2297,7 @@ function showResult(){
   const dayIdx=Math.floor(Date.now()/864e5)%dailyTips.length;
   document.getElementById('daily-tip-text').textContent='"'+dailyTips[dayIdx]+'"';
   go('sec-result','anim-fade');clearProgress();playReveal(score);
-  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs8','rs9','rs10','rs11','rs12','rs12b','rs13'];
+  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs8','rs9','rs9b','rs10','rs11','rs12','rs12b','rs12c','rs13'];
   // First few sections animate on timer; rest use Intersection Observer for scroll-reveal
   const timerCount=5;
   rsIds.slice(0,timerCount).forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),300+i*140);});
