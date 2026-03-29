@@ -4779,6 +4779,112 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ REPORT HEADER WITH BARCODE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const rs0=document.getElementById('rs0');
+      if(!rs0||document.getElementById('report-barcode'))return;
+      // Generate pseudo-barcode SVG
+      const score=calcScore();
+      const bars=[];
+      const seed=score*137+42;
+      for(let i=0;i<40;i++){
+        const w=((seed*i*7+13)%3)+1;
+        bars.push(`<rect x="${i*3}" y="0" width="${w}" height="20" fill="rgba(255,255,255,${((seed*i)%3===0)?'.15':'.06'})"/>`);
+      }
+      const barcode=document.createElement('div');
+      barcode.id='report-barcode';
+      barcode.style.cssText='display:flex;align-items:center;gap:10px;justify-content:center;margin-top:10px;opacity:.4;';
+      barcode.innerHTML=`<svg viewBox="0 0 120 20" style="width:80px;height:14px;">${bars.join('')}</svg><span style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--dim);">SDI-${String(score).padStart(3,'0')}-${Date.now().toString(36).slice(-6).toUpperCase()}</span>`;
+      rs0.appendChild(barcode);
+    },800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ QUIZ ANSWER PATTERN ANALYSIS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('pattern-analysis'))return;
+      const answers=Object.values(ans).filter(v=>v!==undefined);
+      if(answers.length<10)return;
+      // Analyze patterns
+      const dangerCount=answers.filter(a=>a>=3).length;
+      const safeCount=answers.filter(a=>a===0).length;
+      const maxStreak=answers.reduce((acc,a)=>{if(a>=3){acc.cur++;acc.max=Math.max(acc.max,acc.cur);}else{acc.cur=0;}return acc;},{cur:0,max:0}).max;
+      const consistency=Math.round(100-answers.reduce((s,a)=>{const mean=answers.reduce((s2,a2)=>s2+a2,0)/answers.length;return s+(a-mean)**2;},0)/answers.length*10);
+      const insights=[];
+      if(dangerCount>=answers.length*0.6)insights.push('你的大部分选择都偏向高危，这不是偶然');
+      else if(safeCount>=answers.length*0.5)insights.push('你的选择整体偏安全，保持这个节奏');
+      if(maxStreak>=4)insights.push(`连续 ${maxStreak} 道题选了高危选项——集中火力自杀式答题`);
+      if(consistency>70)insights.push('你的答题非常一致，说明你对自己的生活方式有清醒认知');
+      else if(consistency<30)insights.push('你的答题波动很大——你的生活可能也是如此');
+      if(insights.length===0)return;
+      const el=document.createElement('div');
+      el.id='pattern-analysis';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(168,85,247,.03);border:1px solid rgba(168,85,247,.1);border-radius:16px;padding:18px 20px;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(168,85,247,.5);margin-bottom:10px;">🔬 ANSWER PATTERN ANALYSIS</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px;">
+          <div style="text-align:center;padding:8px;background:rgba(255,255,255,.02);border-radius:10px;">
+            <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:#ef4444;">${dangerCount}</div>
+            <div style="font-size:9px;color:var(--dim);">高危选项</div>
+          </div>
+          <div style="text-align:center;padding:8px;background:rgba(255,255,255,.02);border-radius:10px;">
+            <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:#34d399;">${safeCount}</div>
+            <div style="font-size:9px;color:var(--dim);">安全选项</div>
+          </div>
+          <div style="text-align:center;padding:8px;background:rgba(255,255,255,.02);border-radius:10px;">
+            <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:#f59e0b;">${maxStreak}</div>
+            <div style="font-size:9px;color:var(--dim);">最长高危连击</div>
+          </div>
+          <div style="text-align:center;padding:8px;background:rgba(255,255,255,.02);border-radius:10px;">
+            <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:#60a5fa;">${consistency}%</div>
+            <div style="font-size:9px;color:var(--dim);">一致性指数</div>
+          </div>
+        </div>
+        ${insights.map(t=>`<div style="font-size:11px;color:rgba(255,255,255,.5);line-height:1.7;padding:6px 0;border-top:1px solid rgba(255,255,255,.03);">💡 ${t}</div>`).join('')}
+      </div>`;
+      const rs12e=document.getElementById('rs12e');
+      if(rs12e){rs12e.parentNode.insertBefore(el,rs12e);}
+    },2600);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ DIMENSION CARD MICRO-ANIMATIONS ════
+(function(){
+  // Add subtle entrance animation to dimension items when they scroll into view
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.style.opacity='1';
+        entry.target.style.transform='none';
+        io.unobserve(entry.target);
+      }
+    });
+  },{threshold:.2});
+  // Watch for dimension items being added
+  const mo=new MutationObserver(()=>{
+    document.querySelectorAll('.dim-item:not([data-anim])').forEach((item,i)=>{
+      item.dataset.anim='1';
+      item.style.opacity='0';
+      item.style.transform='translateY(12px)';
+      item.style.transition=`opacity .4s ${i*.08}s ease, transform .4s ${i*.08}s ease`;
+      io.observe(item);
+    });
+  });
+  mo.observe(document.body,{subtree:true,childList:true});
+})();
+
 // ════ SCORE CONTEXT COMPARISON ════
 (function(){
   const obs=new MutationObserver(()=>{
