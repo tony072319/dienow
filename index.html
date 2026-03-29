@@ -458,15 +458,41 @@ input[type=range]::-moz-range-thumb {
 }
 
 .score-circle {
-  width: 140px; height: 140px;
-  border-radius: 50%;
-  border: 3px solid;
+  width: 160px; height: 160px;
+  position: relative;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-ring-svg {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+}
+
+.score-ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.06);
+  stroke-width: 5;
+}
+
+.score-ring-fill {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  transition: stroke-dashoffset 1.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+.score-inner {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 20px;
-  position: relative;
 }
 
 .score-num {
@@ -743,8 +769,14 @@ input[type=range]::-moz-range-thumb {
       <div class="result-header">
         <div class="result-grade" id="res-grade">GRADE S</div>
         <div class="score-circle" id="score-circle">
-          <div class="score-num" id="score-num">0</div>
-          <div class="score-label">猝死指数</div>
+          <svg class="score-ring-svg" viewBox="0 0 160 160">
+            <circle class="score-ring-bg" cx="80" cy="80" r="70"/>
+            <circle class="score-ring-fill" id="score-ring-fill" cx="80" cy="80" r="70"/>
+          </svg>
+          <div class="score-inner">
+            <div class="score-num" id="score-num">0</div>
+            <div class="score-label">猝死指数</div>
+          </div>
         </div>
         <div class="result-level" id="res-level"></div>
         <div class="result-desc" id="res-desc"></div>
@@ -1212,9 +1244,13 @@ function showResult() {
   // Animate final color
   applyThemeColor(score / 100);
 
-  const circle = document.getElementById('score-circle');
-  circle.style.borderColor = level.color;
-  circle.style.boxShadow = `0 0 50px ${level.color}33`;
+  // Animate SVG ring
+  const ring = document.getElementById('score-ring-fill');
+  ring.style.stroke = level.color;
+  ring.style.filter = `drop-shadow(0 0 8px ${level.color})`;
+  setTimeout(() => {
+    ring.style.strokeDashoffset = String(440 - 440 * score / 100);
+  }, 80);
 
   document.getElementById('res-grade').textContent = `GRADE ${level.grade}`;
   document.getElementById('res-grade').style.color = level.color;
