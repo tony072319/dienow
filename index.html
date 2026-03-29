@@ -4779,6 +4779,49 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ OPTION SELECTION SOUND VARIATION ════
+(function(){
+  // Play different tones based on danger level of selection
+  const origPick=pickGrid;
+  pickGrid=function(i){
+    origPick(i);
+    if(!soundOn)return;
+    const q=curQ(),o=q.opts[i];
+    const s=o.s!==undefined?o.s:i;
+    try{
+      ensureAudio();
+      const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+      osc.connect(gain);gain.connect(audioCtx.destination);
+      // Safe = higher pitch pleasant tone, Danger = lower ominous tone
+      osc.frequency.value=s>=3?180+Math.random()*40:440+s*50;
+      osc.type=s>=3?'sawtooth':'sine';
+      const t=audioCtx.currentTime;
+      gain.gain.setValueAtTime(0.03,t);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+.2);
+      osc.start(t);osc.stop(t+.2);
+    }catch(e){}
+  };
+})();
+
+// ════ ENHANCED RESUME QUIZ DIALOG ════
+(function(){
+  try{
+    const saved=localStorage.getItem('sdi-progress');
+    if(!saved)return;
+    const data=JSON.parse(saved);
+    if(!data||!data.fi||data.fi<3)return; // Only offer resume if 3+ questions answered
+    const pct=Math.round((data.fi/(data.total||30))*100);
+    const bar=document.querySelector('.resume-bar');
+    if(bar){
+      // Enhance existing resume bar with progress info
+      const info=document.createElement('div');
+      info.style.cssText='font-size:9px;color:var(--dim);margin-top:4px;';
+      info.textContent=`已完成 ${data.fi}/${data.total||30} 题 (${pct}%)`;
+      bar.appendChild(info);
+    }
+  }catch(e){}
+})();
+
 // ════ "HEALTH SPIRIT ANIMAL" ════
 (function(){
   const obs=new MutationObserver(()=>{
