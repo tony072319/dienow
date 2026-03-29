@@ -551,6 +551,34 @@ input[type=range]::-moz-range-thumb {
   line-height: 1.75;
   max-width: 420px;
   text-align: center;
+  margin-bottom: 14px;
+}
+
+.result-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.result-tag {
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
+}
+
+.percentile-text {
+  font-size: 13px;
+  color: var(--dim);
+  text-align: center;
+  margin-bottom: 20px;
+  font-style: italic;
 }
 
 /* Death prophecy */
@@ -852,6 +880,8 @@ input[type=range]::-moz-range-thumb {
         </div>
         <div class="result-level" id="res-level"></div>
         <div class="result-desc" id="res-desc"></div>
+        <div class="result-tags" id="result-tags"></div>
+        <div class="percentile-text" id="percentile-text"></div>
       </div>
 
       <!-- Death Prophecy -->
@@ -1356,6 +1386,10 @@ function showResult() {
   document.getElementById('res-level').style.color = level.color;
   document.getElementById('res-desc').textContent = level.desc;
 
+  // Percentile
+  const pctl = getPercentile(score);
+  document.getElementById('percentile-text').textContent = `你的作死程度超过了 ${pctl}% 的测试者`;
+
   const numEl = document.getElementById('score-num');
   numEl.style.color = level.color;
   let n = 0;
@@ -1377,6 +1411,10 @@ function showResult() {
     const pct = Math.round((filled - cnt) / (cnt * 4) * 100);
     return { ...dim, pct };
   });
+
+  // Tags
+  const tags = generateTags(dimResults);
+  document.getElementById('result-tags').innerHTML = tags.map(t => `<span class="result-tag">#${t}</span>`).join('');
 
   // Render radar chart
   renderRadar(dimResults, level.color);
@@ -1434,6 +1472,41 @@ function shareResult() {
     t.classList.add('show');
     setTimeout(()=>t.classList.remove('show'), 2200);
   });
+}
+
+function generateTags(dimResults) {
+  const tags = [];
+  const get = key => dimResults.find(d => d.key === key)?.pct || 0;
+
+  if (get('sleep') >= 60) tags.push('资深熬夜选手');
+  if (get('sleep') <= 20) tags.push('早睡早起模范');
+  if (get('work') >= 70) tags.push('996钉子户');
+  if (get('work') >= 50 && get('work') < 70) tags.push('社畜本畜');
+  if (get('exercise') >= 60) tags.push('沙发永久居民');
+  if (get('exercise') <= 20) tags.push('运动达人');
+  if (get('diet') >= 60) tags.push('外卖王者');
+  if (get('diet') <= 20) tags.push('养生饮食家');
+  if (get('stress') >= 70) tags.push('压力山大');
+  if (get('habit') >= 60) tags.push('咖啡因依赖者');
+  if (get('emotion') >= 70) tags.push('情绪内耗大师');
+  if (get('emotion') <= 20) tags.push('快乐星球居民');
+  if (get('checkup') >= 60) tags.push('医院绝缘体');
+  if (get('lifestyle') >= 60) tags.push('通勤战士');
+
+  if (get('sleep') >= 60 && get('work') >= 60) tags.push('燃烧生命的打工人');
+  if (get('exercise') >= 60 && get('diet') >= 60) tags.push('亚健康代言人');
+
+  return tags.slice(0, 4); // max 4 tags
+}
+
+function getPercentile(score) {
+  // Simulated percentile based on bell curve centered around 45
+  if (score <= 10) return Math.round(5 + score * 0.5);
+  if (score <= 30) return Math.round(10 + (score - 10) * 1.5);
+  if (score <= 50) return Math.round(40 + (score - 30) * 1.2);
+  if (score <= 70) return Math.round(64 + (score - 50) * 1.0);
+  if (score <= 85) return Math.round(84 + (score - 70) * 0.6);
+  return Math.round(93 + (score - 85) * 0.4);
 }
 
 function renderRadar(dimResults, color) {
