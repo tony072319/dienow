@@ -7594,6 +7594,471 @@ document.addEventListener('dblclick',e=>{
   obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
 
+// ════ SEASONAL THEME ACCENT ════
+(function(){
+  const m=new Date().getMonth();
+  // Spring(3-5): green, Summer(6-8): gold, Autumn(9-11): orange, Winter(12-2): ice blue
+  const themes=[
+    {months:[2,3,4],accent:'#4ade80',ar:74,ag:222,ab:128,name:'春'},
+    {months:[5,6,7],accent:'#facc15',ar:250,ag:204,ab:21,name:'夏'},
+    {months:[8,9,10],accent:'#f97316',ar:249,ag:115,ab:22,name:'秋'},
+    {months:[11,0,1],accent:'#38bdf8',ar:56,ag:189,ab:248,name:'冬'},
+  ];
+  const season=themes.find(t=>t.months.includes(m));
+  if(!season)return;
+  // Only apply if user hasn't manually set theme
+  if(localStorage.getItem('sdi-theme'))return;
+  // Subtle seasonal accent shift - don't override main accent, add as secondary
+  const style=document.createElement('style');
+  style.textContent=`
+    .season-badge{position:fixed;top:8px;right:8px;font-size:9px;color:var(--dim);opacity:.4;z-index:5;pointer-events:none;font-family:monospace;}
+    .season-badge::after{content:'${season.name}季主题';display:block;text-align:right;}
+  `;
+  document.head.appendChild(style);
+  const badge=document.createElement('div');
+  badge.className='season-badge';
+  document.body.appendChild(badge);
+})();
+
+// ════ HEALTH BINGO CARD ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-bingo'))return;
+      const bingoItems=[
+        {text:'熬夜过12点',icon:'🌙',check:()=>{const h=new Date().getHours();return h>=0&&h<6;}},
+        {text:'久坐>6小时',icon:'🪑',check:()=>true},
+        {text:'吃过外卖',icon:'🥡',check:()=>Math.random()>.3},
+        {text:'没喝够8杯水',icon:'💧',check:()=>Math.random()>.4},
+        {text:'看手机>3h',icon:'📱',check:()=>true},
+        {text:'没有运动',icon:'🏃',check:()=>Math.random()>.5},
+        {text:'喝了咖啡',icon:'☕',check:()=>Math.random()>.4},
+        {text:'忘记吃早餐',icon:'🍳',check:()=>Math.random()>.5},
+        {text:'情绪波动',icon:'😤',check:()=>Math.random()>.6},
+        {text:'加班/赶DDL',icon:'⏰',check:()=>Math.random()>.5},
+        {text:'没晒太阳',icon:'☀️',check:()=>Math.random()>.4},
+        {text:'背/颈酸痛',icon:'💆',check:()=>Math.random()>.5},
+        {text:'吃了宵夜',icon:'🍜',check:()=>Math.random()>.6},
+        {text:'焦虑过',icon:'😰',check:()=>Math.random()>.5},
+        {text:'没午休',icon:'😴',check:()=>Math.random()>.5},
+        {text:'吃了垃圾食品',icon:'🍟',check:()=>Math.random()>.5},
+      ];
+      // Pick 9 for 3x3 grid
+      const shuffled=bingoItems.sort(()=>Math.random()-.5).slice(0,9);
+      const checked=shuffled.map(i=>({...i,done:i.check()}));
+      const count=checked.filter(i=>i.done).length;
+      const el=document.createElement('div');
+      el.id='health-bingo';
+      el.className='rs on';
+      let grid='';
+      checked.forEach((item,idx)=>{
+        grid+=`<div style="background:${item.done?'rgba(239,68,68,.12)':'rgba(255,255,255,.03)'};border:1px solid ${item.done?'rgba(239,68,68,.25)':'var(--card-border)'};border-radius:8px;padding:8px 4px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all .2s;" onclick="this.style.background=this.style.background.includes('68')?'rgba(255,255,255,.03)':'rgba(239,68,68,.12)';this.querySelector('.bc').textContent=this.style.background.includes('68')?'✓':'○'">
+          <span style="font-size:18px;">${item.icon}</span>
+          <span style="font-size:9px;color:var(--dim);line-height:1.2;">${item.text}</span>
+          <span class="bc" style="font-size:10px;color:${item.done?'#ef4444':'var(--dim)'}">${item.done?'✓':'○'}</span>
+        </div>`;
+      });
+      el.innerHTML=`<div style="text-align:center;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:4px;">🎯 今日健康 BINGO</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.35);">点击切换状态 · 你中了 <b style="color:#ef4444;">${count}/9</b> 个</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">${grid}</div>
+      <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--dim);">
+        ${count>=7?'🔥 Bingo！你今天简直在玩命':count>=4?'⚠️ 过半了，注意身体':'✅ 还不错，继续保持'}
+      </div>`;
+      // Insert before rs0 section
+      const rs0=document.getElementById('rs0');
+      const target=rs0?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(5,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },2500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ MINI HEALTH GAME: TAP CHALLENGE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('tap-challenge'))return;
+      const el=document.createElement('div');
+      el.id='tap-challenge';
+      el.className='rs on';
+      let taps=0,started=false,timer=null,timeLeft=10;
+      el.innerHTML=`<div style="text-align:center;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:8px;">💓 心跳挑战</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:12px;">10秒内尽可能多地点击，测测你的手速</div>
+        <div id="tap-area" style="background:rgba(255,255,255,.03);border:2px dashed var(--card-border);border-radius:16px;padding:30px 20px;cursor:pointer;user-select:none;transition:all .15s;">
+          <div id="tap-count" style="font-size:36px;font-weight:900;color:var(--accent);">0</div>
+          <div id="tap-label" style="font-size:11px;color:var(--dim);margin-top:4px;">点击开始</div>
+          <div id="tap-timer" style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px;">⏱ 10.0s</div>
+        </div>
+        <div id="tap-result" style="font-size:10px;color:var(--dim);margin-top:8px;min-height:14px;"></div>
+      </div>`;
+      const rs0=document.getElementById('rs0');
+      const target=rs0?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(7,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+      const area=document.getElementById('tap-area');
+      const countEl=document.getElementById('tap-count');
+      const labelEl=document.getElementById('tap-label');
+      const timerEl=document.getElementById('tap-timer');
+      const resultEl=document.getElementById('tap-result');
+      if(!area)return;
+      area.addEventListener('click',()=>{
+        if(!started){
+          started=true;taps=0;timeLeft=10;
+          labelEl.textContent='继续点！';
+          area.style.borderColor='var(--accent)';
+          const startTime=Date.now();
+          timer=setInterval(()=>{
+            const elapsed=(Date.now()-startTime)/1000;
+            timeLeft=Math.max(0,10-elapsed);
+            timerEl.textContent=`⏱ ${timeLeft.toFixed(1)}s`;
+            if(timeLeft<=0){
+              clearInterval(timer);started=false;
+              area.style.borderColor='var(--card-border)';
+              labelEl.textContent='再来一次？';
+              const bpm=taps*6;
+              let msg='';
+              if(bpm>=180)msg='🏆 超人级手速！你的手指比心脏跳得还快';
+              else if(bpm>=120)msg='💪 不错！相当于剧烈运动心率';
+              else if(bpm>=80)msg='😊 正常水平，和安静心率差不多';
+              else msg='🐌 这速度...你确定手没睡着？';
+              resultEl.innerHTML=`${taps} 次 · 约 ${bpm} BPM · ${msg}`;
+              // Save best score
+              try{
+                const best=parseInt(localStorage.getItem('sdi-tap-best'))||0;
+                if(taps>best){localStorage.setItem('sdi-tap-best',taps);resultEl.innerHTML+=` · 🎉 新纪录！`;}
+                else if(best>0)resultEl.innerHTML+=` · 历史最高: ${best}次`;
+              }catch(e){}
+            }
+          },100);
+        }
+        if(started){
+          taps++;
+          countEl.textContent=taps;
+          area.style.transform='scale(0.97)';
+          setTimeout(()=>{area.style.transform='scale(1)';},80);
+        }
+      });
+    },3000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH RECEIPT" THERMAL PRINTER STYLE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-receipt'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      const now=new Date();
+      const receipt=document.createElement('div');
+      receipt.id='health-receipt';
+      receipt.className='rs on';
+      const line='─'.repeat(32);
+      const dline='═'.repeat(32);
+      let dimLines='';
+      dims.forEach(d=>{
+        const bar='█'.repeat(Math.round(d.pct/10))+'░'.repeat(10-Math.round(d.pct/10));
+        dimLines+=`  ${d.name.padEnd(12,' ')} ${bar} ${String(d.pct).padStart(3,' ')}%\n`;
+      });
+      receipt.innerHTML=`<div style="background:#f5f5dc;color:#333;font-family:'Courier New',monospace;padding:20px 16px;border-radius:4px;font-size:11px;line-height:1.6;white-space:pre;overflow-x:auto;box-shadow:0 2px 12px rgba(0,0,0,.3);position:relative;">
+<div style="text-align:center;font-weight:bold;">☠️ 猝死指数检测中心 ☠️
+SUDDEN DEATH INDEX LAB
+${dline}
+收据 / RECEIPT
+${line}</div>
+日期: ${now.toLocaleDateString()}  ${now.toLocaleTimeString()}
+编号: #SDI-${Math.floor(Math.random()*90000+10000)}
+患者年龄: ${age}岁
+${line}
+<b>检测结果</b>
+  猝死指数: ${score}/100
+  危险等级: ${score>=80?'☠️ 极度危险':score>=60?'🔴 高危':score>=40?'🟡 中等':score>=20?'🟢 低危':'💚 健康'}
+${line}
+<b>维度分析</b>
+${dimLines}${line}
+<b>总计</b>
+  综合指数  ..................  ${score}
+  超越用户  .................. ${Math.min(99,Math.max(1,Math.round(50+score*0.45)))}%
+  建议行动  .................. ${score>=60?'立即改善':'保持观察'}
+${dline}
+<div style="text-align:center;font-size:10px;color:#888;">感谢使用 SDI 检测系统
+本收据不构成医学诊断
+${line}
+*** 请保留此收据 ***</div></div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(8,sections.length-1)];
+        if(insertBefore)target.insertBefore(receipt,insertBefore);
+        else target.appendChild(receipt);
+      }
+    },3200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ SWIPE BETWEEN RESULT SECTIONS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    // Add smooth swipe indicators
+    setTimeout(()=>{
+      const sections=sec.querySelectorAll('.rs');
+      if(sections.length<3)return;
+      let startY=0;
+      sec.addEventListener('touchstart',e=>{startY=e.touches[0].clientY;},{passive:true});
+      sec.addEventListener('touchend',e=>{
+        const dy=e.changedTouches[0].clientY-startY;
+        if(Math.abs(dy)>100){
+          // Quick swipe: scroll by one viewport height
+          sec.scrollBy({top:dy<0?window.innerHeight*0.7:-window.innerHeight*0.7,behavior:'smooth'});
+        }
+      },{passive:true});
+    },1000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ QUIZ SPEED ANALYSIS ════
+(function(){
+  const qTimes=[];
+  let lastQTime=0;
+  const origNextQ=window.nextQ;
+  if(!origNextQ)return;
+  window.nextQ=function(){
+    const now=Date.now();
+    if(lastQTime>0)qTimes.push(now-lastQTime);
+    lastQTime=now;
+    origNextQ.apply(this,arguments);
+  };
+  // On result page, analyze speed patterns
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    if(qTimes.length<5)return;
+    setTimeout(()=>{
+      if(document.getElementById('speed-analysis'))return;
+      const avg=qTimes.reduce((a,b)=>a+b,0)/qTimes.length;
+      const fastest=Math.min(...qTimes);
+      const slowest=Math.max(...qTimes);
+      // Find which questions took longest (hesitation = concern?)
+      const hesitationIdx=qTimes.indexOf(slowest);
+      let speedType='';
+      if(avg<2000)speedType='⚡ 闪电型：你答题比思考快，是直觉派';
+      else if(avg<4000)speedType='🎯 精准型：你认真思考了每道题';
+      else if(avg<8000)speedType='🤔 深思型：你对每个选项都仔细斟酌';
+      else speedType='🐢 佛系型：你用了大量时间，可能在反思人生';
+      const el=document.createElement('div');
+      el.id='speed-analysis';
+      el.className='rs on';
+      el.innerHTML=`<div style="text-align:center;margin-bottom:8px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);">⏱ 答题速度分析</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;">
+        <div style="text-align:center;background:rgba(255,255,255,.03);padding:8px;border-radius:8px;">
+          <div style="font-size:16px;font-weight:800;color:var(--accent);">${(avg/1000).toFixed(1)}s</div>
+          <div style="font-size:9px;color:var(--dim);">平均用时</div>
+        </div>
+        <div style="text-align:center;background:rgba(255,255,255,.03);padding:8px;border-radius:8px;">
+          <div style="font-size:16px;font-weight:800;color:#4ade80;">${(fastest/1000).toFixed(1)}s</div>
+          <div style="font-size:9px;color:var(--dim);">最快</div>
+        </div>
+        <div style="text-align:center;background:rgba(255,255,255,.03);padding:8px;border-radius:8px;">
+          <div style="font-size:16px;font-weight:800;color:#ef4444;">${(slowest/1000).toFixed(1)}s</div>
+          <div style="font-size:9px;color:var(--dim);">最慢</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:11px;color:rgba(255,255,255,.5);">${speedType}</div>
+      ${hesitationIdx>=0?`<div style="text-align:center;font-size:10px;color:var(--dim);margin-top:6px;">你在第 ${hesitationIdx+2} 题犹豫最久，也许那个问题戳到了痛处？</div>`:''}
+      <div style="margin-top:10px;display:flex;gap:2px;align-items:end;justify-content:center;height:40px;">
+        ${qTimes.map((t,i)=>{const h=Math.min(38,Math.max(4,t/slowest*38));return`<div style="width:${Math.max(3,Math.floor(200/qTimes.length))}px;height:${h}px;background:${t===slowest?'#ef4444':t===fastest?'#4ade80':'var(--accent)'};border-radius:2px 2px 0 0;opacity:.7;" title="第${i+2}题: ${(t/1000).toFixed(1)}s"></div>`;}).join('')}
+      </div>
+      <div style="text-align:center;font-size:9px;color:rgba(255,255,255,.25);margin-top:4px;">每题用时分布</div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(4,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },2800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ ANIMATED SCORE ODOMETER ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const scoreEl=document.getElementById('score-num');
+      if(!scoreEl||scoreEl.dataset.animated)return;
+      scoreEl.dataset.animated='1';
+      const target=parseInt(scoreEl.textContent)||0;
+      let current=0;
+      const duration=1500;
+      const startTime=performance.now();
+      function animate(now){
+        const elapsed=now-startTime;
+        const progress=Math.min(1,elapsed/duration);
+        // Easing: ease-out cubic
+        const eased=1-Math.pow(1-progress,3);
+        current=Math.round(target*eased);
+        scoreEl.textContent=current;
+        if(progress<1)requestAnimationFrame(animate);
+      }
+      scoreEl.textContent='0';
+      requestAnimationFrame(animate);
+    },300);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ FUN LOADING MESSAGES ROTATION ════
+(function(){
+  const messages=[
+    '正在分析你的生活方式…',
+    '正在计算熬夜积累的伤害…',
+    '正在评估你的外卖频率…',
+    '正在统计你的久坐时长…',
+    '正在测量你的咖啡因浓度…',
+    '正在扫描你的黑眼圈深度…',
+    '正在检查你的最后一次运动记录…',
+    '正在分析你和床的分离焦虑程度…',
+    '正在计算你的维生素D缺乏量…',
+    '正在评估你的手机依赖症等级…',
+    '正在读取你的外卖订单历史…',
+    '正在估算你的颈椎弯曲度…',
+  ];
+  const loadingEl=document.getElementById('loading-text');
+  if(!loadingEl)return;
+  let msgIdx=0,interval;
+  const origShowLoading=window.showLoading;
+  if(!origShowLoading)return;
+  window.showLoading=function(){
+    origShowLoading.apply(this,arguments);
+    msgIdx=0;
+    const rotate=()=>{
+      if(loadingEl){
+        loadingEl.style.opacity='0';
+        setTimeout(()=>{
+          loadingEl.textContent=messages[msgIdx%messages.length];
+          loadingEl.style.opacity='1';
+          msgIdx++;
+        },200);
+      }
+    };
+    loadingEl.style.transition='opacity .2s';
+    interval=setInterval(rotate,2200);
+    setTimeout(()=>clearInterval(interval),20000);
+  };
+})();
+
+// ════ RESULT PAGE: SCROLL-TO-TOP FAB ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('scroll-top-fab'))return;
+      const fab=document.createElement('button');
+      fab.id='scroll-top-fab';
+      fab.innerHTML='↑';
+      fab.style.cssText='position:fixed;bottom:24px;right:20px;width:40px;height:40px;border-radius:50%;background:var(--card-bg);border:1px solid var(--card-border);color:var(--dim);font-size:16px;cursor:pointer;z-index:100;opacity:0;transform:translateY(10px);transition:all .3s ease;backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;';
+      document.body.appendChild(fab);
+      fab.addEventListener('click',()=>{
+        window.scrollTo({top:0,behavior:'smooth'});
+      });
+      let shown=false;
+      window.addEventListener('scroll',()=>{
+        if(window.scrollY>600&&!shown){
+          shown=true;fab.style.opacity='1';fab.style.transform='none';
+        }else if(window.scrollY<=600&&shown){
+          shown=false;fab.style.opacity='0';fab.style.transform='translateY(10px)';
+        }
+      },{passive:true});
+    },500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ QUESTION STREAK COUNTER ════
+(function(){
+  let streak=0,maxStreak=0;
+  const origPickGrid=window.pickGrid;
+  if(!origPickGrid)return;
+  window.pickGrid=function(btn,val){
+    origPickGrid.apply(this,arguments);
+    // Track "dangerous" answer streaks (val >= 3 on a 0-4 scale)
+    if(val>=3){streak++;maxStreak=Math.max(maxStreak,streak);}
+    else{streak=0;}
+    if(streak>=3){
+      const existing=document.getElementById('streak-indicator');
+      if(existing)existing.remove();
+      const ind=document.createElement('div');
+      ind.id='streak-indicator';
+      ind.style.cssText='position:fixed;top:60px;left:50%;transform:translateX(-50%);background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:20px;padding:4px 14px;font-size:10px;color:#ef4444;z-index:200;animation:fadeUp .3s ease;backdrop-filter:blur(8px);';
+      ind.textContent=`🔥 危险连击 ×${streak}`;
+      document.body.appendChild(ind);
+      setTimeout(()=>ind.remove(),2000);
+    }
+  };
+})();
+
+// ════ PERSONALIZED GREETING BASED ON HISTORY ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-intro');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    try{
+      const history=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+      if(history.length===0)return;
+      const lastScore=history[history.length-1].score;
+      const testCount=history.length;
+      const greetEl=document.createElement('div');
+      greetEl.style.cssText='text-align:center;font-size:10px;color:var(--dim);margin-bottom:12px;animation:fadeUp .5s ease;';
+      let msg='';
+      if(testCount>=5)msg=`老朋友，这是你第 ${testCount} 次测试了。上次得分 ${lastScore}，这次会更好吗？`;
+      else if(testCount>=2)msg=`欢迎回来！上次猝死指数 ${lastScore} 分，让我们看看有没有进步。`;
+      else msg=`上次你得了 ${lastScore} 分，回来看看有没有变化？`;
+      greetEl.textContent=msg;
+      const startBtn=sec.querySelector('.start-btn')||sec.querySelector('button');
+      if(startBtn)startBtn.parentNode.insertBefore(greetEl,startBtn);
+    }catch(e){}
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // Check URL hash on load for shared results
 (function checkURLResult(){
   const hash=location.hash;if(!hash.startsWith('#r='))return;
