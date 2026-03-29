@@ -4779,6 +4779,46 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ ANIMATED CATEGORY TRANSITION PARTICLES ════
+(function(){
+  const origShowCat=window.showCatSplash;
+  if(!origShowCat)return;
+  window.showCatSplash=function(cat,cb){
+    origShowCat(cat,cb);
+    // Add burst particles on category transition
+    if(typeof pts!=='undefined'){
+      const canvEl=document.getElementById('particle-canvas');
+      if(!canvEl)return;
+      const catColors={sleep:[100,100,240],work:[239,150,68],exercise:[52,211,153],diet:[245,158,11],stress:[168,85,247],habit:[239,68,68],emotion:[244,114,182]};
+      const col=catColors[cat]||[124,110,240];
+      for(let i=0;i<12;i++){
+        pts.push({x:canvEl.width/2+(Math.random()-.5)*200,y:canvEl.height/2+(Math.random()-.5)*200,vx:(Math.random()-.5)*2,vy:(Math.random()-.5)*2,sz:Math.random()*2+1,al:.5,r:col[0],g:col[1],b:col[2],life:0,max:80+Math.random()*60,cross:false,rot:0});
+      }
+    }
+  };
+})();
+
+// ════ ENHANCED LANDING PAGE SOCIAL PROOF ════
+(function(){
+  // Add a "recently tested" ticker below warning box
+  const intro=document.getElementById('sec-intro');
+  if(!intro)return;
+  const warningBox=intro.querySelector('.warning-box');
+  if(!warningBox)return;
+  const recentTests=[
+    {city:'北京',score:72,time:'2分钟前'},{city:'上海',score:45,time:'5分钟前'},
+    {city:'深圳',score:88,time:'8分钟前'},{city:'杭州',score:31,time:'12分钟前'},
+    {city:'成都',score:67,time:'15分钟前'},{city:'广州',score:53,time:'18分钟前'},
+  ];
+  const recent=recentTests[Math.floor(Math.random()*recentTests.length)];
+  const col=recent.score>=60?'#ef4444':recent.score>=30?'#fbbf24':'#34d399';
+  const ticker=document.createElement('div');
+  ticker.style.cssText=`display:flex;align-items:center;gap:8px;font-size:10px;color:var(--dim);margin-bottom:14px;padding:8px 14px;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:10px;opacity:0;animation:tipFadeIn .5s 2s ease both;`;
+  ticker.innerHTML=`<span style="width:6px;height:6px;border-radius:50%;background:${col};flex-shrink:0;animation:livePulse 1.5s ease-in-out infinite;"></span>
+    <span>${recent.city}的用户 ${recent.time} 测出了 <span style="font-weight:700;color:${col};font-family:'Space Mono',monospace;">${recent.score}分</span></span>`;
+  warningBox.after(ticker);
+})();
+
 // ════ "HEALTH CREDIT SCORE" (gamified rating) ════
 (function(){
   const obs=new MutationObserver(()=>{
