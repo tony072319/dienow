@@ -4779,6 +4779,89 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ FUN SIDE-BY-SIDE COMPARISON TABLE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('comparison-table'))return;
+      const score=calcScore();
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      const bodyAge=Math.round(age*(1+score/200));
+      const comparisons=[
+        {metric:'睡眠时间',you:score>=60?'5-6h':score>=30?'6-7h':'7-8h',avg:'6.5h',ideal:'7-9h'},
+        {metric:'每日步数',you:score>=60?'<3000':score>=30?'3000-6000':'6000+',avg:'5000',ideal:'8000-10000'},
+        {metric:'屏幕时间',you:score>=60?'10h+':score>=30?'6-8h':'4-6h',avg:'7h',ideal:'<4h'},
+        {metric:'水摄入量',you:score>=60?'<1L':score>=30?'1-1.5L':'1.5L+',avg:'1.2L',ideal:'2L+'},
+        {metric:'压力水平',you:score>=60?'极高':score>=30?'中等':'低',avg:'中等',ideal:'低'},
+      ];
+      const el=document.createElement('div');
+      el.id='comparison-table';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:18px 16px;overflow-x:auto;">
+        <div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 你 vs 平均 vs 理想</div>
+        <table style="width:100%;border-collapse:collapse;font-size:10px;">
+          <thead><tr style="border-bottom:1px solid rgba(255,255,255,.06);">
+            <th style="text-align:left;padding:6px 8px;color:var(--dim);font-weight:400;">指标</th>
+            <th style="text-align:center;padding:6px 8px;color:var(--accent);font-weight:700;">你</th>
+            <th style="text-align:center;padding:6px 8px;color:var(--dim);font-weight:400;">平均</th>
+            <th style="text-align:center;padding:6px 8px;color:#34d399;font-weight:400;">理想</th>
+          </tr></thead>
+          <tbody>${comparisons.map(c=>`<tr style="border-bottom:1px solid rgba(255,255,255,.03);">
+            <td style="padding:8px;color:var(--dim);">${c.metric}</td>
+            <td style="padding:8px;text-align:center;font-weight:600;color:var(--text);">${c.you}</td>
+            <td style="padding:8px;text-align:center;color:var(--dim);">${c.avg}</td>
+            <td style="padding:8px;text-align:center;color:rgba(52,211,153,.6);">${c.ideal}</td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>`;
+      const rs5=document.getElementById('rs5');
+      if(rs5){rs5.parentNode.insertBefore(el,rs5.nextSibling);}
+    },1900);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH BANK ACCOUNT" METAPHOR ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-bank'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const deposits=dims.filter(d=>d.pct<=30).length;
+      const withdrawals=dims.filter(d=>d.pct>=60).length;
+      const balance=100-score; // Higher is better
+      const statusText=balance>=70?'余额充裕，继续保持':balance>=40?'余额告急，请减少透支':balance>=20?'接近透支极限':'已经严重透支';
+      const statusCol=balance>=70?'#34d399':balance>=40?'#fbbf24':balance>=20?'#f59e0b':'#ef4444';
+      const el=document.createElement('div');
+      el.id='health-bank';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:12px;">🏦 HEALTH BANK · 健康银行</div>
+        <div style="font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:${statusCol};margin-bottom:4px;">¥${balance.toLocaleString()}</div>
+        <div style="font-size:11px;color:var(--dim);margin-bottom:12px;">${statusText}</div>
+        <div style="display:flex;justify-content:center;gap:16px;font-size:10px;">
+          <div style="padding:6px 12px;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.12);border-radius:8px;color:#34d399;">
+            +${deposits} 存入<br><span style="font-size:8px;color:var(--dim);">健康维度</span>
+          </div>
+          <div style="padding:6px 12px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.12);border-radius:8px;color:#ef4444;">
+            -${withdrawals} 透支<br><span style="font-size:8px;color:var(--dim);">风险维度</span>
+          </div>
+        </div>
+      </div>`;
+      const rs3=document.getElementById('rs3');
+      if(rs3){rs3.parentNode.insertBefore(el,rs3.nextSibling);}
+    },1700);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ DIMENSION SPARKLINE HISTORY ════
 (function(){
   const obs=new MutationObserver(()=>{
