@@ -308,6 +308,10 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .pct-bar-fill{height:100%;border-radius:10px;transition:width 1.2s .5s cubic-bezier(.25,.8,.25,1);}
 .pct-text{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);margin-top:6px;}
 .pct-num{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;flex-shrink:0;}
+.pct-subs{width:100%;display:flex;gap:8px;margin-top:12px;}
+.pct-sub{flex:1;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;text-align:center;}
+.pct-sub-val{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;display:block;margin-bottom:3px;}
+.pct-sub-lbl{font-size:10px;color:var(--dim);line-height:1.4;}
 .vitals-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
 .vital{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:13px;padding:14px 10px;text-align:center;}
 .vital-icon{font-size:18px;display:block;margin-bottom:5px;}
@@ -345,6 +349,10 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .doctor-card::before{content:'Rx';position:absolute;top:16px;right:20px;font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:rgba(255,255,255,.05);}
 .doctor-text{font-size:13px;line-height:1.9;color:#b0b0b0;font-style:italic;}
 .doctor-sig{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);margin-top:12px;border-top:1px solid rgba(255,255,255,.05);padding-top:10px;letter-spacing:1px;}
+.rx-section{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,.08);}
+.rx-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);margin-bottom:10px;}
+.rx-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:12px;color:#b0b0b0;line-height:1.7;}
+.rx-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.2);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
 .timeline-card{background:rgba(255,136,0,.03);border:1px solid rgba(255,136,0,.12);border-radius:16px;padding:22px;margin-bottom:14px;}
 .tl-item{display:flex;gap:14px;position:relative;}
 .tl-item::before{content:'';position:absolute;left:11px;top:22px;bottom:-16px;width:1px;background:rgba(255,255,255,.08);}
@@ -510,12 +518,12 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
     <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div><div class="fun-tags" id="fun-tags"></div></div></div>
     <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">你的健康人格</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div></div>
-    <div class="rs" id="rs3"><div class="percentile-banner"><div class="pct-bar-wrap"><div class="pct-bar-bg"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div><div class="pct-text" id="pct-text">—</div></div><div class="pct-num" id="pct-num">—</div></div></div>
+    <div class="rs" id="rs3"><div class="percentile-banner"><div class="pct-bar-wrap"><div class="pct-bar-bg"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div><div class="pct-text" id="pct-text">—</div></div><div class="pct-num" id="pct-num">—</div></div><div class="pct-subs" id="pct-subs"></div></div>
     <div class="rs" id="rs4"><div class="vitals-row"><div class="vital"><span class="vital-icon">🧬</span><span class="vital-val" id="v-bodyage">—</span><span class="vital-lbl">身体年龄</span></div><div class="vital"><span class="vital-icon">❤️</span><span class="vital-val" id="v-heart">—</span><span class="vital-lbl">心脏负荷</span></div><div class="vital"><span class="vital-icon">🔋</span><span class="vital-val" id="v-recovery">—</span><span class="vital-lbl">恢复力</span></div><div class="vital"><span class="vital-icon">🧠</span><span class="vital-val" id="v-stress">—</span><span class="vital-lbl">神经紧张</span></div></div><div class="risk-tags" id="risk-tags"></div></div>
     <div class="rs" id="rs5"><div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 身体系统风险</div><div class="systems-grid" id="systems-grid"></div></div>
     <div class="rs" id="rs6"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 各维度风险贡献</div><div class="radar-wrap"><svg id="radar-svg" viewBox="-10 -10 320 320" xmlns="http://www.w3.org/2000/svg"><defs><filter id="r-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="r-fill-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="100%" stop-color="var(--accent)" stop-opacity=".08"/></radialGradient></defs><g id="r-grid-g"></g><g id="r-axes-g"></g><polygon id="r-poly" points="150,150" fill="url(#r-fill-grad)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" filter="url(#r-glow)"/><g id="r-dots-g"></g><g id="r-labels-g"></g></svg></div><div class="contrib-chart" id="contrib-chart"></div></div>
     <div class="rs" id="rs7"><div class="prophecy-card"><div class="sec-label" style="color:#ff4466">☠ &nbsp;死亡预言</div><div class="prophecy-text" id="prophecy-text"></div><div class="prophecy-moment" id="prophecy-moment"></div></div></div>
-    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v5.0 · AUTOMATED REPORT</div></div></div>
+    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v5.0 · AUTOMATED REPORT</div></div></div>
     <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#ff9900;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
     <div class="rs" id="rs11"><div class="sec-label" style="color:var(--dim);margin-bottom:10px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px">// 七维分析 · 点击展开建议</div><div class="dims-grid" id="dims-grid"></div></div>
@@ -1227,7 +1235,29 @@ function drawRadar(dims,accentCol){
 }
 function calcSystems(dims){const get=k=>dims.find(d=>d.key===k)?.pct||0;return[{icon:'❤️',name:'心血管系统',risk:Math.round((get('work')*.4+get('stress')*.35+get('exercise')*.25)),note:'长期压力和缺乏运动是心血管疾病的主要非遗传风险因素'},{icon:'🦴',name:'肌肉骨骼系统',risk:Math.round((get('exercise')*.5+get('work')*.3+get('stress')*.2)),note:'久坐和缺乏运动加速肌肉萎缩和骨密度下降'},{icon:'🫁',name:'代谢与内分泌',risk:Math.round((get('diet')*.4+get('sleep')*.3+get('habit')*.3)),note:'睡眠、饮食和嗜好共同决定代谢健康'},{icon:'🧠',name:'神经与情绪',risk:Math.round((get('stress')*.4+get('emotion')*.4+get('sleep')*.2)),note:'长期高皮质醇直接影响大脑结构和情绪调节'}];}
 function calcTimeline(s){if(s<20)return[{t:'现在',txt:'身体状况良好，各主要器官运作正常',col:'#00ff88'},{t:'5-10年后',txt:'如保持现有习惯，预计维持良好状态',col:'#00ff88'},{t:'10年后',txt:'以当前轨迹，身体年龄与实际年龄接近',col:'#88ee00'}];if(s<40)return[{t:'现在',txt:'整体状况良好，部分维度有改善空间',col:'#88ee00'},{t:'2-3年后',txt:'如不改变，可能开始出现慢性疲劳或轻度代谢异常',col:'#ffcc00'},{t:'5年后',txt:'亚健康症状可能固化，改变难度增加',col:'#ff8800'}];if(s<60)return[{t:'现在',txt:'身体正在发出明显信号，多项指标偏高',col:'#ffcc00'},{t:'1-2年后',txt:'如不改变，慢性病风险显著上升',col:'#ff8800'},{t:'3-5年后',txt:'心血管或代谢方面可能需要医疗干预',col:'#ff4444'}];if(s<80)return[{t:'现在',txt:'多项指标已超出安全范围',col:'#ff8800'},{t:'6-18个月',txt:'如不改变，可能面临重大健康事件触发点',col:'#ff4444'},{t:'2-3年后',txt:'不改变的话，预计有严重医疗问题需要处理',col:'#ff0044'}];return[{t:'现在',txt:'当前状态已接近临界点，时间窗口非常紧迫',col:'#ff4444'},{t:'数月内',txt:'如不立即改变，身体可能发出最终警告',col:'#ff0044'},{t:'现在就开始',txt:'哪怕改变一件事，也会影响这个轨迹',col:'#ff8800'}];}
-function getDoctorNote(s,dims,arch){const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);const wl=worst.name.replace(/^../,'');if(s<20)return`患者整体生活习惯良好，各主要指标在正常范围内。建议保持现有作息与运动习惯，每年进行常规体检以建立健康基线。无需特殊干预。`;if(s<40)return`患者整体状况尚可，${wl}维度存在一定风险，建议在此方面做出针对性调整。定期体检，关注血压与睡眠质量变化。`;if(s<60)return`患者呈现典型亚健康状态，${wl}维度风险尤为突出（${worst.pct}%）。结合体质类型「${arch?.name||'—'}」，判断患者处于慢性消耗状态。建议立即制定改善计划，优先处理睡眠与运动问题。`;if(s<80)return`患者多项生活方式指标超出健康阈值，${wl}及相关维度显示高风险信号。体质类型「${arch?.name||'—'}」提示存在系统性风险叠加。强烈建议本月内完成心血管及代谢相关检查。`;return`患者生活方式评估结果严峻，猝死指数${s}/100，体质类型「${arch?.name||'—'}」。${wl}维度达到${worst.pct}%高风险水平。当前状态已超出亚健康范畴，进入临床关注区间。建议立即就医，不宜延迟。`;}
+function getDoctorNote(s,dims,arch){
+  const sorted=[...dims].sort((a,b)=>b.pct-a.pct);
+  const worst=sorted[0],second=sorted[1];
+  const wl=worst.name.replace(/^../,''),sl=second.name.replace(/^../,'');
+  const at=arch?.name||'—';
+  if(s<20)return`患者整体生活习惯良好，各主要指标在正常范围内。七项维度评估均处于安全阈值以下，未检测到需要临床关注的风险叠加模式。建议保持现有作息与运动习惯，每年进行常规体检以建立健康基线。无需特殊干预。`;
+  if(s<40)return`患者整体状况尚可，${wl}维度存在一定风险（${worst.pct}%），${sl}维度次之（${second.pct}%）。尚未形成显著的维度间风险共振，但需关注${wl}指标的发展趋势。建议定期体检，重点关注血压、血脂与睡眠质量变化。如有持续疲劳感，建议主动就医排查。`;
+  if(s<60)return`患者呈现典型亚健康状态，${wl}维度风险尤为突出（${worst.pct}%），与${sl}维度（${second.pct}%）形成双重负荷。体质类型判定为「${at}」，符合慢性消耗模式特征。患者可能已对亚健康症状产生适应性麻痹。建议立即制定改善计划，优先干预${wl}，同步关注${sl}的联动影响。`;
+  if(s<80)return`警告：患者多项生活方式指标超出健康阈值。${wl}（${worst.pct}%）与${sl}（${second.pct}%）构成高风险组合，体质类型「${at}」进一步提示系统性风险叠加。当前评估表明患者已脱离亚健康区间，进入需要主动医疗干预的阶段。强烈建议本月内完成心血管、代谢及相关高风险维度的专项检查。`;
+  return`紧急评估：患者猝死指数达到 ${s}/100，属于极高风险等级。${wl}维度（${worst.pct}%）和${sl}维度（${second.pct}%）均处于危险区间。体质类型「${at}」对应的多维度同步恶化模式，在临床文献中与急性健康事件有显著关联。当前状态已超出生活方式调整的有效窗口。建议立即就医，进行全面体检，不宜延迟。这不是建议，是警告。`;
+}
+function getRx(dims){
+  const RX_MAP={
+    sleep:'每晚11:00前关灯，手机放到臂距之外。连续执行7天后评估睡眠改善。',
+    work:'设定工作结束时间并严格执行。每日预留≥2小时完全脱离工作状态。',
+    exercise:'每日步行≥20分钟或等效有氧运动，每周≥3次。从明天开始。',
+    diet:'每日≥3餐规律进食，饮水≥6杯。减少外卖频率至每周≤3次。',
+    stress:'每日进行≥10分钟有意识的放松（深呼吸/冥想/散步），本周开始。',
+    habit:'将当前最主要的不良嗜好频率减半。不是戒断，是减半。持续14天。',
+    emotion:'每周至少与一位信任的人进行≥15分钟的真实对话。如持续低落，寻求专业支持。'
+  };
+  return [...dims].sort((a,b)=>b.pct-a.pct).slice(0,3).map(d=>({dim:d.name.replace(/^../,''),rx:RX_MAP[d.key]||''}));
+}
 
 function showResult(){
   const score=calcScore(),level=LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
@@ -1267,6 +1297,14 @@ function showResult(){
   const pBar=document.getElementById('pct-bar');pBar.style.background=pCol;pBar.style.width='0%';setTimeout(()=>pBar.style.width=pp+'%',600);
   document.getElementById('pct-num').textContent=pp+'%';document.getElementById('pct-num').style.color=pCol;
   document.getElementById('pct-text').textContent=`你比 ${pp}% 的同龄城市白领更接近猝死`;
+  // Age group + city comparison
+  const ageGroup=userAge<25?'18-24':userAge<30?'25-29':userAge<35?'30-34':userAge<40?'35-39':userAge<50?'40-49':'50+';
+  const cityAvg=Math.round(52+Math.random()*8);
+  const ageAvg=Math.round(userAge<25?42:userAge<30?55:userAge<35?60:userAge<40?58:userAge<50?53:48);
+  const worstDim=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+  const worstRank=Math.min(95,Math.round(worstDim.pct*.9+Math.random()*5));
+  const psEl=document.getElementById('pct-subs');
+  psEl.innerHTML=`<div class="pct-sub"><span class="pct-sub-val" style="color:${pCol}">${ageGroup}岁</span><span class="pct-sub-lbl">你的年龄段平均指数 ${ageAvg}</span></div><div class="pct-sub"><span class="pct-sub-val" style="color:${pCol}">${cityAvg}</span><span class="pct-sub-lbl">一线城市打工人平均</span></div><div class="pct-sub"><span class="pct-sub-val" style="color:${dimCol(worstDim.pct)}">TOP ${worstRank}%</span><span class="pct-sub-lbl">${worstDim.name.replace(/^../,'')}维度风险排名</span></div>`;
   const bA=Math.min(85,Math.round(userAge+score*.28));
   const wP=dimObj.work||0,sP=dimObj.stress||0;
   const hL=Math.round(wP*.4+sP*.35+((100-(dimObj.exercise||0))*.25));
@@ -1289,6 +1327,8 @@ function showResult(){
   const mo=MOMENTS[pKey]||'';typewriter('prophecy-text',pt,18);
   const mEl=document.getElementById('prophecy-moment');mEl.textContent=mo;mEl.style.display=mo?'block':'none';
   document.getElementById('doctor-text').textContent=getDoctorNote(score,dims,arch);
+  const rxEl=document.getElementById('rx-items');rxEl.innerHTML='';
+  getRx(dims).forEach((r,i)=>{rxEl.innerHTML+=`<div class="rx-item"><span class="rx-num">${i+1}</span><span><b style="color:var(--accent)">${r.dim}：</b>${r.rx}</span></div>`;});
   const tl=document.getElementById('timeline-items');tl.innerHTML='';
   calcTimeline(score).forEach((t,i)=>{const el=document.createElement('div');el.className='tl-item';el.innerHTML=`<div class="tl-dot" style="border-color:${t.col};color:${t.col}">${i+1}</div><div class="tl-body"><div class="tl-time" style="color:${t.col}">${t.t}</div><div class="tl-text">${t.txt}</div></div>`;tl.appendChild(el);});
   const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);const p=PRIORITY[worst.key];
