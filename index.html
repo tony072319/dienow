@@ -783,6 +783,10 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
         <div class="tcard"><div class="tcard-quote">"给我贴了'咖啡因依赖综合征'标签，我正端着第四杯美式看结果。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(204,136,68,.12)">☕</div><div class="tcard-name">前端开发工程师</div><div class="tcard-score" style="color:#f59e0b">74分</div></div></div>
         <div class="tcard"><div class="tcard-quote">"死亡预言那段太准了，准到我想举报。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,0,100,.1)">😱</div><div class="tcard-name">创业公司CTO</div><div class="tcard-score" style="color:#ef4444">83分</div></div></div>
         <div class="tcard"><div class="tcard-quote">"全组一起测，结果互相没脸看。团建变成体检预约。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,200,0,.12)">🫠</div><div class="tcard-name">某互联网中层</div><div class="tcard-score" style="color:#fbbf24">69分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"凌晨2点做这个测试本身就是行为艺术。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(136,85,255,.12)">🦉</div><div class="tcard-name">深夜设计师</div><div class="tcard-score" style="color:#8855ff">81分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"我妈转发了这个给全家群。我的社会性死亡指数也满了。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(244,114,182,.12)">🙈</div><div class="tcard-name">被迫体检者</div><div class="tcard-score" style="color:#f472b6">58分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"测完当天就买了跑鞋。三天后跑鞋成了摆设。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(52,211,153,.12)">🏃</div><div class="tcard-name">短暂觉醒者</div><div class="tcard-score" style="color:#fbbf24">55分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"讣告预览那段，我截图发朋友圈了。获赞最多的一条。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,51,51,.12)">📜</div><div class="tcard-name">行为艺术家</div><div class="tcard-score" style="color:#ef4444">87分</div></div></div>
       </div>
     </div>
   </div>
@@ -1927,6 +1931,10 @@ function nextQ(){
     const oldCat=curQ().cat;fi++;const newCat=curQ().cat;
     if(newCat!==oldCat&&!Q[curQi()].branch){showCatSplash(newCat,()=>{go('sec-question','anim-in');renderQ();window.scrollTo({top:0,behavior:'smooth'});});}
     else{const card=document.getElementById('q-card');card.style.animation='slideOut .2s ease both';setTimeout(()=>{renderQ();card.style.animation='slideIn .25s ease both';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{card.style.animation='';},300);},200);}
+  // Milestone mini-toast
+  const progress=fi/flow.length;
+  if(progress>=0.5&&(fi-1)/flow.length<0.5){showMilestone('🏔️ 已过半！坚持住');}
+  else if(progress>=0.8&&(fi-1)/flow.length<0.8){showMilestone('🏁 最后几题了！');}
   }else{playSuccess();showLoading();}
 }
 
@@ -1954,6 +1962,13 @@ document.addEventListener('keydown',e=>{
   if(sec.id==='sec-intro'&&e.key==='Enter'){startQuiz();e.preventDefault();}
 });
 
+function showMilestone(msg){
+  const el=document.createElement('div');
+  el.style.cssText='position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);background:rgba(var(--ar),var(--ag),var(--ab),.15);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.3);border-radius:100px;padding:8px 20px;font-size:13px;font-weight:600;color:var(--accent);z-index:300;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;backdrop-filter:blur(10px);';
+  el.textContent=msg;document.body.appendChild(el);
+  requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='translateX(-50%) translateY(0)';});
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(-50%) translateY(-20px)';setTimeout(()=>el.remove(),300);},2000);
+}
 function getPersonalizedLoadMsgs(){
   const msgs=['SCANNING VITALS'];
   if(ans[0]>=3) msgs.push('正在计算你凌晨的脑电波频率');
