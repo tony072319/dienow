@@ -15,7 +15,9 @@
 <meta name="twitter:description" content="我的猝死指数是___分，你敢测吗？">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap');
+/* Font loading with China-friendly fallback */
+@font-face{font-family:'Inter';font-style:normal;font-weight:400 900;font-display:swap;src:local('Inter'),local('Inter-Regular');unicode-range:U+0000-024F,U+1E00-1EFF,U+2000-206F;}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:400 700;font-display:swap;src:local('Space Mono'),local('SpaceMono-Regular');unicode-range:U+0000-00FF,U+2000-206F;}
 
 :root {
   --bg:#0f1117;--bg2:#171a24;--accent:#7c6ef0;--ar:124;--ag:110;--ab:240;
