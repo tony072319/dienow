@@ -4779,6 +4779,122 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ RESULT PARTICLES COLOR SHIFT ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    const score=calcScore();
+    // Shift particle colors based on score
+    if(typeof pts!=='undefined'){
+      const baseR=score>=70?239:score>=40?245:52;
+      const baseG=score>=70?68:score>=40?158:211;
+      const baseB=score>=70?68:score>=40?11:153;
+      pts.forEach(p=>{
+        if(!p.cross){
+          p.r=baseR+Math.floor(Math.random()*30-15);
+          p.g=baseG+Math.floor(Math.random()*30-15);
+          p.b=baseB+Math.floor(Math.random()*30-15);
+        }
+      });
+    }
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ PERSISTENT VISIT COUNTER ════
+(function(){
+  try{
+    let visits=parseInt(localStorage.getItem('sdi-visits')||'0')+1;
+    localStorage.setItem('sdi-visits',String(visits));
+    if(visits>=5){
+      const el=document.getElementById('live-count');
+      if(el){
+        const base=parseInt(el.textContent.replace(/,/g,''))||8247;
+        el.textContent=(base+visits).toLocaleString();
+      }
+    }
+    if(visits>=10&&typeof unlockAchievement==='function'){
+      setTimeout(()=>unlockAchievement('loyal','💎','忠实用户','访问网站10次以上'),3000);
+    }
+    if(visits>=50&&typeof unlockAchievement==='function'){
+      setTimeout(()=>unlockAchievement('superfan','🌟','超级粉丝','访问网站50次以上'),3500);
+    }
+  }catch(e){}
+})();
+
+// ════ CELEBRITY LIFESTYLE COMPARISON ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('celeb-compare'))return;
+      const score=calcScore();
+      const celebs=[
+        {range:[0,15],name:'钟南山',desc:'83岁还在打篮球的传奇院士',icon:'🏀',lifestyle:'每天锻炼1小时，规律作息，均衡饮食'},
+        {range:[16,30],name:'村上春树',desc:'每天凌晨4点起床跑步的小说家',icon:'📚',lifestyle:'每天跑步10公里，早睡早起，清淡饮食'},
+        {range:[31,45],name:'普通日本上班族',desc:'加班但还算注意健康',icon:'🗾',lifestyle:'偶尔加班，每周运动2-3次，基本规律饮食'},
+        {range:[46,60],name:'互联网大厂员工',desc:'996但周末会补觉',icon:'💻',lifestyle:'工作强度高，运动不足，外卖为主'},
+        {range:[61,75],name:'创业公司CEO',desc:'永远在线，永远焦虑',icon:'📈',lifestyle:'睡眠严重不足，压力极大，饮食不规律'},
+        {range:[76,90],name:'电竞职业选手',desc:'每天训练14小时的赛博战士',icon:'🎮',lifestyle:'久坐+熬夜+外卖+高压，身体年龄远超实际'},
+        {range:[91,100],name:'传说中的"猝死候选人"',desc:'集齐了所有高危因素',icon:'⚰️',lifestyle:'不睡觉+不运动+不吃饭+高压+全部不良嗜好'},
+      ];
+      const celeb=celebs.find(c=>score>=c.range[0]&&score<=c.range[1]);
+      if(!celeb)return;
+      const el=document.createElement('div');
+      el.id='celeb-compare';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:12px;">// 生活方式最接近的名人</div>
+        <div style="font-size:36px;margin-bottom:8px;">${celeb.icon}</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;">${celeb.name}</div>
+        <div style="font-size:12px;color:var(--dim);margin-bottom:8px;">${celeb.desc}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);line-height:1.7;padding:10px;background:rgba(255,255,255,.02);border-radius:10px;">${celeb.lifestyle}</div>
+      </div>`;
+      const rs7e=document.getElementById('rs7e');
+      if(rs7e){rs7e.parentNode.insertBefore(el,rs7e.nextSibling);}
+    },2000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ COPY ALL RESULTS AS MARKDOWN ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('copy-md-btn'))return;
+      const btns=document.querySelector('.res-btns');
+      if(!btns)return;
+      const btn=document.createElement('button');
+      btn.id='copy-md-btn';
+      btn.className='btn-share';
+      btn.textContent='📝 复制Markdown';
+      btn.onclick=function(){
+        const score=calcScore();
+        const dims=calcDims();
+        const grade=score>=80?'F':score>=65?'D':score>=45?'C':score>=25?'B':'A';
+        let md=`# 猝死指数测试结果\n\n`;
+        md+=`**总分**: ${score}/100 (${grade}级)\n\n`;
+        md+=`## 七维分析\n\n`;
+        dims.forEach(d=>{md+=`- ${d.name}: ${d.pct}% ${'█'.repeat(Math.round(d.pct/10))}${'░'.repeat(10-Math.round(d.pct/10))}\n`;});
+        md+=`\n---\n*测试时间: ${new Date().toLocaleString()}*\n`;
+        navigator.clipboard?.writeText(md).then(()=>{
+          const t=document.getElementById('toast');t.textContent='Markdown已复制 ✓';t.classList.add('show');
+          setTimeout(()=>t.classList.remove('show'),1500);
+        });
+      };
+      btns.insertBefore(btn,btns.querySelector('.btn-retry'));
+    },3000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ TERMINAL MODE EASTER EGG (triple-click any section header) ════
 (function(){
   let clickCount=0,clickTimer=null;
