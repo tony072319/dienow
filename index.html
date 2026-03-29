@@ -9781,6 +9781,205 @@ ${dims.map(d=>`║ ${d.name.padEnd(9,' ')} ${'█'.repeat(Math.round(d.pct/10))}
   };
 })();
 
+// ════ "HEALTH TRADING CARD" (COLLECTIBLE) ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('trading-card'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const best=dims.reduce((a,b)=>a.pct<b.pct?a:b);
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      // Rarity based on score uniqueness
+      const rarities=[
+        {range:[0,10],name:'传说',color:'#f59e0b',bg:'linear-gradient(135deg,#4a3800,#1a1400)',border:'#f59e0b'},
+        {range:[10,25],name:'史诗',color:'#a855f7',bg:'linear-gradient(135deg,#2d1a4a,#1a0f2e)',border:'#a855f7'},
+        {range:[25,50],name:'稀有',color:'#3b82f6',bg:'linear-gradient(135deg,#1a2a4a,#0f1a2e)',border:'#3b82f6'},
+        {range:[50,75],name:'普通',color:'#6b7280',bg:'linear-gradient(135deg,#1a1a24,#0f0f17)',border:'#6b7280'},
+        {range:[75,101],name:'危险',color:'#ef4444',bg:'linear-gradient(135deg,#2a1010,#1a0808)',border:'#ef4444'},
+      ];
+      const rarity=rarities.find(r=>score>=r.range[0]&&score<r.range[1])||rarities[3];
+      // Stats
+      const hp=Math.max(1,100-score);
+      const atk=Math.round(worst.pct*0.8);
+      const def=Math.round((100-best.pct)*0.6);
+      const spd=Math.round(50+Math.random()*30);
+      const serialNum=`#${String(Math.floor(Math.random()*9000+1000)).padStart(4,'0')}`;
+      const el=document.createElement('div');
+      el.id='trading-card';
+      el.className='rs on';
+      el.innerHTML=`<div style="width:220px;margin:0 auto;background:${rarity.bg};border:2px solid ${rarity.border};border-radius:14px;padding:14px;box-shadow:0 8px 32px ${rarity.border}33;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:100%;background:linear-gradient(135deg,transparent 40%,${rarity.border}11 50%,transparent 60%);animation:holoShine 4s linear infinite;pointer-events:none;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-size:9px;color:${rarity.color};font-weight:700;letter-spacing:2px;">${rarity.name}</div>
+          <div style="font-size:8px;color:rgba(255,255,255,.2);">${serialNum}</div>
+        </div>
+        <div style="text-align:center;padding:12px 0;background:rgba(0,0,0,.3);border-radius:8px;margin-bottom:8px;">
+          <div style="font-size:36px;">💀</div>
+          <div style="font-size:11px;font-weight:700;color:#fff;margin-top:4px;">${age}岁测试者</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px;">
+          <div style="text-align:center;background:rgba(255,255,255,.03);padding:4px;border-radius:4px;">
+            <div style="font-size:12px;font-weight:900;color:#ef4444;">${hp}</div>
+            <div style="font-size:7px;color:var(--dim);">HP</div>
+          </div>
+          <div style="text-align:center;background:rgba(255,255,255,.03);padding:4px;border-radius:4px;">
+            <div style="font-size:12px;font-weight:900;color:#f59e0b;">${atk}</div>
+            <div style="font-size:7px;color:var(--dim);">ATK</div>
+          </div>
+          <div style="text-align:center;background:rgba(255,255,255,.03);padding:4px;border-radius:4px;">
+            <div style="font-size:12px;font-weight:900;color:#3b82f6;">${def}</div>
+            <div style="font-size:7px;color:var(--dim);">DEF</div>
+          </div>
+          <div style="text-align:center;background:rgba(255,255,255,.03);padding:4px;border-radius:4px;">
+            <div style="font-size:12px;font-weight:900;color:#4ade80;">${spd}</div>
+            <div style="font-size:7px;color:var(--dim);">SPD</div>
+          </div>
+        </div>
+        <div style="font-size:9px;color:rgba(255,255,255,.3);line-height:1.5;">
+          <b style="color:${rarity.color};">特技:</b> ${worst.name.split(' ')[1]}弱化 · ${best.name.split(' ')[1]}防御<br>
+          <b style="color:${rarity.color};">属性:</b> 猝死指数 ${score} · 综合战力 ${hp+def+spd}
+        </div>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(12,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },5200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH WEATHER MAP" EMOJI FORECAST ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('weather-forecast'))return;
+      const dims=calcDims();
+      const weatherEmoji=pct=>pct>=70?'⛈️':pct>=55?'🌧️':pct>=40?'🌥️':pct>=25?'⛅':'☀️';
+      const weatherDesc=pct=>pct>=70?'暴风雨':pct>=55?'阵雨':pct>=40?'多云':pct>=25?'晴间多云':'晴天';
+      const el=document.createElement('div');
+      el.id='weather-forecast';
+      el.className='rs on';
+      let forecastHTML='';
+      const days=['今天','明天','后天','周四','周五','周六','周日'].slice(0,dims.length);
+      dims.forEach((d,i)=>{
+        forecastHTML+=`<div style="text-align:center;flex:1;min-width:0;">
+          <div style="font-size:8px;color:var(--dim);">${days[i]||''}</div>
+          <div style="font-size:20px;margin:4px 0;">${weatherEmoji(d.pct)}</div>
+          <div style="font-size:8px;color:rgba(255,255,255,.3);">${weatherDesc(d.pct)}</div>
+          <div style="font-size:8px;color:rgba(255,255,255,.2);margin-top:2px;">${d.name.split(' ')[0]}</div>
+        </div>`;
+      });
+      el.innerHTML=`<div style="text-align:center;margin-bottom:8px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);">🌤️ 健康天气预报</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.35);">每个维度的「天气状况」</div>
+      </div>
+      <div style="display:flex;gap:4px;">${forecastHTML}</div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(4,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },1500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ PERFORMANCE: LAZY LOAD RESULT SECTIONS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    // Use IntersectionObserver to lazy-animate sections
+    setTimeout(()=>{
+      const sections=sec.querySelectorAll('.rs');
+      const io=new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.style.opacity='1';
+            entry.target.style.transform='none';
+            io.unobserve(entry.target);
+          }
+        });
+      },{threshold:0.1,rootMargin:'50px'});
+      sections.forEach((s,i)=>{
+        if(i<3)return; // First few always visible
+        s.style.opacity='0';
+        s.style.transform='translateY(20px)';
+        s.style.transition='opacity .5s ease, transform .5s ease';
+        io.observe(s);
+      });
+    },100);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ SMART DARK/LIGHT AUTO DETECTION ════
+(function(){
+  // If user hasn't explicitly set theme, follow system preference
+  if(localStorage.getItem('sdi-theme'))return;
+  const mq=window.matchMedia('(prefers-color-scheme: light)');
+  if(mq.matches&&window.toggleTheme){
+    window.toggleTheme();
+  }
+  mq.addEventListener('change',e=>{
+    const isLight=document.documentElement.classList.contains('light');
+    if(e.matches&&!isLight)window.toggleTheme?.();
+    else if(!e.matches&&isLight)window.toggleTheme?.();
+  });
+})();
+
+// ════ RESULT SECTION: TABLE OF CONTENTS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('result-toc'))return;
+      const sections=sec.querySelectorAll('.rs');
+      if(sections.length<5)return;
+      const tocItems=[];
+      sections.forEach((s,i)=>{
+        // Try to find a title in the section
+        const title=s.querySelector('[style*="letter-spacing:2px"]')||s.querySelector('[style*="font-weight:700"]');
+        if(title&&title.textContent.trim().length>2&&title.textContent.trim().length<30){
+          tocItems.push({text:title.textContent.trim(),idx:i,el:s});
+        }
+      });
+      if(tocItems.length<3)return;
+      const el=document.createElement('div');
+      el.id='result-toc';
+      el.className='rs on';
+      el.innerHTML=`<details style="cursor:pointer;">
+        <summary style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);text-align:center;list-style:none;display:flex;align-items:center;justify-content:center;gap:6px;">
+          📑 结果目录 <span style="font-size:9px;color:rgba(255,255,255,.2);">(${tocItems.length}个模块)</span>
+        </summary>
+        <div style="margin-top:8px;display:flex;flex-direction:column;gap:2px;">
+          ${tocItems.map((item,i)=>`<a href="#" onclick="event.preventDefault();document.querySelectorAll('#sec-result .rs')[${item.idx}]?.scrollIntoView({behavior:'smooth',block:'center'});" style="font-size:10px;color:rgba(255,255,255,.4);text-decoration:none;padding:4px 8px;border-radius:6px;transition:all .15s;display:flex;align-items:center;gap:6px;" onmouseover="this.style.background='rgba(255,255,255,.03)';this.style.color='var(--accent)'" onmouseout="this.style.background='';this.style.color='rgba(255,255,255,.4)'"><span style="font-size:8px;color:var(--dim);width:16px;">${String(i+1).padStart(2,'0')}</span>${item.text}</a>`).join('')}
+        </div>
+      </details>`;
+      const rs0=document.getElementById('rs0');
+      if(rs0)rs0.parentNode.insertBefore(el,rs0.nextSibling);
+    },400);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // Check URL hash on load for shared results
 (function checkURLResult(){
   const hash=location.hash;if(!hash.startsWith('#r='))return;
