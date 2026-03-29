@@ -45,6 +45,10 @@ section.anim-fade{animation:fadeUp .44s cubic-bezier(.25,.8,.25,1) both;}
 section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
 @keyframes slideIn {from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:none}}
 @keyframes slideOut{from{opacity:1;transform:none}to{opacity:0;transform:translateX(-36px)}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-36px)}to{opacity:1;transform:none}}
+@keyframes slideOutRight{from{opacity:1;transform:none}to{opacity:0;transform:translateX(36px)}}
+section.anim-in-left{animation:slideInLeft .36s cubic-bezier(.32,.86,.27,1) both;}
+section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) both;}
 @keyframes fadeUp {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 
 .card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:24px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:36px 32px;width:100%;box-shadow:0 4px 32px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.03);transition:box-shadow 1s,border-color .5s;position:relative;overflow:hidden;}
@@ -774,6 +778,23 @@ function startPts(){canv.classList.add('active');animP();}
 addEventListener('mousemove',e=>{const mx=(e.clientX/innerWidth-.5)*30,my=(e.clientY/innerHeight-.5)*20;document.getElementById('orb1').style.transform=`translate(${mx*.6}px,${my*.6}px)`;document.getElementById('orb2').style.transform=`translate(${-mx*.4}px,${-my*.4}px)`;});
 let liveN=8247;setInterval(()=>{liveN+=Math.floor(Math.random()*3);document.getElementById('live-count').textContent=liveN.toLocaleString();},4000);
 
+// Animated count-up for landing stats
+(function animateLandingStats(){
+  const stats=document.querySelectorAll('.lstat-num');
+  stats.forEach(el=>{
+    const target=parseInt(el.textContent);if(isNaN(target))return;
+    el.textContent='0';
+    const dur=1200,start=performance.now();
+    function tick(now){
+      const p=Math.min((now-start)/dur,1);
+      const ease=1-Math.pow(1-p,3);// ease-out cubic
+      el.textContent=Math.round(target*ease);
+      if(p<1)requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+})();
+
 // Death clock — ticks based on user's age
 function updateDeathClock(){
   const age=parseInt(document.getElementById('age-input')?.value)||28;
@@ -1342,26 +1363,36 @@ const LAST_WORDS=[
   {min:0,max:15,quotes:[
     {q:'我的葬礼上能不能放蹦迪音乐？',a:'—— 活到105岁的养生博主'},
     {q:'如果我能重来，我还是会每天11点睡觉。',a:'—— 无聊但长寿的人'},
+    {q:'我活得太久了，已经开始同情那些加班猝死的新闻主角了。',a:'—— 退休后依然在晨跑的人'},
+    {q:'长寿的秘诀？不知道。我只是什么都没做过头。',a:'—— 佛系养生终身会员'},
   ]},
   {min:15,max:40,quotes:[
     {q:'我以为我会活很久。事实上，我确实活很久了。只是不够精彩。',a:'—— 某个规律但平淡的人'},
     {q:'医生说我很健康，但我总觉得哪里不对。',a:'—— 轻度焦虑的养生者'},
+    {q:'最大的遗憾是，我健康到连"遗憾"都想不出来。',a:'—— 养生界优等生'},
+    {q:'我用自律换来了健康，但偶尔会羡慕那些凌晨还在吃火锅的人。',a:'—— 11点准时熄灯的纪律委员'},
   ]},
   {min:40,max:60,quotes:[
     {q:'我不是不想改，我只是想再等一个合适的时间。然后就没有然后了。',a:'—— 拖延症晚期确诊者'},
     {q:'我的身体在第37次发出警告后，终于放弃了沟通。',a:'—— 忽视体检信号的人'},
     {q:'我把青春都给了工作，工作把发票给了我。',a:'—— 某互联网中层遗言'},
+    {q:'我一直以为亚健康只是个形容词，直到它变成了诊断书。',a:'—— 从不请假的模范员工'},
+    {q:'我的养生方法是可乐加枸杞。现在看来，枸杞没起到什么作用。',a:'—— 朋克养生先驱'},
   ]},
   {min:60,max:80,quotes:[
     {q:'我知道熬夜不好。但你不知道凌晨三点的安静有多珍贵。',a:'—— 把夜晚当避难所的人'},
     {q:'如果996有墓碑，上面应该刻着："他很努力，但身体不同意。"',a:'—— 职场殉道者代表'},
     {q:'我的遗愿是删除我的搜索记录和外卖订单历史。',a:'—— 数字时代的隐私遗嘱'},
+    {q:'手机比我活得久。它至少每天都充电。',a:'—— 从不给自己充电的人'},
+    {q:'我以为年轻就是本钱。结果这笔钱，花得比想象中快。',a:'—— 体检报告刺客的受害者'},
   ]},
   {min:80,max:101,quotes:[
     {q:'我以为我是铁人。结果铁人也会生锈。',a:'—— 某人最后的朋友圈'},
     {q:'别在我的墓碑上写"愿TA安息"——这是TA这辈子唯一没做过的事。',a:'—— 长期失眠者的自嘲'},
     {q:'我的一生可以总结为：已读不回——包括身体发来的每一条警告。',a:'—— 系统日志最后一行'},
     {q:'遗言？我连遗嘱都没时间写。',a:'—— 忙到死的打工人'},
+    {q:'我的器官在群聊里集体发了辞职信，而我一条都没看到。',a:'—— 免疫系统工会主席'},
+    {q:'我想请假，但死亡不批调休，只批离职。',a:'—— HR都不敢拒绝的申请'},
   ]},
 ];
 function getLastWords(score){
@@ -1541,7 +1572,8 @@ function renderQ(){
   document.getElementById('q-cat').textContent=q.cat;
   document.getElementById('q-text').textContent=q.text;
   document.getElementById('q-num').textContent=String(fi+1).padStart(2,'0');
-  document.getElementById('pbar').style.width=(fi/total*100)+'%';
+  const pbarPct=Math.round(fi/total*100);
+  document.getElementById('pbar').style.width=pbarPct+'%';
   // Step dots
   const dotsEl=document.getElementById('step-dots');
   if(dotsEl){
@@ -1589,7 +1621,13 @@ function renderQ(){
   document.getElementById('btn-prev').classList.toggle('hide',fi===0);
 }
 
-function setReady(y){document.getElementById('btn-next').className='btn-next'+(y?' ready':'');}
+function setReady(y){
+  const btn=document.getElementById('btn-next');
+  const wasReady=btn.classList.contains('ready');
+  btn.className='btn-next'+(y?' ready':'');
+  // Pulse effect when first becoming ready
+  if(y&&!wasReady){btn.style.transform='scale(1.08)';setTimeout(()=>{btn.style.transform='';},200);}
+}
 
 function showReaction(txt){
   const rl=document.getElementById('reaction-line');rl.textContent=txt;rl.classList.remove('show');void rl.offsetWidth;rl.classList.add('show');
@@ -1626,14 +1664,17 @@ function pickGrid(i){
 }
 
 function prevQ(){
-  if(fi>0){fi--;renderQ();window.scrollTo({top:0,behavior:'smooth'});}
+  if(fi<=0)return;
+  const card=document.getElementById('q-card');
+  card.style.animation='slideOutRight .2s ease both';
+  setTimeout(()=>{fi--;renderQ();card.style.animation='slideInLeft .25s ease both';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{card.style.animation='';},300);},200);
 }
 function nextQ(){
   if(ans[curQi()]===undefined)return;
   if(fi<flow.length-1){
     const oldCat=curQ().cat;fi++;const newCat=curQ().cat;
     if(newCat!==oldCat&&!Q[curQi()].branch){showCatSplash(newCat,()=>{go('sec-question','anim-in');renderQ();window.scrollTo({top:0,behavior:'smooth'});});}
-    else{renderQ();window.scrollTo({top:0,behavior:'smooth'});}
+    else{const card=document.getElementById('q-card');card.style.animation='slideOut .2s ease both';setTimeout(()=>{renderQ();card.style.animation='slideIn .25s ease both';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{card.style.animation='';},300);},200);}
   }else showLoading();
 }
 
@@ -1798,7 +1839,21 @@ function showResult(){
   const numEl=document.getElementById('score-num');numEl.style.color=level.color;
   // Glitch effect for high scores
   if(score>=70){numEl.classList.add('glitch-score');numEl.setAttribute('data-val',score);}else{numEl.classList.remove('glitch-score');}
-  let n=0;const iv=setInterval(()=>{n=Math.min(n+Math.ceil(score/22),score);numEl.textContent=n;if(score>=70)numEl.setAttribute('data-val',n);ring.style.strokeDashoffset=circ-(n/100)*circ;if(n>=score)clearInterval(iv);},40);
+  // Animated score reveal with easing and color interpolation
+  const scoreDur=1800,scoreStart=performance.now();
+  (function tickScore(now){
+    const p=Math.min((now-scoreStart)/scoreDur,1);
+    const ease=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;// ease-in-out cubic
+    const n=Math.round(score*ease);
+    numEl.textContent=n;
+    if(score>=70)numEl.setAttribute('data-val',n);
+    ring.style.strokeDashoffset=circ-(n/100)*circ;
+    // Interpolate ring color during count
+    const curCol=toHex(lerp3(n/100,CSTOPS));
+    ring.style.stroke=curCol;numEl.style.color=curCol;
+    ring.style.filter=`drop-shadow(0 0 12px ${curCol}66)`;
+    if(p<1)requestAnimationFrame(tickScore);
+  })(scoreStart);
   document.getElementById('res-grade').textContent=`GRADE ${level.grade}`;document.getElementById('res-grade').style.color=level.color;
   document.getElementById('res-level').textContent=level.label;document.getElementById('res-level').style.color=level.color;
   // Easter eggs for extreme scores
@@ -1890,7 +1945,13 @@ function showResult(){
   document.getElementById('advice-list').innerHTML=level.advice.map(a=>`<li>${a}</li>`).join('');
   go('sec-result','anim-fade');clearProgress();playReveal(score);
   const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs8','rs9','rs10','rs11','rs12','rs13'];
-  rsIds.forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),180+i*100);});
+  rsIds.forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),300+i*140);});
+  // Bounce-in for grade badge
+  const gradeEl=document.getElementById('res-grade');
+  if(gradeEl){gradeEl.style.transform='scale(0)';gradeEl.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';setTimeout(()=>{gradeEl.style.transform='scale(1)';},1200);}
+  // Bounce-in for level label
+  const levelEl=document.getElementById('res-level');
+  if(levelEl){levelEl.style.transform='scale(0)';levelEl.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';setTimeout(()=>{levelEl.style.transform='scale(1)';},1500);}
   setTimeout(()=>{document.querySelectorAll('.dim-bar,.contrib-bar').forEach(b=>b.style.width=b.dataset.pct+'%');},400);
 }
 
