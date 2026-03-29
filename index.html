@@ -8948,6 +8948,204 @@ ${line}
   obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
 
+// ════ "HEALTH CHAT BUBBLE" CONVERSATION ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-chat'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const chats=[
+        {from:'body',msg:'我们需要谈谈。',delay:0},
+        {from:'user',msg:'怎么了？',delay:600},
+        {from:'body',msg:`你的${worst.name.split(' ')[1]}数据让我很担心。`,delay:1200},
+        {from:'user',msg:'有那么严重吗？',delay:1800},
+        {from:'body',msg:score>=60?'你看看这个数字：'+score+'分。你觉得呢？':'还好啦，但'+worst.pct+'%的风险不能忽视。',delay:2400},
+        {from:'user',msg:score>=60?'……':'我会注意的',delay:3000},
+        {from:'body',msg:score>=60?'改变从现在开始，还来得及。':'这就对了👍 我们一起加油。',delay:3600},
+      ];
+      const el=document.createElement('div');
+      el.id='health-chat';
+      el.className='rs on';
+      el.innerHTML=`<div style="text-align:center;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);">💬 你的身体想对你说</div>
+      </div>
+      <div id="chat-bubbles" style="display:flex;flex-direction:column;gap:6px;"></div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(3,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+      // Animate chat bubbles
+      const container=document.getElementById('chat-bubbles');
+      if(!container)return;
+      chats.forEach(chat=>{
+        setTimeout(()=>{
+          const bubble=document.createElement('div');
+          const isBody=chat.from==='body';
+          bubble.style.cssText=`max-width:75%;padding:8px 12px;border-radius:${isBody?'14px 14px 14px 4px':'14px 14px 4px 14px'};font-size:11px;line-height:1.5;animation:fadeUp .3s ease;align-self:${isBody?'flex-start':'flex-end'};background:${isBody?'rgba(239,68,68,.08)':'rgba(var(--ar),var(--ag),var(--ab),.08)'};color:${isBody?'rgba(255,255,255,.6)':'rgba(255,255,255,.5)'};border:1px solid ${isBody?'rgba(239,68,68,.15)':'rgba(var(--ar),var(--ag),var(--ab),.15)'};`;
+          bubble.innerHTML=`<div style="font-size:8px;color:var(--dim);margin-bottom:2px;">${isBody?'🫀 身体':'🧑 你'}</div>${chat.msg}`;
+          container.appendChild(bubble);
+          container.scrollTop=container.scrollHeight;
+        },chat.delay);
+      });
+    },2000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH PERIODIC TABLE" ELEMENT ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('periodic-element'))return;
+      const score=calcScore();
+      const elements=[
+        {range:[0,20],symbol:'He',name:'氦',num:2,desc:'轻如氦气，健康无忧',color:'#4ade80'},
+        {range:[20,40],symbol:'O',name:'氧',num:8,desc:'呼吸尚稳，需多运动',color:'#60a5fa'},
+        {range:[40,60],symbol:'Fe',name:'铁',num:26,desc:'表面坚硬，内里疲惫',color:'#f59e0b'},
+        {range:[60,80],symbol:'Pb',name:'铅',num:82,desc:'沉重不堪，急需减负',color:'#f97316'},
+        {range:[80,101],symbol:'U',name:'铀',num:92,desc:'高度危险，随时爆炸',color:'#ef4444'},
+      ];
+      const elem=elements.find(e=>score>=e.range[0]&&score<e.range[1])||elements[2];
+      const el=document.createElement('div');
+      el.id='periodic-element';
+      el.className='rs on';
+      el.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;gap:16px;">
+        <div style="width:80px;height:90px;border:2px solid ${elem.color};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.2);position:relative;box-shadow:0 0 20px ${elem.color}33;">
+          <div style="font-size:9px;color:${elem.color};position:absolute;top:4px;left:6px;">${elem.num}</div>
+          <div style="font-size:32px;font-weight:900;color:${elem.color};line-height:1;">${elem.symbol}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.5);">${elem.name}</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;">你的健康元素</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45);line-height:1.6;">${elem.desc}</div>
+          <div style="font-size:9px;color:var(--dim);margin-top:4px;">原子序数 ${elem.num} · 猝死指数 ${score}</div>
+        </div>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(7,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },3200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ INTERACTIVE "HEALTH WHEEL OF FORTUNE" SPIN ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-wheel'))return;
+      const challenges=[
+        '今天做20个深蹲','喝3杯水','走5000步',
+        '睡前不看手机30分钟','吃一份水果','伸展5分钟',
+        '给朋友打个电话','冥想3分钟','爬一次楼梯',
+        '记录今天的心情','吃一顿自己做的饭','户外走10分钟',
+      ];
+      const el=document.createElement('div');
+      el.id='health-wheel';
+      el.className='rs on';
+      let spinning=false;
+      el.innerHTML=`<div style="text-align:center;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:10px;">🎰 健康转盘挑战</div>
+        <div id="wheel-display" style="font-size:14px;color:var(--text);min-height:24px;margin-bottom:10px;transition:all .2s;">点击转盘获取今日挑战</div>
+        <button id="wheel-spin" style="background:linear-gradient(135deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.7));border:none;color:#fff;padding:10px 28px;border-radius:24px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(var(--ar),var(--ag),var(--ab),.3);">
+          🎡 转！
+        </button>
+        <div id="wheel-history" style="font-size:9px;color:var(--dim);margin-top:8px;min-height:14px;"></div>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(12,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+      const spinBtn=document.getElementById('wheel-spin');
+      const display=document.getElementById('wheel-display');
+      const historyEl=document.getElementById('wheel-history');
+      if(!spinBtn||!display)return;
+      let spinCount=0;
+      spinBtn.addEventListener('click',()=>{
+        if(spinning)return;
+        spinning=true;
+        spinBtn.disabled=true;
+        spinBtn.style.opacity='.5';
+        let count=0;
+        const totalCycles=15+Math.floor(Math.random()*10);
+        const interval=setInterval(()=>{
+          display.textContent=challenges[count%challenges.length];
+          display.style.transform=`scale(${1+Math.sin(count/3)*0.1})`;
+          count++;
+          if(count>=totalCycles){
+            clearInterval(interval);
+            const result=challenges[Math.floor(Math.random()*challenges.length)];
+            display.textContent=`🎯 ${result}`;
+            display.style.transform='scale(1.1)';
+            display.style.color='var(--accent)';
+            setTimeout(()=>{display.style.transform='scale(1)';},300);
+            spinning=false;
+            spinBtn.disabled=false;
+            spinBtn.style.opacity='1';
+            spinCount++;
+            if(historyEl)historyEl.textContent=`已转 ${spinCount} 次`;
+          }
+        },80+count*8);
+      });
+    },5500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ RESULT PAGE: PROGRESSIVE NUMBER COUNTER ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    // Animate all percentage numbers in dim items
+    setTimeout(()=>{
+      const pctEls=sec.querySelectorAll('.dim-pct,[class*="pct"]');
+      pctEls.forEach(el=>{
+        const text=el.textContent;
+        const match=text.match(/(\d+)%/);
+        if(!match||el.dataset.counted)return;
+        el.dataset.counted='1';
+        const target=parseInt(match[1]);
+        let current=0;
+        const duration=800;
+        const start=performance.now();
+        function animate(now){
+          const elapsed=now-start;
+          const progress=Math.min(1,elapsed/duration);
+          current=Math.round(target*(1-Math.pow(1-progress,3)));
+          el.textContent=text.replace(/\d+%/,current+'%');
+          if(progress<1)requestAnimationFrame(animate);
+        }
+        el.textContent=text.replace(/\d+%/,'0%');
+        requestAnimationFrame(animate);
+      });
+    },800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ PAGE VISIBILITY: PAUSE ANIMATIONS WHEN HIDDEN ════
 (function(){
   document.addEventListener('visibilitychange',()=>{
