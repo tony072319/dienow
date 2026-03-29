@@ -863,6 +863,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="rs" id="rs12"><div class="advice-card"><div class="sec-label" style="color:var(--accent);margin-bottom:12px">// 综合改善建议</div><ul class="advice-list" id="advice-list"></ul></div></div>
     <div class="rs" id="rs12b"><div style="text-align:center;padding:16px 20px;margin-bottom:14px;background:rgba(var(--ar),var(--ag),var(--ab),.03);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.08);border-radius:16px;"><div style="font-size:22px;margin-bottom:6px;">🔮</div><div id="health-fortune" style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.7;"></div></div><div class="daily-tip" id="daily-tip" style="background:rgba(var(--ar),var(--ag),var(--ab),.04);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:8px;text-transform:uppercase">// 今日一句</div><div id="daily-tip-text" style="font-size:14px;line-height:1.8;color:#c8c8c8;font-style:italic;"></div></div></div>
     <div class="rs" id="rs12c"><div style="background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 如果你是……</div><div id="what-if-items" style="display:flex;flex-direction:column;gap:10px;"></div></div></div>
+    <div class="rs" id="rs12d"><div style="background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.04),rgba(var(--ar),var(--ag),var(--ab),.01));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:20px;padding:24px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--accent);margin-bottom:14px">🎯 本周健康挑战</div><div id="weekly-challenge" style="font-size:18px;font-weight:700;color:#e8e8e8;line-height:1.6;margin-bottom:10px;"></div><div id="challenge-desc" style="font-size:12px;color:var(--dim);line-height:1.7;"></div><div id="challenge-diff" style="margin-top:12px;font-size:11px;font-weight:600;letter-spacing:1px;"></div></div></div>
     <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-share" onclick="encodeResultToURL()">🔗 分享链接</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
   </div>
 </section>
@@ -2296,8 +2297,25 @@ function showResult(){
   const dailyTips=['你的身体是唯一一个从出生陪你到死亡的东西，善待它。','每多喝一杯水，你的细胞就多一分感激。','今天走路20分钟，等于给未来的自己存了一笔健康基金。','压力不会自己消失，但你可以学会让它变小。','早睡一小时带来的改变，比你想象的大得多。','你不需要完美的健康习惯，只需要比昨天好一点。','人生不是百米冲刺，是马拉松。配速很重要。','你的身体一直在给你发消息，试着不要已读不回。','健康不是目标，是每天都在做的选择。','如果你现在很累，那不是因为你不够努力，而是因为你太努力了。','情绪不是敌人，忽视情绪才是。','30秒的深呼吸，比10分钟的刷手机更能让你放松。','找一个人说说你最近的感受，这不是软弱，是智慧。','你的价值不等于你的产出。休息是你应得的。','与其完美地计划改变，不如现在就做一件小事。'];
   const dayIdx=Math.floor(Date.now()/864e5)%dailyTips.length;
   document.getElementById('daily-tip-text').textContent='"'+dailyTips[dayIdx]+'"';
+  // Weekly health challenge
+  const challenges=[
+    {ch:'连续7天晚上11点前放下手机',desc:'不需要11点睡着，只要放下手机。你的褪黑素需要30分钟的暗环境来启动。',diff:'EASY',dcol:'#34d399'},
+    {ch:'这周每天喝8杯水',desc:'在桌上放一个大水杯，每次看到就喝一口。脱水是最容易被忽视的健康杀手。',diff:'EASY',dcol:'#34d399'},
+    {ch:'每天走路20分钟',desc:'不需要跑步，不需要健身房。只是出门走20分钟。这件事的ROI高得离谱。',diff:'MEDIUM',dcol:'#fbbf24'},
+    {ch:'连续5天自己做一顿饭',desc:'哪怕是煮个面+水煮蛋。自己做饭的过程本身就是一种减压方式。',diff:'MEDIUM',dcol:'#fbbf24'},
+    {ch:'每天10分钟完全安静，什么都不做',desc:'不看手机，不听音乐，不想事情。让大脑进入"默认模式网络"——这是创造力和修复的源泉。',diff:'HARD',dcol:'#f59e0b'},
+    {ch:'这周和一个朋友进行一次30分钟的深度对话',desc:'不聊工作，不聊八卦。聊聊彼此最近真实的感受。被理解是最好的减压药。',diff:'HARD',dcol:'#f59e0b'},
+    {ch:'记录7天的睡眠时间和起床感受',desc:'不需要改变什么，只需要记录。自我觉察是改变的第一步。',diff:'EASY',dcol:'#34d399'},
+    {ch:'这周把最主要的不良嗜好减半',desc:'不是戒掉，只是减半。咖啡从4杯变2杯，抽烟从一包变半包。可持续的改变才是真改变。',diff:'MEDIUM',dcol:'#fbbf24'},
+  ];
+  const weekIdx=Math.floor(Date.now()/(7*864e5))%challenges.length;
+  const chl=challenges[weekIdx];
+  document.getElementById('weekly-challenge').textContent=chl.ch;
+  document.getElementById('challenge-desc').textContent=chl.desc;
+  const cdEl=document.getElementById('challenge-diff');
+  cdEl.textContent=`难度：${chl.diff}`;cdEl.style.color=chl.dcol;
   go('sec-result','anim-fade');clearProgress();playReveal(score);
-  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs8','rs9','rs9b','rs10','rs11','rs12','rs12b','rs12c','rs13'];
+  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs8','rs9','rs9b','rs10','rs11','rs12','rs12b','rs12c','rs12d','rs13'];
   // First few sections animate on timer; rest use Intersection Observer for scroll-reveal
   const timerCount=5;
   rsIds.slice(0,timerCount).forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),300+i*140);});
