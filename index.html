@@ -3247,6 +3247,67 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ OPTION HOVER SOUND PREVIEW ════
+(function(){
+  let lastHoverTime=0;
+  document.addEventListener('mouseover',e=>{
+    const item=e.target.closest('.eg-item');
+    if(!item||!soundOn||item.classList.contains('sel'))return;
+    const now=Date.now();
+    if(now-lastHoverTime<150)return;
+    lastHoverTime=now;
+    playHover();
+  });
+})();
+
+// ════ DIMENSION CHIP CLICK TO SCROLL ════
+(function(){
+  document.addEventListener('click',e=>{
+    const chip=e.target.closest('.dim-chip');
+    if(!chip)return;
+    // Find matching dimension in the grid
+    const dimName=chip.textContent.trim().split(/\s+/)[0];
+    const dims=document.querySelectorAll('.dim-item');
+    dims.forEach(d=>{
+      const name=d.querySelector('.dim-name');
+      if(name&&name.textContent.includes(dimName)){
+        d.scrollIntoView({behavior:'smooth',block:'center'});
+        d.classList.add('expanded');
+        d.style.transition='box-shadow .3s';
+        d.style.boxShadow='0 0 20px rgba(var(--ar),var(--ag),var(--ab),.2)';
+        setTimeout(()=>{d.style.boxShadow='';},2000);
+      }
+    });
+  });
+})();
+
+// ════ RESULT CARD SCROLL DEPTH TRACKER ════
+(function(){
+  let maxScroll=0;
+  const obs=new MutationObserver(()=>{
+    const isResult=document.getElementById('sec-result')?.classList.contains('active');
+    if(isResult)maxScroll=0;
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  window.addEventListener('scroll',()=>{
+    if(!document.getElementById('sec-result')?.classList.contains('active'))return;
+    const pct=Math.round(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100);
+    if(pct>maxScroll)maxScroll=pct;
+    // Achievement: read 100% of results
+    if(maxScroll>=95){
+      try{
+        if(!localStorage.getItem('sdi-fullread')){
+          localStorage.setItem('sdi-fullread','true');
+          const t=document.getElementById('toast');
+          t.textContent='🏆 成就解锁：完整阅读报告';
+          t.classList.add('show');
+          setTimeout(()=>{t.classList.remove('show');t.textContent='已复制到剪贴板 ✓';},2500);
+        }
+      }catch(e){}
+    }
+  },{passive:true});
+})();
+
 // ════ SHARE BUTTON CONFETTI ════
 (function(){
   document.addEventListener('click',e=>{
