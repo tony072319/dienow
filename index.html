@@ -2167,6 +2167,10 @@ function showMilestone(msg){
 }
 function getPersonalizedLoadMsgs(){
   const msgs=['SCANNING VITALS'];
+  const hour=new Date().getHours();
+  // Time-aware loading messages
+  if(hour>=0&&hour<5)msgs.push('检测到你正在凌晨做这个测试…这本身就是一个数据点');
+  else if(hour>=23)msgs.push('这个点还在测试…你的睡眠维度已经+10分');
   if(ans[0]>=3) msgs.push('正在计算你凌晨的脑电波频率');
   else msgs.push('ANALYZING SLEEP PATTERNS');
   if(ans[14]>=3) msgs.push('检测到咖啡因残留…浓度异常');
@@ -2179,8 +2183,14 @@ function getPersonalizedLoadMsgs(){
   if(ans[24]>=3) msgs.push('你的焦虑指数正在让服务器也焦虑');
   else if(ans[23]>=3) msgs.push('检测到笑容缺失…加载替代方案');
   else msgs.push('EVALUATING MENTAL STATE');
+  // Calculate preliminary danger level for dramatic loading
+  const preScore=calcScore();
+  if(preScore>=80)msgs.push('⚠️ 风险等级过高，正在调用紧急评估模块');
+  else if(preScore>=60)msgs.push('ACTIVATING SECONDARY ANALYSIS MODULE');
+  else if(preScore<20)msgs.push('✓ 系统表示：难得见到这么健康的样本');
   msgs.push('CROSS-REFERENCING ALL DIMENSIONS');
   msgs.push('生成你的死亡预言书');
+  msgs.push('ENCRYPTING CONFIDENTIAL REPORT');
   msgs.push('FINALIZING REPORT');
   return msgs;
 }
@@ -3222,6 +3232,86 @@ function stopAmbient(){
   });
   // Close on outside click
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
+})();
+
+// ════ SKULL EASTER EGG: tap skull 5 times for party mode ════
+(function(){
+  let tapCount=0,tapTimer=null;
+  const skull=document.querySelector('.skull-anim');
+  if(!skull)return;
+  skull.style.cursor='pointer';
+  skull.addEventListener('click',()=>{
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer=setTimeout(()=>tapCount=0,1500);
+    if(tapCount===5){
+      tapCount=0;
+      // Party mode: rainbow everything for 5 seconds
+      const root=document.documentElement;
+      let hue=0;
+      const iv=setInterval(()=>{
+        hue=(hue+5)%360;
+        const r=Math.round(128+127*Math.sin(hue*Math.PI/180));
+        const g=Math.round(128+127*Math.sin((hue+120)*Math.PI/180));
+        const b=Math.round(128+127*Math.sin((hue+240)*Math.PI/180));
+        root.style.setProperty('--accent',`rgb(${r},${g},${b})`);
+        root.style.setProperty('--ar',r);root.style.setProperty('--ag',g);root.style.setProperty('--ab',b);
+        curRGB=[r,g,b];
+      },50);
+      // Rainbow particles
+      for(let i=0;i<30;i++){
+        const h=(i/30)*360;
+        const r2=Math.round(128+127*Math.sin(h*Math.PI/180));
+        const g2=Math.round(128+127*Math.sin((h+120)*Math.PI/180));
+        const b2=Math.round(128+127*Math.sin((h+240)*Math.PI/180));
+        pts.push({x:Math.random()*canv.width,y:canv.height+10,vx:(Math.random()-.5)*3,vy:-Math.random()*4-2,sz:Math.random()*3+1,al:.7,r:r2,g:g2,b:b2,life:0,max:180,cross:false,rot:0});
+      }
+      if(!canv.classList.contains('active'))startPts();
+      // Toast
+      const t=document.getElementById('toast');t.textContent='🌈 派对模式已激活！';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);
+      // Sound
+      if(soundOn){
+        ensureAudio();
+        [261,329,392,523,659,784].forEach((f,i)=>{
+          const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+          osc.connect(gain);gain.connect(audioCtx.destination);
+          osc.frequency.value=f;osc.type='sine';
+          const t2=audioCtx.currentTime+i*.07;
+          gain.gain.setValueAtTime(0.1,t2);gain.gain.exponentialRampToValueAtTime(0.001,t2+.2);
+          osc.start(t2);osc.stop(t2+.2);
+        });
+      }
+      // Stop after 5s
+      setTimeout(()=>{clearInterval(iv);applyTheme(0);},5000);
+    }else if(tapCount>=3){
+      // Hint that they're getting close
+      skull.style.filter=`drop-shadow(0 0 ${tapCount*6}px rgba(255,215,0,.8))`;
+      setTimeout(()=>{skull.style.filter='drop-shadow(0 0 18px rgba(239,68,68,.75))';},300);
+    }
+  });
+})();
+
+// ════ LOADING SCREEN GLITCH TEXT ════
+(function(){
+  const loadTitle=document.querySelector('.load-title');
+  if(!loadTitle)return;
+  const original=loadTitle.textContent;
+  const glitchChars='█▓▒░▀▄▌▐';
+  const obs=new MutationObserver(()=>{
+    const isLoading=document.getElementById('sec-loading')?.classList.contains('active');
+    if(!isLoading)return;
+    let gIv=setInterval(()=>{
+      if(!document.getElementById('sec-loading')?.classList.contains('active')){clearInterval(gIv);loadTitle.textContent=original;return;}
+      if(Math.random()<.15){
+        const arr=[...original];
+        const pos=Math.floor(Math.random()*arr.length);
+        arr[pos]=glitchChars[Math.floor(Math.random()*glitchChars.length)];
+        loadTitle.textContent=arr.join('');
+        setTimeout(()=>{loadTitle.textContent=original;},80);
+      }
+    },200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
 
 // ════ LONG-PRESS OPTION FOR EXTRA INFO ════
