@@ -1046,7 +1046,7 @@ let branchInserted = false;
 
 function buildFlow() {
   // Default flow excludes branch (index 5), includes 0-4, 6-29
-  questionFlow = [0,1,2,3,4, 6,7,8, 9,10,11, 12,13,14,15, 16,17,18,19, 20,21,22, 23,24,25,26, 27,28, 29,30];
+  questionFlow = [0,1,2,3,4, 6,7,8, 9,10,11, 12,13,14,15, 16,17,18,19, 20,21,22, 23,24,25,26, 27,28, 29];
   branchInserted = false;
 }
 
@@ -1194,7 +1194,7 @@ function showLoading() {
 
 function calcScore() {
   // Only score questions 0-4, 6-30 (skip branch=5 for base score, include if answered)
-  const scoreIndices = [0,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
+  const scoreIndices = [0,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29];
   let total = 0, count = 0;
   scoreIndices.forEach(qi => {
     if (answers[qi] !== undefined) { total += answers[qi]+1; count++; }
