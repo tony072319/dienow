@@ -4779,6 +4779,78 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ "HEALTH REPORT CARD" EMAIL FORMAT ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('email-report'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const grade=score>=80?'F':score>=65?'D':score>=45?'C':score>=25?'B':'A';
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      const el=document.createElement('div');
+      el.id='email-report';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.03);border:1px solid var(--card-border);border-radius:12px;overflow:hidden;">
+        <div style="background:rgba(255,255,255,.04);padding:12px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--card-border);">
+          <div style="font-size:10px;color:var(--dim);">📧 health@sdi-system.cn</div>
+          <div style="font-size:9px;color:var(--dim);">${new Date().toLocaleString()}</div>
+        </div>
+        <div style="padding:18px;">
+          <div style="font-size:10px;color:var(--dim);margin-bottom:2px;">Subject:</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px;">[${grade}级] 你的猝死指数健康报告已生成</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.5);line-height:2;">
+            <p>尊敬的用户（${age}岁）：</p>
+            <p>您的猝死指数检测已完成。总分 <b style="color:${score>=60?'#ef4444':'var(--text)'};">${score}/100</b>（${grade}级）。</p>
+            <p>我们注意到您的 <b style="color:#ef4444;">${worst.name}</b> 维度风险偏高（${worst.pct}%），建议您优先关注该领域。</p>
+            <p>详细报告请见上方各分析模块。</p>
+            <p style="color:var(--dim);font-size:10px;margin-top:8px;">此为系统自动生成的报告，请勿回复。</p>
+          </div>
+        </div>
+      </div>`;
+      const rs0=document.getElementById('rs0');
+      if(rs0){rs0.parentNode.insertBefore(el,rs0.nextSibling);}
+    },900);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ DIMENSION RANKING MEDALS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const dimItems=document.querySelectorAll('.dim-item');
+      if(!dimItems.length)return;
+      const dims=calcDims();
+      const sorted=[...dims].sort((a,b)=>a.pct-b.pct); // Best first
+      const medals=['🥇','🥈','🥉'];
+      // Add medal to top 3 healthiest dimensions
+      dimItems.forEach(item=>{
+        const nameEl=item.querySelector('.dim-name');
+        if(!nameEl)return;
+        const nameText=nameEl.textContent;
+        const idx=sorted.findIndex(d=>nameText.includes(d.name.split(' ')[1]));
+        if(idx>=0&&idx<3&&!item.querySelector('.dim-medal')){
+          const medal=document.createElement('span');
+          medal.className='dim-medal';
+          medal.style.cssText='font-size:14px;margin-left:6px;';
+          medal.textContent=medals[idx];
+          medal.title=['最健康维度','第二健康','第三健康'][idx];
+          nameEl.appendChild(medal);
+        }
+      });
+    },2000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ RANDOM MOTIVATIONAL POPUP DURING QUIZ ════
 (function(){
   const messages=[
