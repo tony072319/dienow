@@ -298,7 +298,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .load-status{font-size:11px;font-weight:600;color:rgba(var(--ar),var(--ag),var(--ab),.6);letter-spacing:2px;text-transform:uppercase;}
 
 /* ══ RESULT ══ */
-.rs{opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s;}
+.rs{opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(.25,.8,.25,1),transform .6s cubic-bezier(.25,.8,.25,1);}
 .rs.on{opacity:1;transform:none;}
 .report-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.06);}
 .report-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);line-height:1.9;letter-spacing:.5px;}
@@ -417,6 +417,9 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .btn-retry{background:linear-gradient(135deg,#ef4444,#dc2626);border:none;color:#fff;padding:13px 30px;border-radius:100px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 0 28px rgba(239,68,68,.25);}
 .btn-retry:hover{transform:translateY(-1px);box-shadow:0 0 44px rgba(239,68,68,.45);}
 .disclaimer{font-size:11px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.7;letter-spacing:.2px;opacity:.6;}
+.back-to-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--card-bg);border:1px solid var(--card-border);backdrop-filter:blur(12px);color:var(--dim);font-size:18px;cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s,background .2s;pointer-events:none;}
+.back-to-top.show{opacity:1;transform:none;pointer-events:auto;}
+.back-to-top:hover{background:rgba(var(--ar),var(--ag),var(--ab),.15);color:var(--accent);}
 .resume-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(var(--ar),var(--ag),var(--ab),.08);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.2);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--text);}
 .resume-bar button{padding:5px 14px;border-radius:100px;font-size:11px;cursor:pointer;font-family:inherit;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;transition:all .15s;}
 .resume-bar button:first-of-type{background:var(--accent);border-color:transparent;color:#000;font-weight:600;}
@@ -788,8 +791,12 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 </section>
 </div>
 <div class="toast" id="toast">已复制到剪贴板 ✓</div>
+<button class="back-to-top" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
+// ════ BACK TO TOP ════
+window.addEventListener('scroll',()=>{const btt=document.getElementById('btt');if(btt)btt.classList.toggle('show',window.scrollY>600);},{passive:true});
+
 // ════ PWA MANIFEST (inline) ════
 (function(){
   const manifest={name:'猝死指数测试',short_name:'猝死指数',start_url:'.',display:'standalone',background_color:'#0f1117',theme_color:'#0f1117',
@@ -1504,7 +1511,14 @@ function insertBranch(){if(!branchDone){const p=flow.indexOf(6);if(p!==-1)flow.s
 function curQi(){return flow[fi];}function curQ(){return Q[flow[fi]];}
 
 function adjAge(d){const el=document.getElementById('age-input');el.value=Math.min(70,Math.max(16,(parseInt(el.value)||28)+d));checkAgeEgg();}
-function checkAgeEgg(){const v=parseInt(document.getElementById('age-input').value)||0;const egg=document.getElementById('age-egg');if(v>=65){egg.textContent='⚡ 传奇级勇士，向您致敬';egg.classList.add('show');}else if(v>=60){egg.textContent='⚡ 勇气可嘉，前辈';egg.classList.add('show');}else if(v===42){egg.textContent='🌌 生命、宇宙以及一切的答案';egg.classList.add('show');}else if(v===35){egg.textContent='🎯 互联网行业"退休"年龄';egg.classList.add('show');}else if(v===25){egg.textContent='🧬 恭喜，你的身体从今天开始走下坡路';egg.classList.add('show');}else if(v<=18){egg.textContent='🍼 年轻就是资本，但别浪费';egg.classList.add('show');}else if(v===16){egg.textContent='👶 你确定你到年龄了吗？';egg.classList.add('show');}else{egg.classList.remove('show');}}
+function checkAgeEgg(){const v=parseInt(document.getElementById('age-input').value)||0;const egg=document.getElementById('age-egg');
+  const msgs={16:'👶 你确定你到年龄了吗？',18:'🍼 年轻就是资本，但别浪费',20:'🎓 20岁，人生刚开始。身体也刚开始记仇',25:'🧬 恭喜，你的身体从今天开始走下坡路',30:'🎂 三十而立，三十而秃，三十而突然开始体检',33:'🍺 耶稣都没扛过去的年纪',35:'🎯 互联网行业"退休"年龄',40:'📉 四十不惑，但体检报告让你很惑',42:'🌌 生命、宇宙以及一切的答案',45:'🏥 你的同龄人已经开始讨论养生了',50:'🧓 半百之年，一半的器官开始罢工',55:'🕰️ 你的身体已经在写回忆录了'};
+  if(v>=65){egg.textContent='⚡ 传奇级勇士，向您致敬';egg.classList.add('show');}
+  else if(v>=60){egg.textContent='⚡ 勇气可嘉，前辈';egg.classList.add('show');}
+  else if(msgs[v]){egg.textContent=msgs[v];egg.classList.add('show');}
+  else{egg.classList.remove('show');}
+  updateDeathClock();
+}
 
 function updateTheme(){
   const sc=flow.slice(0,fi+1).filter(qi=>ans[qi]!==undefined&&!Q[qi].branch).map(qi=>ans[qi]+1);
@@ -2006,7 +2020,13 @@ function showResult(){
   document.getElementById('advice-list').innerHTML=level.advice.map(a=>`<li>${a}</li>`).join('');
   go('sec-result','anim-fade');clearProgress();playReveal(score);
   const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs8','rs9','rs10','rs11','rs12','rs13'];
-  rsIds.forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),300+i*140);});
+  // First few sections animate on timer; rest use Intersection Observer for scroll-reveal
+  const timerCount=5;
+  rsIds.slice(0,timerCount).forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),300+i*140);});
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
+    rsIds.slice(timerCount).forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el);});
+  }else{rsIds.slice(timerCount).forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),300+(timerCount+i)*140);});}
   // Bounce-in for grade badge
   const gradeEl=document.getElementById('res-grade');
   if(gradeEl){gradeEl.style.transform='scale(0)';gradeEl.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';setTimeout(()=>{gradeEl.style.transform='scale(1)';},1200);}
