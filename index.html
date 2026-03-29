@@ -715,6 +715,7 @@ input[type=range]::-moz-range-thumb {
 }
 
 .dim-name { font-size: 11px; color: var(--dim); margin-bottom: 8px; }
+.dim-detail { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 6px; line-height: 1.5; }
 
 .dim-bar-bg {
   height: 4px;
@@ -1533,7 +1534,8 @@ function showResult() {
       <div class="dim-bar-bg">
         <div class="dim-bar-fill" style="width:0%;background:${col}" data-pct="${dim.pct}"></div>
       </div>
-      <div class="dim-val" style="color:${col}">${dim.pct}%</div>`;
+      <div class="dim-val" style="color:${col}">${dim.pct}%</div>
+      <div class="dim-detail">${getDimDetail(dim.key, dim.pct)}</div>`;
     dimsWrap.appendChild(el);
   });
 
@@ -1602,6 +1604,72 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+const DIM_DETAILS = {
+  sleep: [
+    '你的睡眠质量非常好，身体在夜间得到充分修复。',
+    '睡眠还行，偶尔的小问题不影响大局。',
+    '睡眠质量开始下降，长期下去免疫力会受影响。',
+    '严重睡眠不足，你的大脑和心血管正在承受巨大压力。',
+  ],
+  work: [
+    '工作强度合理，你很好地平衡了工作和生活。',
+    '工作量中等，注意不要让加班成为常态。',
+    '工作强度偏高，你的身体正在为效率买单。',
+    '工作强度过高，持续下去器官损伤不可逆。',
+  ],
+  exercise: [
+    '运动充足，你的心肺功能和肌肉都在健康状态。',
+    '有一定运动量，建议再增加一些有氧训练。',
+    '运动不足，肌肉正在退化，代谢在变慢。',
+    '完全缺乏运动，心血管风险正在快速上升。',
+  ],
+  diet: [
+    '饮食习惯优秀，你的肠胃和营养摄入都很健康。',
+    '饮食基本合格，偶尔的不规律问题不大。',
+    '饮食不太健康，缺乏营养素，消化系统在抗议。',
+    '饮食极差，长期这样会导致营养不良和慢性病。',
+  ],
+  stress: [
+    '压力水平很低，你有效地管理了生活中的压力。',
+    '有些压力但在可控范围，保持现有的调节方式。',
+    '压力较大，皮质醇长期偏高会影响免疫和心脏。',
+    '压力已经爆表，你的身体处于持续应激状态。',
+  ],
+  habit: [
+    '没有明显不良嗜好，身体少了很多额外负担。',
+    '有轻微不良习惯，注意控制频率。',
+    '不良嗜好较多，这些在悄悄消耗你的器官功能。',
+    '不良嗜好严重，肝肾肺正在被加速损耗。',
+  ],
+  emotion: [
+    '情绪状态良好，心理健康是长寿的重要因素。',
+    '情绪偶有波动，但整体还算稳定。',
+    '情绪问题明显，长期低落会影响免疫和心血管。',
+    '情绪状态堪忧，建议寻求专业心理支持。',
+  ],
+  checkup: [
+    '体检习惯良好，早发现问题是最好的预防。',
+    '体检频率还行，注意不要拖太久。',
+    '很久没体检了，很多问题可能已经在潜伏。',
+    '完全不体检，这就像蒙着眼睛开车。',
+  ],
+  lifestyle: [
+    '生活方式健康，有充足的个人时间和爱好。',
+    '生活方式尚可，但可以更丰富一些。',
+    '生活方式单调，缺乏让你快乐的事物。',
+    '生活方式极度不健康，你需要重新找到生活的意义。',
+  ],
+};
+
+function getDimDetail(key, pct) {
+  const arr = DIM_DETAILS[key];
+  if (!arr) return '';
+  if (pct <= 25) return arr[0];
+  if (pct <= 50) return arr[1];
+  if (pct <= 75) return arr[2];
+  return arr[3];
 }
 
 function generateTags(dimResults) {
