@@ -3247,6 +3247,69 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ FLOATING EMOJI REACTION ON DANGEROUS PICKS ════
+function floatEmoji(emoji,x,y){
+  const el=document.createElement('div');
+  el.textContent=emoji;
+  el.style.cssText=`position:fixed;left:${x}px;top:${y}px;font-size:28px;pointer-events:none;z-index:999;transition:all 1.2s cubic-bezier(.25,.8,.25,1);opacity:1;`;
+  document.body.appendChild(el);
+  requestAnimationFrame(()=>{
+    el.style.transform=`translateY(-80px) rotate(${(Math.random()-.5)*40}deg) scale(1.3)`;
+    el.style.opacity='0';
+  });
+  setTimeout(()=>el.remove(),1200);
+}
+// Hook into pickGrid to float emojis for dangerous answers
+const _originalPickGrid=pickGrid;
+pickGrid=function(i){
+  _originalPickGrid(i);
+  const q=curQ(),o=q.opts[i];
+  const s=o.s!==undefined?o.s:i;
+  if(s>=3){
+    const items=document.querySelectorAll('.eg-item');
+    const item=items[i];
+    if(item){
+      const rect=item.getBoundingClientRect();
+      const emojis=['💀','☠️','⚡','🔥','💥','⚰️','🪦'];
+      const em=emojis[Math.floor(Math.random()*emojis.length)];
+      floatEmoji(em,rect.left+rect.width/2-14,rect.top);
+      if(s>=4)floatEmoji(emojis[Math.floor(Math.random()*emojis.length)],rect.left+rect.width/2+20,rect.top+10);
+    }
+  }else if(s===0){
+    const items=document.querySelectorAll('.eg-item');
+    const item=items[i];
+    if(item){
+      const rect=item.getBoundingClientRect();
+      floatEmoji('✨',rect.left+rect.width/2-14,rect.top);
+    }
+  }
+};
+
+// ════ RESULT PAGE AUTO-SCROLL HINT ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    // After initial animations, show scroll hint
+    setTimeout(()=>{
+      const hint=document.createElement('div');
+      hint.style.cssText='text-align:center;padding:20px 0;animation:scrollHintBounce 2s ease-in-out infinite;opacity:.3;font-size:13px;color:var(--dim);cursor:pointer;';
+      hint.innerHTML='<div style="font-size:20px;margin-bottom:4px;">↓</div><div style="font-size:10px;letter-spacing:2px;">向下滑动查看完整报告</div>';
+      hint.onclick=()=>{window.scrollBy({top:300,behavior:'smooth'});hint.remove();};
+      const rs1=document.getElementById('rs1');
+      if(rs1&&!document.getElementById('scroll-hint-el')){hint.id='scroll-hint-el';rs1.appendChild(hint);}
+      // Auto-remove on scroll
+      const removeOnScroll=()=>{hint.remove();window.removeEventListener('scroll',removeOnScroll);};
+      window.addEventListener('scroll',removeOnScroll,{passive:true,once:true});
+    },3500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  const style=document.createElement('style');
+  style.textContent='@keyframes scrollHintBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}';
+  document.head.appendChild(style);
+})();
+
 // ════ SCORE HISTORY SPARKLINE ════
 (function(){
   const obs=new MutationObserver(()=>{
