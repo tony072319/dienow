@@ -795,6 +795,32 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
 .cpill{transition:all .2s;cursor:default;}
 .cpill:hover{background:rgba(var(--ar),var(--ag),var(--ab),.08);border-color:rgba(var(--ar),var(--ag),var(--ab),.25);transform:translateY(-2px) scale(1.02);box-shadow:0 4px 16px rgba(var(--ar),var(--ag),var(--ab),.08);}
 
+/* ══ HOLOGRAPHIC HEALTH CARD ══ */
+.holo-card{position:relative;width:100%;max-width:360px;margin:0 auto 14px;aspect-ratio:1.586/1;border-radius:16px;background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.12) 0%,rgba(var(--ar),var(--ag),var(--ab),.04) 50%,rgba(var(--ar),var(--ag),var(--ab),.08) 100%);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.2);overflow:hidden;cursor:default;transition:transform .3s,box-shadow .3s;}
+.holo-card::before{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(var(--ar),var(--ag),var(--ab),.15) 45%,rgba(var(--ar),var(--ag),var(--ab),.05) 50%,transparent 55%);background-size:200% 200%;animation:holoShine 4s ease-in-out infinite;pointer-events:none;}
+@keyframes holoShine{0%,100%{background-position:200% 0}50%{background-position:-200% 0}}
+.holo-card:hover{transform:scale(1.02);box-shadow:0 8px 40px rgba(var(--ar),var(--ag),var(--ab),.15);}
+.holo-top{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 22px 0;}
+.holo-chip{width:36px;height:26px;border-radius:5px;background:linear-gradient(135deg,rgba(255,200,0,.4),rgba(255,180,0,.2));border:1px solid rgba(255,200,0,.3);}
+.holo-logo{font-size:9px;font-weight:700;letter-spacing:3px;color:rgba(var(--ar),var(--ag),var(--ab),.6);text-align:right;}
+.holo-score{padding:12px 22px;font-family:'Space Mono',monospace;font-size:32px;font-weight:700;letter-spacing:4px;color:var(--text);}
+.holo-grade{display:inline-block;font-size:14px;padding:2px 10px;border-radius:100px;background:rgba(var(--ar),var(--ag),var(--ab),.12);color:var(--accent);margin-left:8px;vertical-align:middle;}
+.holo-bottom{display:flex;justify-content:space-between;padding:0 22px 18px;font-size:10px;color:var(--dim);}
+.holo-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(var(--ar),var(--ag),var(--ab),.5);margin-bottom:2px;}
+.holo-val{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,.7);}
+.holo-stripe{height:1px;margin:8px 22px;background:linear-gradient(90deg,transparent,rgba(var(--ar),var(--ag),var(--ab),.15),transparent);}
+.holo-network{position:absolute;bottom:8px;right:16px;font-size:8px;letter-spacing:2px;color:rgba(var(--ar),var(--ag),var(--ab),.3);}
+html.light .holo-card{background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.08),rgba(var(--ar),var(--ag),var(--ab),.02),rgba(var(--ar),var(--ag),var(--ab),.05));border-color:rgba(var(--ar),var(--ag),var(--ab),.15);}
+html.light .holo-score{color:#1a1a2e;}
+html.light .holo-val{color:rgba(0,0,0,.6);}
+
+/* ══ WISDOM QUOTE ══ */
+.wisdom-card{background:rgba(255,255,255,.015);border:1px solid var(--card-border);border-radius:16px;padding:20px 24px;margin-bottom:14px;text-align:center;position:relative;}
+.wisdom-quote{font-size:14px;font-style:italic;line-height:1.8;color:rgba(255,255,255,.55);margin-bottom:10px;}
+.wisdom-author{font-size:11px;color:var(--dim);letter-spacing:.5px;}
+.wisdom-card::before{content:'"';position:absolute;top:8px;left:16px;font-size:40px;color:rgba(var(--ar),var(--ag),var(--ab),.1);font-family:Georgia,serif;line-height:1;}
+html.light .wisdom-quote{color:rgba(0,0,0,.45);}
+
 /* ══ BELL CURVE VISUALIZATION ══ */
 .bell-curve-wrap{background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:18px 20px;margin-bottom:14px;text-align:center;}
 .bell-curve-wrap svg{width:100%;max-width:340px;height:auto;}
@@ -4710,6 +4736,128 @@ document.addEventListener('dblclick',e=>{
   dim.style.boxShadow=dim.style.boxShadow?'':'0 0 20px rgba(var(--ar),var(--ag),var(--ab),.2)';
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
+
+// ════ HOLOGRAPHIC HEALTH CARD ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('holo-card-section'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const level=score>=80?'CRITICAL':score>=60?'WARNING':score>=40?'CAUTION':score>=20?'NORMAL':'OPTIMAL';
+      const grade=score>=80?'F':score>=65?'D':score>=45?'C':score>=25?'B':'A';
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      const bodyAge=Math.round(age*(1+score/200));
+      const date=new Date().toISOString().split('T')[0];
+      const el=document.createElement('div');
+      el.id='holo-card-section';
+      el.className='rs on';
+      el.innerHTML=`<div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 健康状态卡 · HEALTH STATUS CARD</div>
+      <div class="holo-card">
+        <div class="holo-top"><div class="holo-chip"></div><div class="holo-logo">SUDDEN DEATH<br>INDEX SYSTEM</div></div>
+        <div class="holo-score">${String(score).padStart(3,'0')}<span class="holo-grade">${grade}</span></div>
+        <div class="holo-stripe"></div>
+        <div class="holo-bottom">
+          <div><div class="holo-label">HOLDER AGE</div><div class="holo-val">${age} / ${bodyAge}</div></div>
+          <div><div class="holo-label">STATUS</div><div class="holo-val">${level}</div></div>
+          <div><div class="holo-label">TOP RISK</div><div class="holo-val">${worst.name.split(' ')[1]} ${worst.pct}%</div></div>
+          <div><div class="holo-label">ISSUED</div><div class="holo-val">${date}</div></div>
+        </div>
+        <div class="holo-network">SDI NETWORK · CERTIFIED</div>
+      </div>`;
+      // Insert after rs2 (archetype)
+      const rs2=document.getElementById('rs2');
+      if(rs2&&rs2.nextSibling){rs2.parentNode.insertBefore(el,rs2.nextSibling);}
+    },1000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ WISDOM QUOTES ABOUT HEALTH ════
+(function(){
+  const quotes=[
+    {text:'早睡早起使人健康、富有、聪明。',author:'本杰明·富兰克林'},
+    {text:'健康是最大的财富。',author:'维吉尔'},
+    {text:'身体是灵魂的花园，意志是花园的园丁。',author:'威廉·莎士比亚'},
+    {text:'千里之行，始于足下。',author:'老子'},
+    {text:'最好的医生就是你自己，最好的药物就是时间，最好的运动就是步行。',author:'约翰·穆勒'},
+    {text:'健康不是一切，但没有健康就没有一切。',author:'叔本华'},
+    {text:'人的每一种身份都是一种自我绑架，唯有失去是通往自由之途。',author:'米兰·昆德拉'},
+    {text:'运动是一切生命的源泉。',author:'达芬奇'},
+    {text:'饮食有节，起居有常，不妄作劳，故能形与神俱。',author:'《黄帝内经》'},
+    {text:'知足者常乐，能忍者自安。',author:'弘一法师'},
+    {text:'你不能控制风向，但你可以调整帆的方向。',author:'吉米·迪恩'},
+    {text:'生活就像骑自行车，要保持平衡就得不断前行。',author:'阿尔伯特·爱因斯坦'},
+  ];
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('wisdom-section'))return;
+      const q=quotes[Math.floor(Math.random()*quotes.length)];
+      const el=document.createElement('div');
+      el.id='wisdom-section';
+      el.className='wisdom-card rs on';
+      el.innerHTML=`<div class="wisdom-quote">${q.text}</div><div class="wisdom-author">—— ${q.author}</div>`;
+      // Insert before the share buttons (rs13)
+      const rs13=document.getElementById('rs13');
+      if(rs13){rs13.parentNode.insertBefore(el,rs13);}
+    },2000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ RESULT PAGE READING TIME ESTIMATE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const sections=sec.querySelectorAll('.rs');
+      const textLen=sec.innerText?.length||0;
+      const readMin=Math.max(2,Math.ceil(textLen/800));
+      // Update the existing reading time badge if it exists, or the footer
+      const rs0=document.getElementById('rs0');
+      if(!rs0||document.getElementById('read-time-badge'))return;
+      const badge=document.createElement('div');
+      badge.id='read-time-badge';
+      badge.style.cssText='text-align:center;font-size:10px;color:var(--dim);letter-spacing:.5px;margin-top:10px;padding:8px 16px;background:rgba(255,255,255,.02);border-radius:100px;display:inline-block;';
+      badge.textContent=`📊 ${sections.length} 个分析模块 · 约 ${readMin} 分钟阅读`;
+      rs0.appendChild(badge);
+    },2500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ ANIMATED SECTION COUNTER IN NAV ════
+(function(){
+  let currentSection=0;
+  const updateNavCounter=()=>{
+    const nav=document.getElementById('res-nav');
+    if(!nav)return;
+    const dots=nav.querySelectorAll('.res-nav-dot');
+    if(!dots.length)return;
+    let counterEl=document.getElementById('nav-counter');
+    if(!counterEl){
+      counterEl=document.createElement('div');
+      counterEl.id='nav-counter';
+      counterEl.style.cssText='text-align:center;font-size:8px;font-family:"Space Mono",monospace;color:var(--dim);letter-spacing:1px;margin-top:4px;';
+      nav.appendChild(counterEl);
+    }
+    const active=[...dots].findIndex(d=>d.classList.contains('active'));
+    if(active>=0&&active!==currentSection){
+      currentSection=active;
+      counterEl.textContent=`${active+1}/${dots.length}`;
+    }
+  };
+  setInterval(updateNavCounter,500);
+})();
 
 // ════ BELL CURVE POPULATION DISTRIBUTION ════
 (function(){
