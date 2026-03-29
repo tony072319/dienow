@@ -4779,6 +4779,87 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ "HEALTH AGE" TIMELINE VISUALIZATION ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('age-timeline'))return;
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      const score=calcScore();
+      const bodyAge=Math.round(age*(1+score/200));
+      const lifeExpectancy=score>=80?55+Math.random()*10:score>=60?60+Math.random()*10:score>=40?70+Math.random()*8:score>=20?78+Math.random()*7:85+Math.random()*10;
+      const le=Math.round(lifeExpectancy);
+      const pctLived=Math.round((age/le)*100);
+      const col=pctLived>=70?'#ef4444':pctLived>=50?'#f59e0b':'#34d399';
+      const el=document.createElement('div');
+      el.id='age-timeline';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:20px;">
+        <div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 生命进度条 · LIFE PROGRESS BAR</div>
+        <div style="position:relative;height:24px;background:rgba(255,255,255,.04);border-radius:100px;overflow:hidden;margin-bottom:10px;">
+          <div style="height:100%;width:${pctLived}%;background:linear-gradient(90deg,${col}40,${col});border-radius:100px;transition:width 1.5s cubic-bezier(.25,.8,.25,1);position:relative;">
+            <div style="position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:3px;height:16px;background:#fff;border-radius:2px;box-shadow:0 0 8px ${col};"></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--dim);">
+          <span>0岁 · 出生</span>
+          <span style="color:${col};font-weight:700;">${age}岁 · 你在这里 (${pctLived}%)</span>
+          <span>${le}岁 · 预估*</span>
+        </div>
+        <div style="margin-top:12px;text-align:center;font-size:20px;font-weight:700;color:var(--text);font-family:'Space Mono',monospace;">
+          ~${le-age} <span style="font-size:12px;color:var(--dim);font-weight:400;">年剩余</span>
+        </div>
+        <div style="text-align:center;font-size:9px;color:var(--dim);margin-top:6px;font-style:italic;">* 基于当前生活方式的统计模型估算，改善习惯可延长</div>
+      </div>`;
+      const rs4b=document.getElementById('rs4b');
+      if(rs4b){rs4b.parentNode.insertBefore(el,rs4b.nextSibling);}
+    },1600);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ FUN RANDOM DEATH CAUSES WHEEL ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const score=calcScore();
+      if(score<50)return; // Only for medium-high scores
+      if(document.getElementById('death-roulette'))return;
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const causes={
+        sleep:['过劳猝死','睡眠呼吸暂停','注意力涣散导致事故','免疫系统崩溃'],
+        work:['职业倦怠综合症','颈椎病发作','过劳心脏骤停','久坐导致肺栓塞'],
+        exercise:['肌肉萎缩症','骨质疏松骨折','代谢综合征','心肺功能衰退'],
+        diet:['胃穿孔','营养不良性贫血','高血压并发症','消化系统罢工'],
+        stress:['焦虑症急性发作','应激性心肌病','神经衰弱','自主神经紊乱'],
+        habit:['肝硬化','慢阻肺','成瘾性器官损伤','多重慢性病叠加'],
+        emotion:['心碎综合症(Takotsubo)','抑郁相关免疫低下','慢性炎症','社交性死亡']
+      };
+      const causeList=causes[worst.key]||causes.stress;
+      const mainCause=causeList[Math.floor(Math.random()*causeList.length)];
+      const el=document.createElement('div');
+      el.id='death-roulette';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(239,68,68,.02);border:1px solid rgba(239,68,68,.08);border-radius:16px;padding:18px;text-align:center;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(239,68,68,.4);margin-bottom:10px;">⚠️ HYPOTHETICAL RISK SCENARIO</div>
+        <div style="font-size:14px;font-weight:700;color:rgba(239,68,68,.7);margin-bottom:6px;">${mainCause}</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.7;">基于你的 ${worst.name} 维度（${worst.pct}%），这是统计学上最可能需要关注的健康风险。</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:8px;font-style:italic;">注意：这不是诊断，是风险提示。预防胜于治疗。</div>
+      </div>`;
+      const rs7=document.getElementById('rs7');
+      if(rs7){rs7.parentNode.insertBefore(el,rs7);}
+    },2100);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ DIMENSION COMPARISON RADAR OVERLAY (Previous vs Current) ════
 (function(){
   const obs=new MutationObserver(()=>{
