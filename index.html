@@ -4779,6 +4779,114 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ HEALTH PLAYLIST RECOMMENDATION ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-playlist'))return;
+      const score=calcScore();
+      const playlists=[
+        {range:[0,25],title:'Morning Zen · 晨间冥想',tracks:['Weightless - Marconi Union','Clair de Lune - Debussy','Gymnopédie No.1 - Satie'],mood:'你的状态很好，用音乐保持这份平静',icon:'🧘',color:'#34d399'},
+        {range:[26,50],title:'Chill & Heal · 舒缓恢复',tracks:['Breathe Me - Sia','Skinny Love - Bon Iver','Holocene - Bon Iver'],mood:'放松一下，你值得一段安静的时光',icon:'🎧',color:'#60a5fa'},
+        {range:[51,70],title:'Wake Up Call · 警醒之歌',tracks:['Lose Yourself - Eminem','Eye of the Tiger - Survivor','Don\'t Stop Me Now - Queen'],mood:'是时候振作起来了，音乐给你力量',icon:'⚡',color:'#f59e0b'},
+        {range:[71,100],title:'Emergency Siren · 紧急警报',tracks:['Stayin\' Alive - Bee Gees','Another One Bites the Dust - Queen','Highway to Hell - AC/DC'],mood:'（歌名都是暗示，请认真对待你的健康）',icon:'🚨',color:'#ef4444'},
+      ];
+      const pl=playlists.find(p=>score>=p.range[0]&&score<=p.range[1]);
+      if(!pl)return;
+      const el=document.createElement('div');
+      el.id='health-playlist';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(${pl.color==='#34d399'?'52,211,153':pl.color==='#60a5fa'?'96,165,250':pl.color==='#f59e0b'?'245,158,11':'239,68,68'},.03);border:1px solid ${pl.color}20;border-radius:16px;padding:20px;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:${pl.color}80;margin-bottom:10px;">${pl.icon} RECOMMENDED PLAYLIST</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">${pl.title}</div>
+        <div style="font-size:11px;color:var(--dim);margin-bottom:12px;font-style:italic;">${pl.mood}</div>
+        ${pl.tracks.map((t,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;${i<pl.tracks.length-1?'border-bottom:1px solid rgba(255,255,255,.03);':''}">
+          <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);width:18px;">${i+1}.</span>
+          <span style="font-size:12px;color:rgba(255,255,255,.5);">${t}</span>
+        </div>`).join('')}
+      </div>`;
+      const wisdom=document.getElementById('wisdom-section');
+      if(wisdom){wisdom.parentNode.insertBefore(el,wisdom);}
+      else{const rs13=document.getElementById('rs13');if(rs13)rs13.parentNode.insertBefore(el,rs13);}
+    },2900);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ QUIZ META FACTS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('quiz-facts'))return;
+      const totalQ=typeof flow!=='undefined'?flow.length:30;
+      const dims=calcDims();
+      const score=calcScore();
+      const hist=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+      const achievements=JSON.parse(localStorage.getItem('sdi-achievements')||'[]');
+      const facts=[
+        `本次测试共 ${totalQ} 道题，覆盖 7 个健康维度`,
+        `系统分析了 ${totalQ * 5} 个可能的答案组合来生成你的报告`,
+        `你的结果报告包含超过 30 个分析模块`,
+        `这是你的第 ${hist.length} 次测试`,
+        achievements.length>0?`你已解锁 ${achievements.length} 个成就`:null,
+        `本测试由 AI 驱动，代码超过 6000 行`,
+      ].filter(Boolean);
+      const el=document.createElement('div');
+      el.id='quiz-facts';
+      el.className='rs on';
+      el.style.cssText='text-align:center;margin-bottom:14px;';
+      el.innerHTML=`<div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:10px;">ℹ️ ABOUT THIS TEST</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+          ${facts.map(f=>`<span style="font-size:9px;padding:5px 12px;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:100px;color:var(--dim);">${f}</span>`).join('')}
+        </div>`;
+      const disclaimer=document.querySelector('.disclaimer');
+      if(disclaimer)disclaimer.before(el);
+    },3200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ SCORE RING HOVER PULSE ════
+(function(){
+  document.addEventListener('mouseenter',e=>{
+    if(!e.target.closest('.score-ring-wrap'))return;
+    const ring=e.target.closest('.score-ring-wrap');
+    ring.style.filter='drop-shadow(0 0 20px rgba(var(--ar),var(--ag),var(--ab),.3))';
+    ring.style.transition='filter .3s';
+  },true);
+  document.addEventListener('mouseleave',e=>{
+    if(!e.target.closest('.score-ring-wrap'))return;
+    const ring=e.target.closest('.score-ring-wrap');
+    ring.style.filter='';
+  },true);
+})();
+
+// ════ SMOOTH RETRY TRANSITION ════
+(function(){
+  const origRetry=window.retryQuiz;
+  if(!origRetry)return;
+  window.retryQuiz=function(){
+    const sec=document.getElementById('sec-result');
+    if(sec){
+      sec.style.transition='opacity .4s, transform .4s';
+      sec.style.opacity='0';
+      sec.style.transform='scale(.98)';
+      setTimeout(()=>{
+        sec.style.opacity='';sec.style.transform='';
+        origRetry.apply(this,arguments);
+      },400);
+    }else{
+      origRetry.apply(this,arguments);
+    }
+  };
+})();
+
 // ════ EMOJI ANSWER SUMMARY ════
 (function(){
   const obs=new MutationObserver(()=>{
