@@ -878,6 +878,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="rs" id="rs12b"><div style="text-align:center;padding:16px 20px;margin-bottom:14px;background:rgba(var(--ar),var(--ag),var(--ab),.03);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.08);border-radius:16px;"><div style="font-size:22px;margin-bottom:6px;">🔮</div><div id="health-fortune" style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.7;"></div></div><div class="daily-tip" id="daily-tip" style="background:rgba(var(--ar),var(--ag),var(--ab),.04);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:8px;text-transform:uppercase">// 今日一句</div><div id="daily-tip-text" style="font-size:14px;line-height:1.8;color:#c8c8c8;font-style:italic;"></div></div></div>
     <div class="rs" id="rs12c"><div style="background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 如果你是……</div><div id="what-if-items" style="display:flex;flex-direction:column;gap:10px;"></div></div></div>
     <div class="rs" id="rs12d"><div style="background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.04),rgba(var(--ar),var(--ag),var(--ab),.01));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:20px;padding:24px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--accent);margin-bottom:14px">🎯 本周健康挑战</div><div id="weekly-challenge" style="font-size:18px;font-weight:700;color:#e8e8e8;line-height:1.6;margin-bottom:10px;"></div><div id="challenge-desc" style="font-size:12px;color:var(--dim);line-height:1.7;"></div><div id="challenge-diff" style="margin-top:12px;font-size:11px;font-weight:600;letter-spacing:1px;"></div></div></div>
+    <div class="rs" id="rs12e"><div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 本次测试统计</div><div id="session-stats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"></div></div></div>
     <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-share" onclick="encodeResultToURL()">🔗 分享链接</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
   </div>
 </section>
@@ -2358,8 +2359,28 @@ function showResult(){
   document.getElementById('challenge-desc').textContent=chl.desc;
   const cdEl=document.getElementById('challenge-diff');
   cdEl.textContent=`难度：${chl.diff}`;cdEl.style.color=chl.dcol;
+  // Session stats
+  const ssEl=document.getElementById('session-stats');
+  const dangerCount=Object.values(ans).filter(v=>v>=3).length;
+  const safeCount=Object.values(ans).filter(v=>v<=1).length;
+  const totalQ=Object.keys(ans).length;
+  const elapsed2=quizStartTime?Math.round((Date.now()-quizStartTime)/1000):0;
+  const avgPerQ=totalQ>0?(elapsed2/totalQ).toFixed(1):'?';
+  const tagCount=matched.length;
+  const achCount=achMatched.length;
+  const histLen2=(()=>{try{return JSON.parse(localStorage.getItem('sdi-history')||'[]').length;}catch(e){return 1;}})();
+  ssEl.innerHTML=[
+    {icon:'❓',label:'答题数',val:`${totalQ}题`},
+    {icon:'⚡',label:'平均用时',val:`${avgPerQ}秒/题`},
+    {icon:'💀',label:'高危选项',val:`${dangerCount}个`},
+    {icon:'✅',label:'安全选项',val:`${safeCount}个`},
+    {icon:'🏷️',label:'获得标签',val:`${tagCount}个`},
+    {icon:'🏆',label:'解锁成就',val:`${achCount}个`},
+    {icon:'📊',label:'历史测试',val:`第${histLen2}次`},
+    {icon:'🎯',label:'危险比率',val:`${totalQ>0?Math.round(dangerCount/totalQ*100):0}%`},
+  ].map(s=>`<div style="background:rgba(255,255,255,.03);border-radius:10px;padding:10px;"><span style="font-size:16px">${s.icon}</span><div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--accent);margin:4px 0">${s.val}</div><div style="font-size:10px;color:var(--dim)">${s.label}</div></div>`).join('');
   go('sec-result','anim-fade');clearProgress();playReveal(score);
-  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs8','rs9','rs9b','rs10','rs10b','rs11','rs12','rs12b','rs12c','rs12d','rs13'];
+  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs8','rs9','rs9b','rs10','rs10b','rs11','rs12','rs12b','rs12c','rs12d','rs12e','rs13'];
   // First few sections animate on timer; rest use Intersection Observer for scroll-reveal
   const timerCount=5;
   rsIds.slice(0,timerCount).forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),300+i*140);});
