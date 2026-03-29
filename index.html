@@ -795,6 +795,28 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
 .cpill{transition:all .2s;cursor:default;}
 .cpill:hover{background:rgba(var(--ar),var(--ag),var(--ab),.08);border-color:rgba(var(--ar),var(--ag),var(--ab),.25);transform:translateY(-2px) scale(1.02);box-shadow:0 4px 16px rgba(var(--ar),var(--ag),var(--ab),.08);}
 
+/* ══ TIME GREETING ══ */
+.time-greeting{text-align:center;font-size:11px;color:var(--dim);letter-spacing:.5px;margin-bottom:12px;opacity:0;animation:tipFadeIn .5s .3s ease both;}
+.time-greeting .tg-icon{font-size:16px;margin-right:4px;vertical-align:middle;}
+.time-greeting .tg-warn{color:rgba(239,68,68,.6);font-weight:600;margin-left:4px;}
+html.light .time-greeting{color:#6b7280;}
+
+/* ══ DIMENSION INSIGHT TEXT ══ */
+.dim-insight{font-size:11px;line-height:1.6;color:var(--dim);margin-top:8px;padding:10px 14px;background:rgba(255,255,255,.02);border-radius:10px;border-left:2px solid rgba(var(--ar),var(--ag),var(--ab),.3);opacity:0;transform:translateY(4px);transition:opacity .4s,transform .4s;}
+.dim-insight.show{opacity:1;transform:none;}
+html.light .dim-insight{background:rgba(0,0,0,.02);}
+
+/* ══ QUIZ RECAP CARD ══ */
+.recap-card{background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:18px 20px;margin-bottom:14px;}
+.recap-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:12px;}
+.recap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;}
+.recap-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid transparent;transition:border-color .2s;}
+.recap-item.high{border-color:rgba(239,68,68,.2);background:rgba(239,68,68,.04);}
+.recap-item.low{border-color:rgba(52,211,153,.15);background:rgba(52,211,153,.03);}
+.recap-emoji{font-size:16px;}
+.recap-val{font-size:9px;font-weight:700;font-family:'Space Mono',monospace;}
+html.light .recap-card{background:rgba(0,0,0,.02);}
+
 /* ══ DAILY HEALTH TIP ══ */
 .health-tip{background:linear-gradient(135deg,rgba(52,211,153,.06),rgba(96,165,250,.04));border:1px solid rgba(52,211,153,.12);border-radius:16px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;font-size:12px;line-height:1.7;color:rgba(255,255,255,.7);opacity:0;transform:translateY(8px);animation:tipFadeIn .6s .8s ease both;}
 .health-tip-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
@@ -964,6 +986,7 @@ html.light .achievement-name{color:#1a1a2e;}
 <!-- ══ LANDING ══ -->
 <section id="sec-intro" class="active anim-fade" style="position:relative;">
   <div class="floating-symbols" id="float-syms"></div>
+  <div class="time-greeting" id="time-greeting"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
   <div class="title-sub">SUDDEN DEATH INDEX · v9.0</div>
@@ -4670,6 +4693,118 @@ document.addEventListener('dblclick',e=>{
   dim.style.boxShadow=dim.style.boxShadow?'':'0 0 20px rgba(var(--ar),var(--ag),var(--ab),.2)';
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
+
+// ════ TIME-OF-DAY GREETING ════
+(function(){
+  const h=new Date().getHours();
+  const el=document.getElementById('time-greeting');
+  if(!el)return;
+  let icon,text,warn='';
+  if(h>=5&&h<8){icon='🌅';text='早起的鸟儿有虫吃——但也要睡够了再起。';}
+  else if(h>=8&&h<12){icon='☀️';text='上午好，精力最充沛的时段。';}
+  else if(h>=12&&h<14){icon='🍱';text='午间时段，吃饱了再测试也不迟。';}
+  else if(h>=14&&h<18){icon='☕';text='下午好，别用咖啡续命，来测测你的续命指数。';}
+  else if(h>=18&&h<22){icon='🌆';text='晚间时段，今天过得怎么样？';}
+  else if(h>=22||h<1){icon='🌙';text='夜深了，测完早点休息。';warn='(此刻不睡觉本身就是加分项)';}
+  else{icon='👻';text='凌晨还在刷手机？';warn='你的猝死指数可能正在实时上升';}
+  el.innerHTML=`<span class="tg-icon">${icon}</span>${text}${warn?'<span class="tg-warn">'+warn+'</span>':''}`;
+})();
+
+// ════ DIMENSION INSIGHT TEXTS ════
+(function(){
+  const INSIGHTS={
+    sleep:{
+      low:'你的睡眠质量相当不错。身体每晚都能得到充分的修复时间，这是你最大的健康资产。继续保持，它会在未来几十年里回报你。',
+      mid:'睡眠债正在悄悄积累。你的身体还在勉强应付，但大脑已经开始偷工减料了——记忆力下降、反应变慢，这些都是信号。',
+      high:'你的身体每晚都在提交加班申请，但你从来不批。长期睡眠债的利息是指数级增长的，心血管系统首先会来催收。'
+    },
+    work:{
+      low:'工作节奏控制得很好。你懂得划清工作和生活的界限，这在当代社会是一种稀缺技能。',
+      mid:'工作正在侵蚀你的个人空间。你可能还觉得自己撑得住，但身体的容忍度是有上限的。',
+      high:'你正处于过劳的高危区间。如果你的身体是一台服务器，它已经在发送 503 错误了。休息不是偷懒，是系统维护。'
+    },
+    exercise:{
+      low:'运动习惯很棒。你的肌肉和心肺系统都在正常运转，骨骼和关节也会因此受益。',
+      mid:'运动量勉强及格。你的肌肉还没到写辞职信的地步，但已经开始抱怨了。',
+      high:'你的肌肉正在写辞职信。它们已经很久没被正式使用过了，正在考虑永久退休。久坐+零运动是现代人最常见的慢性自杀方式。'
+    },
+    diet:{
+      low:'饮食习惯不错。规律的营养摄入让你的消化系统运转良好，这是身体一切正常运作的基础。',
+      mid:'饮食结构需要调整。你的胃还在兢兢业业工作，但它对你的饮食选择有很多意见。',
+      high:'你的胃正在对你实施冷暴力。不规律的饮食加上过多的外卖和加工食品，消化系统的耐心已经快被耗尽了。'
+    },
+    stress:{
+      low:'压力水平控制得很好。你有自己的减压方法，心理韧性也不错。继续保持这种自我调节能力。',
+      mid:'压力正在累积。你可能已经习惯了这种紧张状态，但长期的皮质醇升高会削弱免疫系统。',
+      high:'你的压力水平已经超过安全阈值。皮质醇长期居高不下会影响免疫系统、消化系统、甚至大脑结构。你的身体在喊停，请听它的。'
+    },
+    habit:{
+      low:'不良嗜好控制得很好。你没有让任何成瘾性物质控制你的生活，这本身就是一种自律。',
+      mid:'有一些不太健康的习惯。它们看起来无害，但这些小习惯的累积效应比你想象的大得多。',
+      high:'多种不良嗜好叠加，你的身体正在多线作战。每一种嗜好单独看或许还行，但它们的组合效应是乘法而不是加法。'
+    },
+    emotion:{
+      low:'情绪状态很稳定。你能健康地处理自己的情绪，也维持着不错的社交支持网络。',
+      mid:'情绪波动比较频繁。你可能经常在开心和低落之间切换，社交孤立也在加重这种不稳定。',
+      high:'情绪状态亮红灯。长期的情绪困扰不仅影响心理健康，还会通过神经-免疫通路直接伤害身体。如果持续如此，请认真考虑寻求专业帮助。'
+    }
+  };
+  // Inject insights after dimension items are rendered
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    setTimeout(()=>{
+      const dimItems=document.querySelectorAll('.dim-item');
+      dimItems.forEach(item=>{
+        if(item.querySelector('.dim-insight'))return;
+        const keyEl=item.querySelector('.dim-name');
+        if(!keyEl)return;
+        const nameText=keyEl.textContent;
+        const dimEntry=Object.entries(INSIGHTS).find(([k,v])=>{
+          const mapping={sleep:'睡眠',work:'工作',exercise:'运动',diet:'饮食',stress:'压力',habit:'嗜好',emotion:'情绪'};
+          return nameText.includes(mapping[k]);
+        });
+        if(!dimEntry)return;
+        const pctEl=item.querySelector('.dim-pct');
+        const pct=pctEl?parseInt(pctEl.textContent):0;
+        const level=pct<=30?'low':pct<=60?'mid':'high';
+        const insight=document.createElement('div');
+        insight.className='dim-insight';
+        insight.textContent=dimEntry[1][level];
+        item.appendChild(insight);
+        setTimeout(()=>insight.classList.add('show'),300);
+      });
+      obs.disconnect();
+    },1500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ QUIZ ANSWER RECAP IN RESULTS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('quiz-recap'))return;
+      const dims=calcDims();
+      const recap=document.createElement('div');
+      recap.id='quiz-recap';
+      recap.className='recap-card rs on';
+      const grid=dims.map(d=>{
+        const cls=d.pct>=65?'high':d.pct<=25?'low':'';
+        const col=d.pct>=65?'#ef4444':d.pct<=25?'#34d399':'var(--dim)';
+        return`<div class="recap-item ${cls}"><span class="recap-emoji">${d.name.split(' ')[0]}</span><span class="recap-val" style="color:${col}">${d.pct}%</span></div>`;
+      }).join('');
+      recap.innerHTML=`<div class="recap-title">维度速览 · DIMENSION OVERVIEW</div><div class="recap-grid">${grid}</div>`;
+      // Insert after the score section (rs1)
+      const rs1=document.getElementById('rs1');
+      if(rs1&&rs1.nextSibling){rs1.parentNode.insertBefore(recap,rs1.nextSibling);}
+    },800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
 
 // ════ DAILY HEALTH TIP ════
 (function(){
