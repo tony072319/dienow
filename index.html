@@ -290,6 +290,11 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .score-lbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.25);display:block;margin-top:4px;}
 .res-level{font-size:24px;font-weight:900;margin-bottom:10px;}
 .res-desc{font-size:14px;color:var(--dim);line-height:1.85;max-width:440px;text-align:center;}
+.fun-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
+.fun-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:100px;font-size:11px;font-weight:600;border:1px solid;opacity:0;transform:scale(.8) translateY(8px);transition:opacity .4s,transform .4s;cursor:default;}
+.fun-tag.on{opacity:1;transform:none;}
+.fun-tag .ft-emoji{font-size:13px;}
+.fun-tag:hover{transform:translateY(-2px);filter:brightness(1.2);}
 .archetype-card{border-radius:16px;padding:22px;margin-bottom:14px;display:flex;align-items:flex-start;gap:18px;}
 .arch-icon{font-size:48px;flex-shrink:0;line-height:1;}
 .arch-body{flex:1;}
@@ -502,7 +507,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 <section id="sec-result">
   <div class="card" id="res-card">
     <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
-    <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div></div></div>
+    <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div><div class="fun-tags" id="fun-tags"></div></div></div>
     <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">你的健康人格</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div></div>
     <div class="rs" id="rs3"><div class="percentile-banner"><div class="pct-bar-wrap"><div class="pct-bar-bg"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div><div class="pct-text" id="pct-text">—</div></div><div class="pct-num" id="pct-num">—</div></div></div>
     <div class="rs" id="rs4"><div class="vitals-row"><div class="vital"><span class="vital-icon">🧬</span><span class="vital-val" id="v-bodyage">—</span><span class="vital-lbl">身体年龄</span></div><div class="vital"><span class="vital-icon">❤️</span><span class="vital-val" id="v-heart">—</span><span class="vital-lbl">心脏负荷</span></div><div class="vital"><span class="vital-icon">🔋</span><span class="vital-val" id="v-recovery">—</span><span class="vital-lbl">恢复力</span></div><div class="vital"><span class="vital-icon">🧠</span><span class="vital-val" id="v-stress">—</span><span class="vital-lbl">神经紧张</span></div></div><div class="risk-tags" id="risk-tags"></div></div>
@@ -949,6 +954,27 @@ const PRIORITY={sleep:{main:'今晚11点前关灯躺下',sub:'不是"尝试"入�
 const RISK_TAGS={sleep:{high:'高心血管风险',med:'睡眠债积累',low:'睡眠良好'},work:{high:'过劳高危',med:'职业倦怠风险',low:'工作平衡'},exercise:{high:'代谢综合征风险',med:'体能偏弱',low:'体能良好'},diet:{high:'营养失衡',med:'饮食不规律',low:'饮食健康'},stress:{high:'慢性应激',med:'压力偏高',low:'压力可控'},habit:{high:'器官损耗',med:'轻度不良嗜好',low:'生活习惯良好'},emotion:{high:'情绪高风险',med:'情绪波动大',low:'情绪稳定'}};
 const ARCHETYPES=[{key:'burner',icon:'🔥',name:'职场殉道者',badge:'CAREER MARTYR',match:d=>d.work>=65&&d.stress>=55,bg:'rgba(255,80,0,.04)',border:'rgba(255,80,0,.2)',color:'#ff8800',desc:'你把自己活成了一个永远在线的人肉服务器。工作和压力已经融为一体，你已经分不清哪些焦虑是正常的，哪些不是。'},{key:'ghost',icon:'👻',name:'数字游魂',badge:'DIGITAL GHOST',match:d=>d.sleep>=60&&d.habit>=55,bg:'rgba(0,200,255,.04)',border:'rgba(0,200,255,.2)',color:'#00ccff',desc:'你的生活发生在屏幕里。你的生物钟已经被蓝光重新校准，你的社交需求正在被算法填满——这两件事都不是好事。'},{key:'zombie',icon:'🧟',name:'外卖进化体',badge:'DELIVERY HUMAN',match:d=>d.diet>=60&&d.exercise>=55,bg:'rgba(200,100,0,.04)',border:'rgba(200,100,0,.2)',color:'#cc6600',desc:'你的消化系统已经适应了外卖容器的形状，你的腿已经忘记了长距离行走是什么感觉。'},{key:'anxious',icon:'😰',name:'焦虑人形容器',badge:'ANXIETY ENGINE',match:d=>d.stress>=65&&d.emotion>=60,bg:'rgba(180,0,255,.04)',border:'rgba(180,0,255,.2)',color:'#cc44ff',desc:'你的大脑已经进化出一种特殊能力：在任何情况下都能找到值得担心的事情。你的杏仁核从未真正休息过。'},{key:'fossil',icon:'🪨',name:'久坐化石',badge:'SEDIMENTARY HUMAN',match:d=>d.work>=60&&d.exercise>=65,bg:'rgba(100,100,100,.05)',border:'rgba(150,150,150,.2)',color:'#aaaaaa',desc:'你的骨骼肌肉系统正在以地质速度慢慢石化。久坐的危害在医学上被认为等同于吸烟。'},{key:'night',icon:'🌙',name:'深夜哲学家',badge:'NOCTURNAL THINKER',match:d=>d.sleep>=60&&d.emotion>=55,bg:'rgba(50,0,100,.06)',border:'rgba(100,50,200,.2)',color:'#8855ff',desc:'你把夜晚变成了思考宇宙终极问题的安全空间。每一个深夜，你都在预支明天的清醒和后年的寿命。'},{key:'declining',icon:'📉',name:'亚健康优等生',badge:'DECLINING AVERAGE',match:d=>Object.values(d).filter(v=>v>=35&&v<65).length>=4,bg:'rgba(255,200,0,.04)',border:'rgba(255,200,0,.2)',color:'#ffcc00',desc:'你哪个维度都不算特别差，但哪个维度也不算好。亚健康最狡猾的地方就在于，它从不触发警报，只是让你越来越累。'},{key:'model',icon:'⚰️',name:'猝死候选模范生',badge:'PRIME CANDIDATE',match:()=>true,bg:'rgba(255,0,68,.05)',border:'rgba(255,0,68,.22)',color:'#ff0044',desc:'你在几乎每一个维度都达到了令人印象深刻的危险水平。这需要一种全面的改变——不是调整某一件事，而是重新思考整个生活方式。'}];
 
+const FUN_TAGS=[
+  {e:'🦉',t:'资深熬夜选手',col:'#8855ff',bg:'rgba(136,85,255,.1)',match:()=>ans[0]>=3},
+  {e:'☕',t:'咖啡因依赖综合征',col:'#cc8844',bg:'rgba(204,136,68,.1)',match:()=>ans[14]>=3},
+  {e:'🛵',t:'外卖平台SVIP',col:'#ff8800',bg:'rgba(255,136,0,.1)',match:()=>ans[13]>=2&&ans[12]>=2},
+  {e:'🪑',t:'久坐世界纪录挑战者',col:'#aaaaaa',bg:'rgba(170,170,170,.1)',match:()=>ans[6]>=3&&ans[9]>=3},
+  {e:'📱',t:'手机共生体',col:'#00ccff',bg:'rgba(0,204,255,.1)',match:()=>ans[22]>=3},
+  {e:'😫',t:'周一恐惧症确诊',col:'#ff4466',bg:'rgba(255,68,102,.1)',match:()=>ans[25]>=3},
+  {e:'⚙️',t:'社畜进化终极形态',col:'#ff6600',bg:'rgba(255,102,0,.1)',match:()=>ans[4]>=3&&ans[8]>=3},
+  {e:'🌑',t:'维生素D绝缘体',col:'#6688aa',bg:'rgba(102,136,170,.1)',match:()=>ans[9]>=3&&ans[10]>=3},
+  {e:'⏰',t:'闹钟免疫体质',col:'#ffcc00',bg:'rgba(255,204,0,.1)',match:()=>ans[3]>=3},
+  {e:'🔍',t:'百度确诊晚期患者',col:'#44bb66',bg:'rgba(68,187,102,.1)',match:()=>ans[28]===2},
+  {e:'😰',t:'焦虑永动机',col:'#cc44ff',bg:'rgba(204,68,255,.1)',match:()=>ans[24]>=3&&ans[23]>=3},
+  {e:'📉',t:'发际线观察日记作者',col:'#dd9944',bg:'rgba(221,153,68,.1)',match:()=>ans[17]>=3},
+  {e:'🏜️',t:'慢性脱水生物',col:'#4488cc',bg:'rgba(68,136,204,.1)',match:()=>ans[15]>=3},
+  {e:'🪨',t:'颈椎病预备役',col:'#888888',bg:'rgba(136,136,136,.1)',match:()=>ans[18]>=3},
+  {e:'🫣',t:'情绪自我消化大师',col:'#ee6688',bg:'rgba(238,102,136,.1)',match:()=>ans[26]>=3},
+  {e:'🙈',t:'体检逃避症候群',col:'#ff5544',bg:'rgba(255,85,68,.1)',match:()=>ans[27]>=3},
+  {e:'🛋️',t:'沙发长期住户',col:'#99aa77',bg:'rgba(153,170,119,.1)',match:()=>ans[9]>=3&&ans[11]>=3},
+  {e:'🌫',t:'兴趣爱好绝缘体',col:'#7788aa',bg:'rgba(119,136,170,.1)',match:()=>ans[30]>=3},
+];
+
 // ════ STATE ════
 const CAT_SPLASH={
   '😴 睡眠习惯':{icon:'😴',name:'睡眠习惯',desc:'每一个深夜都在悄悄重写你明天的剧本',count:4},
@@ -1179,6 +1205,10 @@ function showResult(){
   document.getElementById('res-grade').textContent=`GRADE ${level.grade}`;document.getElementById('res-grade').style.color=level.color;
   document.getElementById('res-level').textContent=level.label;document.getElementById('res-level').style.color=level.color;
   document.getElementById('res-desc').textContent=level.desc;
+  // Fun tags
+  const ftEl=document.getElementById('fun-tags');ftEl.innerHTML='';
+  const matched=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,3);
+  matched.forEach((t,i)=>{const el=document.createElement('span');el.className='fun-tag';el.innerHTML=`<span class="ft-emoji">${t.e}</span>${t.t}`;el.style.color=t.col;el.style.borderColor=t.col;el.style.background=t.bg;setTimeout(()=>el.classList.add('on'),600+i*200);ftEl.appendChild(el);});
   const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
   const ac=document.getElementById('archetype-card');ac.style.background=arch.bg;ac.style.border=`1px solid ${arch.border}`;
   document.getElementById('arch-icon').textContent=arch.icon;document.getElementById('arch-icon').style.textShadow=`0 0 20px ${arch.color}`;
