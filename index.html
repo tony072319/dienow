@@ -4779,6 +4779,76 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ FUN "HEALTH ZODIAC" BASED ON WORST DIMENSION COMBO ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-zodiac'))return;
+      const dims=calcDims();
+      const sorted=[...dims].sort((a,b)=>b.pct-a.pct);
+      const top2=[sorted[0].key,sorted[1].key].sort().join('+');
+      const zodiacs={
+        'sleep+work':{sign:'♒ 过劳水瓶',desc:'你把所有精力都倒进了工作的杯子里，忘了给自己留一滴。'},
+        'sleep+stress':{sign:'♓ 失眠双鱼',desc:'你的大脑在深夜游来游去，不肯停下来休息。'},
+        'diet+sleep':{sign:'♈ 暴食白羊',desc:'夜晚吃零食、白天不吃早饭，你的生物钟和胃同时混乱。'},
+        'exercise+sleep':{sign:'♉ 懒床金牛',desc:'床是你最好的朋友，但也是你健康最大的敌人。'},
+        'habit+sleep':{sign:'♊ 瘾眠双子',desc:'手机和床，你的两个灵魂伴侣，正在联手毁灭你。'},
+        'diet+work':{sign:'♋ 外卖巨蟹',desc:'工作填满了你的日程，外卖填满了你的胃，但都没填满你的健康。'},
+        'exercise+work':{sign:'♌ 久坐狮子',desc:'你在工位上称王称霸，但你的身体已经开始叛变。'},
+        'stress+work':{sign:'♍ 焦虑处女',desc:'你对工作追求完美，却完美地忽略了自己。'},
+        'emotion+stress':{sign:'♎ 崩溃天秤',desc:'你一直在试图平衡一切，但天秤已经倾斜到了危险的角度。'},
+        'diet+exercise':{sign:'♏ 代谢天蝎',desc:'不动+乱吃=你的代谢系统正在密谋报复。'},
+        'exercise+stress':{sign:'♐ 暴走射手',desc:'你的精神在狂奔，但身体还瘫在沙发上。'},
+        'habit+work':{sign:'♑ 成瘾摩羯',desc:'工作和坏习惯，你两样都戒不掉。'},
+        'emotion+sleep':{sign:'♒ emo水瓶',desc:'夜深人静的时候，你的情绪和失眠一起发作。'},
+        'diet+stress':{sign:'♓ 暴食双鱼',desc:'压力一大就想吃，吃完又有罪恶感，恶性循环。'},
+      };
+      const zodiac=zodiacs[top2]||{sign:'⭐ 综合危机',desc:`你的 ${sorted[0].name.split(' ')[1]} 和 ${sorted[1].name.split(' ')[1]} 形成了独特的风险组合。`};
+      const el=document.createElement('div');
+      el.id='health-zodiac';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:linear-gradient(135deg,rgba(168,85,247,.04),rgba(244,114,182,.03));border:1px solid rgba(168,85,247,.12);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(168,85,247,.5);margin-bottom:10px;">🌟 YOUR HEALTH ZODIAC</div>
+        <div style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px;">${zodiac.sign}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.8;max-width:280px;margin:0 auto;">${zodiac.desc}</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:8px;">${sorted[0].name} × ${sorted[1].name} 组合</div>
+      </div>`;
+      const arch=document.getElementById('rs2');
+      if(arch){arch.parentNode.insertBefore(el,arch);}
+    },1300);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ RESULT PAGE KEYBOARD NAVIGATION ════
+(function(){
+  document.addEventListener('keydown',e=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    // J/K for scroll between sections
+    const sections=Array.from(sec.querySelectorAll('.rs.on'));
+    if(!sections.length)return;
+    if(e.key==='j'||e.key==='k'){
+      e.preventDefault();
+      const scrollY=window.scrollY+window.innerHeight/2;
+      let currentIdx=sections.findIndex(s=>s.getBoundingClientRect().top+window.scrollY>scrollY-100);
+      if(currentIdx<0)currentIdx=sections.length-1;
+      const nextIdx=e.key==='j'?Math.min(currentIdx+1,sections.length-1):Math.max(currentIdx-1,0);
+      sections[nextIdx].scrollIntoView({behavior:'smooth',block:'center'});
+    }
+    // S for share, R for retry
+    if(e.key==='s'&&!e.ctrlKey&&!e.metaKey){
+      if(typeof shareResult==='function')shareResult();
+    }
+    if(e.key==='r'&&!e.ctrlKey&&!e.metaKey){
+      if(typeof retryQuiz==='function')retryQuiz();
+    }
+  });
+})();
+
 // ════ "HEALTH YEAR IN REVIEW" SUMMARY ════
 (function(){
   const obs=new MutationObserver(()=>{
