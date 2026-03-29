@@ -3247,6 +3247,48 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ CALENDAR-STYLE "TODAY" CARD ON RESULT PAGE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const rs12b=document.getElementById('rs12b');
+      if(!rs12b||document.getElementById('today-card'))return;
+      const now=new Date();
+      const days=['日','一','二','三','四','五','六'];
+      const months=['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+      const score=calcScore();
+      const greeting=now.getHours()<6?'凌晨好，夜猫子':now.getHours()<12?'早上好':now.getHours()<18?'下午好':'晚上好';
+      const mood=score>=70?'今天是改变的好时机':score>=40?'还来得及':score<20?'继续保持':'关注你的身体';
+      const card=document.createElement('div');card.id='today-card';
+      card.style.cssText='display:flex;align-items:center;gap:16px;padding:18px;margin-bottom:14px;background:rgba(var(--ar),var(--ag),var(--ab),.03);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.1);border-radius:16px;opacity:0;transform:translateY(8px);transition:all .5s;';
+      card.innerHTML=`<div style="text-align:center;flex-shrink:0;width:60px;"><div style="font-size:9px;letter-spacing:2px;color:var(--accent);font-weight:600;">${months[now.getMonth()]}</div><div style="font-size:32px;font-weight:900;font-family:'Space Mono',monospace;color:var(--text);line-height:1;">${now.getDate()}</div><div style="font-size:10px;color:var(--dim);">周${days[now.getDay()]}</div></div><div style="flex:1;border-left:1px solid rgba(var(--ar),var(--ag),var(--ab),.1);padding-left:16px;"><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;">${greeting}</div><div style="font-size:12px;color:var(--dim);line-height:1.6;">${mood}</div></div>`;
+      rs12b.insertBefore(card,rs12b.firstChild);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{card.style.opacity='1';card.style.transform='none';}));
+    },4500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ RESULT SECTION: READING TIME ESTIMATE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    const rsCount=sec.querySelectorAll('.rs').length;
+    const readTime=Math.ceil(rsCount*0.3);
+    const badge=document.createElement('div');
+    badge.style.cssText='text-align:center;font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:16px;opacity:0;transition:opacity .5s;';
+    badge.textContent=`📖 预计阅读时间 ${readTime} 分钟 · ${rsCount} 个分析模块`;
+    const rs0=document.getElementById('rs0');
+    if(rs0){rs0.insertBefore(badge,rs0.firstChild);setTimeout(()=>{badge.style.opacity='1';},800);}
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ DANGER ALARM ON LOADING COMPLETE (high scores) ════
 (function(){
   const origShowResult=window.showResult;
