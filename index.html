@@ -709,6 +709,23 @@ html.light .report-meta span{color:rgba(0,0,0,.3);}
 .theme-toggle .theme-icon{transition:transform .5s cubic-bezier(.34,1.56,.64,1);}
 html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
 
+/* ══ RESULT SECTION NAV ══ */
+.res-nav{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:150;display:flex;flex-direction:column;gap:6px;opacity:0;transition:opacity .4s;pointer-events:none;}
+.res-nav.show{opacity:1;pointer-events:auto;}
+.res-nav-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .2s;position:relative;}
+.res-nav-dot:hover{background:rgba(var(--ar),var(--ag),var(--ab),.4);transform:scale(1.4);}
+.res-nav-dot.active{background:var(--accent);box-shadow:0 0 8px rgba(var(--ar),var(--ag),var(--ab),.5);transform:scale(1.3);}
+.res-nav-dot::before{content:attr(data-label);position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--dim);white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none;background:var(--card-bg);padding:2px 8px;border-radius:6px;border:1px solid var(--card-border);}
+.res-nav-dot:hover::before{opacity:1;}
+@media(max-width:520px){.res-nav{display:none;}}
+
+/* ══ SCORE BREAKDOWN TOOLTIP ══ */
+.score-breakdown{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(8px) scale(.9);background:rgba(0,0,0,.95);border:1px solid var(--card-border);border-radius:14px;padding:16px 20px;min-width:200px;z-index:100;opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.34,1.56,.64,1);backdrop-filter:blur(12px);}
+.score-breakdown.show{opacity:1;transform:translateX(-50%) translateY(8px) scale(1);pointer-events:auto;}
+.sb-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:11px;}
+.sb-dim{color:var(--dim);}
+.sb-val{font-family:'Space Mono',monospace;font-weight:700;}
+
 /* Reduced motion */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
@@ -978,6 +995,7 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
   </div>
 </section>
 </div>
+<div class="res-nav" id="res-nav"></div>
 <div class="toast" id="toast">已复制到剪贴板 ✓</div>
 <button class="back-to-top" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
@@ -2224,9 +2242,10 @@ function showResult(){
   if(score>=80){const rc=document.getElementById('res-card');rc.classList.add('screen-shake');setTimeout(()=>rc.classList.remove('screen-shake'),700);}
   // Extreme ring glow for 90+
   document.querySelector('.score-ring-wrap')?.classList.toggle('extreme',score>=90);
-  // Dynamic favicon and low-score celebration
+  // Dynamic favicon, low-score celebration, and ambient sound
   updateFavicon(score);
   celebrateLowScore(score);
+  startAmbient(score);
   // Reset streak bar
   document.getElementById('streak-bar').classList.remove('show');
   document.getElementById('rpt-id').textContent='#'+Math.random().toString(36).substr(2,6).toUpperCase();
@@ -2879,7 +2898,7 @@ function shareTextArt(){
     const t=document.getElementById('toast');t.textContent='文字海报已复制 ✓';t.classList.add('show');setTimeout(()=>{t.classList.remove('show');t.textContent='已复制到剪贴板 ✓';},2200);
   }).catch(()=>{});
 }
-function retryQuiz(){if(praf)cancelAnimationFrame(praf);canv.classList.remove('active');pts=[];history.replaceState(null,'',location.pathname);startQuiz();}
+function retryQuiz(){if(praf)cancelAnimationFrame(praf);canv.classList.remove('active');pts=[];stopAmbient();history.replaceState(null,'',location.pathname);startQuiz();}
 
 // ════ URL RESULT ENCODING ════
 function encodeResultToURL(){
@@ -2990,6 +3009,82 @@ function toggleTheme(){
       if(tickEl)tickEl.textContent=secs;
     },1000);
   }
+})();
+
+// ════ AMBIENT MOOD DRONE ════
+let ambientOsc=null,ambientGain=null;
+function startAmbient(score){
+  if(!soundOn||ambientOsc)return;
+  ensureAudio();
+  ambientOsc=audioCtx.createOscillator();
+  ambientGain=audioCtx.createGain();
+  const filter=audioCtx.createBiquadFilter();
+  filter.type='lowpass';filter.frequency.value=score>=60?180:score>=30?300:500;
+  ambientOsc.connect(filter);filter.connect(ambientGain);ambientGain.connect(audioCtx.destination);
+  // Lower drone for higher danger, pleasant hum for low scores
+  ambientOsc.frequency.value=score>=70?55:score>=50?65:score>=30?82:110;
+  ambientOsc.type=score>=60?'sawtooth':'sine';
+  ambientGain.gain.setValueAtTime(0,audioCtx.currentTime);
+  ambientGain.gain.linearRampToValueAtTime(score>=60?.025:.015,audioCtx.currentTime+2);
+  ambientOsc.start();
+}
+function stopAmbient(){
+  if(!ambientOsc)return;
+  try{ambientGain.gain.linearRampToValueAtTime(0,audioCtx.currentTime+1);setTimeout(()=>{try{ambientOsc.stop();ambientOsc=null;ambientGain=null;}catch(e){}},1200);}catch(e){ambientOsc=null;ambientGain=null;}
+}
+
+// ════ RESULT SECTION NAVIGATION ════
+(function(){
+  const navEl=document.getElementById('res-nav');if(!navEl)return;
+  const labels={'rs0':'报告','rs1':'评分','rs2':'人格','rs3':'百分位','rs4':'体征','rs6':'雷达图','rs7':'预言','rs8':'医生','rs9':'轨迹','rs11':'维度','rs12':'建议','rs13':'操作'};
+  Object.entries(labels).forEach(([id,label])=>{
+    const dot=document.createElement('div');dot.className='res-nav-dot';dot.dataset.label=label;dot.dataset.target=id;
+    dot.onclick=()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});};
+    navEl.appendChild(dot);
+  });
+  // Show/hide nav and track active section
+  const observer=new MutationObserver(()=>{
+    const isResult=document.getElementById('sec-result')?.classList.contains('active');
+    navEl.classList.toggle('show',!!isResult);
+    if(!isResult)stopAmbient();
+  });
+  observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  // Active dot tracking
+  window.addEventListener('scroll',()=>{
+    const dots=navEl.querySelectorAll('.res-nav-dot');
+    let closest=null,minDist=Infinity;
+    dots.forEach(d=>{
+      const el=document.getElementById(d.dataset.target);if(!el)return;
+      const rect=el.getBoundingClientRect();
+      const dist=Math.abs(rect.top-window.innerHeight/3);
+      if(dist<minDist){minDist=dist;closest=d;}
+    });
+    dots.forEach(d=>d.classList.toggle('active',d===closest));
+  },{passive:true});
+})();
+
+// ════ SCORE BREAKDOWN TOOLTIP ════
+(function(){
+  const ringWrap=document.querySelector('.score-ring-wrap');if(!ringWrap)return;
+  ringWrap.style.position='relative';
+  const tip=document.createElement('div');tip.className='score-breakdown';tip.id='score-breakdown';
+  ringWrap.appendChild(tip);
+  let shown=false;
+  ringWrap.addEventListener('click',e=>{
+    if(e.target.closest('button'))return;
+    shown=!shown;
+    if(shown){
+      // Populate breakdown
+      try{
+        const dims=calcDims();
+        tip.innerHTML='<div style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--dim);margin-bottom:8px;">SCORE BREAKDOWN</div>'+
+          dims.map(d=>`<div class="sb-row"><span class="sb-dim">${d.name.replace(/^../,'')}</span><span class="sb-val" style="color:${d.pct>=65?'#ef4444':d.pct>=30?'#fbbf24':'#34d399'}">${d.pct}%</span></div>`).join('');
+      }catch(e){}
+    }
+    tip.classList.toggle('show',shown);
+  });
+  // Close on outside click
+  document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
 // ════ DYNAMIC FAVICON ════
