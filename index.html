@@ -170,6 +170,10 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
 .scenario-box{background:rgba(255,255,255,.02);border-left:2px solid rgba(var(--ar),var(--ag),var(--ab),.3);border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;font-size:13px;color:var(--dim);line-height:1.7;font-style:italic;transition:border-color .8s;}
 
 /* Live risk badge in corner */
+/* Danger meter bar at bottom of question card */
+.danger-meter{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.03);overflow:hidden;border-radius:0 0 24px 24px;}
+.danger-meter-fill{height:100%;width:0%;transition:width .6s cubic-bezier(.25,.8,.25,1),background .6s;border-radius:0 2px 2px 0;}
+
 .live-risk-badge{
   position:absolute;top:20px;right:28px;
   font-family:'Space Mono',monospace;font-size:10px;
@@ -594,6 +598,8 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 
 /* ══ RESULT CARD INNER GLOW ══ */
 #res-card::after{content:'';position:absolute;top:0;left:50%;width:60%;height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(var(--ar),var(--ag),var(--ab),.3),transparent);transition:background 1s;pointer-events:none;}
+/* Result card top gradient glow */
+#res-card::before{content:'';position:absolute;top:0;left:0;right:0;height:200px;background:radial-gradient(ellipse 80% 160px at 50% 0%,rgba(var(--ar),var(--ag),var(--ab),.06) 0%,transparent 70%);pointer-events:none;z-index:0;border-radius:24px 24px 0 0;transition:background 1s;}
 
 /* ══ LOADING SCREEN ENHANCED ══ */
 .load-title{background:linear-gradient(135deg,#fff 40%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -738,6 +744,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="step-dots" id="step-dots"></div>
   </div>
   <div class="card" id="q-card">
+    <div class="danger-meter"><div class="danger-meter-fill" id="danger-meter"></div></div>
     <div class="live-risk-badge" id="lrb"><div class="lrb-dot" id="lrb-dot"></div><span class="lrb-val" id="lrb-val">0%</span></div>
     <div class="q-num" id="q-num">01</div>
     <div id="branch-flag" style="display:none"><div class="branch-tag">⚡ FOLLOW-UP</div></div>
@@ -1573,6 +1580,12 @@ function updateTheme(){
     const col=pct<.3?'#34d399':pct<.6?'#fbbf24':pct<.8?'#f59e0b':'#ef4444';
     document.getElementById('lrb-dot').style.background=col;
     document.getElementById('lrb-val').style.color=col;
+  }
+  // Danger meter bar
+  const dmEl=document.getElementById('danger-meter');
+  if(dmEl){
+    dmEl.style.width=Math.round(pct*100)+'%';
+    dmEl.style.background=pct<.3?'#34d399':pct<.5?'#a3e635':pct<.7?'#f59e0b':'#ef4444';
   }
   // Question card danger gradient
   const qCard=document.getElementById('q-card');
