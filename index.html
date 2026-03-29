@@ -3247,6 +3247,80 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ DEATH CLOCK PULSE ON SECOND CHANGE ════
+(function(){
+  let lastSec=-1;
+  const origUpdate=updateDeathClock;
+  updateDeathClock=function(){
+    origUpdate();
+    const secEl=document.getElementById('dc-secs');
+    if(!secEl)return;
+    const cur=parseInt(secEl.textContent);
+    if(cur!==lastSec){
+      lastSec=cur;
+      secEl.style.transform='scale(1.2)';secEl.style.color='rgba(248,113,113,.8)';
+      setTimeout(()=>{secEl.style.transform='scale(1)';secEl.style.color='';},150);
+    }
+  };
+})();
+
+// ════ TESTIMONIAL HOVER EXPAND ════
+(function(){
+  document.addEventListener('mouseover',e=>{
+    const card=e.target.closest('.tcard');
+    if(!card)return;
+    // Pause scroll animation
+    const inner=card.closest('.test-scroll-inner');
+    if(inner)inner.style.animationPlayState='paused';
+  });
+  document.addEventListener('mouseout',e=>{
+    const card=e.target.closest('.tcard');
+    if(!card)return;
+    const inner=card.closest('.test-scroll-inner');
+    if(inner)inner.style.animationPlayState='running';
+  });
+})();
+
+// ════ PROPHECY DRAMATIC ENTRANCE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    // Add typing effect to prophecy when it scrolls into view
+    const propEl=document.getElementById('prophecy-text');
+    if(!propEl||propEl.dataset.animated)return;
+    const ioObs=new IntersectionObserver(entries=>{
+      if(!entries[0].isIntersecting)return;
+      ioObs.disconnect();
+      propEl.dataset.animated='true';
+      const text=propEl.textContent;
+      propEl.textContent='';propEl.classList.add('type-cursor');
+      let i=0;
+      function type(){
+        if(i<text.length){propEl.textContent+=text[i];i++;setTimeout(type,30+(Math.random()*15));}
+        else{propEl.classList.remove('type-cursor');}
+      }
+      type();
+    },{threshold:.5});
+    ioObs.observe(propEl.closest('.rs')||propEl);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ PULSING WARNING BOX ON LANDING ════
+(function(){
+  const warn=document.querySelector('.warning-icon');
+  if(!warn)return;
+  warn.addEventListener('click',()=>{
+    const box=warn.closest('.warning-box');
+    if(!box)return;
+    box.style.borderColor='rgba(239,68,68,.3)';
+    box.style.boxShadow='0 0 20px rgba(239,68,68,.1)';
+    setTimeout(()=>{box.style.borderColor='';box.style.boxShadow='';},1500);
+    if(navigator.vibrate)navigator.vibrate([20,40,20]);
+  });
+})();
+
 // ════ OPTION HOVER SOUND PREVIEW ════
 (function(){
   let lastHoverTime=0;
