@@ -68,7 +68,7 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
 @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
 .live-text{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);}
 .live-count{font-size:11px;color:var(--dim);margin-left:4px;}
-.glitch-title{font-size:clamp(40px,9vw,68px);font-weight:900;line-height:1.1;text-align:center;color:#fff;letter-spacing:-1px;margin-bottom:8px;position:relative;}
+.glitch-title{font-size:clamp(40px,9vw,68px);font-weight:900;line-height:1.1;text-align:center;color:#fff;letter-spacing:-1px;margin-bottom:8px;position:relative;text-shadow:0 0 80px rgba(var(--ar),var(--ag),var(--ab),.15);}
 .glitch-title::before,.glitch-title::after{content:attr(data-text);position:absolute;top:0;left:0;right:0;overflow:hidden;clip:rect(0,0,0,0);}
 .glitch-title::before{left:2px;text-shadow:-2px 0 #ef4444;animation:g1 5s infinite;}
 .glitch-title::after {left:-2px;text-shadow:2px 0 #60a5fa;animation:g2 5s infinite;}
@@ -92,8 +92,10 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
 .cat-preview{width:100%;margin-bottom:24px;}
 .cat-preview-title{font-size:11px;font-weight:500;letter-spacing:3px;color:var(--dim);margin-bottom:12px;text-align:center;text-transform:uppercase;}
 .cat-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
-.cpill{display:flex;align-items:center;gap:7px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:100px;padding:8px 16px;font-size:12px;font-weight:500;transition:all .2s;cursor:default;}
-.cpill:hover{background:rgba(var(--ar),var(--ag),var(--ab),.08);border-color:rgba(var(--ar),var(--ag),var(--ab),.25);transform:translateY(-2px);}
+.cpill{display:flex;align-items:center;gap:7px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:100px;padding:8px 16px;font-size:12px;font-weight:500;transition:all .2s;cursor:default;animation:pillFadeIn .5s ease both;}
+.cpill:nth-child(1){animation-delay:.1s}.cpill:nth-child(2){animation-delay:.15s}.cpill:nth-child(3){animation-delay:.2s}.cpill:nth-child(4){animation-delay:.25s}.cpill:nth-child(5){animation-delay:.3s}.cpill:nth-child(6){animation-delay:.35s}.cpill:nth-child(7){animation-delay:.4s}
+@keyframes pillFadeIn{from{opacity:0;transform:translateY(8px) scale(.95)}to{opacity:1;transform:none}}
+.cpill:hover{background:rgba(var(--ar),var(--ag),var(--ab),.08);border-color:rgba(var(--ar),var(--ag),var(--ab),.25);transform:translateY(-2px);box-shadow:0 4px 16px rgba(var(--ar),var(--ag),var(--ab),.08);}
 .cpill-num{font-size:10px;color:var(--dim);}
 .testimonials{width:100%;margin-bottom:24px;}
 .test-title{font-size:11px;font-weight:500;letter-spacing:3px;color:var(--dim);margin-bottom:12px;text-align:center;text-transform:uppercase;}
@@ -818,6 +820,29 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 <button class="back-to-top" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
+// ════ CARD TILT (desktop only) ════
+if(!('ontouchstart' in window)){
+  const qCard=document.getElementById('q-card');
+  if(qCard){
+    qCard.style.transition+= ',transform .15s ease';
+    qCard.addEventListener('mousemove',e=>{
+      const rect=qCard.getBoundingClientRect();
+      const x=(e.clientX-rect.left)/rect.width-.5;
+      const y=(e.clientY-rect.top)/rect.height-.5;
+      qCard.style.transform=`perspective(800px) rotateY(${x*3}deg) rotateX(${-y*3}deg)`;
+    });
+    qCard.addEventListener('mouseleave',()=>{qCard.style.transform='perspective(800px) rotateY(0) rotateX(0)';});
+  }
+}
+
+// ════ SCORE RING EASTER EGG ════
+document.querySelector('.score-ring-wrap')?.addEventListener('dblclick',function(){
+  this.style.transition='transform .4s cubic-bezier(.34,1.56,.64,1)';
+  this.style.transform='scale(1.15) rotate(360deg)';
+  setTimeout(()=>{this.style.transform='scale(1) rotate(0deg)';},500);
+  if(navigator.vibrate)navigator.vibrate([20,50,20]);
+});
+
 // ════ BACK TO TOP ════
 window.addEventListener('scroll',()=>{const btt=document.getElementById('btt');if(btt)btt.classList.toggle('show',window.scrollY>600);},{passive:true});
 
