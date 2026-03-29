@@ -4779,6 +4779,84 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ ANIMATED SCORE TICKER ON INTRO (if returning user) ════
+(function(){
+  try{
+    const hist=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+    if(hist.length===0)return;
+    const scores=hist.map(h=>h.s).filter(s=>s!==undefined);
+    if(scores.length===0)return;
+    const latest=scores[scores.length-1];
+    const avg=Math.round(scores.reduce((s,v)=>s+v,0)/scores.length);
+    const intro=document.getElementById('sec-intro');
+    if(!intro)return;
+    const ticker=document.createElement('div');
+    ticker.style.cssText='display:flex;justify-content:center;gap:20px;margin-bottom:12px;opacity:0;animation:tipFadeIn .5s .5s ease both;';
+    ticker.innerHTML=`
+      <div style="text-align:center;padding:6px 14px;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:10px;">
+        <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:${latest>=60?'#ef4444':latest>=30?'#fbbf24':'#34d399'}">${latest}</div>
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;">LAST SCORE</div>
+      </div>
+      <div style="text-align:center;padding:6px 14px;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:10px;">
+        <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--dim)">${avg}</div>
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;">AVG SCORE</div>
+      </div>
+      <div style="text-align:center;padding:6px 14px;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:10px;">
+        <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--accent)">${scores.length}</div>
+        <div style="font-size:8px;color:var(--dim);letter-spacing:1px;">TESTS</div>
+      </div>`;
+    const liveRow=intro.querySelector('.live-row');
+    if(liveRow)liveRow.after(ticker);
+  }catch(e){}
+})();
+
+// ════ HIDDEN ACHIEVEMENT GALLERY ════
+(function(){
+  // Add achievement gallery button on landing if user has achievements
+  try{
+    const achs=JSON.parse(localStorage.getItem('sdi-achievements')||'[]');
+    if(achs.length===0)return;
+    const intro=document.getElementById('sec-intro');
+    if(!intro)return;
+    const allAchs={
+      'first-test':{icon:'🎯',name:'初次检测'},'danger-zone':{icon:'☠️',name:'极度危险'},
+      'immortal':{icon:'🛡️',name:'不死之身'},'nice':{icon:'😏',name:'Nice'},
+      'answer':{icon:'🌌',name:'终极答案'},'regular':{icon:'📋',name:'常客'},
+      'addict':{icon:'🔬',name:'沉迷检测'},'night-owl':{icon:'🦉',name:'夜猫子'},
+      'theme-switch':{icon:'🎨',name:'主题达人'},'terminal':{icon:'💻',name:'终端模式'},
+      'sos':{icon:'🆘',name:'求助信号'},'hacker':{icon:'👨‍💻',name:'黑客模式'},
+      'secret-stats':{icon:'🔍',name:'数据分析师'},'improver':{icon:'📈',name:'健康进步者'},
+      'speedster':{icon:'⚡',name:'闪电手'},'thinker':{icon:'🤔',name:'深思熟虑'},
+      'weekly-streak':{icon:'📅',name:'一周不落'},'loyal':{icon:'💎',name:'忠实用户'},
+      'superfan':{icon:'🌟',name:'超级粉丝'},'zen':{icon:'🧘',name:'禅意时刻'},
+    };
+    const btn=document.createElement('div');
+    btn.style.cssText='text-align:center;margin-bottom:12px;cursor:pointer;opacity:0;animation:tipFadeIn .5s .7s ease both;';
+    btn.innerHTML=`<span style="font-size:10px;padding:5px 14px;background:rgba(var(--ar),var(--ag),var(--ab),.05);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:100px;color:var(--accent);">🏆 已解锁 ${achs.length} 个成就</span>`;
+    btn.onclick=function(){
+      const overlay=document.createElement('div');
+      overlay.style.cssText='position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);animation:fadeUp .3s ease;cursor:pointer;';
+      overlay.innerHTML=`<div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:28px;max-width:360px;width:90%;" onclick="event.stopPropagation()">
+        <div style="font-size:9px;letter-spacing:3px;color:var(--accent);margin-bottom:16px;text-align:center;">🏆 ACHIEVEMENT GALLERY</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+          ${Object.entries(allAchs).map(([id,a])=>{
+            const unlocked=achs.includes(id);
+            return`<div style="text-align:center;padding:8px 4px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid ${unlocked?'rgba(var(--ar),var(--ag),var(--ab),.15)':'rgba(255,255,255,.04)'};opacity:${unlocked?'1':'.3'};">
+              <div style="font-size:20px;${unlocked?'':'filter:grayscale(1);'}">${a.icon}</div>
+              <div style="font-size:8px;color:var(--dim);margin-top:2px;">${unlocked?a.name:'???'}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div style="text-align:center;margin-top:14px;font-size:9px;color:var(--dim);">${achs.length}/${Object.keys(allAchs).length} 已解锁 · 点击外部关闭</div>
+      </div>`;
+      overlay.addEventListener('click',()=>{overlay.style.opacity='0';overlay.style.transition='opacity .2s';setTimeout(()=>overlay.remove(),200);});
+      document.body.appendChild(overlay);
+    };
+    const disclaimer=intro.querySelector('.start-disclaimer');
+    if(disclaimer)disclaimer.before(btn);
+  }catch(e){}
+})();
+
 // ════ "WOULD YOU RATHER" HEALTH EDITION ════
 (function(){
   const obs=new MutationObserver(()=>{
