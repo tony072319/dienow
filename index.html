@@ -754,6 +754,34 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
 .sb-dim{color:var(--dim);}
 .sb-val{font-family:'Space Mono',monospace;font-weight:700;}
 
+/* ══ IDLE PULSE ON LANDING STATS ══ */
+.lstat{transition:transform .2s,border-color .3s,box-shadow .3s;}
+.lstat:hover{transform:translateY(-3px);border-color:rgba(var(--ar),var(--ag),var(--ab),.2);box-shadow:0 8px 24px rgba(var(--ar),var(--ag),var(--ab),.08);}
+.lstat-num{display:inline-block;transition:transform .3s;}
+.lstat:hover .lstat-num{transform:scale(1.12);}
+
+/* ══ CPILL INTERACTION ══ */
+.cpill{transition:all .2s;cursor:default;}
+.cpill:hover{background:rgba(var(--ar),var(--ag),var(--ab),.08);border-color:rgba(var(--ar),var(--ag),var(--ab),.25);transform:translateY(-2px) scale(1.02);box-shadow:0 4px 16px rgba(var(--ar),var(--ag),var(--ab),.08);}
+
+/* ══ PRINT STYLES ══ */
+@media print{
+  body{background:#fff!important;color:#000!important;}
+  #vignette,#ambient,#noise-overlay,#particle-canvas,.parallax-orb,.danger-flash,.combo-toast,.theme-toggle,.res-nav,.back-to-top,.toast,#scroll-progress{display:none!important;}
+  .card{background:#fff!important;border:1px solid #ddd!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+  .card::before,.card::after{display:none!important;}
+  .prophecy-card,.doctor-card,.survival-card,.timeline-card,.obituary-card,.lastwords-card,.priority-card,.advice-card,.archetype-card{border:1px solid #ddd!important;background:#fafafa!important;}
+  .res-btns,.btn-share,.btn-retry{display:none!important;}
+  .glitch-title::before,.glitch-title::after{display:none!important;}
+  .wrap{max-width:100%;padding:20px;}
+  .rs{opacity:1!important;transform:none!important;}
+  .score-num,.vital-val,.dim-pct,.pct-num{color:#000!important;}
+  .sec-label{color:#333!important;}
+  .res-level{-webkit-text-fill-color:initial!important;background:none!important;}
+  .disclaimer{color:#666!important;opacity:1!important;}
+  @page{margin:1.5cm;}
+}
+
 /* Reduced motion */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
@@ -3194,6 +3222,51 @@ function stopAmbient(){
   });
   // Close on outside click
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
+})();
+
+// ════ LONG-PRESS OPTION FOR EXTRA INFO ════
+(function(){
+  let pressTimer=null,pressEl=null;
+  document.addEventListener('touchstart',e=>{
+    const item=e.target.closest('.eg-item');if(!item)return;
+    pressEl=item;
+    pressTimer=setTimeout(()=>{
+      // Show danger level info on long press
+      const dots=item.querySelectorAll('.eg-danger-dot span').length;
+      const level=dots>=3?'极危':dots>=2?'高危':dots>=1?'警戒':'安全';
+      const col=dots>=2?'#ef4444':dots>=1?'#fbbf24':'#34d399';
+      const tip=document.createElement('div');
+      tip.style.cssText=`position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.92);border:1px solid ${col}40;border-radius:10px;padding:8px 14px;font-size:11px;color:${col};white-space:nowrap;z-index:100;animation:feedSlideIn .3s;pointer-events:none;`;
+      tip.textContent=`危险等级：${level}`;
+      item.style.position='relative';item.appendChild(tip);
+      setTimeout(()=>tip.remove(),1500);
+      if(navigator.vibrate)navigator.vibrate(30);
+    },500);
+  },{passive:true});
+  document.addEventListener('touchend',()=>{clearTimeout(pressTimer);pressEl=null;},{passive:true});
+  document.addEventListener('touchmove',()=>{clearTimeout(pressTimer);},{passive:true});
+})();
+
+// ════ IDLE ANIMATION: SUBTLE CARD BREATHING ════
+(function(){
+  // On landing page, cards subtly "breathe" when idle
+  let idleTimer=null;
+  function resetIdle(){
+    clearTimeout(idleTimer);
+    document.querySelectorAll('.lstat').forEach(el=>el.style.animation='');
+    idleTimer=setTimeout(()=>{
+      if(!document.getElementById('sec-intro')?.classList.contains('active'))return;
+      document.querySelectorAll('.lstat').forEach((el,i)=>{
+        el.style.animation=`idleBreathe 3s ease-in-out ${i*.3}s infinite`;
+      });
+    },5000);
+  }
+  document.addEventListener('mousemove',resetIdle,{passive:true});
+  document.addEventListener('touchstart',resetIdle,{passive:true});
+  resetIdle();
+  const style=document.createElement('style');
+  style.textContent='@keyframes idleBreathe{0%,100%{transform:translateY(0);box-shadow:0 0 0 transparent}50%{transform:translateY(-3px);box-shadow:0 4px 16px rgba(var(--ar),var(--ag),var(--ab),.06)}}';
+  document.head.appendChild(style);
 })();
 
 // ════ MOUSE TRAIL PARTICLES (result page) ════
