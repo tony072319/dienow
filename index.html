@@ -724,6 +724,13 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
   .start-btn{padding:16px 40px;font-size:16px;}
   .body-heatmap{flex-direction:column;align-items:center;gap:16px;}
   .body-svg-wrap{width:80px;height:140px;}
+  .dim-gauge-grid{grid-template-columns:repeat(auto-fit,minmax(85px,1fr));gap:6px;}
+  .dim-gauge{padding:10px 6px;}
+  .dim-gauge-ring{width:44px;height:44px;}
+  .dim-gauge-val{font-size:11px;}
+  .age-compare{flex-direction:column;text-align:center;gap:12px;}
+  .week-heat{gap:4px;}
+  .week-day-box{width:24px;height:24px;font-size:10px;}
   .radar-wrap svg{max-width:260px;}
   .archetype-card{padding:18px;gap:14px;}
   .arch-icon{font-size:40px;}
@@ -1655,6 +1662,12 @@ const PROFESSIONS=[
   {icon:'🎨',name:'自由插画师',avg:38,desc:'作息自由+久坐+社交较少'},
   {icon:'🧘',name:'瑜伽教练',avg:18,desc:'规律运动+饮食健康+情绪稳定'},
   {icon:'👨‍🌾',name:'有机农场主',avg:15,desc:'户外运动+健康饮食+低压生活'},
+  {icon:'🚑',name:'120急救医生',avg:70,desc:'轮班制+高压急救+睡眠碎片化'},
+  {icon:'📱',name:'短视频创作者',avg:64,desc:'日夜颠倒+焦虑流量+久坐剪辑'},
+  {icon:'🏢',name:'房产中介经理',avg:56,desc:'高压业绩+饮食不规律+情绪消耗'},
+  {icon:'🎵',name:'音乐制作人',avg:50,desc:'深夜创作+不规律作息+咖啡依赖'},
+  {icon:'🐕',name:'宠物训练师',avg:28,desc:'户外活动多+情绪稳定+规律作息'},
+  {icon:'🏊',name:'游泳教练',avg:22,desc:'规律运动+体能良好+压力适中'},
 ];
 function getProfComparison(score){
   const sorted=[...PROFESSIONS].sort((a,b)=>Math.abs(a.avg-score)-Math.abs(b.avg-score));
@@ -1982,6 +1995,8 @@ function showMilestone(msg){
   el.textContent=msg;document.body.appendChild(el);
   requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='translateX(-50%) translateY(0)';});
   setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(-50%) translateY(-20px)';setTimeout(()=>el.remove(),300);},2000);
+  // Milestone sound
+  if(soundOn){ensureAudio();[523,659,784].forEach((f,i)=>{const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.connect(gain);gain.connect(audioCtx.destination);osc.frequency.value=f;osc.type='sine';const t=audioCtx.currentTime+i*.08;gain.gain.setValueAtTime(.08,t);gain.gain.exponentialRampToValueAtTime(.001,t+.2);osc.start(t);osc.stop(t+.2);});}
 }
 function getPersonalizedLoadMsgs(){
   const msgs=['SCANNING VITALS'];
