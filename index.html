@@ -9385,6 +9385,217 @@ ${line}
   obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
 
+// ════ CANVAS SHARE IMAGE GENERATOR ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('canvas-share-btn'))return;
+      const shareWrap=sec.querySelector('.share-row')||sec.querySelector('[class*="share"]');
+      const btn=document.createElement('button');
+      btn.id='canvas-share-btn';
+      btn.style.cssText='background:linear-gradient(135deg,#7c6ef0,#a78bfa);border:none;color:#fff;padding:10px 20px;border-radius:14px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(124,110,240,.3);display:flex;align-items:center;gap:6px;margin:12px auto;';
+      btn.innerHTML='📸 生成分享图片';
+      btn.addEventListener('click',async()=>{
+        btn.textContent='生成中…';btn.disabled=true;
+        try{
+          const score=calcScore();
+          const dims=calcDims();
+          const age=parseInt(document.getElementById('age-input')?.value)||28;
+          const c=document.createElement('canvas');
+          c.width=540;c.height=960;
+          const ctx=c.getContext('2d');
+          // Background
+          const grad=ctx.createLinearGradient(0,0,0,960);
+          grad.addColorStop(0,'#0f1117');grad.addColorStop(0.5,'#131620');grad.addColorStop(1,'#0f1117');
+          ctx.fillStyle=grad;ctx.fillRect(0,0,540,960);
+          // Decorative elements
+          ctx.fillStyle='rgba(124,110,240,.03)';
+          ctx.beginPath();ctx.arc(270,200,180,0,Math.PI*2);ctx.fill();
+          // Title
+          ctx.textAlign='center';
+          ctx.fillStyle='rgba(255,255,255,.4)';ctx.font='bold 12px sans-serif';
+          ctx.letterSpacing='4px';
+          ctx.fillText('SUDDEN DEATH INDEX',270,60);
+          // Score circle
+          const color=score>=70?'#ef4444':score>=45?'#f59e0b':score>=25?'#facc15':'#4ade80';
+          ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=10;
+          ctx.beginPath();ctx.arc(270,200,90,0,Math.PI*2);ctx.stroke();
+          ctx.strokeStyle=color;ctx.lineWidth=10;ctx.lineCap='round';
+          ctx.beginPath();ctx.arc(270,200,90,-Math.PI/2,-Math.PI/2+(score/100)*Math.PI*2);ctx.stroke();
+          // Score number
+          ctx.fillStyle='#fff';ctx.font='bold 56px sans-serif';ctx.textAlign='center';
+          ctx.fillText(score,270,218);
+          ctx.fillStyle='rgba(255,255,255,.3)';ctx.font='14px sans-serif';
+          ctx.fillText('/100',270,245);
+          // Grade
+          const grade=score>=80?'S':score>=65?'A':score>=45?'B':score>=25?'C':'D';
+          ctx.fillStyle=color;ctx.font='bold 18px sans-serif';
+          ctx.fillText(grade+'级 · '+age+'岁',270,290);
+          // Dimension bars
+          ctx.textAlign='left';
+          dims.forEach((d,i)=>{
+            const y=350+i*48;
+            ctx.fillStyle='rgba(255,255,255,.5)';ctx.font='12px sans-serif';
+            ctx.fillText(d.name,50,y);
+            ctx.fillStyle='rgba(255,255,255,.15)';ctx.font='bold 12px sans-serif';
+            ctx.fillText(d.pct+'%',470,y);
+            // Bar background
+            ctx.fillStyle='rgba(255,255,255,.04)';
+            ctx.fillRect(50,y+8,420,8);
+            // Bar fill
+            const barColor=d.pct>=60?'#ef4444':d.pct>=40?'#f59e0b':'#4ade80';
+            ctx.fillStyle=barColor;
+            ctx.fillRect(50,y+8,420*(d.pct/100),8);
+          });
+          // Footer
+          ctx.textAlign='center';
+          ctx.fillStyle='rgba(255,255,255,.2)';ctx.font='11px sans-serif';
+          ctx.fillText('猝死指数测试 · '+new Date().toLocaleDateString(),270,720);
+          ctx.fillStyle='rgba(255,255,255,.1)';ctx.font='10px sans-serif';
+          ctx.fillText('本测试纯属娱乐，不构成医学建议',270,745);
+          // Watermark
+          ctx.fillStyle='rgba(255,255,255,.05)';ctx.font='bold 80px sans-serif';
+          ctx.fillText('💀',270,880);
+          // Download
+          c.toBlob(blob=>{
+            if(!blob){btn.textContent='生成失败';return;}
+            const url=URL.createObjectURL(blob);
+            const a=document.createElement('a');
+            a.href=url;a.download=`sdi-result-${score}.png`;
+            a.click();
+            URL.revokeObjectURL(url);
+            btn.innerHTML='📸 生成分享图片';btn.disabled=false;
+            // Also try Web Share
+            if(navigator.canShare&&navigator.canShare({files:[new File([blob],'sdi.png',{type:'image/png'})]})){
+              const file=new File([blob],'sdi-result.png',{type:'image/png'});
+              navigator.share({files:[file],title:'猝死指数测试',text:`我的猝死指数是${score}分`}).catch(()=>{});
+            }
+          },'image/png');
+        }catch(e){btn.innerHTML='📸 生成分享图片';btn.disabled=false;}
+      });
+      // Insert after share section or score ring
+      const scoreRing=sec.querySelector('.score-ring-wrap');
+      if(scoreRing)scoreRing.parentNode.insertBefore(btn,scoreRing.nextSibling);
+      else{
+        const rs0=document.getElementById('rs0');
+        if(rs0)rs0.appendChild(btn);
+      }
+    },1200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH DIARY" ENTRY ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-diary'))return;
+      const score=calcScore();
+      const now=new Date();
+      const dayNames=['日','一','二','三','四','五','六'];
+      const months=['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+      const mood=score>=70?'😵':score>=50?'😰':score>=30?'😐':'😊';
+      const weather=['☀️','🌤️','⛅','🌧️','🌩️'][Math.min(4,Math.floor(score/20))];
+      const el=document.createElement('div');
+      el.id='health-diary';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:linear-gradient(135deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--card-border);border-radius:12px;padding:16px;position:relative;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed rgba(255,255,255,.06);">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text);">📔 健康日记</div>
+            <div style="font-size:9px;color:var(--dim);">${months[now.getMonth()]} ${now.getDate()}日 · 星期${dayNames[now.getDay()]}</div>
+          </div>
+          <div style="display:flex;gap:4px;font-size:16px;">${mood} ${weather}</div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.45);line-height:2;font-style:italic;">
+          今天做了猝死指数测试，得了${score}分。${score>=60?'说实话有点慌，也许该认真对待一下健康了。':'结果还算正常，但还是有需要改进的地方。'}
+          ${score>=40?'最需要改善的是那几个高分维度，明天开始行动。':'继续保持现在的生活方式就好。'}
+        </div>
+        <div style="margin-top:10px;">
+          <textarea id="diary-input" placeholder="写下你的想法…" style="width:100%;min-height:40px;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:8px;padding:8px;font-size:10px;color:var(--text);resize:vertical;font-family:inherit;"></textarea>
+          <button onclick="try{const v=document.getElementById('diary-input').value;if(v){localStorage.setItem('sdi-diary-'+Date.now(),v);this.textContent='已保存 ✓';this.disabled=true;}}catch(e){}" style="margin-top:4px;background:rgba(var(--ar),var(--ag),var(--ab),.1);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.2);color:var(--accent);padding:4px 14px;border-radius:8px;font-size:10px;cursor:pointer;">保存日记</button>
+        </div>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(13,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },5500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ ENHANCED QUESTION TRANSITION: CATEGORY COLOR ════
+(function(){
+  const catColors={
+    sleep:'59,130,246',exercise:'34,197,94',diet:'245,158,11',
+    work:'168,85,247',stress:'239,68,68',habit:'236,72,153',emotion:'99,102,241',
+  };
+  const origRenderQ=window.renderQ;
+  if(!origRenderQ)return;
+  window.renderQ=function(){
+    origRenderQ.apply(this,arguments);
+    // Change ambient glow based on current category
+    if(!window.QS||!window.CI)return;
+    const q=window.QS[window.CI];
+    if(!q)return;
+    const cat=q.cat;
+    const rgb=catColors[cat];
+    if(!rgb)return;
+    const ambient=document.getElementById('ambient');
+    if(ambient){
+      ambient.style.background=`radial-gradient(ellipse 72% 32% at 50% 0%, rgba(${rgb},.08) 0%, transparent 70%)`;
+    }
+  };
+})();
+
+// ════ "HEALTH SUMMARY CARD" FOR CLIPBOARD ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('summary-card'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const best=dims.reduce((a,b)=>a.pct<b.pct?a:b);
+      const grade=score>=80?'S':score>=65?'A':score>=45?'B':score>=25?'C':'D';
+      const summary=`╔════════════════════════╗
+║  猝死指数测试结果  ║
+╠════════════════════════╣
+║ 分数: ${String(score).padStart(3,' ')}/100  等级: ${grade}     ║
+║ 最危维度: ${worst.name.padEnd(8,' ')} ${String(worst.pct).padStart(3,' ')}%  ║
+║ 最优维度: ${best.name.padEnd(8,' ')} ${String(best.pct).padStart(3,' ')}%  ║
+╠════════════════════════╣
+${dims.map(d=>`║ ${d.name.padEnd(9,' ')} ${'█'.repeat(Math.round(d.pct/10))}${'░'.repeat(10-Math.round(d.pct/10))} ${String(d.pct).padStart(3,' ')}% ║`).join('\n')}
+╚════════════════════════╝
+你也来测测: 猝死指数测试`;
+      const el=document.createElement('div');
+      el.id='summary-card';
+      el.className='rs on';
+      el.innerHTML=`<div style="text-align:center;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:8px;">📋 文字版结果卡片</div>
+        <pre style="font-size:9px;color:rgba(255,255,255,.4);line-height:1.4;text-align:left;background:rgba(0,0,0,.2);padding:10px;border-radius:8px;overflow-x:auto;font-family:'Courier New',monospace;">${summary}</pre>
+        <button onclick="navigator.clipboard?.writeText(this.previousElementSibling.textContent).then(()=>{this.textContent='已复制 ✓';setTimeout(()=>{this.textContent='📋 复制到剪贴板';},1500);});" style="margin-top:8px;background:rgba(var(--ar),var(--ag),var(--ab),.1);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.2);color:var(--accent);padding:6px 16px;border-radius:10px;font-size:10px;cursor:pointer;">📋 复制到剪贴板</button>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target)target.appendChild(el);
+    },6000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // Check URL hash on load for shared results
 (function checkURLResult(){
   const hash=location.hash;if(!hash.startsWith('#r='))return;
