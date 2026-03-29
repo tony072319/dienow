@@ -26,6 +26,9 @@
 html{scroll-behavior:smooth;}
 body{background:#060606;color:var(--text);font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;min-height:100vh;overflow-x:hidden;transition:background 1.2s ease;}
 
+/* ══ NOISE GRAIN TEXTURE ══ */
+#noise-overlay{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.035;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px;}
+
 #grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(var(--ar),var(--ag),var(--ab),.02) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--ar),var(--ag),var(--ab),.02) 1px,transparent 1px);background-size:48px 48px;animation:gridMove 28s linear infinite;}
 @keyframes gridMove{to{transform:translate(48px,48px);}}
 #scanlines{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.13) 3px,rgba(0,0,0,.13) 4px);opacity:.3;}
@@ -514,6 +517,70 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .streak-fire{animation:firePulse 1s ease infinite;font-size:14px;}
 @keyframes firePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
 
+/* ══ ANIMATED GRADIENT BORDERS ══ */
+@property --border-angle{syntax:'<angle>';initial-value:0deg;inherits:false;}
+@keyframes borderSpin{to{--border-angle:360deg;}}
+.prophecy-card,.doctor-card,.obituary-card,.lastwords-card,.timeline-card{position:relative;}
+.prophecy-card::before,.doctor-card::before,.timeline-card::before{content:'';position:absolute;inset:-1px;border-radius:17px;padding:1px;background:conic-gradient(from var(--border-angle),transparent 40%,rgba(var(--ar),var(--ag),var(--ab),.35) 50%,transparent 60%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:borderSpin 6s linear infinite;pointer-events:none;z-index:0;}
+
+/* ══ SECTION DIVIDERS (ECG heartbeat between result sections) ══ */
+.section-divider{width:100%;height:24px;margin:8px 0;display:flex;align-items:center;justify-content:center;opacity:.2;}
+.section-divider svg{width:120px;height:24px;}
+.section-divider path{fill:none;stroke:var(--accent);stroke-width:1.5;transition:stroke .8s;}
+.sd-skull{font-size:10px;margin:0 8px;opacity:.3;line-height:1;}
+
+/* ══ CRT SCANLINE + FLICKER (high-danger results) ══ */
+.crt-mode #scanlines{opacity:.5!important;}
+.crt-mode .wrap{animation:crtFlicker 8s steps(1) infinite;}
+@keyframes crtFlicker{0%,97%,100%{opacity:1}97.5%{opacity:.92}98%{opacity:1}98.5%{opacity:.96}99%{opacity:1}}
+.crt-mode .card{box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 28px 80px rgba(0,0,0,.55),0 0 60px rgba(255,0,68,.08),inset 0 0 120px rgba(255,0,68,.015);}
+.crt-mode .score-num{text-shadow:0 0 10px currentColor,0 0 40px rgba(255,0,68,.2);}
+
+/* ══ ENHANCED CARD HOVER/GLOW STATES ══ */
+.sys-item{transition:border-color .25s,transform .2s,box-shadow .25s;}
+.sys-item:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3),0 0 20px rgba(var(--ar),var(--ag),var(--ab),.05);}
+.vital{transition:border-color .25s,transform .2s,box-shadow .25s;}
+.vital:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.2);transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.3);}
+.survival-card:hover{border-color:rgba(0,255,136,.25);box-shadow:0 0 30px rgba(0,255,136,.06);}
+.prophecy-card:hover{border-color:rgba(255,0,68,.25);box-shadow:0 0 30px rgba(255,0,68,.06);}
+.doctor-card:hover{border-color:rgba(255,255,255,.12);box-shadow:0 0 30px rgba(255,255,255,.03);}
+.timeline-card:hover{border-color:rgba(255,136,0,.2);box-shadow:0 0 30px rgba(255,136,0,.06);}
+.profession-card:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.2);box-shadow:0 0 25px rgba(var(--ar),var(--ag),var(--ab),.05);}
+.prophecy-card,.doctor-card,.survival-card,.timeline-card,.profession-card,.obituary-card,.lastwords-card,.priority-card,.advice-card{transition:border-color .3s,box-shadow .3s,background .3s;}
+
+/* ══ FLOATING SYMBOLS (landing page bg) ══ */
+.floating-symbols{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
+.float-sym{position:absolute;font-size:24px;opacity:.04;animation:floatDrift linear infinite;filter:blur(1px);}
+@keyframes floatDrift{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-60px) rotate(180deg)}100%{transform:translateY(0) rotate(360deg)}}
+
+/* ══ GRADIENT TEXT EFFECTS ══ */
+.gradient-text{background:linear-gradient(135deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.6),#fff,rgba(var(--ar),var(--ag),var(--ab),.8));background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradTextShift 6s ease infinite;}
+@keyframes gradTextShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.res-level{background:linear-gradient(135deg,currentColor 30%,rgba(255,255,255,.8) 50%,currentColor 70%);background-size:200% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:levelShine 3s ease infinite;}
+@keyframes levelShine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ══ VITAL COUNTER ANIMATION ══ */
+.vital-val-anim{display:inline-block;animation:vitalPop .5s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes vitalPop{from{transform:scale(0) translateY(8px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+
+/* ══ ENHANCED SCORE RING: double ring + outer pulse ══ */
+.score-ring-wrap::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(var(--ar),var(--ag),var(--ab),.08);transition:border-color .8s;}
+.score-ring-wrap.extreme::before{border-color:rgba(255,0,68,.2);animation:outerRingPulse 2s ease-in-out infinite;}
+@keyframes outerRingPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.06);opacity:1}}
+.score-ring-wrap::after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(var(--ar),var(--ag),var(--ab),.04);transition:border-color .8s;}
+
+/* ══ LANDING ECG DIVIDER ENHANCED ══ */
+.landing-ecg{position:relative;}
+.landing-ecg::before,.landing-ecg::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:1;pointer-events:none;}
+.landing-ecg::before{left:0;background:linear-gradient(90deg,var(--bg),transparent);}
+.landing-ecg::after{right:0;background:linear-gradient(90deg,transparent,var(--bg));}
+
+/* ══ RESULT CARD INNER GLOW ══ */
+#res-card::after{content:'';position:absolute;top:0;left:50%;width:60%;height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(var(--ar),var(--ag),var(--ab),.3),transparent);transition:background 1s;pointer-events:none;}
+
+/* ══ LOADING SCREEN ENHANCED ══ */
+.load-title{background:linear-gradient(135deg,#fff 40%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
 @media(max-width:520px){
   .card{padding:24px 18px;}
   .dims-grid,.systems-grid{grid-template-columns:1fr;}
@@ -542,7 +609,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 </style>
 </head>
 <body>
-<div id="grid-bg"></div><div id="scanlines"></div><div id="vignette"></div><div id="ambient"></div>
+<div id="grid-bg"></div><div id="scanlines"></div><div id="vignette"></div><div id="ambient"></div><div id="noise-overlay"></div>
 <canvas id="particle-canvas"></canvas>
 <div class="parallax-orb" id="orb1" style="width:400px;height:400px;top:-100px;left:-100px;background:rgba(0,255,136,.04);"></div>
 <div class="parallax-orb" id="orb2" style="width:300px;height:300px;bottom:-80px;right:-80px;background:rgba(0,200,255,.03);"></div>
@@ -556,10 +623,11 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 <div class="wrap">
 
 <!-- ══ LANDING ══ -->
-<section id="sec-intro" class="active anim-fade">
+<section id="sec-intro" class="active anim-fade" style="position:relative;">
+  <div class="floating-symbols" id="float-syms"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v6.0</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v6.3</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div></div>
   <div class="warning-box"><span class="warning-icon">⚠️</span><div class="warning-text"><b>健康提示：</b>本测试为娱乐性健康评估，结果不构成医学诊断。但如果你测完之后感到不适，那可能不是巧合。高分用户建议认真预约体检。</div></div>
@@ -670,14 +738,17 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="rs" id="rs4"><div class="vitals-row"><div class="vital"><span class="vital-icon">🧬</span><span class="vital-val" id="v-bodyage">—</span><span class="vital-lbl">身体年龄</span></div><div class="vital"><span class="vital-icon">❤️</span><span class="vital-val" id="v-heart">—</span><span class="vital-lbl">心脏负荷</span></div><div class="vital"><span class="vital-icon">🔋</span><span class="vital-val" id="v-recovery">—</span><span class="vital-lbl">恢复力</span></div><div class="vital"><span class="vital-icon">🧠</span><span class="vital-val" id="v-stress">—</span><span class="vital-lbl">神经紧张</span></div></div><div class="risk-tags" id="risk-tags"></div></div>
     <div class="rs" id="rs5"><div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 身体系统风险</div><div class="systems-grid" id="systems-grid"></div></div>
     <div class="rs" id="rs6"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 各维度风险贡献</div><div class="radar-wrap"><svg id="radar-svg" viewBox="-10 -10 320 320" xmlns="http://www.w3.org/2000/svg"><defs><filter id="r-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="r-fill-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="100%" stop-color="var(--accent)" stop-opacity=".08"/></radialGradient></defs><g id="r-grid-g"></g><g id="r-axes-g"></g><polygon id="r-poly" points="150,150" fill="url(#r-fill-grad)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" filter="url(#r-glow)"/><g id="r-dots-g"></g><g id="r-labels-g"></g></svg></div><div class="contrib-chart" id="contrib-chart"></div></div>
+    <div class="section-divider"><span class="sd-skull">💀</span><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg><span class="sd-skull">💀</span></div>
     <div class="rs" id="rs7"><div class="prophecy-card"><div class="sec-label" style="color:#ff4466">☠ &nbsp;死亡预言</div><div class="prophecy-text" id="prophecy-text"></div><div class="prophecy-moment" id="prophecy-moment"></div></div></div>
     <div class="rs" id="rs7b"><div class="obituary-card" id="obituary-card"><div class="sec-label" style="color:rgba(255,255,255,.25)">📜 讣告预览 · OBITUARY PREVIEW</div><div class="obituary-text" id="obituary-text"></div><div class="obituary-footer">—— 来自未来的档案</div></div></div>
     <div class="rs" id="rs7c"><div class="lastwords-card"><div class="lw-quote" id="lw-quote"></div><div class="lw-attr" id="lw-attr"></div></div></div>
     <div class="rs" id="rs7d"><div class="survival-card"><div class="sec-label" style="color:#00ff88;margin-bottom:12px">🌱 如果你从今天开始改变</div><div class="survival-items" id="survival-items"></div><div class="survival-note">以上数据基于流行病学模型估算，每改变一个维度，你的未来都会被重写。</div></div></div>
     <div class="rs" id="rs7e"><div class="profession-card"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">📊 你的风险相当于</div><div class="profession-items" id="profession-items"></div></div></div>
-    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v6.0 · AUTOMATED REPORT</div></div></div>
+    <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
+    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v6.3 · AUTOMATED REPORT</div></div></div>
     <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#ff9900;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
+    <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
     <div class="rs" id="rs11"><div class="sec-label" style="color:var(--dim);margin-bottom:10px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px">// 七维分析 · 点击展开建议</div><div class="dims-grid" id="dims-grid"></div></div>
     <div class="rs" id="rs12"><div class="advice-card"><div class="sec-label" style="color:var(--accent);margin-bottom:12px">// 综合改善建议</div><ul class="advice-list" id="advice-list"></ul></div></div>
     <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
@@ -716,6 +787,22 @@ function updateDeathClock(){
 }
 updateDeathClock();setInterval(updateDeathClock,60000);
 document.getElementById('age-input')?.addEventListener('input',updateDeathClock);
+
+// Floating symbols on landing page
+(function initFloatSyms(){
+  const syms=['💀','☠','⚰️','🪦','💊','🩺','❤️‍🩹','🫀','🧬','⏳','🕯️','📉','⚡','🩸'];
+  const container=document.getElementById('float-syms');if(!container)return;
+  for(let i=0;i<18;i++){
+    const el=document.createElement('span');el.className='float-sym';
+    el.textContent=syms[Math.floor(Math.random()*syms.length)];
+    el.style.left=Math.random()*100+'%';el.style.top=Math.random()*100+'%';
+    el.style.fontSize=(14+Math.random()*20)+'px';
+    el.style.animationDuration=(8+Math.random()*12)+'s';
+    el.style.animationDelay=(-Math.random()*10)+'s';
+    el.style.opacity=.02+Math.random()*.03;
+    container.appendChild(el);
+  }
+})();
 
 // ════ RESTORE ════
 (function(){const save=loadProgress();if(save){const bar=document.createElement('div');bar.className='resume-bar';bar.innerHTML=`<span>检测到未完成的测试（${Object.keys(save.ans).length}题已答）</span><button onclick="resumeQuiz(loadProgress());this.parentElement.remove()">继续</button><button onclick="clearProgress();this.parentElement.remove()">重新开始</button>`;document.getElementById('sec-intro').prepend(bar);}})();
@@ -1390,6 +1477,8 @@ function startQuiz(){
   document.getElementById('lrb').classList.remove('show');
   document.getElementById('streak-bar').classList.remove('show');
   document.getElementById('res-card').classList.remove('res-card-chromatic','danger-mode');
+  document.body.classList.remove('crt-mode');
+  document.querySelector('.score-ring-wrap')?.classList.remove('extreme');
   const qcReset=document.getElementById('q-card');if(qcReset){qcReset.style.borderColor='';qcReset.style.boxShadow='';}
   const firstQ=Q[flow[0]];
   showCatSplash(firstQ.cat,()=>{go('sec-question','anim-in');renderQ();});
@@ -1639,6 +1728,11 @@ function getRx(dims){
   return [...dims].sort((a,b)=>b.pct-a.pct).slice(0,3).map(d=>({dim:d.name.replace(/^../,''),rx:RX_MAP[d.key]||''}));
 }
 
+function animVital(id,val,col,delay){
+  const el=document.getElementById(id);
+  el.textContent='—';el.style.color=col;el.classList.remove('vital-val-anim');
+  setTimeout(()=>{el.textContent=val;el.classList.add('vital-val-anim');},600+delay);
+}
 function showResult(){
   const score=calcScore(),level=LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
   const dims=calcDims();const dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
@@ -1648,6 +1742,8 @@ function showResult(){
   startPts();
   document.getElementById('res-card').classList.toggle('danger-mode',score>=80);
   document.getElementById('res-card').classList.toggle('res-card-chromatic',score>=75);
+  // CRT mode for high-danger results
+  document.body.classList.toggle('crt-mode',score>=75);
   // Screen shake for very high scores
   if(score>=80){const rc=document.getElementById('res-card');rc.classList.add('screen-shake');setTimeout(()=>rc.classList.remove('screen-shake'),700);}
   // Extreme ring glow for 90+
@@ -1707,10 +1803,12 @@ function showResult(){
   const hLab=hL<30?'正常':hL<50?'偏高':hL<70?'过载':'危险';const hCol=hL<30?'#00ff88':hL<50?'#ffcc00':hL<70?'#ff8800':'#ff4444';
   const rLab=score<20?'极强':score<40?'良好':score<60?'一般':score<80?'较弱':'极弱';const rCol=score<40?'#00ff88':score<65?'#ffcc00':'#ff4444';
   const nLab=sP<30?'平稳':sP<50?'偏紧':sP<70?'紧张':'高度紧张';const nCol=sP<30?'#00ff88':sP<50?'#ffcc00':sP<70?'#ff8800':'#ff4444';
-  const baEl=document.getElementById('v-bodyage');baEl.textContent=bA+'岁';baEl.style.color=bA<=userAge?'#00ff88':bA<=userAge+8?'#ffcc00':'#ff4444';
-  document.getElementById('v-heart').textContent=hLab;document.getElementById('v-heart').style.color=hCol;
-  document.getElementById('v-recovery').textContent=rLab;document.getElementById('v-recovery').style.color=rCol;
-  document.getElementById('v-stress').textContent=nLab;document.getElementById('v-stress').style.color=nCol;
+  // Animated vital counters with pop-in
+  const baCol=bA<=userAge?'#00ff88':bA<=userAge+8?'#ffcc00':'#ff4444';
+  animVital('v-bodyage',bA+'岁',baCol,0);
+  animVital('v-heart',hLab,hCol,150);
+  animVital('v-recovery',rLab,rCol,300);
+  animVital('v-stress',nLab,nCol,450);
   const tags=document.getElementById('risk-tags');tags.innerHTML='';
   dims.forEach((d,i)=>{const tier=d.pct>=65?'high':d.pct>=40?'med':'low';if(tier==='low'&&score<25)return;const lbl=RISK_TAGS[d.key]?.[tier];if(lbl){const el=document.createElement('div');el.className=`rtag ${tier}`;el.textContent=lbl;el.style.animationDelay=(i*.08)+'s';tags.appendChild(el);}});
   const sys=calcSystems(dims);const sg=document.getElementById('systems-grid');sg.innerHTML='';
@@ -1766,7 +1864,7 @@ function shareResult(){
   const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
   const tags=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,3).map(t=>t.e+t.t);
   const tagLine=tags.length?'\n标签：'+tags.join(' · '):'';
-  const text=`【猝死指数测试 v6.0 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}\n\n${level.desc}\n\n你敢测吗？👉`;
+  const text=`【猝死指数测试 v6.3 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}\n\n${level.desc}\n\n你敢测吗？👉`;
   navigator.clipboard.writeText(text).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);});
 }
 
@@ -1794,7 +1892,7 @@ function downloadCard(){
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v6.1 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v6.3 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -1866,7 +1964,7 @@ function downloadCard(){
   x.fillText(lw.a,cx,dy);
   // Footer
   x.fillStyle='rgba(255,255,255,.12)';x.font='400 15px "Space Mono",monospace';
-  x.fillText('猝死指数测试 💀 Sudden Death Index v6.1',cx,H-70);
+  x.fillText('猝死指数测试 💀 Sudden Death Index v6.3',cx,H-70);
   x.fillStyle='rgba(255,255,255,.08)';x.font='400 13px "Space Mono",monospace';
   x.fillText('测试纯属娱乐 · 不构成医学建议 · 你敢测吗？',cx,H-42);
   // Download
