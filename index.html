@@ -3266,6 +3266,55 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ DOUBLE-CLICK SCORE NUMBER FOR SECRET DETAIL ════
+(function(){
+  document.addEventListener('dblclick',e=>{
+    const num=e.target.closest('.score-num,.score-inner');
+    if(!num)return;
+    const score=parseInt(document.getElementById('score-num')?.textContent)||0;
+    // Show a dramatic "classified" overlay
+    const overlay=document.createElement('div');
+    overlay.style.cssText='position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;animation:konamiFlash .5s ease reverse;cursor:pointer;';
+    const content=document.createElement('div');content.style.cssText='text-align:center;max-width:400px;padding:40px;';
+    const messages={
+      extreme:[`你的猝死指数 ${score} 已超越 ${Math.round(95+score/100*4.9)}% 的测试者。`,`你的身体正在以 ${Math.round(score*1.2)} 倍的速度消耗生命能量。`,`如果用颜色表示你的健康状况，那是一片漆黑中的红色警报。`],
+      high:[`${score} 分意味着你的身体正在发出黄色预警。`,`在同年龄段中，你的健康债务已经超过了平均水平的 ${Math.round(score/60*100)}%。`,`好消息是：看到这条信息说明你还活着。`],
+      mid:[`${score} 分，处于微妙的平衡点。`,`你的身体正在中间地带徘徊，一个习惯的改变就能决定方向。`,`有 ${100-score}% 的改善空间，这比很多人的起点都好。`],
+      low:[`${score} 分？你确定你不是来凡尔赛的？`,`你的身体状态让算法表示：没什么可分析的。`,`在所有测试者中，你是让系统最无聊的那种人。褒义的。`],
+    };
+    const tier=score>=80?'extreme':score>=55?'high':score>=30?'mid':'low';
+    const msgs=messages[tier];
+    const msg=msgs[Math.floor(Math.random()*msgs.length)];
+    content.innerHTML=`<div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:rgba(255,255,255,.2);margin-bottom:20px;">CLASSIFIED ANALYSIS</div><div style="font-size:64px;margin-bottom:16px;filter:drop-shadow(0 0 30px rgba(239,68,68,.3));">🔒</div><div style="font-size:16px;color:#ccc;line-height:1.8;font-style:italic;">${msg}</div><div style="font-size:11px;color:rgba(255,255,255,.2);margin-top:24px;">点击任意处关闭</div>`;
+    overlay.appendChild(content);overlay.onclick=()=>{overlay.style.opacity='0';setTimeout(()=>overlay.remove(),300);};
+    document.body.appendChild(overlay);
+  });
+})();
+
+// ════ ANIMATED ECG LINE ON RESULT PAGE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    // Add animated ECG line to section dividers
+    sec.querySelectorAll('.section-divider svg path').forEach(path=>{
+      const length=path.getTotalLength?.()|| 200;
+      path.style.strokeDasharray=length;
+      path.style.strokeDashoffset=length;
+      path.style.transition='none';
+      const ioObs=new IntersectionObserver(entries=>{
+        if(!entries[0].isIntersecting)return;
+        ioObs.disconnect();
+        path.style.transition='stroke-dashoffset 1s ease';
+        path.style.strokeDashoffset='0';
+      },{threshold:.5});
+      ioObs.observe(path.closest('.section-divider'));
+    });
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ CALENDAR-STYLE "TODAY" CARD ON RESULT PAGE ════
 (function(){
   const obs=new MutationObserver(()=>{
