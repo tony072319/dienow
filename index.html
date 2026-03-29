@@ -2224,6 +2224,9 @@ function showResult(){
   if(score>=80){const rc=document.getElementById('res-card');rc.classList.add('screen-shake');setTimeout(()=>rc.classList.remove('screen-shake'),700);}
   // Extreme ring glow for 90+
   document.querySelector('.score-ring-wrap')?.classList.toggle('extreme',score>=90);
+  // Dynamic favicon and low-score celebration
+  updateFavicon(score);
+  celebrateLowScore(score);
   // Reset streak bar
   document.getElementById('streak-bar').classList.remove('show');
   document.getElementById('rpt-id').textContent='#'+Math.random().toString(36).substr(2,6).toUpperCase();
@@ -2453,7 +2456,22 @@ function showResult(){
     const bold=d.isUser?'font-weight:700;':'';
     demoEl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;${bold}"><span style="font-size:12px;color:${d.isUser?col:'#bbb'};width:130px;flex-shrink:0;text-align:right;">${d.label}</span><div style="flex:1;height:8px;background:rgba(255,255,255,.04);border-radius:10px;overflow:hidden;"><div style="height:100%;width:${w};background:${col};border-radius:10px;transition:width 1s cubic-bezier(.25,.8,.25,1);box-shadow:${d.isUser?'0 0 10px '+col+'60':'none'};"></div></div><span style="font-family:'Space Mono',monospace;font-size:11px;color:${col};width:30px;">${d.avg}</span></div>`;
   });
-  document.getElementById('doctor-text').textContent=getDoctorNote(score,dims,arch);
+  // Animated typing for doctor note
+  (function(){
+    const el=document.getElementById('doctor-text');
+    const text=getDoctorNote(score,dims,arch);
+    el.textContent='';el.classList.add('type-cursor');
+    let i=0;const speed=25;
+    function typeChar(){
+      if(i<text.length){el.textContent+=text[i];i++;setTimeout(typeChar,speed+(Math.random()*20-10));}
+      else{el.classList.remove('type-cursor');}
+    }
+    // Start typing when section becomes visible
+    const obs=new IntersectionObserver(entries=>{
+      if(entries[0].isIntersecting){typeChar();obs.disconnect();}
+    },{threshold:.3});
+    obs.observe(el.closest('.rs')||el);
+  })();
   const rxEl=document.getElementById('rx-items');rxEl.innerHTML='';
   getRx(dims).forEach((r,i)=>{rxEl.innerHTML+=`<div class="rx-item"><span class="rx-num">${i+1}</span><span><b style="color:var(--accent)">${r.dim}：</b>${r.rx}</span></div>`;});
   const tl=document.getElementById('timeline-items');tl.innerHTML='';
@@ -2973,6 +2991,51 @@ function toggleTheme(){
     },1000);
   }
 })();
+
+// ════ DYNAMIC FAVICON ════
+function updateFavicon(score){
+  const emoji=score>=90?'☠️':score>=70?'💀':score>=50?'😰':score>=30?'😐':'💚';
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${emoji}</text></svg>`;
+  let link=document.querySelector('link[rel="icon"]');
+  if(link){link.href='data:image/svg+xml,'+encodeURIComponent(svg);}
+}
+
+// ════ RESULT PAGE CONFETTI ON LOW SCORE ════
+function celebrateLowScore(score){
+  if(score>25)return;
+  // Green/healthy confetti for very healthy results
+  const cols=[[52,211,153],[34,211,153],[163,230,53],[96,165,250],[76,210,160]];
+  for(let i=0;i<30;i++){
+    const[r,g,b]=cols[i%cols.length];
+    pts.push({x:canv.width/2+(Math.random()-.5)*300,y:canv.height*.3,vx:(Math.random()-.5)*4,vy:-Math.random()*4-1,sz:Math.random()*2.5+1,al:.7,r,g,b,life:0,max:150+Math.random()*100,cross:false,rot:0});
+  }
+}
+
+// ════ CARD PARALLAX TILT ON RESULT SECTIONS ════
+(function(){
+  if('ontouchstart' in window)return;
+  document.addEventListener('mousemove',e=>{
+    const cards=document.querySelectorAll('#sec-result .rs.on .card, #sec-result .rs.on .prophecy-card, #sec-result .rs.on .doctor-card, #sec-result .rs.on .archetype-card');
+    cards.forEach(card=>{
+      const rect=card.getBoundingClientRect();
+      if(e.clientY<rect.top-100||e.clientY>rect.bottom+100)return;
+      const x=(e.clientX-rect.left)/rect.width-.5;
+      const y=(e.clientY-rect.top)/rect.height-.5;
+      card.style.transform=`perspective(1200px) rotateY(${x*1.5}deg) rotateX(${-y*1.5}deg)`;
+    });
+  });
+  document.addEventListener('mouseleave',()=>{
+    document.querySelectorAll('#sec-result .card, #sec-result .prophecy-card, #sec-result .doctor-card').forEach(c=>{c.style.transform='';});
+  });
+})();
+
+// ════ DOUBLE-CLICK TO BOOKMARK DIMENSION ════
+document.addEventListener('dblclick',e=>{
+  const dim=e.target.closest('.dim-item');
+  if(!dim)return;
+  dim.style.boxShadow=dim.style.boxShadow?'':'0 0 20px rgba(var(--ar),var(--ag),var(--ab),.2)';
+  dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
+});
 
 // Check URL hash on load for shared results
 (function checkURLResult(){
