@@ -83,8 +83,7 @@ section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
 .cpill-num{font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);}
 .testimonials{width:100%;margin-bottom:24px;}
 .test-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--dim);margin-bottom:12px;text-align:center;text-transform:uppercase;}
-.test-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.tcard{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:14px;}
+.tcard{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:14px;width:200px;flex-shrink:0;}
 .tcard-quote{font-size:12px;line-height:1.7;color:#aaa;margin-bottom:10px;font-style:italic;}
 .tcard-meta{display:flex;align-items:center;gap:8px;}
 .tcard-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
@@ -104,7 +103,15 @@ section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
 @keyframes shimmer{to{transform:translateX(220%);}}
 .start-btn:hover{transform:translateY(-3px);box-shadow:0 0 60px rgba(var(--ar),var(--ag),var(--ab),.55),0 8px 32px rgba(0,0,0,.5);}
 .start-btn:active{transform:scale(.97);}
+@keyframes btnBreathe{0%,100%{box-shadow:0 0 30px rgba(var(--ar),var(--ag),var(--ab),.3),0 4px 24px rgba(0,0,0,.5)}50%{box-shadow:0 0 55px rgba(var(--ar),var(--ag),var(--ab),.6),0 4px 24px rgba(0,0,0,.5),0 0 80px rgba(var(--ar),var(--ag),var(--ab),.2)}}
+.start-btn{animation:btnBreathe 2.5s ease-in-out infinite;}
 .start-disclaimer{font-size:10px;color:var(--dim);margin-top:12px;font-family:'Space Mono',monospace;text-align:center;letter-spacing:.5px;}
+.test-cards{overflow:hidden;position:relative;}
+.test-scroll-inner{display:flex;gap:8px;animation:testimonialScroll 18s linear infinite;width:max-content;}
+.test-scroll-inner:hover{animation-play-state:paused;}
+@keyframes testimonialScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.age-egg{font-size:11px;color:#ff9900;margin-top:6px;opacity:0;transition:opacity .4s;font-family:'Space Mono',monospace;text-align:center;}
+.age-egg.show{opacity:1;}
 
 /* ══ CATEGORY SPLASH ══ */
 #sec-cat-splash .card{text-align:center;padding:52px 40px;}
@@ -188,6 +195,7 @@ section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
 .eg-item.sel .eg-emoji{transform:scale(1.12);}
 .eg-label{font-size:11px;color:rgba(255,255,255,.45);line-height:1.4;transition:color .15s;}
 .eg-item.sel .eg-label{color:rgba(255,255,255,.8);}
+.eg-item.dim{opacity:.45;transform:scale(.95);filter:grayscale(.3);pointer-events:auto;}
 
 /* Stagger delays */
 .eg-item:nth-child(1){animation-delay:.04s}
@@ -422,12 +430,22 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
   <div class="testimonials">
     <div class="test-title">// 他们测完之后</div>
     <div class="test-cards">
-      <div class="tcard"><div class="tcard-quote">"测完当晚把闹钟从15个减到3个。进步是有的。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,136,0,.15)">😮</div><div class="tcard-name">某大厂产品经理</div><div class="tcard-score" style="color:#ff8800">78分</div></div></div>
-      <div class="tcard"><div class="tcard-quote">"拿了S级，但感觉测试有问题。我明明很累。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(0,255,136,.1)">😌</div><div class="tcard-name">认证养生博主</div><div class="tcard-score" style="color:#00ff88">12分</div></div></div>
-      <div class="tcard"><div class="tcard-quote">"得了F，发给我妈，她终于停止催婚开始催我体检了。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,0,68,.1)">💀</div><div class="tcard-name">自由职业者</div><div class="tcard-score" style="color:#ff0044">91分</div></div></div>
+      <div class="test-scroll-inner">
+        <div class="tcard"><div class="tcard-quote">"测完当晚把闹钟从15个减到3个。进步是有的。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,136,0,.15)">😮</div><div class="tcard-name">某大厂产品经理</div><div class="tcard-score" style="color:#ff8800">78分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"拿了S级，但感觉测试有问题。我明明很累。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(0,255,136,.1)">😌</div><div class="tcard-name">认证养生博主</div><div class="tcard-score" style="color:#00ff88">12分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"得了F，发给我妈，她终于停止催婚开始催我体检了。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,0,68,.1)">💀</div><div class="tcard-name">自由职业者</div><div class="tcard-score" style="color:#ff0044">91分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"测了三次，越来越高。可能是因为熬夜测试。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(0,180,255,.12)">🤯</div><div class="tcard-name">研究生在读</div><div class="tcard-score" style="color:#ffcc00">65分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"转给老板看了。他测了85分，终于批了年假。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,80,0,.12)">😈</div><div class="tcard-name">运营总监</div><div class="tcard-score" style="color:#ff8800">72分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"测完当晚把闹钟从15个减到3个。进步是有的。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,136,0,.15)">😮</div><div class="tcard-name">某大厂产品经理</div><div class="tcard-score" style="color:#ff8800">78分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"拿了S级，但感觉测试有问题。我明明很累。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(0,255,136,.1)">😌</div><div class="tcard-name">认证养生博主</div><div class="tcard-score" style="color:#00ff88">12分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"得了F，发给我妈，她终于停止催婚开始催我体检了。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,0,68,.1)">💀</div><div class="tcard-name">自由职业者</div><div class="tcard-score" style="color:#ff0044">91分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"测了三次，越来越高。可能是因为熬夜测试。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(0,180,255,.12)">🤯</div><div class="tcard-name">研究生在读</div><div class="tcard-score" style="color:#ffcc00">65分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"转给老板看了。他测了85分，终于批了年假。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,80,0,.12)">😈</div><div class="tcard-name">运营总监</div><div class="tcard-score" style="color:#ff8800">72分</div></div></div>
+      </div>
     </div>
   </div>
-  <div class="age-row"><span class="age-label">你今年多大？（影响身体年龄与同龄人对比）</span><div class="age-input-wrap"><div class="age-btns"><button class="age-btn" onclick="adjAge(1)">▲</button><button class="age-btn" onclick="adjAge(-1)">▼</button></div><input class="age-input" id="age-input" type="number" min="16" max="70" value="28"><span class="age-suffix">岁</span></div></div>
+  <div class="age-row"><span class="age-label">你今年多大？（影响身体年龄与同龄人对比）</span><div class="age-input-wrap"><div class="age-btns"><button class="age-btn" onclick="adjAge(1)">▲</button><button class="age-btn" onclick="adjAge(-1)">▼</button></div><input class="age-input" id="age-input" type="number" min="16" max="70" value="28" oninput="checkAgeEgg()"><span class="age-suffix">岁</span></div></div>
+  <div class="age-egg" id="age-egg"></div>
   <button class="start-btn" onclick="startQuiz()"><span>💉</span><span>开始检测</span></button>
   <div class="start-disclaimer">预计用时 5 分钟 · 结果仅供娱乐参考 · 高分请认真对待</div>
 </section>
@@ -949,7 +967,8 @@ function buildFlow(){flow=[0,1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
 function insertBranch(){if(!branchDone){const p=flow.indexOf(6);if(p!==-1)flow.splice(p,0,5);branchDone=true;}}
 function curQi(){return flow[fi];}function curQ(){return Q[flow[fi]];}
 
-function adjAge(d){const el=document.getElementById('age-input');el.value=Math.min(70,Math.max(16,(parseInt(el.value)||28)+d));}
+function adjAge(d){const el=document.getElementById('age-input');el.value=Math.min(70,Math.max(16,(parseInt(el.value)||28)+d));checkAgeEgg();}
+function checkAgeEgg(){const v=parseInt(document.getElementById('age-input').value)||0;const egg=document.getElementById('age-egg');if(v>=60){egg.textContent='⚡ 勇气可嘉，前辈';egg.classList.add('show');}else if(v<=18){egg.textContent='🍼 年轻就是资本，但别浪费';egg.classList.add('show');}else{egg.classList.remove('show');}}
 
 function updateTheme(){
   const sc=flow.slice(0,fi+1).filter(qi=>ans[qi]!==undefined&&!Q[qi].branch).map(qi=>ans[qi]+1);
@@ -1072,7 +1091,7 @@ function pickGrid(i){
   const o=q.opts[i];
   ans[qi]=o.s!==undefined?o.s:i;
   if(qi===4&&ans[qi]>=3)insertBranch();
-  document.querySelectorAll('.eg-item').forEach((el,idx)=>el.classList.toggle('sel',idx===i));
+  document.querySelectorAll('.eg-item').forEach((el,idx)=>{el.classList.toggle('sel',idx===i);el.classList.toggle('dim',idx!==i);});
   setReady(true);
   document.getElementById('btn-next').textContent=fi===flow.length-1?'查看结果 →':'下一题 →';
   updateTheme();
