@@ -4779,6 +4779,109 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ DYNAMIC TAB TITLE ════
+(function(){
+  const origTitle=document.title;
+  // During quiz, show progress
+  const origRenderQ=window.renderQ;
+  if(origRenderQ){
+    window.renderQ=function(){
+      origRenderQ.apply(this,arguments);
+      const total=typeof flow!=='undefined'?flow.length:30;
+      document.title=`(${fi+1}/${total}) 猝死指数测试`;
+    };
+  }
+  // On result, show score
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    const score=calcScore();
+    document.title=`💀 ${score}分 - 猝死指数测试结果`;
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  // Restore on landing
+  const obs2=new MutationObserver(()=>{
+    if(document.getElementById('sec-intro')?.classList.contains('active'))document.title=origTitle;
+  });
+  obs2.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ FUTURE SELF LETTER ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('future-letter'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      const futureAge=age+10;
+      const letters={
+        low:`亲爱的 ${age} 岁的自己：\n\n这是 ${futureAge} 岁的你。谢谢你在这个年纪就开始关注健康，因为你的选择，我现在活得很好。那些看似微不足道的好习惯——按时睡觉、规律运动、好好吃饭——它们的回报比你想象的大得多。\n\n继续保持，未来的你会感激现在的你。`,
+        mid:`亲爱的 ${age} 岁的自己：\n\n这是 ${futureAge} 岁的你。我需要告诉你一些事情。你现在的${worst.name.split(' ')[1]}问题（${worst.pct}%），如果不改变的话，10年后会加倍偿还。我知道你觉得自己还年轻，身体还扛得住，但请相信我——趁现在开始改变，还来得及。\n\n别等到我的年纪才后悔。`,
+        high:`亲爱的 ${age} 岁的自己：\n\n如果你能收到这封信的话……说明情况还没到最坏的地步。但我必须警告你：按照你目前的生活方式——特别是${worst.name.split(' ')[1]}维度（${worst.pct}%），我在 ${futureAge} 岁的日子过得很艰难。\n\n我不是在吓你。我是在求你——现在就改变。哪怕只改一件事。\n\n带着遗憾写于 ${futureAge} 岁。`
+      };
+      const level=score<=35?'low':score<=65?'mid':'high';
+      const borderCol=level==='low'?'rgba(52,211,153,.12)':level==='mid'?'rgba(245,158,11,.12)':'rgba(239,68,68,.12)';
+      const el=document.createElement('div');
+      el.id='future-letter';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.02);border:1px solid ${borderCol};border-radius:16px;padding:24px;position:relative;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:14px;">📨 来自未来的信</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.55);line-height:2;white-space:pre-line;font-style:italic;">${letters[level]}</div>
+        <div style="text-align:right;margin-top:12px;font-size:11px;color:var(--dim);">—— ${futureAge} 岁的你</div>
+      </div>`;
+      const rs7c=document.getElementById('rs7c');
+      if(rs7c){rs7c.parentNode.insertBefore(el,rs7c.nextSibling);}
+    },2300);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ SIMULATED LEADERBOARD ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('leaderboard'))return;
+      const score=calcScore();
+      // Generate fake leaderboard entries
+      const names=['匿名用户A','深圳·程序员','上海·设计师','北京·PM','成都·自由职业','杭州·运营','广州·销售','武汉·研究生'];
+      const entries=[];
+      for(let i=0;i<8;i++){
+        entries.push({name:names[i],score:Math.floor(Math.random()*70+20)});
+      }
+      entries.push({name:'→ 你',score,isYou:true});
+      entries.sort((a,b)=>b.score-a.score);
+      const el=document.createElement('div');
+      el.id='leaderboard';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:18px 20px;">
+        <div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 今日排行榜 · TODAY'S RANKING</div>
+        ${entries.map((e,i)=>{
+          const col=e.score>=70?'#ef4444':e.score>=40?'#fbbf24':'#34d399';
+          const bg=e.isYou?'rgba(var(--ar),var(--ag),var(--ab),.06)':'transparent';
+          const border=e.isYou?'1px solid rgba(var(--ar),var(--ag),var(--ab),.15)':'1px solid transparent';
+          return`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:${bg};border:${border};${e.isYou?'font-weight:700;':''}">
+            <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);width:20px;">#${i+1}</span>
+            <span style="flex:1;font-size:11px;color:${e.isYou?'var(--accent)':'rgba(255,255,255,.5)'};">${e.name}</span>
+            <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:${col};">${e.score}</span>
+          </div>`;
+        }).join('')}
+        <div style="font-size:9px;color:var(--dim);text-align:center;margin-top:10px;font-style:italic;">* 数据为模拟展示，保护用户隐私</div>
+      </div>`;
+      const rs7f=document.getElementById('rs7f');
+      if(rs7f){rs7f.parentNode.insertBefore(el,rs7f.nextSibling);}
+    },2500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ REPORT HEADER WITH BARCODE ════
 (function(){
   const obs=new MutationObserver(()=>{
