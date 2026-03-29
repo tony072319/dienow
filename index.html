@@ -3266,6 +3266,66 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ CONTEXTUAL ENCOURAGEMENT MESSAGES ════
+(function(){
+  // Show encouraging message after every few questions
+  const msgs=[
+    {at:5,text:'已完成 1/6 的检测，继续前进！',icon:'⚡'},
+    {at:10,text:'进度过半将近，你做得很好。',icon:'💪'},
+    {at:15,text:'一半完成！最困难的部分已经过去了。',icon:'🎯'},
+    {at:20,text:'还有不到10题，坚持住！',icon:'🔥'},
+    {at:25,text:'马上就要看到结果了…',icon:'👀'},
+  ];
+  let shown=new Set();
+  const origNextQ=window.nextQ;
+  if(origNextQ){
+    // We can't easily wrap nextQ since it might be called different ways
+    // Instead, hook into the progress bar update
+  }
+  // Use interval to check
+  setInterval(()=>{
+    if(!document.getElementById('sec-question')?.classList.contains('active'))return;
+    const counter=document.getElementById('q-counter')?.textContent;
+    if(!counter)return;
+    const num=parseInt(counter);
+    msgs.forEach(m=>{
+      if(num===m.at&&!shown.has(m.at)){
+        shown.add(m.at);
+        showEncouragement(m.icon+' '+m.text);
+      }
+    });
+  },500);
+  function showEncouragement(text){
+    const el=document.createElement('div');
+    el.style.cssText='position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);background:rgba(var(--ar),var(--ag),var(--ab),.15);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.25);border-radius:100px;padding:10px 22px;font-size:12px;font-weight:600;color:var(--accent);z-index:300;opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);backdrop-filter:blur(12px);white-space:nowrap;';
+    el.textContent=text;document.body.appendChild(el);
+    requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='translateX(-50%) translateY(0)';});
+    setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(-50%) translateY(-20px)';setTimeout(()=>el.remove(),400);},2500);
+  }
+})();
+
+// ════ SMART RETRY: REMEMBER WEAKEST AREAS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      try{
+        const dims=calcDims();
+        const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+        const retryBtn=document.querySelector('.btn-retry');
+        if(!retryBtn||document.getElementById('retry-hint'))return;
+        const hint=document.createElement('div');hint.id='retry-hint';
+        hint.style.cssText='font-size:10px;color:var(--dim);text-align:center;margin-top:8px;font-style:italic;';
+        hint.textContent=`提示：你最需要关注的是「${worst.name.replace(/^../,'').trim()}」维度 (${worst.pct}%)`;
+        retryBtn.parentElement.appendChild(hint);
+      }catch(e){}
+    },3000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ GRADE REPORT CARD VISUALIZATION ════
 (function(){
   const obs=new MutationObserver(()=>{
