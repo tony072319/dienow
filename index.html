@@ -4779,6 +4779,87 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ "HEALTH SPIRIT ANIMAL" ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('spirit-animal'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const animals=[
+        {range:[0,15],animal:'🐢',name:'百岁龟',desc:'缓慢但稳定，你有着乌龟般的生命力。它们能活150年——按照你的生活方式，你也有望加入它们的行列。'},
+        {range:[16,30],animal:'🦅',name:'翱翔鹰',desc:'你拥有鹰一般的生命力和敏锐的健康意识。继续保持这种高度的自我觉察，天空是你的极限。'},
+        {range:[31,45],animal:'🐱',name:'九命猫',desc:'虽然偶尔冒险，但你总能化险为夷。不过猫可是有9条命的，你只有1条，悠着点。'},
+        {range:[46,60],animal:'🐺',name:'疲惫狼',desc:'你像一匹在夜晚奔跑的狼——看似强大，但已经筋疲力尽。狼群会休息的，你也应该。'},
+        {range:[61,75],animal:'🦊',name:'透支狐',desc:'聪明但太会透支自己。你的身体已经在用各种方式告诉你：该停下来了。'},
+        {range:[76,90],animal:'🐉',name:'回光龙',desc:'你正在燃烧自己的生命力，像龙一样壮观但不可持续。龙是神话生物——你不是。'},
+        {range:[91,100],animal:'🪶',name:'浴火凤',desc:'你已经接近燃烧殆尽。但凤凰能从灰烬中重生——如果你现在就开始改变，你也可以。'},
+      ];
+      const spirit=animals.find(a=>score>=a.range[0]&&score<=a.range[1]);
+      if(!spirit)return;
+      const el=document.createElement('div');
+      el.id='spirit-animal';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(var(--ar),var(--ag),var(--ab),.03);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:16px;padding:24px;text-align:center;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(var(--ar),var(--ag),var(--ab),.5);margin-bottom:10px;">🌿 YOUR HEALTH SPIRIT ANIMAL</div>
+        <div style="font-size:48px;margin-bottom:8px;">${spirit.animal}</div>
+        <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;">${spirit.name}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.8;max-width:300px;margin:0 auto;">${spirit.desc}</div>
+      </div>`;
+      const rs2=document.getElementById('rs2');
+      if(rs2){rs2.parentNode.insertBefore(el,rs2.nextSibling);}
+    },1200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "RISK MAP" GEOGRAPHIC COMPARISON ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('risk-map'))return;
+      const score=calcScore();
+      const cities=[
+        {name:'深圳',avg:64,emoji:'🏙️'},{name:'北京',avg:61,emoji:'🏛️'},
+        {name:'上海',avg:58,emoji:'🌃'},{name:'杭州',avg:55,emoji:'🌸'},
+        {name:'成都',avg:52,emoji:'🐼'},{name:'长沙',avg:57,emoji:'🌶️'},
+        {name:'广州',avg:56,emoji:'🌴'},{name:'拉萨',avg:35,emoji:'🏔️'},
+      ];
+      const el=document.createElement('div');
+      el.id='risk-map';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:18px 20px;">
+        <div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 城市猝死指数对比 · CITY COMPARISON</div>
+        ${cities.map(c=>{
+          const diff=score-c.avg;
+          const col=diff>10?'#ef4444':diff>0?'#f59e0b':diff>-10?'#fbbf24':'#34d399';
+          const barW=Math.min(100,c.avg);
+          return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;">
+            <span style="font-size:12px;width:20px;text-align:center;">${c.emoji}</span>
+            <span style="font-size:10px;color:var(--dim);width:30px;">${c.name}</span>
+            <div style="flex:1;height:6px;background:rgba(255,255,255,.04);border-radius:100px;overflow:hidden;position:relative;">
+              <div style="height:100%;width:${barW}%;background:${c.avg>=60?'rgba(239,68,68,.4)':c.avg>=40?'rgba(245,158,11,.3)':'rgba(52,211,153,.3)'};border-radius:100px;"></div>
+              ${score>0?`<div style="position:absolute;top:-2px;left:${Math.min(98,score)}%;width:2px;height:10px;background:var(--accent);border-radius:1px;" title="你的位置"></div>`:''}
+            </div>
+            <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);width:25px;text-align:right;">${c.avg}</span>
+          </div>`;
+        }).join('')}
+        <div style="text-align:center;margin-top:8px;font-size:9px;color:var(--dim);">紫色标记为你的位置 · 数据为模拟</div>
+      </div>`;
+      const rs7f=document.getElementById('rs7f');
+      if(rs7f){rs7f.parentNode.insertBefore(el,rs7f);}
+    },2100);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ RESULT SECTIONS READING INDICATOR ════
 (function(){
   const obs=new MutationObserver(()=>{
