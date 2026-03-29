@@ -3266,6 +3266,62 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ FOOTER CREDITS EASTER EGG ════
+(function(){
+  const disclaimer=document.querySelector('.disclaimer');
+  if(!disclaimer)return;
+  let clickCount=0;
+  disclaimer.style.cursor='default';
+  disclaimer.addEventListener('click',()=>{
+    clickCount++;
+    if(clickCount===3){
+      clickCount=0;
+      disclaimer.innerHTML+=`<div style="margin-top:8px;font-size:10px;color:rgba(var(--ar),var(--ag),var(--ab),.4);font-family:'Space Mono',monospace;">// made with 💀 and ☕ · ${new Date().getFullYear()}</div>`;
+    }
+  });
+})();
+
+// ════ DYNAMIC QUESTION BACKGROUND BASED ON CATEGORY ════
+(function(){
+  const catColors={
+    '😴 睡眠习惯':{r:100,g:100,b:220},
+    '💼 工作强度':{r:220,g:160,b:60},
+    '🏃 运动频率':{r:60,g:180,b:120},
+    '🍔 饮食习惯':{r:220,g:120,b:60},
+    '🧠 压力水平':{r:200,g:80,b:120},
+    '🚬 不良嗜好':{r:180,g:80,b:80},
+    '😰 情绪状态':{r:160,g:100,b:200},
+  };
+  const obs=new MutationObserver(()=>{
+    const catEl=document.getElementById('q-cat-top');
+    if(!catEl)return;
+    const cat=catEl.textContent;
+    const col=catColors[cat];
+    if(!col)return;
+    const qCard=document.getElementById('q-card');
+    if(qCard){
+      qCard.style.boxShadow=`0 4px 32px rgba(0,0,0,.4),0 0 40px rgba(${col.r},${col.g},${col.b},.04)`;
+    }
+  });
+  obs.observe(document.body,{subtree:true,childList:true,characterData:true});
+})();
+
+// ════ SMOOTH CATEGORY SPLASH ENTRANCE ════
+(function(){
+  const origShowCatSplash=window.showCatSplash;
+  if(!origShowCatSplash)return;
+  window.showCatSplash=function(cat,cb){
+    origShowCatSplash(cat,cb);
+    // Add particles for category splash
+    if(canv.classList.contains('active')){
+      const[r,g,b]=curRGB;
+      for(let i=0;i<8;i++){
+        pts.push({x:canv.width/2+(Math.random()-.5)*200,y:canv.height/2,vx:(Math.random()-.5)*2,vy:-Math.random()*2-1,sz:Math.random()*2+.5,al:.5,r,g,b,life:0,max:80+Math.random()*60,cross:false,rot:0});
+      }
+    }
+  };
+})();
+
 // ════ PULL-DOWN REFRESH ON LANDING (mobile) ════
 (function(){
   if(!('ontouchstart' in window))return;
