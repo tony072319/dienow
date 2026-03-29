@@ -4779,6 +4779,98 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ TERMINAL MODE EASTER EGG (triple-click any section header) ════
+(function(){
+  let clickCount=0,clickTimer=null;
+  document.addEventListener('click',e=>{
+    const label=e.target.closest('.sec-label');
+    if(!label)return;
+    clickCount++;
+    clearTimeout(clickTimer);
+    clickTimer=setTimeout(()=>{clickCount=0;},400);
+    if(clickCount>=3){
+      clickCount=0;
+      document.body.classList.toggle('terminal-mode');
+      const isTerminal=document.body.classList.contains('terminal-mode');
+      const toast=document.getElementById('toast');
+      toast.textContent=isTerminal?'TERMINAL MODE: ON':'TERMINAL MODE: OFF';
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'),1500);
+      if(typeof unlockAchievement==='function')unlockAchievement('terminal','💻','终端模式','激活了隐藏的终端显示模式');
+    }
+  });
+  // Inject terminal mode CSS
+  const style=document.createElement('style');
+  style.textContent=`body.terminal-mode{background:#000a00!important;}body.terminal-mode *{color:#00ff41!important;border-color:rgba(0,255,65,.15)!important;}body.terminal-mode .card,body.terminal-mode .holo-card,body.terminal-mode .passport-card,body.terminal-mode .forecast-item,body.terminal-mode .recap-card,body.terminal-mode .wisdom-card,body.terminal-mode .bell-curve-wrap{background:rgba(0,255,65,.03)!important;}body.terminal-mode .score-num{color:#00ff41!important;-webkit-text-fill-color:#00ff41!important;text-shadow:0 0 20px rgba(0,255,65,.5)!important;}body.terminal-mode .sec-label{color:#00ff41!important;opacity:.7!important;}body.terminal-mode svg text{fill:#00ff41!important;}body.terminal-mode .ring-fill{stroke:#00ff41!important;}body.terminal-mode .ring-bg{stroke:rgba(0,255,65,.1)!important;}body.terminal-mode .res-level{-webkit-text-fill-color:#00ff41!important;background:none!important;}body.terminal-mode #particle-canvas{filter:hue-rotate(100deg)!important;}`;
+  document.head.appendChild(style);
+})();
+
+// ════ TYPING "sos" EASTER EGG ════
+(function(){
+  let buffer='';
+  document.addEventListener('keypress',e=>{
+    buffer+=e.key.toLowerCase();
+    if(buffer.length>10)buffer=buffer.slice(-10);
+    if(buffer.endsWith('sos')){
+      buffer='';
+      const overlay=document.createElement('div');
+      overlay.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;animation:fadeUp .3s ease;cursor:pointer;';
+      overlay.innerHTML=`<div style="font-size:48px;animation:achieveSpin 1s ease;">🆘</div>
+        <div style="font-size:18px;font-weight:700;color:#ef4444;">紧急联系方式</div>
+        <div style="font-size:14px;color:#ccc;text-align:center;line-height:2;">
+          心理援助热线：<span style="color:#60a5fa;font-weight:700;">400-161-9995</span><br>
+          北京心理危机研究与干预中心：<span style="color:#60a5fa;font-weight:700;">010-82951332</span><br>
+          全国24h心理危机干预热线：<span style="color:#60a5fa;font-weight:700;">010-82951332</span><br>
+          生命热线：<span style="color:#60a5fa;font-weight:700;">400-821-1215</span>
+        </div>
+        <div style="font-size:11px;color:var(--dim);margin-top:10px;">点击任意处关闭 · 如果你正在经历困难，请寻求帮助</div>`;
+      overlay.addEventListener('click',()=>{overlay.style.opacity='0';overlay.style.transition='opacity .3s';setTimeout(()=>overlay.remove(),300);});
+      document.body.appendChild(overlay);
+      if(typeof unlockAchievement==='function')unlockAchievement('sos','🆘','求助信号','输入了SOS求助代码');
+    }
+    // "hack" Easter egg
+    if(buffer.endsWith('hack')){
+      buffer='';
+      document.querySelectorAll('*').forEach(el=>{el.style.transition='transform .5s';el.style.transform='rotate('+(Math.random()*4-2)+'deg)';});
+      setTimeout(()=>{document.querySelectorAll('*').forEach(el=>{el.style.transform='';});},2000);
+      if(typeof unlockAchievement==='function')unlockAchievement('hacker','👨‍💻','黑客模式','触发了系统故障');
+    }
+  });
+})();
+
+// ════ LONG PRESS LOADING TO SKIP ════
+(function(){
+  let pressTimer=null;
+  const loadSec=document.getElementById('sec-loading');
+  if(!loadSec)return;
+  loadSec.addEventListener('mousedown',()=>{
+    pressTimer=setTimeout(()=>{
+      // Skip loading animation
+      const pEl=document.getElementById('load-pct');
+      if(pEl)pEl.textContent='100%';
+      if(typeof showResult==='function'){
+        setTimeout(()=>{try{showResult();}catch(e){}},100);
+      }
+      const toast=document.getElementById('toast');
+      toast.textContent='⚡ 跳过加载动画';toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'),1500);
+    },2000);
+  });
+  loadSec.addEventListener('mouseup',()=>clearTimeout(pressTimer));
+  loadSec.addEventListener('mouseleave',()=>clearTimeout(pressTimer));
+  // Touch support
+  loadSec.addEventListener('touchstart',()=>{
+    pressTimer=setTimeout(()=>{
+      const pEl=document.getElementById('load-pct');
+      if(pEl)pEl.textContent='100%';
+      if(typeof showResult==='function'){
+        setTimeout(()=>{try{showResult();}catch(e){}},100);
+      }
+    },2000);
+  },{passive:true});
+  loadSec.addEventListener('touchend',()=>clearTimeout(pressTimer));
+})();
+
 // ════ RISK WEATHER FORECAST ════
 (function(){
   const obs=new MutationObserver(()=>{
