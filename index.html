@@ -3247,6 +3247,68 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ HEALTH QUOTES ROTATION ON RESULT PAGE ════
+(function(){
+  const quotes=[
+    {q:'健康是人生的第一财富。',a:'— 爱默生'},
+    {q:'疾病是身体的抗议书。',a:'— 佚名'},
+    {q:'预防胜于治疗。',a:'— 古谚'},
+    {q:'你的身体是唯一的住所，请好好维修。',a:'— Jim Rohn'},
+    {q:'健康不是一切，但没有健康就没有一切。',a:'— 叔本华'},
+    {q:'不要在需要腿的时候才想起它们。',a:'— 英国谚语'},
+    {q:'最好的医生是你自己。',a:'— 佚名'},
+    {q:'睡眠是大自然最好的护士。',a:'— 莎士比亚'},
+    {q:'运动是穷人的医药。',a:'— 意大利谚语'},
+    {q:'身体是灵魂的花园，意志是花园的园丁。',a:'— 佚名'},
+  ];
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const adviceCard=document.getElementById('rs12');
+      if(!adviceCard||document.getElementById('health-quote'))return;
+      const q=quotes[Math.floor(Math.random()*quotes.length)];
+      const el=document.createElement('div');el.id='health-quote';
+      el.style.cssText='text-align:center;padding:20px;margin-top:10px;opacity:0;transform:translateY(8px);transition:all .5s;';
+      el.innerHTML=`<div style="font-size:15px;font-style:italic;color:rgba(255,255,255,.5);line-height:1.8;max-width:400px;margin:0 auto;">"${q.q}"</div><div style="font-size:11px;color:var(--dim);margin-top:8px;">${q.a}</div>`;
+      adviceCard.appendChild(el);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='none';}));
+    },5000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ ENHANCED CARD ENTRANCE: STAGGERED REVEAL ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    // Add staggered delays to all .rs elements
+    const sections=sec.querySelectorAll('.rs');
+    sections.forEach((s,i)=>{
+      if(i<5)return;// first 5 handled by timer
+      s.style.transitionDelay=(i*80)+'ms';
+    });
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ RADAR CHART: CLICK VERTEX TO HIGHLIGHT ════
+(function(){
+  document.addEventListener('click',e=>{
+    const radarSvg=document.getElementById('radar-svg');
+    if(!radarSvg)return;
+    const dot=e.target.closest('#r-dots-g circle');
+    if(!dot)return;
+    // Highlight this vertex
+    dot.style.transition='r .3s, filter .3s';
+    dot.setAttribute('r','8');
+    dot.style.filter='drop-shadow(0 0 8px currentColor)';
+    setTimeout(()=>{dot.setAttribute('r','5');dot.style.filter='';},1500);
+  });
+})();
+
 // ════ START BUTTON: DRAMATIC ENTRANCE ════
 (function(){
   const btn=document.querySelector('.start-btn');
