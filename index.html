@@ -39,7 +39,9 @@ body{background:linear-gradient(180deg,#0f1117 0%,#131620 50%,#0f1117 100%);back
 #particle-canvas.active{opacity:1;}
 .parallax-orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;transition:transform .1s ease,background 1.2s ease;}
 
-.wrap{position:relative;z-index:2;max-width:640px;margin:0 auto;padding:32px 20px 60px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.wrap{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:32px 20px 60px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+@media(min-width:1200px){.wrap{max-width:960px;padding:32px 40px 60px;}}
+@media(max-width:480px){.wrap{padding:16px 12px 40px;}}
 
 section{display:none;width:100%;}
 section.active{display:flex;flex-direction:column;align-items:center;}
@@ -686,8 +688,8 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .load-title{background:linear-gradient(135deg,#fff 40%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 
 /* ══ LIGHT MODE ══ */
-html.light{--bg:#f4f5f7;--bg2:#ebedf2;--text:#1a1a2e;--dim:#6b7280;--card-bg:rgba(255,255,255,.92);--card-border:rgba(0,0,0,.08);}
-html.light body{background:linear-gradient(180deg,#f4f5f7 0%,#ebedf2 50%,#f4f5f7 100%)!important;}
+html.light{--bg:#f0f1f4;--bg2:#e5e7ed;--text:#1a1a2e;--dim:#3d4451;--card-bg:rgba(255,255,255,.95);--card-border:rgba(0,0,0,.12);}
+html.light body{background:linear-gradient(180deg,#f0f1f4 0%,#e5e7ed 50%,#f0f1f4 100%)!important;}
 html.light #vignette{background:radial-gradient(ellipse 90% 90% at 50% 50%,transparent 55%,rgba(200,200,220,.25) 100%);}
 html.light #noise-overlay{opacity:.008;}
 html.light .glitch-title{color:#1a1a2e;text-shadow:0 0 60px rgba(var(--ar),var(--ag),var(--ab),.1);}
@@ -762,6 +764,68 @@ html.light .fun-tag{border-color:currentColor!important;}
 /* Light mode for fun sections */
 html.light #tarot-front,html.light #tarot-back{background:linear-gradient(135deg,#e8e0f0,#d5c8e8)!important;}
 html.light #trading-card>div{box-shadow:0 4px 16px rgba(0,0,0,.1)!important;}
+/* Light mode: result page text readability */
+html.light .score-lbl{color:rgba(0,0,0,.4)!important;}
+html.light .ring-bg{stroke:rgba(0,0,0,.08)!important;}
+html.light .arch-desc{color:#444!important;}
+html.light .doctor-text{color:#444!important;}
+html.light .doctor-card::before{color:rgba(0,0,0,.06)!important;}
+html.light .doctor-sig{color:#666!important;border-top-color:rgba(0,0,0,.08)!important;}
+html.light .rx-title{color:rgba(0,0,0,.4)!important;}
+html.light .rx-item{color:#555!important;}
+html.light .prophecy-text{color:#444!important;}
+html.light .prophecy-moment{color:rgba(200,40,40,.7)!important;}
+html.light .obituary-text{color:#444!important;}
+html.light .obituary-card::after{color:rgba(0,0,0,.04)!important;}
+html.light .tl-text{color:#444!important;}
+html.light .dim-desc{color:#555!important;border-bottom-color:rgba(0,0,0,.06)!important;}
+html.light .dim-tips li{color:#555!important;}
+html.light .dim-item:hover{border-color:rgba(0,0,0,.15)!important;}
+html.light .dim-item.expanded{border-color:rgba(var(--ar),var(--ag),var(--ab),.3)!important;}
+html.light .advice-list li{color:#444!important;}
+html.light .lw-quote{color:#1a1a2e!important;}
+html.light .lw-quote::before,html.light .lw-quote::after{color:rgba(200,40,40,.2)!important;}
+html.light .surv-action{color:#333!important;}
+html.light .survival-item{border-bottom-color:rgba(0,0,0,.06)!important;}
+html.light .prof-name{color:#333!important;}
+html.light .prof-item{border-bottom-color:rgba(0,0,0,.06)!important;}
+html.light .body-legend-item{color:#555!important;}
+html.light .combo-sub{color:rgba(0,0,0,.5)!important;}
+html.light .load-stage{color:#555!important;}
+html.light .passport-key{color:rgba(0,0,0,.45)!important;}
+html.light .passport-val{color:rgba(0,0,0,.7)!important;}
+html.light .wisdom-quote{color:rgba(0,0,0,.55)!important;}
+html.light .holo-val{color:rgba(0,0,0,.65)!important;}
+html.light .holo-score{color:#1a1a2e!important;}
+html.light .sparkline-wrap{background:rgba(0,0,0,.03)!important;border-color:rgba(0,0,0,.06)!important;color:#666!important;}
+html.light .completion-time{background:rgba(0,0,0,.03)!important;border-color:rgba(0,0,0,.06)!important;color:#666!important;}
+html.light .percentile-banner{background:rgba(0,0,0,.02)!important;}
+html.light .pct-sub{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.06)!important;}
+html.light .pct-bar-bg{background:rgba(0,0,0,.08)!important;}
+html.light .report-header{border-bottom-color:rgba(0,0,0,.08)!important;}
+html.light .btn-share{background:rgba(0,0,0,.04)!important;border-color:rgba(0,0,0,.1)!important;color:#333!important;}
+html.light .btn-share:hover{background:rgba(0,0,0,.08)!important;}
+html.light .btn-retry{color:#fff!important;}
+html.light .res-level{-webkit-text-fill-color:unset!important;background:none!important;color:inherit!important;}
+html.light .res-nav-dot{background:rgba(0,0,0,.1)!important;border-color:rgba(0,0,0,.08)!important;}
+html.light .res-nav-dot.active{background:var(--accent)!important;}
+html.light .body-heatmap{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.06)!important;}
+html.light .scenario-box{background:rgba(0,0,0,.02)!important;color:#555!important;}
+html.light .tl-item::before{background:rgba(0,0,0,.08)!important;}
+html.light .forecast-item{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.06)!important;}
+html.light .recap-card{background:rgba(0,0,0,.02)!important;color:#444!important;}
+html.light .health-tip{color:#444!important;}
+html.light .dim-insight{background:rgba(0,0,0,.02)!important;color:#444!important;}
+html.light .time-greeting{color:#555!important;}
+html.light .resume-bar button{border-color:rgba(0,0,0,.1)!important;background:rgba(0,0,0,.04)!important;color:#555!important;}
+html.light .resume-bar button:first-of-type{background:var(--accent)!important;color:#fff!important;}
+html.light .ach{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.08)!important;}
+html.light .ach::after{background:linear-gradient(135deg,rgba(0,0,0,.03),transparent)!important;}
+html.light .dw-title{color:rgba(200,40,40,.55)!important;}
+html.light .streak-bar{background:rgba(239,68,68,.05)!important;color:rgba(180,40,40,.65)!important;}
+html.light .dc-sep{color:rgba(200,40,40,.35)!important;}
+html.light .age-btn{background:rgba(0,0,0,.05)!important;border-color:rgba(0,0,0,.1)!important;color:#333!important;}
+html.light .age-row{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.08)!important;}
 
 /* ══ SMOOTH CARD HOVER GLOW ══ */
 .rs{position:relative;}
