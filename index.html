@@ -2395,7 +2395,9 @@ function shareResult(){
   const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
   const tags=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,3).map(t=>t.e+t.t);
   const tagLine=tags.length?'\n标签：'+tags.join(' · '):'';
-  const text=`【猝死指数测试 v7.4 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}\n\n${level.desc}\n\n你敢测吗？👉`;
+  const histLen=(()=>{try{return JSON.parse(localStorage.getItem('sdi-history')||'[]').length;}catch(e){return 0;}})();
+  const histText=histLen>1?`\n（第${histLen}次测试）`:'';
+  const text=`【猝死指数测试 v7.4 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.icon} ${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}${histText}\n\n${level.desc}\n\n你敢测吗？👉`;
   // Try native share first (mobile), fall back to clipboard
   if(navigator.share){
     navigator.share({title:'猝死指数测试 💀',text}).catch(()=>{});
@@ -2498,7 +2500,20 @@ function downloadCard(){
   dy+=lines.length*30+16;
   x.fillStyle='rgba(255,255,255,.3)';x.font='400 14px "Space Mono",monospace';
   x.fillText(lw.a,cx,dy);
+  // Score rank bar
+  dy+=30;
+  const rankW=W-200;
+  const rankGrd=x.createLinearGradient(100,0,100+rankW,0);
+  rankGrd.addColorStop(0,'#34d399');rankGrd.addColorStop(.4,'#fbbf24');rankGrd.addColorStop(.65,'#f59e0b');rankGrd.addColorStop(1,'#ef4444');
+  x.beginPath();x.roundRect(100,dy,rankW,8,4);x.fillStyle=rankGrd;x.fill();
+  const markerX=100+rankW*Math.min(.98,score/100);
+  x.fillStyle='#fff';x.beginPath();x.arc(markerX,dy+4,6,0,Math.PI*2);x.fill();
+  x.strokeStyle=level.color;x.lineWidth=2;x.stroke();
+  x.textAlign='left';x.fillStyle='rgba(255,255,255,.3)';x.font='400 10px sans-serif';
+  x.fillText('安全',100,dy+24);x.textAlign='right';x.fillText('极危',100+rankW,dy+24);
   // Footer
+  dy+=50;
+  x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.12)';x.font='400 15px "Space Mono",monospace';
   x.fillText('猝死指数测试 💀 Sudden Death Index v7.4',cx,H-70);
   x.fillStyle='rgba(255,255,255,.08)';x.font='400 13px "Space Mono",monospace';
