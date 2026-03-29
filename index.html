@@ -3247,6 +3247,66 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ HEALTH DASHBOARD QUICK SUMMARY ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(renderDashboard,2000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  function renderDashboard(){
+    try{
+      const score=calcScore();
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const best=dims.reduce((a,b)=>b.pct<a.pct?b:a);
+      const rs0=document.getElementById('rs0');
+      if(!rs0||document.getElementById('quick-dash'))return;
+      const dash=document.createElement('div');dash.id='quick-dash';
+      dash.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;opacity:0;transform:translateY(8px);transition:all .5s;';
+      const items=[
+        {label:'最大风险',value:worst.name.replace(/^../,''),sub:worst.pct+'%',col:worst.pct>=65?'#ef4444':worst.pct>=30?'#fbbf24':'#34d399'},
+        {label:'最佳维度',value:best.name.replace(/^../,''),sub:best.pct+'%',col:best.pct>=65?'#ef4444':best.pct>=30?'#fbbf24':'#34d399'},
+        {label:'综合等级',value:score<20?'优秀':score<40?'良好':score<60?'警告':score<80?'危险':'极危',sub:score+'/100',col:score<30?'#34d399':score<60?'#fbbf24':'#ef4444'},
+      ];
+      items.forEach(item=>{
+        dash.innerHTML+=`<div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-size:9px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;text-transform:uppercase;">${item.label}</div>
+          <div style="font-size:14px;font-weight:700;color:${item.col};margin-bottom:2px;">${item.value}</div>
+          <div style="font-size:10px;font-family:'Space Mono',monospace;color:var(--dim);">${item.sub}</div>
+        </div>`;
+      });
+      rs0.appendChild(dash);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{dash.style.opacity='1';dash.style.transform='none';}));
+    }catch(e){}
+  }
+})();
+
+// ════ NEXT CHECKUP COUNTDOWN ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(renderCheckupCountdown,4000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  function renderCheckupCountdown(){
+    const checkupEl=document.getElementById('checkup-msg');
+    if(!checkupEl||document.getElementById('checkup-cd'))return;
+    const score=calcScore();
+    // Recommend next checkup based on score
+    const daysUntil=score>=70?7:score>=50?30:score>=30?90:180;
+    const checkDate=new Date();checkDate.setDate(checkDate.getDate()+daysUntil);
+    const cd=document.createElement('div');cd.id='checkup-cd';
+    cd.style.cssText='margin-top:14px;text-align:center;font-family:"Space Mono",monospace;';
+    cd.innerHTML=`<div style="font-size:9px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;">建议下次体检日期</div><div style="font-size:16px;font-weight:700;color:${score>=50?'#ef4444':'var(--accent)'};">${checkDate.toISOString().split('T')[0]}</div><div style="font-size:10px;color:var(--dim);margin-top:4px;">${daysUntil} 天后 · ${score>=70?'越快越好':'定期检查有益健康'}</div>`;
+    checkupEl.parentElement.appendChild(cd);
+  }
+})();
+
 // ════ FLOATING EMOJI REACTION ON DANGEROUS PICKS ════
 function floatEmoji(emoji,x,y){
   const el=document.createElement('div');
