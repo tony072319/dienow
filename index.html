@@ -4779,6 +4779,75 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ "HEALTH CREDIT SCORE" (gamified rating) ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('credit-score'))return;
+      const score=calcScore();
+      const creditScore=Math.round(850-score*5.5); // 300-850 range like real credit scores
+      const creditGrade=creditScore>=750?'优秀':creditScore>=700?'良好':creditScore>=650?'一般':creditScore>=550?'较差':'很差';
+      const creditCol=creditScore>=750?'#34d399':creditScore>=700?'#60a5fa':creditScore>=650?'#fbbf24':creditScore>=550?'#f59e0b':'#ef4444';
+      const el=document.createElement('div');
+      el.id='credit-score';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:linear-gradient(135deg,rgba(${creditScore>=650?'52,211,153':'239,68,68'},.04),transparent);border:1px solid ${creditCol}20;border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:${creditCol}80;margin-bottom:8px;">💳 HEALTH CREDIT SCORE</div>
+        <div style="font-family:'Space Mono',monospace;font-size:36px;font-weight:700;color:${creditCol};">${creditScore}</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:4px;">${creditGrade}</div>
+        <div style="position:relative;height:6px;background:linear-gradient(90deg,#ef4444,#f59e0b,#fbbf24,#60a5fa,#34d399);border-radius:10px;margin:12px 20px 6px;overflow:visible;">
+          <div style="position:absolute;top:-5px;left:${Math.max(0,Math.min(100,((creditScore-300)/550)*100))}%;width:16px;height:16px;background:#fff;border:2px solid ${creditCol};border-radius:50%;transform:translateX(-50%);box-shadow:0 0 8px ${creditCol};transition:left 1.5s cubic-bezier(.25,.8,.25,1);"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin:0 16px;font-size:8px;color:var(--dim);"><span>300</span><span>550</span><span>700</span><span>850</span></div>
+      </div>`;
+      const rs1=document.getElementById('rs1');
+      if(rs1){rs1.parentNode.insertBefore(el,rs1.nextSibling);}
+    },1100);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "DID YOU KNOW" RANDOM FACT ════
+(function(){
+  const facts=[
+    '心脏每天跳动约10万次，一年约3600万次。善待它。',
+    '大脑只占体重的2%，却消耗20%的能量。它需要好的燃料。',
+    '人一生大约花25年在睡觉上。如果你少睡，这个时间不会被节省——只会从你的寿命里扣除。',
+    '笑能增加免疫细胞的活性。所以看到你的测试结果请努力笑一下。',
+    '走路时大脑会释放内啡肽。这就是为什么散步能改善心情。',
+    '每天静坐超过6小时的人，过早死亡的风险增加40%。',
+    '压力会让端粒缩短，端粒越短，细胞衰老越快。冥想可以逆转这个过程。',
+    '肠道有超过1亿个神经元，被称为"第二大脑"。你吃什么，直接影响你的情绪。',
+    '慢性缺乏睡眠会导致大脑中的β-淀粉样蛋白积累，这与阿尔茨海默症有关。',
+    '运动后的"runner\'s high"和大麻激活的是同一个受体系统。合法且免费。',
+  ];
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('did-you-know'))return;
+      const fact=facts[Math.floor(Math.random()*facts.length)];
+      const el=document.createElement('div');
+      el.id='did-you-know';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(96,165,250,.03);border:1px solid rgba(96,165,250,.1);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:18px;flex-shrink:0;">🧠</span>
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(96,165,250,.5);margin-bottom:6px;">DID YOU KNOW?</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.8;">${fact}</div>
+        </div>
+      </div>`;
+      const rs12=document.getElementById('rs12');
+      if(rs12){rs12.parentNode.insertBefore(el,rs12);}
+    },2500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ FUN SIDE-BY-SIDE COMPARISON TABLE ════
 (function(){
   const obs=new MutationObserver(()=>{
