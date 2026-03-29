@@ -880,8 +880,45 @@ const LEVELS=[
   {max:85,grade:'D',label:'高危人群',color:'#ff4444',desc:'你已把身体当消耗品在用。各项指标触目惊心。你面对的风险是真实且迫切的。',advice:['🚨 本周内就医，做心血管检查','立即减少烟酒','7小时睡眠是不可谈判的底线','申请年假','告知家人你的身体状况']},
   {max:100,grade:'F',label:'当代猝死候选人',color:'#ff0044',desc:'系统已将您标记为高风险案例。您的生活方式在各维度均超出安全范围。请认真对待这份报告。',advice:['⚠️ 立即就医，不是今天，是现在','请身边的人了解你的状况','向公司请假','寻求专业心理支持']},
 ];
-const PROPHECY={'sleep+work':'某个周三凌晨，你一个人改第九版PPT，手指突然停了。不是完成了，是你的大脑短暂地拒绝工作了。你坐在屏幕前愣了三分钟，想不起来自己要做什么。这种停顿会越来越频繁，直到有一天，它变成更长的时间。','sleep+stress':'你的大脑已经开发出一项新技能：在入睡前30分钟内，同时完整回放三年前的社死瞬间和明天10点的汇报内容。你的皮质醇从未真正降低过。某天早上你会发现自己爬不起来——不是懒，是真的爬不起来。','sleep+diet':'你用咖啡续命、用外卖填肚子、用熬夜预支明天的精力。每天赤字运转。临床名称：慢性消耗综合征。通俗说：用明天的寿命换今天的KPI。','sleep+exercise':'你的身体没有任何修复机会。睡眠不足意味着细胞修复停止，缺乏运动意味着代谢废物在积累。你正在以最彻底的方式让身体失去自我修复能力。','sleep+emotion':'失眠和情绪低落正在互相喂养。越睡不好越焦虑，越焦虑越睡不着。这个循环不会自己结束。','work+stress':'你的身体已经开过内部会议：下一次大病将选择一个你最措手不及的时刻——可能是重要项目截止日前一天，或者某次关键会议的当天早上。','work+exercise':'你最近一次心跳加速，是因为收到了老板的微信，而不是因为运动。你的心脏只被恐惧激活，而不是被健康激活。','work+diet':'外卖平台的算法已经精准掌握了你的饮食规律。你的胃默默记住了每次被敷衍对待的经历，正在考虑采取行动。','stress+emotion':'你已经很久没有因为真正开心而笑过了。大部分时候你只是在扮演一个状态还好的人。扮演本身需要消耗能量，而这些能量本应用于真正地活着。','exercise+diet':'你缺乏运动产生的代谢消耗，同时摄入超出需要的热量。你的心血管系统在沉默中记账，终有一天会结算。','exercise+habit':'你既不给身体修复机会，又在主动增加损耗。一边不充电，一边开着最耗电的应用在跑。','stress+diet':'你的消化系统在持续压力激素环境下工作，同时接受不规律的饮食刺激。它已经在考虑递交辞职信。','work+emotion':'你把所有能量都给了工作，留给自己的只有空荡荡的疲惫。某天你会发现，你已经很久没有做过一件只是因为喜欢而做的事情了。','diet+habit':'你的肝脏、肾脏和消化系统没有罢工，但它们在攒着。攒够了之后会在某个普通的早晨，用一个不普通的方式让你知道它们的存在。','habit+emotion':'不良嗜好往往是情绪出口的替代品。麻痹本身也在消耗你剩余的生命力。'};
-const MOMENTS={'sleep+work':'⏱ 高危时刻：某个连续加班三天后的深夜','sleep+stress':'⏱ 高危时刻：重要考核前一晚无法入睡的凌晨','work+stress':'⏱ 高危时刻：高压项目截止日被突发打乱的早晨','work+exercise':'⏱ 高危时刻：久坐8小时后突然快步去赶会议','stress+emotion':'⏱ 高危时刻：某个普通的周二下午，没有特定原因','sleep+exercise':'⏱ 高危时刻：长期透支后某次看似平常的体力活动','exercise+diet':'⏱ 高危时刻：某次饭后突然站起快走','sleep+diet':'⏱ 高危时刻：连续加班+没吃饭+第四杯咖啡后','sleep+emotion':'⏱ 高危时刻：连续失眠第四天的某个下午','work+diet':'⏱ 高危时刻：连续外卖三周后某次出差途中','work+emotion':'⏱ 高危时刻：绩效谈话结束后独自开车回家'};
+// Keys sorted alphabetically: diet < emotion < exercise < habit < sleep < stress < work
+const PROPHECY={
+  'sleep+work'    :'某个周三凌晨，你一个人改第九版PPT，手指突然停了。不是完成了，是你的大脑短暂地拒绝工作了。你坐在屏幕前愣了三分钟，想不起来自己要做什么。这种停顿会越来越频繁，直到有一天，它变成更长的时间。',
+  'sleep+stress'  :'你的大脑已经开发出一项新技能：在入睡前30分钟内，同时完整回放三年前的社死瞬间和明天10点的汇报内容。你的皮质醇从未真正降低过。某天早上你会发现自己爬不起来——不是懒，是真的爬不起来。',
+  'diet+sleep'    :'你用咖啡续命、用外卖填肚子、用熬夜预支明天的精力。每天赤字运转。临床名称：慢性消耗综合征。通俗说：用明天的寿命换今天的KPI。',
+  'exercise+sleep':'你的身体没有任何修复机会。睡眠不足意味着细胞修复停止，缺乏运动意味着代谢废物在积累。你正在以最彻底的方式让身体失去自我修复能力。',
+  'emotion+sleep' :'失眠和情绪低落正在互相喂养。越睡不好越焦虑，越焦虑越睡不着。这个循环不会自己结束。它会越来越紧，直到某天早上你发现自己真的爬不起来了。',
+  'habit+sleep'   :'你熬夜，还有不良嗜好。深夜是人最脆弱的时候，而你选择在最脆弱的时候继续消耗自己。你的身体在用沉默记录，总有一天会大声说出来。',
+  'stress+work'   :'你的身体已经开过内部会议：下一次大病将选择一个你最措手不及的时刻——可能是重要项目截止日前一天，或者某次关键会议的当天早上。',
+  'exercise+work' :'你最近一次心跳加速，是因为收到了老板的微信，而不是因为运动。你的心脏只被恐惧激活，而不是被健康激活。',
+  'diet+work'     :'外卖平台的算法已经精准掌握了你的饮食规律。你的胃默默记住了每次被敷衍对待的经历，正在考虑采取行动。',
+  'emotion+work'  :'你把所有能量都给了工作，留给自己的只有空荡荡的疲惫。某天你会发现，你已经很久没有做过一件只是因为喜欢而做的事情了。',
+  'habit+work'    :'高强度工作，然后用烟酒或咖啡因来"放松"——这不是放松，是在用加速老化来逃避疲惫。你的肝脏和心脏正在同时超负荷运转。',
+  'emotion+stress':'你已经很久没有因为真正开心而笑过了。大部分时候你只是在扮演一个状态还好的人。扮演本身需要消耗能量，而这些能量本应用于真正地活着。',
+  'diet+stress'   :'你的消化系统在持续压力激素环境下工作，同时接受不规律的饮食刺激。它已经在考虑递交辞职信。某天那份辞职信会直接送到你的胃部。',
+  'exercise+stress':'你的皮质醇水平长期偏高，而你没有任何方式来释放它。运动是最有效的压力出口，但你没有在用它。这些积累的压力激素正在你的血管里悄悄工作，从不放假。',
+  'habit+stress'  :'你用不良嗜好来对抗压力，但这只是把一种伤害换成了另一种伤害。真正的压力没有减少，反而多了一层身体上的损伤，两份账单同时到期。',
+  'diet+exercise' :'你缺乏运动产生的代谢消耗，同时摄入超出需要的热量。你的心血管系统在沉默中记账，终有一天会结算。',
+  'exercise+habit':'你既不给身体修复机会，又在主动增加损耗。一边不充电，一边开着最耗电的应用在跑。',
+  'emotion+exercise':'你的皮质醇长期处于高位，但你既没有战斗也没有逃跑。没有运动来释放这些压力激素，它们正在慢慢腐蚀你的心血管和免疫系统。',
+  'diet+habit'    :'你的肝脏、肾脏和消化系统没有罢工，但它们在攒着。攒够了之后会在某个普通的早晨，用一个不普通的方式让你知道它们的存在。',
+  'diet+emotion'  :'情绪性进食和饮食混乱是一个危险组合。你的身体在用进食来填补情感的空洞，而这两种饥饿都无法被真正满足。',
+  'emotion+habit' :'不良嗜好往往是情绪出口的替代品。麻痹本身也在消耗你剩余的生命力。你在用加速度来逃避当下，而当下正在等待你。',
+};
+// MOMENTS keys also sorted alphabetically
+const MOMENTS={
+  'sleep+work'    :'⏱ 高危时刻：某个连续加班三天后的深夜',
+  'sleep+stress'  :'⏱ 高危时刻：重要考核前一晚无法入睡的凌晨',
+  'stress+work'   :'⏱ 高危时刻：高压项目截止日被突发打乱的早晨',
+  'exercise+work' :'⏱ 高危时刻：久坐8小时后突然快步去赶会议',
+  'emotion+stress':'⏱ 高危时刻：某个普通的周二下午，没有特定原因',
+  'exercise+sleep':'⏱ 高危时刻：长期透支后某次看似平常的体力活动',
+  'diet+exercise' :'⏱ 高危时刻：某次饭后突然站起快走',
+  'diet+sleep'    :'⏱ 高危时刻：连续加班+没吃饭+第四杯咖啡后',
+  'emotion+sleep' :'⏱ 高危时刻：连续失眠第四天的某个下午',
+  'diet+work'     :'⏱ 高危时刻：连续外卖三周后某次出差途中',
+  'emotion+work'  :'⏱ 高危时刻：绩效谈话结束后独自开车回家',
+  'exercise+stress':'⏱ 高危时刻：某次长会结束后独自快步走向停车场',
+};
 const PRIORITY={sleep:{main:'今晚11点前关灯躺下',sub:'不是"尝试"入睡，是强制关灯躺下。就算睡不着，也让身体进入修复模式。这一件事，效果超过你能做的任何其他改变。'},work:{main:'今天下班后手机静音两小时',sub:'设置工作消息免打扰，从今晚开始。告诉自己这是一个实验。世界不会因为你两小时没看消息而崩塌。'},exercise:{main:'明天走路20分钟，哪怕只是下班散步',sub:'不需要健身房，不需要装备。20分钟步行足以改变你的代谢、情绪和睡眠质量。今晚设好明天的提醒。'},diet:{main:'今天喝够6杯水',sub:'现在去拿一个大杯子，装满水放桌上。脱水是你疲惫、头疼和注意力下降最容易被忽视的原因。'},stress:{main:'今天和一个人说说你最近的状态',sub:'不需要倾诉很多，只需要说一句"我最近有点累"。被听见是减压最有效的方式之一，而且完全免费。'},habit:{main:'今天把最影响你的那个嗜好减少一半',sub:'不是戒掉，是减半。小而可持续的改变比剧烈戒断更有效。'},emotion:{main:'今晚允许自己什么都不做一小时',sub:'不带愧疚感地休息。你的大脑需要无目的的时间来修复自己。'}};
 const RISK_TAGS={sleep:{high:'高心血管风险',med:'睡眠债积累',low:'睡眠良好'},work:{high:'过劳高危',med:'职业倦怠风险',low:'工作平衡'},exercise:{high:'代谢综合征风险',med:'体能偏弱',low:'体能良好'},diet:{high:'营养失衡',med:'饮食不规律',low:'饮食健康'},stress:{high:'慢性应激',med:'压力偏高',low:'压力可控'},habit:{high:'器官损耗',med:'轻度不良嗜好',low:'生活习惯良好'},emotion:{high:'情绪高风险',med:'情绪波动大',low:'情绪稳定'}};
 const ARCHETYPES=[{key:'burner',icon:'🔥',name:'职场殉道者',badge:'CAREER MARTYR',match:d=>d.work>=65&&d.stress>=55,bg:'rgba(255,80,0,.04)',border:'rgba(255,80,0,.2)',color:'#ff8800',desc:'你把自己活成了一个永远在线的人肉服务器。工作和压力已经融为一体，你已经分不清哪些焦虑是正常的，哪些不是。'},{key:'ghost',icon:'👻',name:'数字游魂',badge:'DIGITAL GHOST',match:d=>d.sleep>=60&&d.habit>=55,bg:'rgba(0,200,255,.04)',border:'rgba(0,200,255,.2)',color:'#00ccff',desc:'你的生活发生在屏幕里。你的生物钟已经被蓝光重新校准，你的社交需求正在被算法填满——这两件事都不是好事。'},{key:'zombie',icon:'🧟',name:'外卖进化体',badge:'DELIVERY HUMAN',match:d=>d.diet>=60&&d.exercise>=55,bg:'rgba(200,100,0,.04)',border:'rgba(200,100,0,.2)',color:'#cc6600',desc:'你的消化系统已经适应了外卖容器的形状，你的腿已经忘记了长距离行走是什么感觉。'},{key:'anxious',icon:'😰',name:'焦虑人形容器',badge:'ANXIETY ENGINE',match:d=>d.stress>=65&&d.emotion>=60,bg:'rgba(180,0,255,.04)',border:'rgba(180,0,255,.2)',color:'#cc44ff',desc:'你的大脑已经进化出一种特殊能力：在任何情况下都能找到值得担心的事情。你的杏仁核从未真正休息过。'},{key:'fossil',icon:'🪨',name:'久坐化石',badge:'SEDIMENTARY HUMAN',match:d=>d.work>=60&&d.exercise>=65,bg:'rgba(100,100,100,.05)',border:'rgba(150,150,150,.2)',color:'#aaaaaa',desc:'你的骨骼肌肉系统正在以地质速度慢慢石化。久坐的危害在医学上被认为等同于吸烟。'},{key:'night',icon:'🌙',name:'深夜哲学家',badge:'NOCTURNAL THINKER',match:d=>d.sleep>=60&&d.emotion>=55,bg:'rgba(50,0,100,.06)',border:'rgba(100,50,200,.2)',color:'#8855ff',desc:'你把夜晚变成了思考宇宙终极问题的安全空间。每一个深夜，你都在预支明天的清醒和后年的寿命。'},{key:'declining',icon:'📉',name:'亚健康优等生',badge:'DECLINING AVERAGE',match:d=>Object.values(d).filter(v=>v>=35&&v<65).length>=4,bg:'rgba(255,200,0,.04)',border:'rgba(255,200,0,.2)',color:'#ffcc00',desc:'你哪个维度都不算特别差，但哪个维度也不算好。亚健康最狡猾的地方就在于，它从不触发警报，只是让你越来越累。'},{key:'model',icon:'⚰️',name:'猝死候选模范生',badge:'PRIME CANDIDATE',match:()=>true,bg:'rgba(255,0,68,.05)',border:'rgba(255,0,68,.22)',color:'#ff0044',desc:'你在几乎每一个维度都达到了令人印象深刻的危险水平。这需要一种全面的改变——不是调整某一件事，而是重新思考整个生活方式。'}];
@@ -1114,7 +1151,7 @@ function showResult(){
   const cc=document.getElementById('contrib-chart');cc.innerHTML='';
   dims.forEach(d=>{const col=dimCol(d.pct);const el=document.createElement('div');el.className='contrib-row';el.innerHTML=`<span class="contrib-label">${d.name.replace(/^../,'')}</span><div class="contrib-bar-bg"><div class="contrib-bar" style="width:0%;background:${col};color:${col}" data-pct="${d.pct}"></div></div><span class="contrib-val" style="color:${col}">${d.pct}%</span>`;cc.appendChild(el);});
   const sorted=[...dims].sort((a,b)=>b.pct-a.pct),top2=sorted.slice(0,2).map(d=>d.key).sort(),pKey=top2.join('+');
-  const pt=score<15?'你的生活方式令人羡慕，也令人费解。如果非要预言：你大概会因为看着身边的人一个个倒下而感到忧郁，而不是自己倒下。继续保持。':(PROPHECY[pKey]||PROPHECY['work+stress']);
+  const pt=score<15?'你的生活方式令人羡慕，也令人费解。如果非要预言：你大概会因为看着身边的人一个个倒下而感到忧郁，而不是自己倒下。继续保持。':(PROPHECY[pKey]||PROPHECY['stress+work']);
   const mo=MOMENTS[pKey]||'';typewriter('prophecy-text',pt,18);
   const mEl=document.getElementById('prophecy-moment');mEl.textContent=mo;mEl.style.display=mo?'block':'none';
   document.getElementById('doctor-text').textContent=getDoctorNote(score,dims,arch);
