@@ -801,7 +801,7 @@ input[type=range]::-moz-range-thumb {
 
 .toast {
   position: fixed;
-  bottom: 32px; left: 50%;
+  bottom: calc(32px + env(safe-area-inset-bottom, 0px)); left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: rgba(0,255,136,0.12);
   border: 1px solid rgba(0,255,136,0.3);
@@ -822,6 +822,21 @@ input[type=range]::-moz-range-thumb {
   .card { padding: 24px 18px; }
   .dims { grid-template-columns: 1fr; }
   .slider-display { font-size: 32px; }
+  .opt { padding: 12px 14px; font-size: 13px; min-height: 48px; }
+  .result-btns { gap: 8px; }
+  .result-btns button { padding: 10px 16px; font-size: 13px; }
+  .title { font-size: clamp(28px,7vw,48px); }
+  .stats-row { gap: 8px; }
+  .stat { padding: 10px 14px; min-width: 80px; }
+  .radar-svg { width: 220px; height: 220px; }
+  .wrap { padding: 16px 12px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+}
+
+@media (max-width: 360px) {
+  .card { padding: 18px 14px; }
+  .q-text { font-size: 15px; }
+  .opt { padding: 10px 12px; font-size: 12px; }
+  .btn-back, .btn-next { padding: 10px 18px; font-size: 13px; }
 }
 
 /* High score shake effect */
