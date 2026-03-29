@@ -795,6 +795,23 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
 .cpill{transition:all .2s;cursor:default;}
 .cpill:hover{background:rgba(var(--ar),var(--ag),var(--ab),.08);border-color:rgba(var(--ar),var(--ag),var(--ab),.25);transform:translateY(-2px) scale(1.02);box-shadow:0 4px 16px rgba(var(--ar),var(--ag),var(--ab),.08);}
 
+/* ══ BELL CURVE VISUALIZATION ══ */
+.bell-curve-wrap{background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:18px 20px;margin-bottom:14px;text-align:center;}
+.bell-curve-wrap svg{width:100%;max-width:340px;height:auto;}
+.bell-marker{transition:all 1s cubic-bezier(.25,.8,.25,1);}
+.bell-you-label{font-size:10px;font-weight:700;fill:var(--accent);text-anchor:middle;}
+.bell-you-line{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:3,2;}
+.bell-area{opacity:.08;}
+.bell-line{fill:none;stroke:rgba(255,255,255,.2);stroke-width:1.5;}
+
+/* ══ LANDING STAGGER ══ */
+.stagger-in{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+.stagger-in.visible{opacity:1;transform:none;}
+
+/* ══ RISK DNA STRAND ══ */
+.risk-dna{position:absolute;top:10px;right:10px;width:30px;height:120px;opacity:.15;overflow:hidden;pointer-events:none;}
+.risk-dna svg{width:100%;height:100%;}
+
 /* ══ TIME GREETING ══ */
 .time-greeting{text-align:center;font-size:11px;color:var(--dim);letter-spacing:.5px;margin-bottom:12px;opacity:0;animation:tipFadeIn .5s .3s ease both;}
 .time-greeting .tg-icon{font-size:16px;margin-right:4px;vertical-align:middle;}
@@ -4693,6 +4710,113 @@ document.addEventListener('dblclick',e=>{
   dim.style.boxShadow=dim.style.boxShadow?'':'0 0 20px rgba(var(--ar),var(--ag),var(--ab),.2)';
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
+
+// ════ BELL CURVE POPULATION DISTRIBUTION ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('bell-curve-card'))return;
+      const score=calcScore();
+      const card=document.createElement('div');
+      card.id='bell-curve-card';
+      card.className='bell-curve-wrap rs on';
+      // Generate bell curve SVG
+      const w=340,h=120,cx=w/2,pad=20;
+      const mu=55,sigma=18; // Mean ~55, SD ~18
+      const norm=(x)=>Math.exp(-0.5*((x-mu)/sigma)**2)/(sigma*Math.sqrt(2*Math.PI));
+      let pathD='M';
+      let areaD='M '+pad+','+h+' L';
+      for(let x=0;x<=100;x+=1){
+        const px=pad+(x/100)*(w-2*pad);
+        const py=h-15-norm(x)*sigma*Math.sqrt(2*Math.PI)*(h-30);
+        pathD+=(x===0?'':' L')+px.toFixed(1)+','+py.toFixed(1);
+        areaD+=' '+px.toFixed(1)+','+py.toFixed(1);
+      }
+      areaD+=' L'+(w-pad)+','+h+' Z';
+      const markerX=pad+(score/100)*(w-2*pad);
+      const markerY=h-15-norm(score)*sigma*Math.sqrt(2*Math.PI)*(h-30);
+      const col=score>=70?'#ef4444':score>=50?'#f59e0b':score>=30?'#fbbf24':'#34d399';
+      card.innerHTML=`<div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 人群分布 · WHERE YOU STAND</div>
+        <svg viewBox="0 0 ${w} ${h+20}" xmlns="http://www.w3.org/2000/svg">
+          <path d="${areaD}" fill="var(--accent)" class="bell-area"/>
+          <path d="${pathD}" class="bell-line"/>
+          <line x1="${markerX}" y1="${markerY}" x2="${markerX}" y2="${h}" class="bell-you-line" stroke="${col}"/>
+          <circle cx="${markerX}" cy="${markerY}" r="4" fill="${col}" class="bell-marker"><animate attributeName="r" values="4;6;4" dur="2s" repeatCount="indefinite"/></circle>
+          <text x="${markerX}" y="${markerY-10}" class="bell-you-label" fill="${col}">你 ${score}分</text>
+          <text x="${pad}" y="${h+14}" fill="var(--dim)" font-size="8" text-anchor="start">0</text>
+          <text x="${cx}" y="${h+14}" fill="var(--dim)" font-size="8" text-anchor="middle">50</text>
+          <text x="${w-pad}" y="${h+14}" fill="var(--dim)" font-size="8" text-anchor="end">100</text>
+          <text x="${pad+(mu/100)*(w-2*pad)}" y="${h+14}" fill="rgba(255,255,255,.3)" font-size="7" text-anchor="middle">平均</text>
+        </svg>`;
+      // Insert after percentile section (rs3)
+      const rs3=document.getElementById('rs3');
+      if(rs3&&rs3.nextSibling){rs3.parentNode.insertBefore(card,rs3.nextSibling);}
+    },1200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ LANDING PAGE STAGGER ANIMATION ════
+(function(){
+  const targets=['.time-greeting','.live-row','.glitch-title','.title-sub','.landing-ecg','.death-clock','.live-feed','#daily-health-tip','.warning-box','.live-stats','.cat-preview','.testimonials','.age-row','.start-btn','.start-disclaimer'];
+  const intro=document.getElementById('sec-intro');
+  if(!intro)return;
+  targets.forEach((sel,i)=>{
+    const el=intro.querySelector(sel);
+    if(el){
+      el.classList.add('stagger-in');
+      el.style.transitionDelay=(i*80)+'ms';
+    }
+  });
+  // Trigger after a frame
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    targets.forEach(sel=>{
+      const el=intro.querySelector(sel);
+      if(el)el.classList.add('visible');
+    });
+  }));
+})();
+
+// ════ DOUBLE-TAP SCORE FOR SECRET STATS ════
+(function(){
+  let lastTap=0;
+  document.addEventListener('click',e=>{
+    const scoreNum=e.target.closest('.score-num');
+    if(!scoreNum)return;
+    const now=Date.now();
+    if(now-lastTap<400){
+      // Show secret stats modal
+      const score=parseInt(scoreNum.textContent);
+      const dims=calcDims();
+      const avg=Math.round(dims.reduce((s,d)=>s+d.pct,0)/dims.length);
+      const max=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const min=dims.reduce((a,b)=>b.pct<a.pct?b:a);
+      const variance=Math.round(Math.sqrt(dims.reduce((s,d)=>s+(d.pct-avg)**2,0)/dims.length));
+      const overlay=document.createElement('div');
+      overlay.style.cssText='position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);animation:fadeUp .3s ease;cursor:pointer;';
+      overlay.innerHTML=`<div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:28px;max-width:320px;width:90%;font-family:'Space Mono',monospace;" onclick="event.stopPropagation()">
+        <div style="font-size:9px;letter-spacing:3px;color:var(--accent);margin-bottom:16px;">SECRET STATISTICS</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:11px;color:#ccc;">
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--dim)">总分</span><span>${score}/100</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--dim)">维度均值</span><span>${avg}%</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--dim)">标准差</span><span>${variance}</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--dim)">最危险</span><span style="color:#ef4444">${max.name} ${max.pct}%</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--dim)">最安全</span><span style="color:#34d399">${min.name} ${min.pct}%</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--dim)">均衡度</span><span>${variance<10?'均衡 ✓':variance<20?'尚可':'极度不均'}</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--dim)">风险集中度</span><span>${Math.round((max.pct/Math.max(avg,1))*100)/100}x</span></div>
+        </div>
+        <div style="font-size:8px;color:var(--dim);margin-top:14px;text-align:center;">TAP OUTSIDE TO CLOSE</div>
+      </div>`;
+      overlay.addEventListener('click',()=>{overlay.style.opacity='0';overlay.style.transition='opacity .2s';setTimeout(()=>overlay.remove(),200);});
+      document.body.appendChild(overlay);
+      if(typeof unlockAchievement==='function')unlockAchievement('secret-stats','🔍','数据分析师','发现了隐藏的统计面板');
+    }
+    lastTap=now;
+  });
+})();
 
 // ════ TIME-OF-DAY GREETING ════
 (function(){
