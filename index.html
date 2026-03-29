@@ -1071,7 +1071,7 @@ html.light .achievement-name{color:#1a1a2e;}
   <div class="time-greeting" id="time-greeting"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v13.0</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v14.0</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div><div class="dc-group"><span class="dc-digit" id="dc-secs">--</span><span class="dc-label">SECS</span></div></div>
   <div class="live-feed" id="live-feed"></div>
@@ -3035,7 +3035,7 @@ function downloadCard(){
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v13.0 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v14.0 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -7502,7 +7502,7 @@ document.addEventListener('dblclick',e=>{
 // ════ TYPING SUBTITLE EFFECT ════
 (function(){
   const subtitles=[
-    'SUDDEN DEATH INDEX · v13.0',
+    'SUDDEN DEATH INDEX · v14.0',
     '你离猝死还有多远？',
     '30题 · 7维度 · 1份残酷报告',
     '熬夜测试本身就是加分项',
@@ -8309,13 +8309,275 @@ ${line}
   };
 })();
 
+// ════ "HEALTH FORTUNE COOKIE" ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('fortune-cookie'))return;
+      const score=calcScore();
+      const fortunes=[
+        {range:[0,25],msgs:['你的身体是台好机器，继续保养！','健康是最好的投资，你做到了。','按这个节奏，长命百岁不是梦。']},
+        {range:[25,45],msgs:['小问题不改，大病来得快。','你站在健康的及格线上，别往下掉。','现在改还来得及，再拖就不好说了。']},
+        {range:[45,65],msgs:['你的身体正在发出黄色预警。','如果身体能说话，它现在在大声抱怨。','你正在用健康透支快乐，利息很高。']},
+        {range:[65,80],msgs:['你的身体已经在写投诉信了。','再不改变，你的器官们要罢工了。','你不是在玩火，你已经着火了。']},
+        {range:[80,101],msgs:['你的身体已经开始倒计时了。','ICU的床位正在向你招手。','你活着就是个奇迹，请珍惜。']},
+      ];
+      const group=fortunes.find(f=>score>=f.range[0]&&score<f.range[1])||fortunes[2];
+      const fortune=group.msgs[Math.floor(Math.random()*group.msgs.length)];
+      const el=document.createElement('div');
+      el.id='fortune-cookie';
+      el.className='rs on';
+      el.style.cursor='pointer';
+      el.innerHTML=`<div style="text-align:center;padding:10px 0;">
+        <div style="font-size:40px;transition:transform .5s cubic-bezier(.34,1.56,.64,1);" id="cookie-emoji">🥠</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);margin:8px 0 4px;">健康签语饼</div>
+        <div id="fortune-text" style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .5s;opacity:0;">「${fortune}」</div>
+        <div id="fortune-hint" style="font-size:10px;color:var(--dim);margin-top:4px;">点击打开</div>
+      </div>`;
+      el.addEventListener('click',function(){
+        const emoji=document.getElementById('cookie-emoji');
+        const text=document.getElementById('fortune-text');
+        const hint=document.getElementById('fortune-hint');
+        if(emoji)emoji.style.transform='scale(1.3) rotate(15deg)';
+        setTimeout(()=>{
+          if(emoji)emoji.textContent='📜';
+          if(emoji)emoji.style.transform='scale(1)';
+          if(text){text.style.maxHeight='80px';text.style.opacity='1';}
+          if(hint)hint.style.display='none';
+        },300);
+      },{once:true});
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(9,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },4000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH NEWS TICKER" ON RESULT PAGE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('news-ticker'))return;
+      const score=calcScore();
+      const headlines=[
+        `⚡ 快讯：某用户猝死指数高达${score}分，专家表示"触目惊心"`,
+        `📊 调查显示：${Math.round(50+score*0.4)}%的年轻人存在类似健康问题`,
+        `🏥 提醒：规律作息可降低猝死风险40%以上`,
+        `☕ 研究：每天超过3杯咖啡可能影响心脏节律`,
+        `🛏️ 专家建议：成年人每晚至少保证7小时睡眠`,
+        `🏃 最新研究：每周150分钟运动可显著改善心血管健康`,
+        `📱 警告：蓝光暴露影响褪黑素分泌，建议睡前1小时放下手机`,
+        `🥗 膳食指南：每天至少摄入500克蔬菜水果`,
+        `😰 心理健康：长期压力是猝死的重要诱因之一`,
+        `💤 睡眠债：周末补觉无法完全弥补工作日的睡眠不足`,
+      ];
+      const el=document.createElement('div');
+      el.id='news-ticker';
+      el.style.cssText='position:relative;overflow:hidden;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:8px;padding:6px 12px;margin-bottom:16px;width:100%;';
+      const inner=document.createElement('div');
+      inner.style.cssText='white-space:nowrap;font-size:10px;color:var(--dim);animation:tickerScroll 25s linear infinite;display:inline-block;';
+      inner.textContent=headlines.join('   ·   ')+'   ·   '+headlines[0];
+      el.appendChild(inner);
+      // Add CSS animation
+      const style=document.createElement('style');
+      style.textContent='@keyframes tickerScroll{from{transform:translateX(100%)}to{transform:translateX(-100%)}}';
+      document.head.appendChild(style);
+      sec.insertBefore(el,sec.firstChild);
+    },600);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH LEVEL UP" GAMIFICATION ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-level'))return;
+      try{
+        const history=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+        const testCount=history.length;
+        // XP based on tests taken + improvements
+        const xp=testCount*50+(history.length>=2?(history[0].score-history[history.length-1].score)*10:0);
+        const level=Math.max(1,Math.floor(Math.sqrt(xp/25))+1);
+        const xpForLevel=Math.pow(level-1,2)*25;
+        const xpForNext=Math.pow(level,2)*25;
+        const progress=Math.min(100,Math.max(0,((xp-xpForLevel)/(xpForNext-xpForLevel))*100));
+        const titles=['健康小白','健康学徒','健康探索者','健康守卫','健康达人','健康导师','健康大师','健康传奇','不死之身'];
+        const title=titles[Math.min(level-1,titles.length-1)];
+        const el=document.createElement('div');
+        el.id='health-level';
+        el.className='rs on';
+        el.innerHTML=`<div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.5));display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 4px 16px rgba(var(--ar),var(--ag),var(--ab),.3);">${level}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+              <div style="font-size:12px;font-weight:700;color:var(--text);">${title}</div>
+              <div style="font-size:9px;color:var(--dim);">Lv.${level} · ${Math.round(xp)} XP</div>
+            </div>
+            <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;">
+              <div style="height:100%;width:${progress}%;background:linear-gradient(90deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.7));border-radius:3px;transition:width 1.5s ease;"></div>
+            </div>
+            <div style="font-size:9px;color:var(--dim);margin-top:4px;">
+              ${testCount===0?'完成测试获取经验值':testCount===1?'继续测试来升级！':`已完成 ${testCount} 次测试 · 距下一级还需 ${Math.max(0,Math.round(xpForNext-xp))} XP`}
+            </div>
+          </div>
+        </div>`;
+        const rs0=document.getElementById('rs0');
+        if(rs0)rs0.parentNode.insertBefore(el,rs0.nextSibling);
+      }catch(e){}
+    },1500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ RESULT PAGE: DIMENSION COMPARISON SENTENCES ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('dim-sentences'))return;
+      const dims=calcDims();
+      const sorted=[...dims].sort((a,b)=>b.pct-a.pct);
+      const best=sorted[sorted.length-1];
+      const worst=sorted[0];
+      const sentences=[
+        `你的 <b style="color:#ef4444">${worst.name}</b>（${worst.pct}%）是最大的健康隐患，而 <b style="color:#4ade80">${best.name}</b>（${best.pct}%）表现最好。`,
+        `${worst.name}的风险是${best.name}的 <b>${(worst.pct/Math.max(1,best.pct)).toFixed(1)}倍</b>，差距相当明显。`,
+        `如果把${worst.name}降到${best.name}的水平，你的总分能减少约 <b>${Math.round((worst.pct-best.pct)*0.14)} 分</b>。`,
+      ];
+      const el=document.createElement('div');
+      el.id='dim-sentences';
+      el.className='rs on';
+      el.innerHTML=`<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);text-align:center;margin-bottom:8px;">📊 维度对比洞察</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5);line-height:2;">${sentences.join('<br>')}</div>`;
+      // Insert after dimension section
+      const dimSection=document.querySelector('.dim-grid')?.closest('.rs');
+      if(dimSection)dimSection.parentNode.insertBefore(el,dimSection.nextSibling);
+    },2500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ ANIMATED "HEALTH METER" GAUGE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-gauge'))return;
+      const score=calcScore();
+      const angle=-90+(score/100)*180; // -90 to 90 degrees
+      const color=score>=70?'#ef4444':score>=45?'#f59e0b':score>=25?'#facc15':'#4ade80';
+      const el=document.createElement('div');
+      el.id='health-gauge';
+      el.className='rs on';
+      el.innerHTML=`<div style="text-align:center;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:12px;">🌡️ 健康仪表盘</div>
+        <svg viewBox="0 0 200 120" style="width:180px;height:auto;margin:0 auto;display:block;">
+          <!-- Background arc -->
+          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="12" stroke-linecap="round"/>
+          <!-- Colored segments -->
+          <path d="M 20 100 A 80 80 0 0 1 60 32" fill="none" stroke="#4ade80" stroke-width="12" stroke-linecap="round" opacity=".3"/>
+          <path d="M 60 32 A 80 80 0 0 1 100 20" fill="none" stroke="#facc15" stroke-width="12" opacity=".3"/>
+          <path d="M 100 20 A 80 80 0 0 1 140 32" fill="none" stroke="#f59e0b" stroke-width="12" opacity=".3"/>
+          <path d="M 140 32 A 80 80 0 0 1 180 100" fill="none" stroke="#ef4444" stroke-width="12" stroke-linecap="round" opacity=".3"/>
+          <!-- Needle -->
+          <g transform="rotate(${angle} 100 100)" style="transition:transform 1.5s cubic-bezier(.34,1.56,.64,1);">
+            <line x1="100" y1="100" x2="100" y2="30" stroke="${color}" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="100" cy="100" r="6" fill="${color}"/>
+          </g>
+          <!-- Labels -->
+          <text x="20" y="118" font-size="8" fill="rgba(255,255,255,.3)" text-anchor="middle">安全</text>
+          <text x="100" y="14" font-size="8" fill="rgba(255,255,255,.3)" text-anchor="middle">中等</text>
+          <text x="180" y="118" font-size="8" fill="rgba(255,255,255,.3)" text-anchor="middle">危险</text>
+        </svg>
+        <div style="font-size:24px;font-weight:900;color:${color};margin-top:4px;">${score}</div>
+        <div style="font-size:10px;color:var(--dim);">猝死风险指数</div>
+      </div>`;
+      const rs0=document.getElementById('rs0');
+      if(rs0)rs0.parentNode.insertBefore(el,rs0);
+    },700);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ DOUBLE-TAP ANYWHERE FOR QUICK SHARE ════
+(function(){
+  let lastTap=0;
+  document.addEventListener('touchend',e=>{
+    const now=Date.now();
+    if(now-lastTap<300){
+      const sec=document.getElementById('sec-result');
+      if(!sec?.classList.contains('active'))return;
+      // Quick share via navigator.share or clipboard
+      const score=document.getElementById('score-num')?.textContent;
+      if(!score)return;
+      const text=`我的猝死指数是 ${score}/100 💀 你敢测吗？`;
+      if(navigator.share){
+        navigator.share({title:'猝死指数测试',text}).catch(()=>{});
+      }else{
+        navigator.clipboard?.writeText(text).then(()=>{
+          const toast=document.createElement('div');
+          toast.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--card-bg);border:1px solid var(--card-border);padding:6px 16px;border-radius:20px;font-size:10px;color:var(--dim);z-index:300;animation:fadeUp .3s;';
+          toast.textContent='📋 已复制分享文案';
+          document.body.appendChild(toast);
+          setTimeout(()=>toast.remove(),2000);
+        });
+      }
+    }
+    lastTap=now;
+  },{passive:true});
+})();
+
+// ════ PREFERS-REDUCED-MOTION RESPECT ════
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const style=document.createElement('style');
+    style.textContent=`*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important;}`;
+    document.head.appendChild(style);
+  }
+})();
+
+// ════ NETWORK STATUS INDICATOR ════
+(function(){
+  function showStatus(online){
+    const existing=document.getElementById('net-status');
+    if(existing)existing.remove();
+    if(online)return; // Only show when offline
+    const el=document.createElement('div');
+    el.id='net-status';
+    el.style.cssText='position:fixed;bottom:0;left:0;right:0;background:rgba(239,68,68,.9);color:#fff;text-align:center;font-size:10px;padding:4px;z-index:999;';
+    el.textContent='📶 你当前处于离线状态，但测试可以正常使用';
+    document.body.appendChild(el);
+  }
+  window.addEventListener('offline',()=>showStatus(false));
+  window.addEventListener('online',()=>showStatus(true));
+  if(!navigator.onLine)showStatus(false);
+})();
+
 // Check URL hash on load for shared results
 (function checkURLResult(){
   const hash=location.hash;if(!hash.startsWith('#r='))return;
   try{
     const data=JSON.parse(atob(hash.slice(3)));
     if(data.s===undefined)return;
-    // Show a simple "someone shared their result" banner
     const bar=document.createElement('div');bar.className='resume-bar';
     bar.innerHTML=`<span>有人分享了他的猝死指数：<b style="color:#ef4444">${data.s}分</b></span><button onclick="this.parentElement.remove()">我也要测</button>`;
     document.getElementById('sec-intro').prepend(bar);
