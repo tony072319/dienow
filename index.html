@@ -1090,7 +1090,7 @@ html.light .achievement-name{color:#1a1a2e;}
   <div class="time-greeting" id="time-greeting"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v14.0</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v15.0</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div><div class="dc-group"><span class="dc-digit" id="dc-secs">--</span><span class="dc-label">SECS</span></div></div>
   <div class="live-feed" id="live-feed"></div>
@@ -3054,7 +3054,7 @@ function downloadCard(){
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v14.0 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v15.0 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -7521,7 +7521,7 @@ document.addEventListener('dblclick',e=>{
 // ════ TYPING SUBTITLE EFFECT ════
 (function(){
   const subtitles=[
-    'SUDDEN DEATH INDEX · v14.0',
+    'SUDDEN DEATH INDEX · v15.0',
     '你离猝死还有多远？',
     '30题 · 7维度 · 1份残酷报告',
     '熬夜测试本身就是加分项',
@@ -8739,6 +8739,224 @@ ${line}
   document.head.appendChild(style);
   setInterval(spawnBubble,4000);
   setTimeout(spawnBubble,2000);
+})();
+
+// ════ "HEALTH SOCIAL MEDIA POST" CARD ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('social-post'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const handles=['@作死小能手','@夜猫子日记','@咖啡续命达人','@外卖重度依赖','@久坐世界冠军','@熬夜冠军'];
+      const handle=handles[Math.floor(Math.random()*handles.length)];
+      const likes=Math.round(score*23+Math.random()*500);
+      const replies=Math.round(score*3+Math.random()*50);
+      const reposts=Math.round(score*8+Math.random()*100);
+      const time=`${Math.floor(Math.random()*12)+1}小时前`;
+      const el=document.createElement('div');
+      el.id='social-post';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.03);border:1px solid var(--card-border);border-radius:16px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#ef4444);display:flex;align-items:center;justify-content:center;font-size:16px;">💀</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text);">${handle}</div>
+            <div style="font-size:10px;color:var(--dim);">${time}</div>
+          </div>
+          <div style="margin-left:auto;font-size:8px;background:rgba(var(--ar),var(--ag),var(--ab),.1);color:var(--accent);padding:2px 8px;border-radius:10px;">模拟</div>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,.7);line-height:1.8;margin-bottom:12px;">
+          刚测了猝死指数，${score}分…… ${score>=60?'我觉得我需要立遗嘱了':'还行，至少暂时死不了'}。${worst.name}竟然高达${worst.pct}%，${worst.pct>=60?'这还能活吗？？':'看来得注意一下了'}。
+          <span style="color:var(--accent);">#猝死指数测试 #健康自检</span>
+        </div>
+        <div style="display:flex;gap:20px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04);">
+          <span style="font-size:10px;color:var(--dim);cursor:pointer;" onclick="this.style.color='#ef4444';this.textContent='❤️ '+(${likes}+1)">🤍 ${likes}</span>
+          <span style="font-size:10px;color:var(--dim);">💬 ${replies}</span>
+          <span style="font-size:10px;color:var(--dim);">🔄 ${reposts}</span>
+          <span style="font-size:10px;color:var(--dim);margin-left:auto;">📤</span>
+        </div>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(11,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },5000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH RECIPE" SURVIVAL KIT ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('survival-kit'))return;
+      const dims=calcDims();
+      const recipes={
+        '😴 睡眠':{item:'薰衣草枕头喷雾',icon:'🛏️',desc:'每晚睡前喷两下，搭配冥想APP使用'},
+        '💼 工作':{item:'番茄钟计时器',icon:'🍅',desc:'25分钟工作+5分钟休息，拯救你的颈椎'},
+        '🏃 运动':{item:'跳绳一根',icon:'🏃',desc:'每天跳500下，性价比最高的运动'},
+        '🍜 饮食':{item:'大号水壶',icon:'💧',desc:'放在桌上提醒自己喝水，标注时间刻度'},
+        '😰 压力':{item:'降噪耳塞',icon:'🎧',desc:'隔绝噪音，给大脑一个安静角落'},
+        '🚬 习惯':{item:'手机使用时间APP',icon:'📱',desc:'设置每日限额，让手瘾无处遁形'},
+        '💔 情绪':{item:'感恩日记本',icon:'📓',desc:'每天写3件感恩的事，重新接线大脑'},
+      };
+      const worst3=dims.sort((a,b)=>b.pct-a.pct).slice(0,3);
+      let itemsHTML='';
+      worst3.forEach((d,i)=>{
+        const recipe=recipes[d.name]||{item:'一本健康书',icon:'📚',desc:'了解自己的身体'};
+        itemsHTML+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;${i<2?'border-bottom:1px solid rgba(255,255,255,.04);':''}">
+          <div style="font-size:22px;flex-shrink:0;">${recipe.icon}</div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text);">${recipe.item}</div>
+            <div style="font-size:10px;color:var(--dim);margin-top:2px;">${recipe.desc}</div>
+          </div>
+        </div>`;
+      });
+      const el=document.createElement('div');
+      el.id='survival-kit';
+      el.className='rs on';
+      el.innerHTML=`<div style="text-align:center;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);">🎒 生存装备推荐</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.35);">基于你最弱的维度，推荐3件救命好物</div>
+      </div>${itemsHTML}`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(5,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },2200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ INTERACTIVE QUIZ: SECRET ANSWER STATS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('answer-stats'))return;
+      if(!window.A||!window.QS)return;
+      const answers=window.A;
+      const questions=window.QS;
+      // Count danger choices
+      let dangerCount=0,safeCount=0,maxDanger=0;
+      answers.forEach((a,i)=>{
+        if(!questions[i])return;
+        const opts=questions[i].opts;
+        const maxVal=Math.max(...opts.map(o=>o.val));
+        if(a.val>=maxVal*0.7)dangerCount++;
+        else if(a.val<=maxVal*0.3)safeCount++;
+        if(a.val===maxVal)maxDanger++;
+      });
+      const total=answers.length;
+      const el=document.createElement('div');
+      el.id='answer-stats';
+      el.className='rs on';
+      el.innerHTML=`<div style="text-align:center;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);">🔍 答题行为分析</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <div style="text-align:center;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.12);border-radius:10px;padding:10px 6px;">
+          <div style="font-size:20px;font-weight:900;color:#ef4444;">${dangerCount}</div>
+          <div style="font-size:9px;color:var(--dim);margin-top:2px;">高危选项</div>
+          <div style="font-size:8px;color:rgba(255,255,255,.25);">占比 ${Math.round(dangerCount/total*100)}%</div>
+        </div>
+        <div style="text-align:center;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.12);border-radius:10px;padding:10px 6px;">
+          <div style="font-size:20px;font-weight:900;color:#4ade80;">${safeCount}</div>
+          <div style="font-size:9px;color:var(--dim);margin-top:2px;">安全选项</div>
+          <div style="font-size:8px;color:rgba(255,255,255,.25);">占比 ${Math.round(safeCount/total*100)}%</div>
+        </div>
+        <div style="text-align:center;background:rgba(var(--ar),var(--ag),var(--ab),.06);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:10px;padding:10px 6px;">
+          <div style="font-size:20px;font-weight:900;color:var(--accent);">${maxDanger}</div>
+          <div style="font-size:9px;color:var(--dim);margin-top:2px;">最危险选项</div>
+          <div style="font-size:8px;color:rgba(255,255,255,.25);">选了最差的</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:10px;color:var(--dim);margin-top:8px;">
+        ${dangerCount>total*0.5?'你选的高危选项超过一半，这不是测试，这是自首。':dangerCount>total*0.3?'有不少危险选择，但还有改善空间。':'你的选择整体偏安全，做得不错。'}
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(4,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },2000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH MOVIE RATING" ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('movie-rating'))return;
+      const score=calcScore();
+      const ratings=[
+        {range:[0,15],stars:5,genre:'治愈系',title:'《养生达人的日常》',review:'一部温馨的健康纪录片，主角的生活方式令人羡慕。'},
+        {range:[15,30],stars:4,genre:'喜剧',title:'《差不多先生的健康生活》',review:'轻松愉快，虽有小瑕疵但整体氛围积极向上。'},
+        {range:[30,50],stars:3,genre:'悬疑',title:'《体检报告迷踪》',review:'剧情渐入佳境，主角开始发现一些令人不安的线索。'},
+        {range:[50,70],stars:2,genre:'惊悚',title:'《身体发出的求救信号》',review:'紧张刺激，每一个器官都在呐喊，建议胆小勿看。'},
+        {range:[70,85],stars:1,genre:'灾难片',title:'《器官大逃亡》',review:'高度紧张，主角的身体已经开始上演末日景象。'},
+        {range:[85,101],stars:0.5,genre:'恐怖片',title:'《猝死来了》',review:'年度最恐怖作品，建议观影前签好免责声明。'},
+      ];
+      const r=ratings.find(r=>score>=r.range[0]&&score<r.range[1])||ratings[3];
+      const starsHTML='★'.repeat(Math.floor(r.stars))+(r.stars%1?'½':'')+'☆'.repeat(5-Math.ceil(r.stars));
+      const el=document.createElement('div');
+      el.id='movie-rating';
+      el.className='rs on';
+      el.innerHTML=`<div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:60px;height:85px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:1px solid rgba(255,255,255,.08);">🎬</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;">${r.title}</div>
+          <div style="font-size:10px;color:#f59e0b;letter-spacing:2px;margin-bottom:4px;">${starsHTML}</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px;">
+            <span style="font-size:9px;background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;color:var(--dim);">${r.genre}</span>
+            <span style="font-size:9px;background:rgba(239,68,68,.08);padding:1px 6px;border-radius:4px;color:#ef4444;">${score>=50?'R级':'PG-13'}</span>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45);line-height:1.6;">${r.review}</div>
+        </div>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(8,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },3800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ PAGE VISIBILITY: PAUSE ANIMATIONS WHEN HIDDEN ════
+(function(){
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){
+      document.body.style.animationPlayState='paused';
+    }else{
+      document.body.style.animationPlayState='running';
+    }
+  });
 })();
 
 // ════ PREFERS-REDUCED-MOTION RESPECT ════
