@@ -1090,7 +1090,7 @@ html.light .achievement-name{color:#1a1a2e;}
   <div class="time-greeting" id="time-greeting"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v15.0</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v16.0</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div><div class="dc-group"><span class="dc-digit" id="dc-secs">--</span><span class="dc-label">SECS</span></div></div>
   <div class="live-feed" id="live-feed"></div>
@@ -3054,7 +3054,7 @@ function downloadCard(){
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v15.0 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v16.0 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -7521,7 +7521,7 @@ document.addEventListener('dblclick',e=>{
 // ════ TYPING SUBTITLE EFFECT ════
 (function(){
   const subtitles=[
-    'SUDDEN DEATH INDEX · v15.0',
+    'SUDDEN DEATH INDEX · v16.0',
     '你离猝死还有多远？',
     '30题 · 7维度 · 1份残酷报告',
     '熬夜测试本身就是加分项',
@@ -9181,6 +9181,208 @@ ${line}
   window.addEventListener('offline',()=>showStatus(false));
   window.addEventListener('online',()=>showStatus(true));
   if(!navigator.onLine)showStatus(false);
+})();
+
+// ════ "HEALTH VOICE" TEXT-TO-SPEECH ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const card=document.getElementById('res-card');
+      if(!card||!window.speechSynthesis)return;
+      if(document.getElementById('tts-btn'))return;
+      const btn=document.createElement('button');
+      btn.id='tts-btn';
+      btn.style.cssText='position:absolute;top:12px;left:12px;width:32px;height:32px;border-radius:50%;border:1px solid var(--card-border);background:var(--card-bg);backdrop-filter:blur(8px);cursor:pointer;font-size:14px;z-index:10;transition:all .2s;display:flex;align-items:center;justify-content:center;';
+      btn.textContent='🔊';
+      btn.title='朗读结果';
+      let speaking=false;
+      btn.addEventListener('click',()=>{
+        if(speaking){speechSynthesis.cancel();btn.textContent='🔊';speaking=false;return;}
+        const score=document.getElementById('score-num')?.textContent||'0';
+        const grade=document.getElementById('grade-badge')?.textContent||'';
+        const text=`你的猝死指数为${score}分，等级${grade}。请注意身体健康。`;
+        const utter=new SpeechSynthesisUtterance(text);
+        utter.lang='zh-CN';utter.rate=0.9;utter.pitch=0.8;
+        utter.onend=()=>{btn.textContent='🔊';speaking=false;};
+        speechSynthesis.speak(utter);
+        btn.textContent='⏹';speaking=true;
+      });
+      card.style.position='relative';
+      card.appendChild(btn);
+    },800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH TIMELINE" LIFE EVENTS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('life-timeline'))return;
+      const score=calcScore();
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      const events=[
+        {age:age,label:'现在',icon:'📍',color:'var(--accent)'},
+        {age:age+2,label:score>=50?'第一次体检异常':'保持健康生活',icon:score>=50?'🏥':'💪',color:score>=50?'#f59e0b':'#4ade80'},
+        {age:age+5,label:score>=60?'慢性病出现':'健康习惯养成',icon:score>=60?'💊':'🧘',color:score>=60?'#f97316':'#4ade80'},
+        {age:age+10,label:score>=70?'需要长期用药':'身体状态良好',icon:score>=70?'💉':'🏃',color:score>=70?'#ef4444':'#60a5fa'},
+        {age:age+20,label:score>=50?'健康隐患累积':'优雅老去',icon:score>=50?'⚠️':'🌅',color:score>=50?'#ef4444':'#4ade80'},
+        {age:Math.min(age+40,score>=70?age+25:age+50),label:score>=70?'高危期':'健康晚年',icon:score>=70?'☠️':'🎂',color:score>=70?'#ef4444':'#4ade80'},
+      ];
+      let timelineHTML='';
+      events.forEach((evt,i)=>{
+        timelineHTML+=`<div style="display:flex;gap:12px;align-items:flex-start;opacity:0;animation:fadeUp .3s ease ${i*0.15}s forwards;">
+          <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:24px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:${evt.color};box-shadow:0 0 8px ${evt.color}44;"></div>
+            ${i<events.length-1?`<div style="width:1px;height:24px;background:linear-gradient(${evt.color},${events[i+1].color});opacity:.3;"></div>`:''}
+          </div>
+          <div style="padding-bottom:${i<events.length-1?'8':'0'}px;">
+            <div style="font-size:10px;color:${evt.color};font-weight:700;">${evt.age}岁 ${evt.icon}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.45);">${evt.label}</div>
+          </div>
+        </div>`;
+      });
+      const el=document.createElement('div');
+      el.id='life-timeline';
+      el.className='rs on';
+      el.innerHTML=`<div style="text-align:center;margin-bottom:12px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);">⏳ 健康轨迹预测</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.35);">基于当前生活方式的未来推演</div>
+      </div>${timelineHTML}
+      <div style="text-align:center;font-size:9px;color:var(--dim);margin-top:8px;font-style:italic;">*仅供参考，改变生活方式可以改写未来</div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(6,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },2800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "LETTER FROM FUTURE SELF" ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('future-letter-v2'))return;
+      const score=calcScore();
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      const futureAge=age+20;
+      const letters={
+        low:`亲爱的${age}岁的自己，我是${futureAge}岁的你。感谢你一直以来的自律和坚持。因为你的好习惯，我现在身体依然健朗，每天还能晨跑5公里。谢谢你没有放弃。`,
+        mid:`亲爱的${age}岁的自己，我是${futureAge}岁的你。我不得不说，有些事你应该更早注意的。虽然还不算太糟，但如果你能从现在开始改变一些习惯，我的膝盖和腰会感谢你的。`,
+        high:`亲爱的${age}岁的自己，我是${futureAge}岁的你……或者说，我希望我能是。按照你现在的生活方式，我不确定我还在不在。如果你能看到这封信，请你停下来想想。改变，从放下手机的这一秒开始。`,
+      };
+      const letter=score>=60?letters.high:score>=35?letters.mid:letters.low;
+      const el=document.createElement('div');
+      el.id='future-letter-v2';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:12px;padding:16px;position:relative;">
+        <div style="position:absolute;top:8px;right:10px;font-size:9px;color:var(--dim);">✉️ 来自 ${futureAge} 岁的你</div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:8px;">📅 ${new Date().getFullYear()+20}年</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55);line-height:2;font-style:italic;">${letter}</div>
+        <div style="text-align:right;font-size:10px;color:rgba(255,255,255,.3);margin-top:8px;">—— ${futureAge}岁的你</div>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(9,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },4200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ LANDING: CLICK SKULL FOR RANDOM DEATH FACT ════
+(function(){
+  const facts=[
+    '全球每年约1700万人死于心血管疾病',
+    '久坐每天超过8小时，死亡风险增加15%',
+    '每天少睡1小时，心脏病风险增加24%',
+    '压力可以使端粒缩短，加速细胞衰老',
+    '笑能释放内啡肽，相当于10分钟划船运动',
+    '步行每增加1000步，全因死亡率下降15%',
+    '孤独的健康危害等同于每天吸15支烟',
+    '冷水澡可以增加白血球数量，增强免疫力',
+    '间歇性禁食可以促进细胞自噬和修复',
+    '深呼吸能在60秒内降低血压和心率',
+  ];
+  const skull=document.querySelector('.skull-anim');
+  if(!skull)return;
+  let clickCount=0;
+  skull.style.cursor='pointer';
+  skull.addEventListener('click',()=>{
+    clickCount++;
+    const fact=facts[(clickCount-1)%facts.length];
+    const tooltip=document.createElement('div');
+    tooltip.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.9);border:1px solid var(--card-border);border-radius:14px;padding:16px 22px;max-width:280px;font-size:11px;color:rgba(255,255,255,.7);z-index:300;backdrop-filter:blur(12px);text-align:center;line-height:1.8;animation:fadeUp .3s ease;';
+    tooltip.innerHTML=`<div style="font-size:9px;color:var(--dim);margin-bottom:6px;">💀 冷知识 #${clickCount}</div>${fact}`;
+    document.body.appendChild(tooltip);
+    tooltip.addEventListener('click',()=>tooltip.remove());
+    setTimeout(()=>{tooltip.style.opacity='0';tooltip.style.transition='opacity .3s';setTimeout(()=>tooltip.remove(),300);},3000);
+  });
+})();
+
+// ════ RESULT: PERSONALIZED LIFESTYLE SCORE CARD ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('lifestyle-score'))return;
+      const dims=calcDims();
+      const categories=[
+        {name:'身体维护',dims:['🏃 运动','🍜 饮食'],icon:'🏋️',grade:''},
+        {name:'精神状态',dims:['😰 压力','💔 情绪'],icon:'🧠',grade:''},
+        {name:'日常习惯',dims:['😴 睡眠','💼 工作','🚬 习惯'],icon:'📋',grade:''},
+      ];
+      categories.forEach(cat=>{
+        const relevant=dims.filter(d=>cat.dims.includes(d.name));
+        const avg=relevant.length?relevant.reduce((s,d)=>s+d.pct,0)/relevant.length:50;
+        cat.score=Math.round(avg);
+        cat.grade=avg>=70?'D':avg>=50?'C':avg>=30?'B':'A';
+      });
+      let cardsHTML='';
+      categories.forEach(cat=>{
+        const color=cat.score>=60?'#ef4444':cat.score>=40?'#f59e0b':'#4ade80';
+        cardsHTML+=`<div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:10px;padding:10px;text-align:center;">
+          <div style="font-size:20px;margin-bottom:4px;">${cat.icon}</div>
+          <div style="font-size:10px;font-weight:600;color:var(--text);margin-bottom:4px;">${cat.name}</div>
+          <div style="font-size:20px;font-weight:900;color:${color};">${cat.grade}</div>
+          <div style="font-size:9px;color:var(--dim);">风险 ${cat.score}%</div>
+        </div>`;
+      });
+      const el=document.createElement('div');
+      el.id='lifestyle-score';
+      el.className='rs on';
+      el.innerHTML=`<div style="text-align:center;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);">📋 生活方式评分</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">${cardsHTML}</div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(5,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },1900);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
 
 // Check URL hash on load for shared results
