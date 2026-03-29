@@ -411,6 +411,53 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);border-radius:100px;padding:10px 24px;font-size:13px;color:var(--accent);pointer-events:none;opacity:0;transition:all .3s;white-space:nowrap;z-index:200;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+/* ══ OBITUARY CARD ══ */
+.obituary-card{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden;font-style:italic;}
+.obituary-card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 24px,rgba(255,255,255,.015) 24px,rgba(255,255,255,.015) 25px);pointer-events:none;}
+.obituary-card::after{content:'R.I.P.';position:absolute;right:16px;bottom:10px;font-family:'Space Mono',monospace;font-size:48px;font-weight:700;color:rgba(255,255,255,.025);pointer-events:none;font-style:normal;}
+.obituary-text{font-size:14px;line-height:2;color:#b0b0b0;position:relative;z-index:1;min-height:50px;}
+.obituary-footer{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);margin-top:12px;text-align:right;font-style:normal;letter-spacing:1px;position:relative;z-index:1;}
+
+/* ══ LAST WORDS ══ */
+.lastwords-card{background:linear-gradient(135deg,rgba(255,0,68,.03),rgba(200,0,100,.02));border:1px solid rgba(255,0,68,.1);border-radius:16px;padding:28px 24px;margin-bottom:14px;text-align:center;position:relative;}
+.lastwords-card::before{content:'💬';position:absolute;top:12px;left:18px;font-size:20px;opacity:.15;}
+.lw-quote{font-size:18px;font-weight:700;line-height:1.7;color:#e8e8e8;margin-bottom:10px;position:relative;}
+.lw-quote::before{content:'"';font-size:42px;color:rgba(255,0,68,.2);position:absolute;top:-16px;left:-8px;font-family:Georgia,serif;line-height:1;}
+.lw-quote::after{content:'"';font-size:42px;color:rgba(255,0,68,.2);font-family:Georgia,serif;line-height:1;margin-left:4px;}
+.lw-attr{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:2px;}
+
+/* ══ SURVIVAL CARD ══ */
+.survival-card{background:linear-gradient(135deg,rgba(0,255,136,.03),rgba(0,200,100,.02));border:1px solid rgba(0,255,136,.12);border-radius:16px;padding:22px;margin-bottom:14px;}
+.survival-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.survival-item:last-child{border-bottom:none;}
+.surv-icon{font-size:22px;flex-shrink:0;}
+.surv-body{flex:1;}
+.surv-action{font-size:13px;font-weight:600;color:#e0e0e0;margin-bottom:2px;}
+.surv-gain{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;}
+.survival-note{font-size:10px;color:var(--dim);margin-top:12px;font-style:italic;line-height:1.6;}
+
+/* ══ LOADING STAGE TEXT ══ */
+.load-stage{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-top:12px;min-height:18px;letter-spacing:.5px;transition:opacity .3s;}
+.load-organ{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(var(--ar),var(--ag),var(--ab),.06);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.15);border-radius:100px;font-size:10px;font-family:'Space Mono',monospace;color:var(--accent);margin:4px 3px;opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s;}
+.load-organ.scanned{opacity:1;transform:scale(1);}
+.load-organ.danger{color:#ff4444;border-color:rgba(255,68,68,.2);background:rgba(255,68,68,.06);}
+.load-organs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:14px;}
+
+/* ══ DEATH CLOCK ══ */
+.death-clock{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;}
+.dc-digit{background:rgba(255,0,68,.06);border:1px solid rgba(255,0,68,.15);border-radius:6px;padding:4px 7px;font-size:14px;font-weight:700;color:#ff6688;min-width:28px;text-align:center;font-variant-numeric:tabular-nums;}
+.dc-sep{color:rgba(255,0,68,.3);font-weight:700;font-size:14px;}
+.dc-label{font-size:8px;color:var(--dim);text-align:center;letter-spacing:2px;margin-top:2px;}
+.dc-group{display:flex;flex-direction:column;align-items:center;}
+
+/* ══ GLITCH RESULT TEXT ══ */
+.glitch-score{position:relative;}
+.glitch-score::before,.glitch-score::after{content:attr(data-val);position:absolute;top:0;left:0;right:0;overflow:hidden;}
+.glitch-score::before{left:2px;text-shadow:-2px 0 #ff0044;animation:gScore 3s infinite;}
+.glitch-score::after{left:-2px;text-shadow:2px 0 #00ccff;animation:gScore2 3s infinite;}
+@keyframes gScore{0%,92%,100%{clip:rect(0,9999px,0,0)}94%{clip:rect(10px,9999px,30px,0);transform:translate(-3px)}97%{clip:rect(30px,9999px,50px,0);transform:translate(3px)}}
+@keyframes gScore2{0%,90%,100%{clip:rect(0,9999px,0,0)}93%{clip:rect(20px,9999px,40px,0);transform:translate(2px)}96%{clip:rect(5px,9999px,25px,0);transform:translate(-2px)}}
+
 /* ══ DANGER FLASH ══ */
 .danger-flash{position:fixed;inset:0;z-index:999;pointer-events:none;opacity:0;}
 .danger-flash.fire{animation:dFlash .35s ease-out;}
@@ -485,6 +532,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
   <div class="title-sub">SUDDEN DEATH INDEX · v6.0</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
+  <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div></div>
   <div class="warning-box"><span class="warning-icon">⚠️</span><div class="warning-text"><b>健康提示：</b>本测试为娱乐性健康评估，结果不构成医学诊断。但如果你测完之后感到不适，那可能不是巧合。高分用户建议认真预约体检。</div></div>
   <div class="live-stats">
     <div class="lstat"><span class="lstat-num">58</span><span class="lstat-lbl">全国平均指数</span></div>
@@ -537,6 +585,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="cat-splash-label">即将进入</div>
     <div class="cat-splash-name" id="cs-name">睡眠习惯</div>
     <div class="cat-splash-desc" id="cs-desc">每一个夜晚都在悄悄影响明天的你</div>
+    <div class="cat-splash-warn" id="cs-warn" style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,100,100,.5);margin-top:10px;margin-bottom:10px;letter-spacing:.5px;opacity:0;transition:opacity .6s .5s;"></div>
     <div class="cat-splash-count" id="cs-count">共 4 题</div>
   </div>
 </section>
@@ -574,9 +623,11 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
   <div class="card">
     <div class="load-title">正在生成你的死亡档案</div>
     <div class="load-sub">系统正在根据你的回答计算命运轨迹</div>
-    <div class="ecg-outer"><svg class="ecg-svg" viewBox="0 0 1200 60" preserveAspectRatio="none"><path class="ecg-path" d="M0,30 L48,30 L60,30 L70,7 L80,53 L90,11 L100,30 L148,30 L160,30 L170,7 L180,53 L190,11 L200,30 L248,30 L260,30 L270,7 L280,53 L290,11 L300,30 L348,30 L360,30 L370,7 L380,53 L390,11 L400,30 L448,30 L460,30 L470,7 L480,53 L490,11 L500,30 L548,30 L560,30 L570,7 L580,53 L590,11 L600,30 M600,30 L648,30 L660,30 L670,7 L680,53 L690,11 L700,30 L748,30 L760,30 L770,7 L780,53 L790,11 L800,30 L848,30 L860,30 L870,7 L880,53 L890,11 L900,30 L948,30 L960,30 L970,7 L980,53 L990,11 L1000,30 L1048,30 L1060,30 L1070,7 L1080,53 L1090,11 L1100,30 L1148,30 L1160,30 L1170,7 L1180,53 L1190,11 L1200,30"/></svg></div>
+    <div class="ecg-outer"><svg class="ecg-svg" id="ecg-svg-el" viewBox="0 0 1200 60" preserveAspectRatio="none"><path class="ecg-path" id="ecg-path-el" d="M0,30 L48,30 L60,30 L70,7 L80,53 L90,11 L100,30 L148,30 L160,30 L170,7 L180,53 L190,11 L200,30 L248,30 L260,30 L270,7 L280,53 L290,11 L300,30 L348,30 L360,30 L370,7 L380,53 L390,11 L400,30 L448,30 L460,30 L470,7 L480,53 L490,11 L500,30 L548,30 L560,30 L570,7 L580,53 L590,11 L600,30 M600,30 L648,30 L660,30 L670,7 L680,53 L690,11 L700,30 L748,30 L760,30 L770,7 L780,53 L790,11 L800,30 L848,30 L860,30 L870,7 L880,53 L890,11 L900,30 L948,30 L960,30 L970,7 L980,53 L990,11 L1000,30 L1048,30 L1060,30 L1070,7 L1080,53 L1090,11 L1100,30 L1148,30 L1160,30 L1170,7 L1180,53 L1190,11 L1200,30"/></svg></div>
     <div class="load-pct" id="load-pct">0%</div>
     <div class="load-status" id="load-status">SCANNING VITALS</div>
+    <div class="load-organs" id="load-organs"></div>
+    <div class="load-stage" id="load-stage"></div>
   </div>
 </section>
 
@@ -591,6 +642,9 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="rs" id="rs5"><div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 身体系统风险</div><div class="systems-grid" id="systems-grid"></div></div>
     <div class="rs" id="rs6"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 各维度风险贡献</div><div class="radar-wrap"><svg id="radar-svg" viewBox="-10 -10 320 320" xmlns="http://www.w3.org/2000/svg"><defs><filter id="r-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="r-fill-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="100%" stop-color="var(--accent)" stop-opacity=".08"/></radialGradient></defs><g id="r-grid-g"></g><g id="r-axes-g"></g><polygon id="r-poly" points="150,150" fill="url(#r-fill-grad)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" filter="url(#r-glow)"/><g id="r-dots-g"></g><g id="r-labels-g"></g></svg></div><div class="contrib-chart" id="contrib-chart"></div></div>
     <div class="rs" id="rs7"><div class="prophecy-card"><div class="sec-label" style="color:#ff4466">☠ &nbsp;死亡预言</div><div class="prophecy-text" id="prophecy-text"></div><div class="prophecy-moment" id="prophecy-moment"></div></div></div>
+    <div class="rs" id="rs7b"><div class="obituary-card" id="obituary-card"><div class="sec-label" style="color:rgba(255,255,255,.25)">📜 讣告预览 · OBITUARY PREVIEW</div><div class="obituary-text" id="obituary-text"></div><div class="obituary-footer">—— 来自未来的档案</div></div></div>
+    <div class="rs" id="rs7c"><div class="lastwords-card"><div class="lw-quote" id="lw-quote"></div><div class="lw-attr" id="lw-attr"></div></div></div>
+    <div class="rs" id="rs7d"><div class="survival-card"><div class="sec-label" style="color:#00ff88;margin-bottom:12px">🌱 如果你从今天开始改变</div><div class="survival-items" id="survival-items"></div><div class="survival-note">以上数据基于流行病学模型估算，每改变一个维度，你的未来都会被重写。</div></div></div>
     <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v6.0 · AUTOMATED REPORT</div></div></div>
     <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#ff9900;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
@@ -608,11 +662,30 @@ const canv=document.getElementById('particle-canvas'),ctx2=canv.getContext('2d')
 let pts=[],praf,ptSpd=1,ptRate=.18;
 function resC(){canv.width=innerWidth;canv.height=innerHeight;}resC();addEventListener('resize',resC);
 let curRGB=[0,255,136];
-function mkPt(){const[r,g,b]=curRGB;return{x:Math.random()*canv.width,y:canv.height+10,vx:(Math.random()-.5)*.5*ptSpd,vy:(-Math.random()*.9-.3)*ptSpd,sz:Math.random()*1.6+.4,al:Math.random()*.45+.1,r,g,b,life:0,max:180+Math.random()*220};}
-function animP(){ctx2.clearRect(0,0,canv.width,canv.height);if(Math.random()<ptRate)pts.push(mkPt());pts=pts.filter(p=>p.life<p.max);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life++;const fade=Math.min(1,(p.max-p.life)/60);ctx2.beginPath();ctx2.arc(p.x,p.y,p.sz,0,Math.PI*2);ctx2.fillStyle=`rgba(${p.r},${p.g},${p.b},${p.al*fade})`;ctx2.fill();});praf=requestAnimationFrame(animP);}
+let dangerPtMode=false;
+function mkPt(){const[r,g,b]=curRGB;const isCross=dangerPtMode&&Math.random()<.12;return{x:Math.random()*canv.width,y:canv.height+10,vx:(Math.random()-.5)*.5*ptSpd,vy:(-Math.random()*.9-.3)*ptSpd,sz:isCross?Math.random()*2+1.5:Math.random()*1.6+.4,al:Math.random()*.45+.1,r,g,b,life:0,max:180+Math.random()*220,cross:isCross,rot:Math.random()*Math.PI};}
+function animP(){ctx2.clearRect(0,0,canv.width,canv.height);if(Math.random()<ptRate)pts.push(mkPt());pts=pts.filter(p=>p.life<p.max);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life++;p.rot+=.008;const fade=Math.min(1,(p.max-p.life)/60);const col=`rgba(${p.r},${p.g},${p.b},${p.al*fade})`;if(p.cross){ctx2.save();ctx2.translate(p.x,p.y);ctx2.rotate(p.rot);ctx2.strokeStyle=col;ctx2.lineWidth=1;ctx2.beginPath();ctx2.moveTo(-p.sz,0);ctx2.lineTo(p.sz,0);ctx2.moveTo(0,-p.sz);ctx2.lineTo(0,p.sz);ctx2.stroke();ctx2.restore();}else{ctx2.beginPath();ctx2.arc(p.x,p.y,p.sz,0,Math.PI*2);ctx2.fillStyle=col;ctx2.fill();}});praf=requestAnimationFrame(animP);}
 function startPts(){canv.classList.add('active');animP();}
 addEventListener('mousemove',e=>{const mx=(e.clientX/innerWidth-.5)*30,my=(e.clientY/innerHeight-.5)*20;document.getElementById('orb1').style.transform=`translate(${mx*.6}px,${my*.6}px)`;document.getElementById('orb2').style.transform=`translate(${-mx*.4}px,${-my*.4}px)`;});
 let liveN=8247;setInterval(()=>{liveN+=Math.floor(Math.random()*3);document.getElementById('live-count').textContent=liveN.toLocaleString();},4000);
+
+// Death clock — ticks based on user's age
+function updateDeathClock(){
+  const age=parseInt(document.getElementById('age-input')?.value)||28;
+  const now=new Date();const bornYear=now.getFullYear()-age;
+  const born=new Date(bornYear,0,1);
+  const diff=now-born;
+  const years=age;
+  const totalDays=Math.floor(diff/864e5);
+  const hours=now.getHours();
+  const mins=now.getMinutes();
+  document.getElementById('dc-years').textContent=years;
+  document.getElementById('dc-days').textContent=totalDays.toLocaleString();
+  document.getElementById('dc-hours').textContent=String(hours).padStart(2,'0');
+  document.getElementById('dc-mins').textContent=String(mins).padStart(2,'0');
+}
+updateDeathClock();setInterval(updateDeathClock,60000);
+document.getElementById('age-input')?.addEventListener('input',updateDeathClock);
 
 // ════ RESTORE ════
 (function(){const save=loadProgress();if(save){const bar=document.createElement('div');bar.className='resume-bar';bar.innerHTML=`<span>检测到未完成的测试（${Object.keys(save.ans).length}题已答）</span><button onclick="resumeQuiz(loadProgress());this.parentElement.remove()">继续</button><button onclick="clearProgress();this.parentElement.remove()">重新开始</button>`;document.getElementById('sec-intro').prepend(bar);}})();
@@ -1078,7 +1151,7 @@ const DIM_DESC={
     low:'你的情绪状态健康稳定。良好的情绪调节能力是长寿最被低估的因素之一。'
   }
 };
-const ARCHETYPES=[{key:'burner',icon:'🔥',name:'职场殉道者',badge:'CAREER MARTYR',match:d=>d.work>=65&&d.stress>=55,bg:'rgba(255,80,0,.04)',border:'rgba(255,80,0,.2)',color:'#ff8800',desc:'你把自己活成了一个永远在线的人肉服务器。工作和压力已经融为一体，你已经分不清哪些焦虑是正常的，哪些不是。'},{key:'ghost',icon:'👻',name:'数字游魂',badge:'DIGITAL GHOST',match:d=>d.sleep>=60&&d.habit>=55,bg:'rgba(0,200,255,.04)',border:'rgba(0,200,255,.2)',color:'#00ccff',desc:'你的生活发生在屏幕里。你的生物钟已经被蓝光重新校准，你的社交需求正在被算法填满——这两件事都不是好事。'},{key:'zombie',icon:'🧟',name:'外卖进化体',badge:'DELIVERY HUMAN',match:d=>d.diet>=60&&d.exercise>=55,bg:'rgba(200,100,0,.04)',border:'rgba(200,100,0,.2)',color:'#cc6600',desc:'你的消化系统已经适应了外卖容器的形状，你的腿已经忘记了长距离行走是什么感觉。'},{key:'anxious',icon:'😰',name:'焦虑人形容器',badge:'ANXIETY ENGINE',match:d=>d.stress>=65&&d.emotion>=60,bg:'rgba(180,0,255,.04)',border:'rgba(180,0,255,.2)',color:'#cc44ff',desc:'你的大脑已经进化出一种特殊能力：在任何情况下都能找到值得担心的事情。你的杏仁核从未真正休息过。'},{key:'fossil',icon:'🪨',name:'久坐化石',badge:'SEDIMENTARY HUMAN',match:d=>d.work>=60&&d.exercise>=65,bg:'rgba(100,100,100,.05)',border:'rgba(150,150,150,.2)',color:'#aaaaaa',desc:'你的骨骼肌肉系统正在以地质速度慢慢石化。久坐的危害在医学上被认为等同于吸烟。'},{key:'night',icon:'🌙',name:'深夜哲学家',badge:'NOCTURNAL THINKER',match:d=>d.sleep>=60&&d.emotion>=55,bg:'rgba(50,0,100,.06)',border:'rgba(100,50,200,.2)',color:'#8855ff',desc:'你把夜晚变成了思考宇宙终极问题的安全空间。每一个深夜，你都在预支明天的清醒和后年的寿命。'},{key:'declining',icon:'📉',name:'亚健康优等生',badge:'DECLINING AVERAGE',match:d=>Object.values(d).filter(v=>v>=35&&v<65).length>=4,bg:'rgba(255,200,0,.04)',border:'rgba(255,200,0,.2)',color:'#ffcc00',desc:'你哪个维度都不算特别差，但哪个维度也不算好。亚健康最狡猾的地方就在于，它从不触发警报，只是让你越来越累。'},{key:'model',icon:'⚰️',name:'猝死候选模范生',badge:'PRIME CANDIDATE',match:()=>true,bg:'rgba(255,0,68,.05)',border:'rgba(255,0,68,.22)',color:'#ff0044',desc:'你在几乎每一个维度都达到了令人印象深刻的危险水平。这需要一种全面的改变——不是调整某一件事，而是重新思考整个生活方式。'}];
+const ARCHETYPES=[{key:'burner',icon:'🔥',name:'职场殉道者',badge:'CAREER MARTYR',match:d=>d.work>=65&&d.stress>=55,bg:'rgba(255,80,0,.04)',border:'rgba(255,80,0,.2)',color:'#ff8800',desc:'你把自己活成了一个永远在线的人肉服务器。工作和压力已经融为一体，你已经分不清哪些焦虑是正常的，哪些不是。'},{key:'ghost',icon:'👻',name:'数字游魂',badge:'DIGITAL GHOST',match:d=>d.sleep>=60&&d.habit>=55,bg:'rgba(0,200,255,.04)',border:'rgba(0,200,255,.2)',color:'#00ccff',desc:'你的生活发生在屏幕里。你的生物钟已经被蓝光重新校准，你的社交需求正在被算法填满——这两件事都不是好事。'},{key:'zombie',icon:'🧟',name:'外卖进化体',badge:'DELIVERY HUMAN',match:d=>d.diet>=60&&d.exercise>=55,bg:'rgba(200,100,0,.04)',border:'rgba(200,100,0,.2)',color:'#cc6600',desc:'你的消化系统已经适应了外卖容器的形状，你的腿已经忘记了长距离行走是什么感觉。'},{key:'anxious',icon:'😰',name:'焦虑人形容器',badge:'ANXIETY ENGINE',match:d=>d.stress>=65&&d.emotion>=60,bg:'rgba(180,0,255,.04)',border:'rgba(180,0,255,.2)',color:'#cc44ff',desc:'你的大脑已经进化出一种特殊能力：在任何情况下都能找到值得担心的事情。你的杏仁核从未真正休息过。'},{key:'fossil',icon:'🪨',name:'久坐化石',badge:'SEDIMENTARY HUMAN',match:d=>d.work>=60&&d.exercise>=65,bg:'rgba(100,100,100,.05)',border:'rgba(150,150,150,.2)',color:'#aaaaaa',desc:'你的骨骼肌肉系统正在以地质速度慢慢石化。久坐的危害在医学上被认为等同于吸烟。'},{key:'night',icon:'🌙',name:'深夜哲学家',badge:'NOCTURNAL THINKER',match:d=>d.sleep>=60&&d.emotion>=55,bg:'rgba(50,0,100,.06)',border:'rgba(100,50,200,.2)',color:'#8855ff',desc:'你把夜晚变成了思考宇宙终极问题的安全空间。每一个深夜，你都在预支明天的清醒和后年的寿命。'},{key:'puncher',icon:'🥊',name:'硬撑型选手',badge:'TOUGH IT OUT',match:d=>d.stress>=55&&d.exercise>=50&&d.emotion>=50,bg:'rgba(255,100,50,.04)',border:'rgba(255,100,50,.2)',color:'#ff6633',desc:'你什么都扛，什么都忍，什么都不说。"我没事"是你最大的谎言。你的身体在等待你终于不再硬撑的那天。'},{key:'phantom',icon:'🫥',name:'透明社畜',badge:'INVISIBLE WORKER',match:d=>d.work>=55&&d.emotion>=55&&d.diet>=45,bg:'rgba(150,150,200,.04)',border:'rgba(150,150,200,.2)',color:'#9999cc',desc:'你在工位上消失了，但没有人注意到。你用沉默换取稳定，用忍耐换取绩效。你像空气一样重要，也像空气一样被忽略。'},{key:'hedonist',icon:'🎰',name:'即时满足患者',badge:'INSTANT GRATIFICATION',match:d=>d.habit>=60&&d.diet>=55&&d.emotion>=45,bg:'rgba(255,50,200,.04)',border:'rgba(255,50,200,.2)',color:'#ff44aa',desc:'你的大脑奖赏回路被调成了"只接受即时快感"模式。外卖、短视频、咖啡、零食——每一个都是你用来麻痹当下的工具。'},{key:'timebomb',icon:'💣',name:'定时炸弹型',badge:'TIME BOMB',match:d=>d.sleep>=55&&d.work>=55&&d.stress>=50&&d.exercise>=45,bg:'rgba(255,0,0,.04)',border:'rgba(255,0,0,.2)',color:'#ff3333',desc:'你在四个以上维度同时累积风险。你现在感觉还行，但这恰恰是最危险的——多维度同步恶化意味着触发点可能在任何普通的一天。'},{key:'declining',icon:'📉',name:'亚健康优等生',badge:'DECLINING AVERAGE',match:d=>Object.values(d).filter(v=>v>=35&&v<65).length>=4,bg:'rgba(255,200,0,.04)',border:'rgba(255,200,0,.2)',color:'#ffcc00',desc:'你哪个维度都不算特别差，但哪个维度也不算好。亚健康最狡猾的地方就在于，它从不触发警报，只是让你越来越累。'},{key:'model',icon:'⚰️',name:'猝死候选模范生',badge:'PRIME CANDIDATE',match:()=>true,bg:'rgba(255,0,68,.05)',border:'rgba(255,0,68,.22)',color:'#ff0044',desc:'你在几乎每一个维度都达到了令人印象深刻的危险水平。这需要一种全面的改变——不是调整某一件事，而是重新思考整个生活方式。'}];
 
 const FUN_TAGS=[
   {e:'🦉',t:'资深熬夜选手',col:'#8855ff',bg:'rgba(136,85,255,.1)',match:()=>ans[0]>=3,why:'你的入睡时间已经超越了大部分人类的生物钟极限'},
@@ -1121,15 +1194,69 @@ const ACHIEVEMENTS=[
   {id:'balance',icon:'⚖️',name:'完美平衡',col:'#ffcc00',bg:'rgba(255,204,0,.08)',border:'rgba(255,204,0,.25)',rare:'SR',match:()=>{const d=calcDims();const ps=d.map(x=>x.pct);return Math.max(...ps)-Math.min(...ps)<15;},desc:'所有维度风险差距不超过15%'},
 ];
 
+// ════ OBITUARY / LAST WORDS / SURVIVAL ════
+function genObituary(score,dims,arch,age){
+  const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+  const wName=worst.name.replace(/^../,'');
+  const year=new Date().getFullYear();
+  const deathAge=Math.round(age+(100-score)*.45+Math.random()*5);
+  if(score<20) return `${year+60}年讣告草稿：TA活到了${age+60}岁，是朋友圈里最后一个还在跑马拉松的人。葬礼上播放的是TA自己录的健身vlog。遗言是："我就说早睡早起有用吧。"全场沉默。`;
+  if(score<40) return `${year+40}年讣告草稿：TA在${age+40}岁因"试图证明自己还年轻"而受伤住院，但最终康复，因为TA的身体底子还不错。医生说："如果所有人都像你一样注意${wName}，我就失业了。"`;
+  if(score<60) return `${year+20}年讣告草稿：TA在${deathAge}岁时被紧急送医。医生看了TA的生活习惯报告后说："你能活到现在本身就是一个医学奇迹。"TA的${wName}指标在最后十年一直是同龄人中最差的5%。朋友圈最后一条动态是："今天只喝了两杯咖啡，在养生了。"`;
+  if(score<80) return `${year+12}年讣告草稿：TA在${deathAge}岁的某个普通周二倒在了工位上。同事们的第一反应是"TA终于请假了"。${wName}维度的长期透支被认为是主要诱因。遗物里有87个未读的体检报告通知和一张过期两年的健身卡。`;
+  return `${year+5}年讣告草稿：TA在${deathAge}岁离开了这个让TA如此疲惫的世界。手机最后的搜索记录是"胸口疼要不要去医院"。答案是"要"，但TA选择了"再等等"。${arch.name}型人格的典型结局——不是不知道，是不愿意面对。讣告由AI自动生成，因为TA的朋友列表已经很久没有更新了。`;
+}
+
+const LAST_WORDS=[
+  {min:0,max:15,quotes:[
+    {q:'我的葬礼上能不能放蹦迪音乐？',a:'—— 活到105岁的养生博主'},
+    {q:'如果我能重来，我还是会每天11点睡觉。',a:'—— 无聊但长寿的人'},
+  ]},
+  {min:15,max:40,quotes:[
+    {q:'我以为我会活很久。事实上，我确实活很久了。只是不够精彩。',a:'—— 某个规律但平淡的人'},
+    {q:'医生说我很健康，但我总觉得哪里不对。',a:'—— 轻度焦虑的养生者'},
+  ]},
+  {min:40,max:60,quotes:[
+    {q:'我不是不想改，我只是想再等一个合适的时间。然后就没有然后了。',a:'—— 拖延症晚期确诊者'},
+    {q:'我的身体在第37次发出警告后，终于放弃了沟通。',a:'—— 忽视体检信号的人'},
+    {q:'我把青春都给了工作，工作把发票给了我。',a:'—— 某互联网中层遗言'},
+  ]},
+  {min:60,max:80,quotes:[
+    {q:'我知道熬夜不好。但你不知道凌晨三点的安静有多珍贵。',a:'—— 把夜晚当避难所的人'},
+    {q:'如果996有墓碑，上面应该刻着："他很努力，但身体不同意。"',a:'—— 职场殉道者代表'},
+    {q:'我的遗愿是删除我的搜索记录和外卖订单历史。',a:'—— 数字时代的隐私遗嘱'},
+  ]},
+  {min:80,max:101,quotes:[
+    {q:'我以为我是铁人。结果铁人也会生锈。',a:'—— 某人最后的朋友圈'},
+    {q:'别在我的墓碑上写"愿TA安息"——这是TA这辈子唯一没做过的事。',a:'—— 长期失眠者的自嘲'},
+    {q:'我的一生可以总结为：已读不回——包括身体发来的每一条警告。',a:'—— 系统日志最后一行'},
+    {q:'遗言？我连遗嘱都没时间写。',a:'—— 忙到死的打工人'},
+  ]},
+];
+function getLastWords(score){
+  const tier=LAST_WORDS.find(t=>score>=t.min&&score<t.max)||LAST_WORDS[LAST_WORDS.length-1];
+  return tier.quotes[Math.floor(Math.random()*tier.quotes.length)];
+}
+
+const SURVIVAL_DATA={
+  sleep:{icon:'🛏️',action:'每晚提前1小时入睡',gain:'+2.5 年预期寿命',col:'#8855ff'},
+  work:{icon:'💼',action:'每周减少10小时工作时间',gain:'+1.8 年预期寿命',col:'#ff8800'},
+  exercise:{icon:'🏃',action:'每周增加3次30分钟运动',gain:'+3.2 年预期寿命',col:'#00ff88'},
+  diet:{icon:'🥗',action:'规律三餐 + 每天8杯水',gain:'+2.1 年预期寿命',col:'#ffcc00'},
+  stress:{icon:'🧘',action:'每天15分钟冥想或放松',gain:'+1.5 年预期寿命',col:'#cc44ff'},
+  habit:{icon:'🚭',action:'戒除或减半不良嗜好',gain:'+2.8 年预期寿命',col:'#ff4444'},
+  emotion:{icon:'💬',action:'每周与朋友深度交谈一次',gain:'+1.2 年预期寿命',col:'#00ccff'},
+};
+
 // ════ STATE ════
 const CAT_SPLASH={
-  '😴 睡眠习惯':{icon:'😴',name:'睡眠习惯',desc:'每一个深夜都在悄悄重写你明天的剧本',count:4},
-  '💼 工作强度':{icon:'💼',name:'工作强度',desc:'你在用多少生命，换取多少绩效',count:4},
-  '🏃 运动频率':{icon:'🏃',name:'运动频率',desc:'你的身体上一次真正被使用是什么时候',count:3},
-  '🍔 饮食习惯':{icon:'🍔',name:'饮食习惯',desc:'你送进身体里的每一口，都是一个选择',count:4},
-  '🧠 压力水平':{icon:'🧠',name:'压力水平',desc:'你的神经系统已经连续加班多少天了',count:4},
-  '🚬 不良嗜好':{icon:'🚬',name:'不良嗜好',desc:'你知道哪些习惯在消耗你，但还是没戒',count:3},
-  '😰 情绪状态':{icon:'😰',name:'情绪状态',desc:'你上一次真正感到平静，是什么时候',count:4},
+  '😴 睡眠习惯':{icon:'😴',name:'睡眠习惯',desc:'每一个深夜都在悄悄重写你明天的剧本',warn:'每少睡1小时，心血管疾病风险+11%',count:4},
+  '💼 工作强度':{icon:'💼',name:'工作强度',desc:'你在用多少生命，换取多少绩效',warn:'每周工作>55小时，中风风险+33%',count:4},
+  '🏃 运动频率':{icon:'🏃',name:'运动频率',desc:'你的身体上一次真正被使用是什么时候',warn:'久坐每多1小时，全因死亡率+2%',count:3},
+  '🍔 饮食习惯':{icon:'🍔',name:'饮食习惯',desc:'你送进身体里的每一口，都是一个选择',warn:'不规律饮食使代谢综合征风险×2.3',count:4},
+  '🧠 压力水平':{icon:'🧠',name:'压力水平',desc:'你的神经系统已经连续加班多少天了',warn:'长期高皮质醇使大脑海马体萎缩6-8%',count:4},
+  '🚬 不良嗜好':{icon:'🚬',name:'不良嗜好',desc:'你知道哪些习惯在消耗你，但还是没戒',warn:'烟酒+久坐使预期寿命缩短7-15年',count:3},
+  '😰 情绪状态':{icon:'😰',name:'情绪状态',desc:'你上一次真正感到平静，是什么时候',warn:'长期孤独的健康危害等同于每天抽15支烟',count:4},
 };
 
 let flow=[],fi=0,ans={},svals={},branchDone=false,userAge=28;
@@ -1196,7 +1323,7 @@ function startQuiz(){
   fi=0;ans={};svals={};branchDone=false;consecutiveDanger=0;
   userAge=parseInt(document.getElementById('age-input').value||28);
   buildFlow();applyTheme(0);clearProgress();
-  canv.classList.remove('active');pts=[];
+  canv.classList.remove('active');pts=[];dangerPtMode=false;
   document.querySelectorAll('.rs').forEach(e=>e.classList.remove('on'));
   document.getElementById('mini-danger').classList.remove('show');
   document.getElementById('lrb').classList.remove('show');
@@ -1218,6 +1345,8 @@ function showCatSplash(cat,cb){
   document.getElementById('cs-icon').textContent=d.icon;
   document.getElementById('cs-name').textContent=d.name;
   document.getElementById('cs-desc').textContent=d.desc;
+  const warnEl=document.getElementById('cs-warn');
+  if(d.warn){warnEl.textContent='⚠️ '+d.warn;warnEl.style.opacity='1';}else{warnEl.style.opacity='0';}
   document.getElementById('cs-count').textContent=`共 ${d.count} 题`;
   go('sec-cat-splash','anim-up');
   if(splashTimer)clearTimeout(splashTimer);
@@ -1346,8 +1475,50 @@ function showLoading(){
   const msgs=getPersonalizedLoadMsgs();
   let mi=0,pct=0;
   const pEl=document.getElementById('load-pct'),sEl=document.getElementById('load-status');
-  const iv=setInterval(()=>{pct=Math.min(pct+Math.random()*6+2,98);pEl.textContent=Math.round(pct)+'%';sEl.textContent=msgs[mi++%msgs.length];},480);
-  setTimeout(()=>{clearInterval(iv);pEl.textContent='100%';sEl.textContent='REPORT READY';setTimeout(showResult,400);},4200);
+  const stageEl=document.getElementById('load-stage');
+  const organsEl=document.getElementById('load-organs');
+  organsEl.innerHTML='';
+  // Organ scan sequence
+  const organs=[
+    {e:'🫀',n:'心脏',key:'work'},{e:'🧠',n:'大脑',key:'stress'},{e:'🫁',n:'肺',key:'habit'},
+    {e:'🦴',n:'骨骼',key:'exercise'},{e:'🫄',n:'消化系统',key:'diet'},{e:'👁️',n:'视觉系统',key:'habit'},
+    {e:'🧬',n:'免疫系统',key:'sleep'}
+  ];
+  organs.forEach(o=>{
+    const el=document.createElement('span');el.className='load-organ';el.id='lo-'+o.n;
+    el.innerHTML=o.e+' '+o.n;organsEl.appendChild(el);
+  });
+  const iv=setInterval(()=>{
+    pct=Math.min(pct+Math.random()*5+2,96);
+    pEl.textContent=Math.round(pct)+'%';
+    sEl.textContent=msgs[mi++%msgs.length];
+  },450);
+  // Scan organs one by one
+  organs.forEach((o,i)=>{
+    setTimeout(()=>{
+      const el=document.getElementById('lo-'+o.n);if(!el)return;
+      // Check if this organ is "in danger" based on related dim
+      const dimIdx=DIM_MAP.findIndex(d=>d.key===o.key);
+      const dimAns=dimIdx>=0?DIM_MAP[dimIdx].idx.map(qi=>ans[qi]!==undefined?ans[qi]+1:1):[];
+      const dimPct=dimAns.length?Math.round((dimAns.reduce((s,v)=>s+v,0)-dimAns.length)/(dimAns.length*4)*100):0;
+      el.classList.add('scanned');
+      if(dimPct>=50)el.classList.add('danger');
+      stageEl.textContent=dimPct>=50?`⚠️ ${o.n} — 检测到异常信号`:`✓ ${o.n} — 扫描完成`;
+    },600+i*500);
+  });
+  // Flatline ECG at the end
+  setTimeout(()=>{
+    clearInterval(iv);pEl.textContent='100%';
+    sEl.textContent='REPORT READY';
+    stageEl.textContent='全部扫描完成 · 生成报告中…';
+    // Brief flatline animation
+    const ecgPath=document.getElementById('ecg-path-el');
+    if(ecgPath)ecgPath.setAttribute('d','M0,30 L1200,30');
+    setTimeout(()=>{
+      if(ecgPath)ecgPath.setAttribute('d','M0,30 L48,30 L60,30 L70,7 L80,53 L90,11 L100,30 L148,30 L160,30 L170,7 L180,53 L190,11 L200,30 L248,30 L260,30 L270,7 L280,53 L290,11 L300,30 L348,30 L360,30 L370,7 L380,53 L390,11 L400,30 L448,30 L460,30 L470,7 L480,53 L490,11 L500,30 L548,30 L560,30 L570,7 L580,53 L590,11 L600,30 M600,30 L648,30 L660,30 L670,7 L680,53 L690,11 L700,30 L748,30 L760,30 L770,7 L780,53 L790,11 L800,30 L848,30 L860,30 L870,7 L880,53 L890,11 L900,30 L948,30 L960,30 L970,7 L980,53 L990,11 L1000,30 L1048,30 L1060,30 L1070,7 L1080,53 L1090,11 L1100,30 L1148,30 L1160,30 L1170,7 L1180,53 L1190,11 L1200,30');
+      setTimeout(showResult,300);
+    },800);
+  },4200);
 }
 
 function calcScore(){
@@ -1411,7 +1582,7 @@ function showResult(){
   const dims=calcDims();const dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
   applyTheme(score/100);
   // High-score particle effects
-  if(score>=70){ptSpd=1+((score-70)/30)*.8;ptRate=.25+((score-70)/30)*.2;}else{ptSpd=1;ptRate=.18;}
+  if(score>=70){ptSpd=1+((score-70)/30)*.8;ptRate=.25+((score-70)/30)*.2;dangerPtMode=true;}else{ptSpd=1;ptRate=.18;dangerPtMode=false;}
   startPts();
   document.getElementById('res-card').classList.toggle('danger-mode',score>=80);
   document.getElementById('res-card').classList.toggle('res-card-chromatic',score>=75);
@@ -1428,7 +1599,9 @@ function showResult(){
   const ring=document.getElementById('score-ring'),circ=2*Math.PI*72;
   ring.style.strokeDasharray=circ;ring.style.strokeDashoffset=circ;ring.style.stroke=level.color;ring.style.filter=`drop-shadow(0 0 12px ${level.color}66)`;
   const numEl=document.getElementById('score-num');numEl.style.color=level.color;
-  let n=0;const iv=setInterval(()=>{n=Math.min(n+Math.ceil(score/22),score);numEl.textContent=n;ring.style.strokeDashoffset=circ-(n/100)*circ;if(n>=score)clearInterval(iv);},40);
+  // Glitch effect for high scores
+  if(score>=70){numEl.classList.add('glitch-score');numEl.setAttribute('data-val',score);}else{numEl.classList.remove('glitch-score');}
+  let n=0;const iv=setInterval(()=>{n=Math.min(n+Math.ceil(score/22),score);numEl.textContent=n;if(score>=70)numEl.setAttribute('data-val',n);ring.style.strokeDashoffset=circ-(n/100)*circ;if(n>=score)clearInterval(iv);},40);
   document.getElementById('res-grade').textContent=`GRADE ${level.grade}`;document.getElementById('res-grade').style.color=level.color;
   document.getElementById('res-level').textContent=level.label;document.getElementById('res-level').style.color=level.color;
   document.getElementById('res-desc').textContent=level.desc;
@@ -1480,6 +1653,18 @@ function showResult(){
   const pt=score<15?'你的生活方式令人羡慕，也令人费解。如果非要预言：你大概会因为看着身边的人一个个倒下而感到忧郁，而不是自己倒下。继续保持。':(PROPHECY[pKey]||PROPHECY['stress+work']);
   const mo=MOMENTS[pKey]||'';typewriter('prophecy-text',pt,18);
   const mEl=document.getElementById('prophecy-moment');mEl.textContent=mo;mEl.style.display=mo?'block':'none';
+  // Obituary
+  document.getElementById('obituary-text').textContent=genObituary(score,dims,arch,userAge);
+  // Last words
+  const lw=getLastWords(score);
+  document.getElementById('lw-quote').textContent=lw.q;
+  document.getElementById('lw-attr').textContent=lw.a;
+  // Survival bonus (show top 3 worst dims' potential gains)
+  const survEl=document.getElementById('survival-items');survEl.innerHTML='';
+  [...dims].sort((a,b)=>b.pct-a.pct).slice(0,3).forEach(d=>{
+    const sd=SURVIVAL_DATA[d.key];if(!sd)return;
+    survEl.innerHTML+=`<div class="survival-item"><span class="surv-icon">${sd.icon}</span><div class="surv-body"><div class="surv-action">${sd.action}</div><div class="surv-gain" style="color:${sd.col}">${sd.gain}</div></div></div>`;
+  });
   document.getElementById('doctor-text').textContent=getDoctorNote(score,dims,arch);
   const rxEl=document.getElementById('rx-items');rxEl.innerHTML='';
   getRx(dims).forEach((r,i)=>{rxEl.innerHTML+=`<div class="rx-item"><span class="rx-num">${i+1}</span><span><b style="color:var(--accent)">${r.dim}：</b>${r.rx}</span></div>`;});
@@ -1491,7 +1676,8 @@ function showResult(){
   dims.forEach(d=>{const col=dimCol(d.pct);const tier=d.pct>=65?'high':d.pct>=30?'mid':'low';const desc=DIM_DESC[d.key]?.[tier]||'';const el=document.createElement('div');el.className='dim-item';el.innerHTML=`<div class="dim-name">${d.name}</div><div class="dim-bar-bg"><div class="dim-bar" style="width:0%;background:${col}" data-pct="${d.pct}"></div></div><div class="dim-footer"><span class="dim-pct" style="color:${col}">${d.pct}%</span><span class="dim-status">${dimStatus(d.pct)}</span></div><div class="dim-expand">${desc?`<div class="dim-desc">${desc}</div>`:''}<ul class="dim-tips">${(d.tips||[]).map(t=>`<li>${t}</li>`).join('')}</ul></div>`;el.onclick=()=>el.classList.toggle('expanded');grid.appendChild(el);});
   document.getElementById('advice-list').innerHTML=level.advice.map(a=>`<li>${a}</li>`).join('');
   go('sec-result','anim-fade');clearProgress();
-  for(let i=0;i<=13;i++){const el=document.getElementById('rs'+i);if(el&&el.style.display!=='none')setTimeout(()=>el.classList.add('on'),180+i*110);}
+  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs6','rs7','rs7b','rs7c','rs7d','rs8','rs9','rs10','rs11','rs12','rs13'];
+  rsIds.forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),180+i*100);});
   setTimeout(()=>{document.querySelectorAll('.dim-bar,.contrib-bar').forEach(b=>b.style.width=b.dataset.pct+'%');},400);
 }
 
