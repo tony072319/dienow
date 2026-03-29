@@ -657,6 +657,58 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 /* ══ LOADING SCREEN ENHANCED ══ */
 .load-title{background:linear-gradient(135deg,#fff 40%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 
+/* ══ LIGHT MODE ══ */
+html.light{--bg:#f4f5f7;--bg2:#ebedf2;--text:#1a1a2e;--dim:#6b7280;--card-bg:rgba(255,255,255,.92);--card-border:rgba(0,0,0,.08);}
+html.light body{background:linear-gradient(180deg,#f4f5f7 0%,#ebedf2 50%,#f4f5f7 100%)!important;}
+html.light #vignette{background:radial-gradient(ellipse 90% 90% at 50% 50%,transparent 55%,rgba(200,200,220,.25) 100%);}
+html.light #noise-overlay{opacity:.008;}
+html.light .glitch-title{color:#1a1a2e;text-shadow:0 0 60px rgba(var(--ar),var(--ag),var(--ab),.1);}
+html.light .card{background:var(--card-bg);border-color:var(--card-border);box-shadow:0 2px 20px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.03);}
+html.light .eg-item{background:rgba(0,0,0,.025);border-color:rgba(0,0,0,.08);}
+html.light .eg-item:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.4);box-shadow:0 8px 24px rgba(var(--ar),var(--ag),var(--ab),.1);}
+html.light .eg-item.sel{background:rgba(var(--ar),var(--ag),var(--ab),.08);border-color:var(--accent);}
+html.light .eg-label{color:rgba(0,0,0,.5);}
+html.light .eg-item.sel .eg-label{color:rgba(0,0,0,.8);}
+html.light .q-text{color:#1a1a2e;}
+html.light .q-num{color:rgba(0,0,0,.04);}
+html.light .warning-box{background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.1);}
+html.light .warning-text{color:rgba(180,60,60,.6);}
+html.light .lstat{background:rgba(255,255,255,.8);border-color:rgba(0,0,0,.06);}
+html.light .tcard{background:rgba(255,255,255,.85);border-color:rgba(0,0,0,.06);}
+html.light .tcard-quote{color:#666;}
+html.light .age-row{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.06);}
+html.light .age-input{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1);color:#1a1a2e;}
+html.light .start-disclaimer{color:#888;}
+html.light .score-num{color:var(--accent);}
+html.light .prophecy-card{background:rgba(239,68,68,.03);border-color:rgba(239,68,68,.1);}
+html.light .doctor-card{background:rgba(0,0,0,.015);border-color:rgba(0,0,0,.06);}
+html.light .doctor-text,.light .arch-desc,.light .prophecy-text,.light .obituary-text{color:#555;}
+html.light .survival-card{background:rgba(52,211,153,.04);border-color:rgba(52,211,153,.15);}
+html.light .timeline-card{background:rgba(245,158,11,.04);border-color:rgba(245,158,11,.12);}
+html.light .obituary-card{background:rgba(0,0,0,.015);border-color:rgba(0,0,0,.06);}
+html.light .sys-item,.light .dim-item,.light .vital,.light .dim-gauge{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.06);}
+html.light .toast{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.2);}
+html.light .resume-bar{background:rgba(var(--ar),var(--ag),var(--ab),.06);border-color:rgba(var(--ar),var(--ag),var(--ab),.15);}
+html.light .landing-ecg::before{background:linear-gradient(90deg,var(--bg),transparent);}
+html.light .landing-ecg::after{background:linear-gradient(90deg,transparent,var(--bg));}
+html.light .parallax-orb{opacity:.4;}
+html.light .float-sym{opacity:.03!important;}
+html.light .title-sub{color:rgba(0,0,0,.18);}
+html.light .btn-next{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08);color:#999;}
+html.light .btn-prev{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.08);color:#888;}
+html.light .sound-btn{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.08);color:#888;}
+html.light .kb-hint{color:rgba(0,0,0,.1);}
+html.light .back-to-top{background:rgba(255,255,255,.9);border-color:rgba(0,0,0,.08);color:#666;}
+html.light .report-meta{color:#888;}
+html.light .report-meta span{color:rgba(0,0,0,.3);}
+
+/* ══ THEME TOGGLE ══ */
+.theme-toggle{position:fixed;top:16px;right:16px;z-index:200;width:42px;height:42px;border-radius:50%;border:1px solid var(--card-border);background:var(--card-bg);backdrop-filter:blur(12px);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .3s;box-shadow:0 2px 12px rgba(0,0,0,.15);}
+.theme-toggle:hover{transform:scale(1.1) rotate(15deg);box-shadow:0 4px 20px rgba(0,0,0,.2);}
+.theme-toggle:active{transform:scale(.95);}
+.theme-toggle .theme-icon{transition:transform .5s cubic-bezier(.34,1.56,.64,1);}
+html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
+
 /* Reduced motion */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
@@ -759,6 +811,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 </head>
 <body>
 <div id="scroll-progress"></div>
+<button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"><span class="theme-icon" id="theme-icon">🌙</span></button>
 <div id="vignette"></div><div id="ambient"></div><div id="noise-overlay"></div>
 <canvas id="particle-canvas"></canvas>
 <div class="parallax-orb" id="orb1" style="width:400px;height:400px;top:-100px;left:-100px;background:rgba(124,110,240,.05);"></div>
@@ -777,7 +830,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
   <div class="floating-symbols" id="float-syms"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v7.4</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v8.0</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div><div class="dc-group"><span class="dc-digit" id="dc-secs">--</span><span class="dc-label">SECS</span></div></div>
   <div class="warning-box"><span class="warning-icon">⚠️</span><div class="warning-text"><b>健康提示：</b>本测试为娱乐性健康评估，结果不构成医学诊断。但如果你测完之后感到不适，那可能不是巧合。高分用户建议认真预约体检。</div></div>
@@ -907,7 +960,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="rs" id="rs7e"><div class="profession-card"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">📊 你的风险相当于</div><div class="profession-items" id="profession-items"></div></div></div>
     <div class="rs" id="rs7f"><div style="background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 人群对比</div><div id="demo-compare" style="display:flex;flex-direction:column;gap:12px;"></div></div></div>
     <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
-    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v7.4 · AUTOMATED REPORT</div></div></div>
+    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v8.0 · AUTOMATED REPORT</div></div></div>
     <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#f59e0b;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
     <div class="rs" id="rs9b"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 风险趋势模拟</div><div class="trend-card"><div class="trend-header"><span class="trend-title">如果维持当前生活方式</span><span class="trend-badge" id="trend-badge">↗ 上升</span></div><svg class="trend-svg" id="trend-svg" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="trend-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><line x1="0" y1="30" x2="400" y2="30" stroke="rgba(239,68,68,.08)" stroke-dasharray="4,4"/><line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,.04)" stroke-dasharray="4,4"/><line x1="0" y1="90" x2="400" y2="90" stroke="rgba(52,211,153,.08)" stroke-dasharray="4,4"/><text x="395" y="28" text-anchor="end" fill="rgba(239,68,68,.2)" font-size="8">高危</text><text x="395" y="88" text-anchor="end" fill="rgba(52,211,153,.2)" font-size="8">安全</text><path id="trend-area" fill="url(#trend-grad)" d=""/><path id="trend-line" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" d=""/><g id="trend-dots"></g></svg><div class="trend-labels"><span>现在</span><span>3个月</span><span>6个月</span><span>1年</span><span>2年</span></div></div></div>
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
@@ -2642,7 +2695,7 @@ function shareResult(){
   const tagLine=tags.length?'\n标签：'+tags.join(' · '):'';
   const histLen=(()=>{try{return JSON.parse(localStorage.getItem('sdi-history')||'[]').length;}catch(e){return 0;}})();
   const histText=histLen>1?`\n（第${histLen}次测试）`:'';
-  const text=`【猝死指数测试 v7.4 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.icon} ${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}${histText}\n\n${level.desc}\n\n你敢测吗？👉`;
+  const text=`【猝死指数测试 v8.0 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.icon} ${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}${histText}\n\n${level.desc}\n\n你敢测吗？👉`;
   // Try native share first (mobile), fall back to clipboard
   if(navigator.share){
     navigator.share({title:'猝死指数测试 💀',text}).catch(()=>{});
@@ -2675,7 +2728,7 @@ function downloadCard(){
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v7.4 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v8.0 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -2760,7 +2813,7 @@ function downloadCard(){
   dy+=50;
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.12)';x.font='400 15px "Space Mono",monospace';
-  x.fillText('猝死指数测试 💀 Sudden Death Index v7.4',cx,H-70);
+  x.fillText('猝死指数测试 💀 Sudden Death Index v8.0',cx,H-70);
   x.fillStyle='rgba(255,255,255,.08)';x.font='400 13px "Space Mono",monospace';
   x.fillText('测试纯属娱乐 · 不构成医学建议 · 你敢测吗？',cx,H-42);
   // Download
@@ -2798,7 +2851,7 @@ function shareTextArt(){
   const bar=v=>{const filled=Math.round(v/100*10);return '█'.repeat(filled)+'░'.repeat(10-filled);};
   const dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
   const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
-  let art=`\n┌─────────────────────────┐\n│   💀 猝死指数测试 v7.4   │\n├─────────────────────────┤\n│                         │\n│     SCORE: ${String(score).padStart(3,' ')} / 100      │\n│     GRADE: ${level.grade.padEnd(12,' ')}  │\n│     ${level.label.padEnd(19,' ')} │\n│                         │\n├── 七维风险 ──────────────┤\n`;
+  let art=`\n┌─────────────────────────┐\n│   💀 猝死指数测试 v8.0   │\n├─────────────────────────┤\n│                         │\n│     SCORE: ${String(score).padStart(3,' ')} / 100      │\n│     GRADE: ${level.grade.padEnd(12,' ')}  │\n│     ${level.label.padEnd(19,' ')} │\n│                         │\n├── 七维风险 ──────────────┤\n`;
   dims.forEach(d=>{
     const name=(d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key).padEnd(4,'　');
     art+=`│ ${name} ${bar(d.pct)} ${String(d.pct).padStart(3,' ')}% │\n`;
@@ -2819,6 +2872,108 @@ function encodeResultToURL(){
   if(navigator.share){navigator.share({title:'猝死指数测试 💀',text:`我的猝死指数是${score}分，你敢测吗？`,url}).catch(()=>{});}
   else{navigator.clipboard.writeText(url).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}).catch(()=>{});}
 }
+// ════ THEME TOGGLE ════
+function toggleTheme(){
+  const html=document.documentElement;
+  const isLight=html.classList.toggle('light');
+  document.getElementById('theme-icon').textContent=isLight?'☀️':'🌙';
+  try{localStorage.setItem('sdi-theme',isLight?'light':'dark');}catch(e){}
+}
+// Restore theme
+(function(){
+  try{
+    const saved=localStorage.getItem('sdi-theme');
+    if(saved==='light'){document.documentElement.classList.add('light');const ic=document.getElementById('theme-icon');if(ic)ic.textContent='☀️';}
+  }catch(e){}
+})();
+
+// ════ KONAMI CODE EASTER EGG ════
+(function(){
+  const code=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let idx=0;
+  document.addEventListener('keydown',e=>{
+    if(e.key===code[idx]){
+      idx++;
+      if(idx===code.length){
+        idx=0;
+        activateGodMode();
+      }
+    }else{idx=0;}
+  });
+  function activateGodMode(){
+    // Create flash overlay
+    const flash=document.createElement('div');
+    flash.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(124,110,240,.3);pointer-events:none;animation:konamiFlash .8s ease-out forwards;';
+    document.body.appendChild(flash);
+    setTimeout(()=>flash.remove(),800);
+    // Show secret message
+    const msg=document.createElement('div');
+    msg.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:10000;background:rgba(0,0,0,.95);border:2px solid var(--accent);border-radius:24px;padding:40px 48px;text-align:center;transition:transform .4s cubic-bezier(.34,1.56,.64,1);pointer-events:auto;box-shadow:0 0 80px rgba(var(--ar),var(--ag),var(--ab),.4);';
+    msg.innerHTML=`<div style="font-size:64px;margin-bottom:12px;">👾</div><div style="font-size:20px;font-weight:900;color:var(--accent);margin-bottom:8px;">KONAMI CODE ACTIVATED</div><div style="font-size:13px;color:#aaa;line-height:1.8;max-width:300px;">恭喜你发现了隐藏彩蛋！<br>作为奖励，你获得了 <b style="color:#ffd700;">✦ 彩蛋猎手</b> 成就。<br><br><span style="font-size:11px;color:#666;">你是第 <span style="color:var(--accent);font-family:Space Mono,monospace;">${Math.floor(Math.random()*200)+42}</span> 个发现的人</span></div><button onclick="this.parentElement.style.transform='translate(-50%,-50%) scale(0)';setTimeout(()=>this.parentElement.remove(),400)" style="margin-top:18px;padding:10px 28px;border-radius:100px;border:1px solid var(--accent);background:rgba(var(--ar),var(--ag),var(--ab),.1);color:var(--accent);cursor:pointer;font-size:13px;font-family:inherit;">收下成就</button>`;
+    document.body.appendChild(msg);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{msg.style.transform='translate(-50%,-50%) scale(1)';}));
+    // Add achievement to localStorage
+    try{
+      const achs=JSON.parse(localStorage.getItem('sdi-konami')||'false');
+      if(!achs)localStorage.setItem('sdi-konami','true');
+    }catch(e){}
+    // Sound effect
+    if(soundOn){
+      ensureAudio();
+      [523,587,659,698,784,880,988,1047].forEach((f,i)=>{
+        const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+        osc.connect(gain);gain.connect(audioCtx.destination);
+        osc.frequency.value=f;osc.type='square';
+        const t=audioCtx.currentTime+i*.08;
+        gain.gain.setValueAtTime(0.08,t);gain.gain.exponentialRampToValueAtTime(0.001,t+.15);
+        osc.start(t);osc.stop(t+.15);
+      });
+    }
+    // Trigger confetti-like rainbow particles
+    const cols=[[255,0,0],[255,127,0],[255,255,0],[0,255,0],[0,0,255],[75,0,130],[148,0,211]];
+    for(let i=0;i<60;i++){
+      const [r,g,b]=cols[i%cols.length];
+      pts.push({x:canv.width/2+(Math.random()-.5)*400,y:canv.height/2,vx:(Math.random()-.5)*6,vy:-Math.random()*6-2,sz:Math.random()*3+1.5,al:.9,r,g,b,life:0,max:120+Math.random()*100,cross:Math.random()<.3,rot:Math.random()*Math.PI});
+    }
+  }
+  // Inject CSS for konami flash
+  const style=document.createElement('style');
+  style.textContent='@keyframes konamiFlash{0%{opacity:1}100%{opacity:0}}';
+  document.head.appendChild(style);
+})();
+
+// ════ INTERACTIVE SURVIVAL COUNTDOWN ════
+// Shows a live countdown of "estimated time saved" ticking up based on result improvements
+(function(){
+  let countdownInterval=null;
+  const observer=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(sec&&sec.classList.contains('active')&&!countdownInterval){
+      startSurvivalCountdown();
+    }else if(sec&&!sec.classList.contains('active')&&countdownInterval){
+      clearInterval(countdownInterval);countdownInterval=null;
+    }
+  });
+  observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  function startSurvivalCountdown(){
+    const el=document.getElementById('survival-items');if(!el)return;
+    // Find or create countdown element
+    let cd=document.getElementById('survival-countdown');
+    if(!cd){
+      cd=document.createElement('div');cd.id='survival-countdown';
+      cd.style.cssText='text-align:center;padding:14px 0 4px;font-family:"Space Mono",monospace;';
+      cd.innerHTML='<div style="font-size:10px;letter-spacing:3px;color:var(--dim);margin-bottom:8px;">SECONDS SINCE YOU SAW THIS RESULT</div><div id="surv-ticking" style="font-size:28px;font-weight:700;color:#34d399;font-variant-numeric:tabular-nums;">0</div><div style="font-size:11px;color:var(--dim);margin-top:4px;font-style:italic;">每一秒都是重新开始的机会</div>';
+      el.parentElement.insertBefore(cd,el.parentElement.querySelector('.survival-note'));
+    }
+    let secs=0;
+    const tickEl=document.getElementById('surv-ticking');
+    countdownInterval=setInterval(()=>{
+      secs++;
+      if(tickEl)tickEl.textContent=secs;
+    },1000);
+  }
+})();
+
 // Check URL hash on load for shared results
 (function checkURLResult(){
   const hash=location.hash;if(!hash.startsWith('#r='))return;
