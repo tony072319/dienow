@@ -3247,6 +3247,84 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ PERSONALITY COMPATIBILITY CHECK SHARE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(addCompatShare,3000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  function addCompatShare(){
+    const archCompat=document.getElementById('arch-compat');
+    if(!archCompat||document.getElementById('compat-share-btn'))return;
+    const btn=document.createElement('button');btn.id='compat-share-btn';
+    btn.style.cssText='margin-top:12px;padding:8px 20px;border-radius:100px;border:1px solid rgba(var(--ar),var(--ag),var(--ab),.2);background:rgba(var(--ar),var(--ag),var(--ab),.05);color:var(--accent);cursor:pointer;font-size:11px;font-family:inherit;transition:all .2s;';
+    btn.textContent='📋 复制人格匹配信息';
+    btn.onmouseover=()=>{btn.style.background='rgba(var(--ar),var(--ag),var(--ab),.12)';btn.style.transform='translateY(-1px)';};
+    btn.onmouseout=()=>{btn.style.background='rgba(var(--ar),var(--ag),var(--ab),.05)';btn.style.transform='';};
+    btn.onclick=()=>{
+      const archName=document.getElementById('arch-name')?.textContent||'';
+      const archDesc=document.getElementById('arch-desc')?.textContent||'';
+      const compat=archCompat.textContent||'';
+      const text=`我的健康人格是「${archName}」\n${archDesc}\n\n${compat}\n\n来测测你的 → 猝死指数测试 💀`;
+      navigator.clipboard.writeText(text).then(()=>{
+        const t=document.getElementById('toast');t.textContent='人格匹配信息已复制 ✓';t.classList.add('show');
+        setTimeout(()=>{t.classList.remove('show');t.textContent='已复制到剪贴板 ✓';},2200);
+      }).catch(()=>{});
+    };
+    archCompat.appendChild(btn);
+  }
+})();
+
+// ════ SMOOTH SCROLLING BETWEEN RESULT SECTIONS ════
+(function(){
+  // Add scroll margin to result sections for better anchor scrolling
+  const style=document.createElement('style');
+  style.textContent='.rs{scroll-margin-top:20px;}.dim-item{scroll-margin-top:100px;}';
+  document.head.appendChild(style);
+})();
+
+// ════ ENHANCED DIMENSION EXPANSION WITH ANIMATION ════
+(function(){
+  document.addEventListener('click',e=>{
+    const dimItem=e.target.closest('.dim-item');
+    if(!dimItem)return;
+    // Animate expand/collapse with height
+    const expand=dimItem.querySelector('.dim-expand');
+    if(!expand)return;
+    if(dimItem.classList.contains('expanded')){
+      expand.style.maxHeight=expand.scrollHeight+'px';
+      requestAnimationFrame(()=>{expand.style.maxHeight='0';});
+    }else{
+      expand.style.maxHeight='0';
+      requestAnimationFrame(()=>{expand.style.maxHeight=expand.scrollHeight+'px';});
+    }
+  });
+})();
+
+// ════ VITALS COUNTER ANIMATION ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    // Animate vital numbers with stagger
+    setTimeout(()=>{
+      document.querySelectorAll('.vital-val').forEach((el,i)=>{
+        const val=el.textContent;
+        if(val==='—')return;
+        el.style.transition='none';el.style.opacity='0';el.style.transform='translateY(10px)';
+        setTimeout(()=>{
+          el.style.transition='all .4s cubic-bezier(.34,1.56,.64,1)';
+          el.style.opacity='1';el.style.transform='none';
+        },i*150+100);
+      });
+    },1200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ DEATH CLOCK PULSE ON SECOND CHANGE ════
 (function(){
   let lastSec=-1;
