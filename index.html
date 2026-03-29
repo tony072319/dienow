@@ -953,8 +953,9 @@ input[type=range]::-moz-range-thumb {
       </div>
 
       <div class="result-btns">
+        <button class="btn-share" onclick="generateShareImage()">🖼️ 保存图片</button>
         <button class="btn-share" onclick="shareResult()">📋 复制结果</button>
-        <button class="btn-share" onclick="nativeShare()">📤 分享给朋友</button>
+        <button class="btn-share" onclick="nativeShare()">📤 分享</button>
         <button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button>
       </div>
 
@@ -1642,6 +1643,159 @@ function renderRadar(dimResults, color) {
 }
 
 function retryQuiz() { startQuiz(); }
+
+function generateShareImage() {
+  const score = calcScore();
+  const level = LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
+  const pctl = getPercentile(score);
+
+  const W = 640, H = 900;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Background
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#0a0a1a');
+  bg.addColorStop(1, '#080808');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < W; i += 40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,H); ctx.stroke(); }
+  for (let i = 0; i < H; i += 40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(W,i); ctx.stroke(); }
+
+  // Title
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '12px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('SUDDEN DEATH INDEX // 猝死指数测试', W/2, 50);
+
+  // Score ring (drawn with arc)
+  const cx = W/2, cy = 200, r = 70;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 5; ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + (Math.PI*2*score/100));
+  ctx.strokeStyle = level.color; ctx.lineWidth = 5;
+  ctx.shadowColor = level.color; ctx.shadowBlur = 15; ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Score number
+  ctx.fillStyle = level.color;
+  ctx.font = 'bold 48px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(score, cx, cy + 12);
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '10px monospace';
+  ctx.fillText('DEATH INDEX', cx, cy + 30);
+
+  // Grade + Level
+  ctx.fillStyle = level.color;
+  ctx.font = 'bold 28px sans-serif';
+  ctx.fillText(`${level.grade} · ${level.label}`, cx, 310);
+
+  // Percentile
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '14px sans-serif';
+  ctx.fillText(`作死程度超过了 ${pctl}% 的测试者`, cx, 345);
+
+  // Tags
+  const dimResults = DIM_MAP.map(dim => {
+    const scored = dim.indices.filter(i => answers[i] !== undefined).map(i => answers[i]+1);
+    const cnt = dim.indices.length;
+    if (scored.length === 0) return { ...dim, pct: 0 };
+    const raw = scored.reduce((s,v)=>s+v,0);
+    const filled = raw + (cnt - scored.length);
+    const pct = Math.round((filled - cnt) / (cnt * 4) * 100);
+    return { ...dim, pct };
+  });
+  const tags = generateTags(dimResults);
+  if (tags.length > 0) {
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.font = '13px sans-serif';
+    ctx.fillText(tags.map(t=>'#'+t).join('  '), cx, 380);
+  }
+
+  // Mini radar chart
+  const rcx = cx, rcy = 520, rr = 80;
+  const n = dimResults.length;
+  // Grid
+  for (let l = 1; l <= 3; l++) {
+    ctx.beginPath();
+    const gr = rr * l / 3;
+    for (let i = 0; i <= n; i++) {
+      const a = (Math.PI*2*i/n) - Math.PI/2;
+      const method = i === 0 ? 'moveTo' : 'lineTo';
+      ctx[method](rcx + gr*Math.cos(a), rcy + gr*Math.sin(a));
+    }
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1; ctx.stroke();
+  }
+  // Data
+  ctx.beginPath();
+  for (let i = 0; i <= n; i++) {
+    const idx = i % n;
+    const a = (Math.PI*2*idx/n) - Math.PI/2;
+    const dr = rr * dimResults[idx].pct / 100;
+    const method = i === 0 ? 'moveTo' : 'lineTo';
+    ctx[method](rcx + dr*Math.cos(a), rcy + dr*Math.sin(a));
+  }
+  ctx.fillStyle = level.color + '25';
+  ctx.fill();
+  ctx.strokeStyle = level.color; ctx.lineWidth = 2; ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '11px sans-serif';
+  for (let i = 0; i < n; i++) {
+    const a = (Math.PI*2*i/n) - Math.PI/2;
+    const lx = rcx + (rr+20)*Math.cos(a);
+    const ly = rcy + (rr+20)*Math.sin(a);
+    ctx.fillText(dimResults[i].name.replace(/^..\s?/,''), lx, ly+4);
+  }
+
+  // Dimension bars
+  const barY = 650;
+  const barW = 400;
+  dimResults.slice(0, 7).forEach((dim, i) => {
+    const y = barY + i * 28;
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(dim.name.replace(/^..\s?/,''), cx - barW/2, y);
+    // Bar bg
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.fillRect(cx - barW/2 + 70, y - 8, barW - 120, 6);
+    // Bar fill
+    const col = dim.pct < 30 ? '#00ff88' : dim.pct < 60 ? '#ffcc00' : '#ff4444';
+    ctx.fillStyle = col;
+    ctx.fillRect(cx - barW/2 + 70, y - 8, (barW - 120) * dim.pct / 100, 6);
+    // Value
+    ctx.fillStyle = col;
+    ctx.textAlign = 'right';
+    ctx.fillText(dim.pct + '%', cx + barW/2, y);
+  });
+
+  // Footer
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('扫码或搜索「猝死指数测试」测测你的', cx, H - 30);
+
+  // Download
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `猝死指数_${score}分_${level.label}.png`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('图片已保存 ✓');
+  });
+}
 </script>
 </body>
 </html>
