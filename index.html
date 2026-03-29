@@ -754,6 +754,18 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
 .sb-dim{color:var(--dim);}
 .sb-val{font-family:'Space Mono',monospace;font-weight:700;}
 
+/* ══ ANIMATED BORDER ON RESULT CARD ══ */
+#res-card{position:relative;overflow:visible;}
+#res-card>.animated-border{position:absolute;inset:-1px;border-radius:25px;padding:1px;background:conic-gradient(from var(--border-angle,0deg),transparent 30%,rgba(var(--ar),var(--ag),var(--ab),.4) 50%,transparent 70%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:borderSpin 8s linear infinite;pointer-events:none;z-index:-1;opacity:.5;transition:opacity 1s;}
+#res-card:hover>.animated-border{opacity:.8;}
+
+/* ══ SCORE HISTORY SPARKLINE ══ */
+.sparkline-wrap{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:8px 16px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:10px;font-size:10px;color:var(--dim);}
+.sparkline-wrap svg{width:80px;height:20px;}
+.sparkline-line{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-linecap:round;}
+.sparkline-dot{fill:var(--accent);}
+.sparkline-area{opacity:.15;}
+
 /* ══ IDLE PULSE ON LANDING STATS ══ */
 .lstat{transition:transform .2s,border-color .3s,box-shadow .3s;}
 .lstat:hover{transform:translateY(-3px);border-color:rgba(var(--ar),var(--ag),var(--ab),.2);box-shadow:0 8px 24px rgba(var(--ar),var(--ag),var(--ab),.08);}
@@ -1017,6 +1029,7 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
 <!-- ══ RESULT ══ -->
 <section id="sec-result">
   <div class="card" id="res-card">
+    <div class="animated-border"></div>
     <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>TIME_ELAPSED: <span id="rpt-time">—</span><br>RISK_DNA: <span id="rpt-dna" style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.25)">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
     <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div><div class="dim-chips" id="dim-chips"></div><div class="fun-tags-section"><div class="fun-tags-label">// 你的标签</div><div class="fun-tags" id="fun-tags"></div></div><div class="achievements" id="achievements"></div><div class="score-rank"><span>你的位置在全部测试者中</span><div class="score-rank-bar"><div class="score-rank-marker" id="score-rank-marker" style="left:0%"></div></div><div class="score-rank-labels"><span>健康达人</span><span>亚健康</span><span>高危</span><span>极危</span></div></div></div></div>
     <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">你的健康人格</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div><div id="arch-traits" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center;"></div><div id="arch-compat" style="font-size:12px;color:var(--dim);text-align:center;margin-top:10px;line-height:1.7;padding:10px;background:rgba(255,255,255,.02);border-radius:12px;border:1px solid rgba(255,255,255,.04);"></div></div>
@@ -3232,6 +3245,42 @@ function stopAmbient(){
   });
   // Close on outside click
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
+})();
+
+// ════ SCORE HISTORY SPARKLINE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(renderSparkline,1800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  function renderSparkline(){
+    try{
+      const hist=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+      if(hist.length<2)return;
+      const scores=hist.map(h=>h.s);
+      const rs1=document.getElementById('rs1');
+      if(!rs1||document.getElementById('sparkline-el'))return;
+      const W=80,H=20,pad=2;
+      const maxS=Math.max(...scores,100),minS=Math.min(...scores,0);
+      const range=maxS-minS||1;
+      const pts=scores.map((s,i)=>{
+        const x=pad+i/(scores.length-1)*(W-pad*2);
+        const y=H-pad-(s-minS)/range*(H-pad*2);
+        return{x,y};
+      });
+      const lineD=pts.map((p,i)=>`${i===0?'M':'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const areaD=lineD+` L${pts[pts.length-1].x.toFixed(1)},${H} L${pts[0].x.toFixed(1)},${H} Z`;
+      const lastP=pts[pts.length-1];
+      const wrap=document.createElement('div');wrap.className='sparkline-wrap';wrap.id='sparkline-el';
+      wrap.style.cssText='opacity:0;transform:translateY(6px);transition:all .5s;';
+      wrap.innerHTML=`<span>历史趋势 (${scores.length}次)</span><svg viewBox="0 0 ${W} ${H}"><path class="sparkline-area" d="${areaD}" fill="var(--accent)"/><path class="sparkline-line" d="${lineD}"/><circle class="sparkline-dot" cx="${lastP.x.toFixed(1)}" cy="${lastP.y.toFixed(1)}" r="2"/></svg><span style="font-family:'Space Mono',monospace;font-weight:700;color:var(--accent);">${scores[scores.length-1]}</span>`;
+      rs1.querySelector('.score-rank')?.after(wrap);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{wrap.style.opacity='1';wrap.style.transform='none';}));
+    }catch(e){}
+  }
 })();
 
 // ════ SKULL EASTER EGG: tap skull 5 times for party mode ════
