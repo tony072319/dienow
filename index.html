@@ -333,6 +333,12 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .fun-tag.on{opacity:1;transform:none;}
 .fun-tag .ft-emoji{font-size:13px;}
 .fun-tag:hover{transform:translateY(-2px);filter:brightness(1.2);}
+/* Dimension summary chips */
+.dim-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:14px 0 8px;}
+.dim-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:600;border:1px solid;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;}
+.dim-chip.on{opacity:1;transform:none;}
+.dim-chip-bar{width:24px;height:3px;border-radius:2px;display:inline-block;}
+
 .archetype-card{border-radius:16px;padding:22px;margin-bottom:14px;display:flex;align-items:flex-start;gap:18px;}
 .arch-icon{font-size:48px;flex-shrink:0;line-height:1;}
 .arch-body{flex:1;}
@@ -784,7 +790,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 <section id="sec-result">
   <div class="card" id="res-card">
     <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
-    <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div><div class="fun-tags-section"><div class="fun-tags-label">// 你的标签</div><div class="fun-tags" id="fun-tags"></div></div><div class="achievements" id="achievements"></div></div></div>
+    <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div><div class="dim-chips" id="dim-chips"></div><div class="fun-tags-section"><div class="fun-tags-label">// 你的标签</div><div class="fun-tags" id="fun-tags"></div></div><div class="achievements" id="achievements"></div></div></div>
     <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">你的健康人格</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div></div>
     <div class="rs" id="rs3"><div class="percentile-banner"><div class="pct-bar-wrap"><div class="pct-bar-bg"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div><div class="pct-text" id="pct-text">—</div></div><div class="pct-num" id="pct-num">—</div></div><div class="pct-subs" id="pct-subs"></div></div>
     <div class="rs" id="rs4"><div class="vitals-row"><div class="vital"><span class="vital-icon">🧬</span><span class="vital-val" id="v-bodyage">—</span><span class="vital-lbl">身体年龄</span></div><div class="vital"><span class="vital-icon">❤️</span><span class="vital-val" id="v-heart">—</span><span class="vital-lbl">心脏负荷</span></div><div class="vital"><span class="vital-icon">🔋</span><span class="vital-val" id="v-recovery">—</span><span class="vital-lbl">恢复力</span></div><div class="vital"><span class="vital-icon">🧠</span><span class="vital-val" id="v-stress">—</span><span class="vital-lbl">神经紧张</span></div></div><div class="risk-tags" id="risk-tags"></div></div>
@@ -1627,7 +1633,16 @@ function triggerCombo(n){
   setTimeout(()=>ct.classList.remove('show'),2200);
 }
 
-function saveProgress(){try{localStorage.setItem('sdi-save',JSON.stringify({fi,ans,svals,branchDone,userAge,flow}));}catch(e){}}
+let saveFlashTimer=null;
+function saveProgress(){
+  try{localStorage.setItem('sdi-save',JSON.stringify({fi,ans,svals,branchDone,userAge,flow}));}catch(e){}
+  // Brief save indicator
+  const counter=document.getElementById('q-counter');
+  if(counter&&!saveFlashTimer){
+    const orig=counter.style.color;counter.style.color='#34d399';
+    saveFlashTimer=setTimeout(()=>{counter.style.color=orig;saveFlashTimer=null;},400);
+  }
+}
 function clearProgress(){try{localStorage.removeItem('sdi-save');}catch(e){}}
 function loadProgress(){try{const d=JSON.parse(localStorage.getItem('sdi-save'));if(d&&d.ans&&Object.keys(d.ans).length>0)return d;}catch(e){}return null;}
 
@@ -2016,6 +2031,16 @@ function showResult(){
   }else{
     document.getElementById('res-desc').textContent=level.desc;
   }
+  // Dimension summary chips
+  const dcEl=document.getElementById('dim-chips');dcEl.innerHTML='';
+  dims.forEach((d,i)=>{
+    const col=dimCol(d.pct);const name=d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key;
+    const el=document.createElement('span');el.className='dim-chip';
+    el.innerHTML=`${d.name.slice(0,2)} ${name} <span class="dim-chip-bar" style="background:${col};width:${Math.max(8,d.pct*.3)}px"></span><span style="color:${col}">${d.pct}%</span>`;
+    el.style.color=col;el.style.borderColor=col+'40';el.style.background=col+'10';
+    setTimeout(()=>el.classList.add('on'),800+i*100);
+    dcEl.appendChild(el);
+  });
   // Fun tags (show up to 5)
   const ftEl=document.getElementById('fun-tags');ftEl.innerHTML='';
   const matched=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,5);
@@ -2033,7 +2058,10 @@ function showResult(){
   const pp=Math.min(98,Math.round(score*.82+Math.random()*5));
   const pCol=score<30?'#34d399':score<55?'#fbbf24':score<75?'#f59e0b':'#ef4444';
   const pBar=document.getElementById('pct-bar');pBar.style.background=pCol;pBar.style.width='0%';setTimeout(()=>pBar.style.width=pp+'%',600);
-  document.getElementById('pct-num').textContent=pp+'%';document.getElementById('pct-num').style.color=pCol;
+  const pctNumEl=document.getElementById('pct-num');pctNumEl.style.color=pCol;pctNumEl.textContent='0%';
+  // Animate percentile counter
+  const pctStart=performance.now();
+  (function tickPct(now){const p=Math.min((now-pctStart)/1200,1);const ease=1-Math.pow(1-p,3);pctNumEl.textContent=Math.round(pp*ease)+'%';if(p<1)requestAnimationFrame(tickPct);})(pctStart);
   document.getElementById('pct-text').textContent=`你比 ${pp}% 的同龄城市白领更接近猝死`;
   // Age group + city comparison
   const ageGroup=userAge<25?'18-24':userAge<30?'25-29':userAge<35?'30-34':userAge<40?'35-39':userAge<50?'40-49':'50+';
