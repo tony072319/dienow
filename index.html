@@ -404,6 +404,10 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .btn-retry{background:linear-gradient(135deg,#ff0044,#cc0033);border:none;color:#fff;padding:12px 28px;border-radius:100px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 0 28px rgba(255,0,68,.3);}
 .btn-retry:hover{transform:translateY(-1px);box-shadow:0 0 44px rgba(255,0,68,.45);}
 .disclaimer{font-size:10px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.7;font-family:'Space Mono',monospace;letter-spacing:.3px;opacity:.6;}
+.resume-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(var(--ar),var(--ag),var(--ab),.08);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.2);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--text);}
+.resume-bar button{padding:5px 14px;border-radius:100px;font-size:11px;cursor:pointer;font-family:inherit;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;transition:all .15s;}
+.resume-bar button:first-of-type{background:var(--accent);border-color:transparent;color:#000;font-weight:600;}
+.resume-bar button:hover{transform:translateY(-1px);}
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);border-radius:100px;padding:10px 24px;font-size:13px;color:var(--accent);pointer-events:none;opacity:0;transition:all .3s;white-space:nowrap;z-index:200;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
@@ -543,7 +547,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
     <div class="rs" id="rs11"><div class="sec-label" style="color:var(--dim);margin-bottom:10px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px">// 七维分析 · 点击展开建议</div><div class="dims-grid" id="dims-grid"></div></div>
     <div class="rs" id="rs12"><div class="advice-card"><div class="sec-label" style="color:var(--accent);margin-bottom:12px">// 综合改善建议</div><ul class="advice-list" id="advice-list"></ul></div></div>
-    <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
+    <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
   </div>
 </section>
 </div>
@@ -560,6 +564,9 @@ function animP(){ctx2.clearRect(0,0,canv.width,canv.height);if(Math.random()<ptR
 function startPts(){canv.classList.add('active');animP();}
 addEventListener('mousemove',e=>{const mx=(e.clientX/innerWidth-.5)*30,my=(e.clientY/innerHeight-.5)*20;document.getElementById('orb1').style.transform=`translate(${mx*.6}px,${my*.6}px)`;document.getElementById('orb2').style.transform=`translate(${-mx*.4}px,${-my*.4}px)`;});
 let liveN=8247;setInterval(()=>{liveN+=Math.floor(Math.random()*3);document.getElementById('live-count').textContent=liveN.toLocaleString();},4000);
+
+// ════ RESTORE ════
+(function(){const save=loadProgress();if(save){const bar=document.createElement('div');bar.className='resume-bar';bar.innerHTML=`<span>检测到未完成的测试（${Object.keys(save.ans).length}题已答）</span><button onclick="resumeQuiz(loadProgress());this.parentElement.remove()">继续</button><button onclick="clearProgress();this.parentElement.remove()">重新开始</button>`;document.getElementById('sec-intro').prepend(bar);}})();
 
 // ════ COLOR ════
 const CSTOPS=[[0,255,136],[200,255,0],[255,180,0],[255,80,0],[255,0,68]];
@@ -1108,16 +1115,27 @@ function triggerCombo(n){
   setTimeout(()=>ct.classList.remove('show'),1800);
 }
 
+function saveProgress(){try{localStorage.setItem('sdi-save',JSON.stringify({fi,ans,svals,branchDone,userAge,flow}));}catch(e){}}
+function clearProgress(){try{localStorage.removeItem('sdi-save');}catch(e){}}
+function loadProgress(){try{const d=JSON.parse(localStorage.getItem('sdi-save'));if(d&&d.ans&&Object.keys(d.ans).length>0)return d;}catch(e){}return null;}
+
 function startQuiz(){
   fi=0;ans={};svals={};branchDone=false;consecutiveDanger=0;
   userAge=parseInt(document.getElementById('age-input').value||28);
-  buildFlow();applyTheme(0);
+  buildFlow();applyTheme(0);clearProgress();
   canv.classList.remove('active');pts=[];
   document.querySelectorAll('.rs').forEach(e=>e.classList.remove('on'));
   document.getElementById('mini-danger').classList.remove('show');
   document.getElementById('lrb').classList.remove('show');
   const firstQ=Q[flow[0]];
   showCatSplash(firstQ.cat,()=>{go('sec-question','anim-in');renderQ();});
+}
+function resumeQuiz(save){
+  fi=save.fi;ans=save.ans;svals=save.svals||{};branchDone=save.branchDone;userAge=save.userAge;flow=save.flow;
+  consecutiveDanger=0;applyTheme(0);
+  canv.classList.remove('active');pts=[];
+  document.querySelectorAll('.rs').forEach(e=>e.classList.remove('on'));
+  go('sec-question','anim-in');renderQ();updateTheme();
 }
 
 function showCatSplash(cat,cb){
@@ -1160,7 +1178,7 @@ function renderQ(){
       document.getElementById('sl-big').textContent=q.fmt(val);
       document.getElementById('sl-comment').textContent=q.comment(val);
       if(qi===4&&ans[qi]>=3)insertBranch();
-      updateTheme();setReady(true);playSlider();
+      updateTheme();setReady(true);playSlider();saveProgress();
     };
     document.getElementById('skip-hint').classList.add('show');
   } else {
@@ -1191,7 +1209,7 @@ function pickGrid(i){
   document.querySelectorAll('.eg-item').forEach((el,idx)=>{el.classList.toggle('sel',idx===i);el.classList.toggle('dim',idx!==i);});
   setReady(true);
   document.getElementById('btn-next').textContent=fi===flow.length-1?'查看结果 →':'下一题 →';
-  updateTheme();
+  updateTheme();saveProgress();
   playClick(ans[qi]);
   checkCombo(ans[qi]);
   if(o.r)showReaction(o.r);
@@ -1355,7 +1373,7 @@ function showResult(){
   const grid=document.getElementById('dims-grid');grid.innerHTML='';
   dims.forEach(d=>{const col=dimCol(d.pct);const tier=d.pct>=65?'high':d.pct>=30?'mid':'low';const desc=DIM_DESC[d.key]?.[tier]||'';const el=document.createElement('div');el.className='dim-item';el.innerHTML=`<div class="dim-name">${d.name}</div><div class="dim-bar-bg"><div class="dim-bar" style="width:0%;background:${col}" data-pct="${d.pct}"></div></div><div class="dim-footer"><span class="dim-pct" style="color:${col}">${d.pct}%</span><span class="dim-status">${dimStatus(d.pct)}</span></div><div class="dim-expand">${desc?`<div class="dim-desc">${desc}</div>`:''}<ul class="dim-tips">${(d.tips||[]).map(t=>`<li>${t}</li>`).join('')}</ul></div>`;el.onclick=()=>el.classList.toggle('expanded');grid.appendChild(el);});
   document.getElementById('advice-list').innerHTML=level.advice.map(a=>`<li>${a}</li>`).join('');
-  go('sec-result','anim-fade');
+  go('sec-result','anim-fade');clearProgress();
   for(let i=0;i<=13;i++){const el=document.getElementById('rs'+i);if(el&&el.style.display!=='none')setTimeout(()=>el.classList.add('on'),180+i*110);}
   setTimeout(()=>{document.querySelectorAll('.dim-bar,.contrib-bar').forEach(b=>b.style.width=b.dataset.pct+'%');},400);
 }
@@ -1371,6 +1389,92 @@ function shareResult(){
   navigator.clipboard.writeText(text).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);});
 }
 
+function downloadCard(){
+  const score=calcScore(),level=LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
+  const dims=calcDims(),dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
+  const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
+  const matched=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,3);
+  const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;
+  const x=c.getContext('2d');
+  // Background
+  x.fillStyle='#0a0a0f';x.fillRect(0,0,W,H);
+  // Subtle grid
+  x.strokeStyle='rgba(255,255,255,.03)';x.lineWidth=1;
+  for(let i=0;i<W;i+=40){x.beginPath();x.moveTo(i,0);x.lineTo(i,H);x.stroke();}
+  for(let i=0;i<H;i+=40){x.beginPath();x.moveTo(0,i);x.lineTo(W,i);x.stroke();}
+  // Top glow
+  const grd=x.createRadialGradient(W/2,0,0,W/2,0,500);
+  grd.addColorStop(0,level.color+'22');grd.addColorStop(1,'transparent');
+  x.fillStyle=grd;x.fillRect(0,0,W,400);
+  // Title
+  x.textAlign='center';
+  x.fillStyle='rgba(255,255,255,.3)';x.font='500 24px "Space Mono",monospace';
+  x.fillText('SUDDEN DEATH INDEX · REPORT',W/2,60);
+  // Score ring
+  const cx=W/2,cy=230,r=100;
+  x.strokeStyle='rgba(255,255,255,.06)';x.lineWidth=6;
+  x.beginPath();x.arc(cx,cy,r,0,Math.PI*2);x.stroke();
+  x.strokeStyle=level.color;x.lineWidth=6;x.lineCap='round';
+  x.beginPath();x.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+(Math.PI*2*score/100));x.stroke();
+  x.shadowColor=level.color;x.shadowBlur=20;
+  x.beginPath();x.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+(Math.PI*2*score/100));x.stroke();
+  x.shadowBlur=0;
+  // Score number
+  x.fillStyle=level.color;x.font='bold 72px "Space Mono",monospace';
+  x.fillText(score,cx,cy+20);
+  x.fillStyle='rgba(255,255,255,.3)';x.font='500 16px "Space Mono",monospace';
+  x.fillText('DEATH INDEX',cx,cy+50);
+  // Grade
+  x.fillStyle=level.color;x.font='bold 28px "Space Mono",monospace';
+  x.fillText(`GRADE ${level.grade} — ${level.label}`,cx,cy+r+50);
+  // Archetype
+  x.fillStyle='rgba(255,255,255,.5)';x.font='400 20px sans-serif';
+  x.fillText(`${arch.icon} ${arch.name}`,cx,cy+r+90);
+  // Mini radar
+  const rcx=W/2,rcy=520,rr=120,n=dims.length;
+  const ang=i=>(Math.PI*2*i/n)-Math.PI/2;
+  // Radar grid
+  [.25,.5,.75,1].forEach((v,ri)=>{x.strokeStyle=ri===3?'rgba(255,255,255,.12)':'rgba(255,255,255,.05)';x.lineWidth=ri===3?1.5:1;x.beginPath();dims.forEach((_,i)=>{const a=ang(i);const px=rcx+rr*v*Math.cos(a),py=rcy+rr*v*Math.sin(a);i===0?x.moveTo(px,py):x.lineTo(px,py);});x.closePath();x.stroke();});
+  // Radar data
+  x.fillStyle=level.color+'33';x.strokeStyle=level.color;x.lineWidth=2;
+  x.beginPath();dims.forEach((d,i)=>{const a=ang(i),v=d.pct/100;const px=rcx+rr*v*Math.cos(a),py=rcy+rr*v*Math.sin(a);i===0?x.moveTo(px,py):x.lineTo(px,py);});x.closePath();x.fill();x.stroke();
+  // Radar dots + labels
+  dims.forEach((d,i)=>{const a=ang(i),v=d.pct/100;const px=rcx+rr*v*Math.cos(a),py=rcy+rr*v*Math.sin(a);const col=dimCol(d.pct);x.fillStyle=col;x.beginPath();x.arc(px,py,4,0,Math.PI*2);x.fill();const lx=rcx+(rr+28)*Math.cos(a),ly=rcy+(rr+28)*Math.sin(a);x.textAlign='center';x.fillStyle='rgba(255,255,255,.6)';x.font='400 16px sans-serif';const name=d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key;x.fillText(name,lx,ly-6);x.fillStyle=col;x.font='bold 14px "Space Mono",monospace';x.fillText(d.pct+'%',lx,ly+14);});
+  // Fun tags
+  if(matched.length){
+    let tagY=690;x.textAlign='center';
+    const tagStrs=matched.map(t=>t.e+' '+t.t);
+    x.font='400 22px sans-serif';
+    const totalW=tagStrs.reduce((s,t)=>s+x.measureText(t).width+40,0)-20;
+    let tx=cx-totalW/2;
+    matched.forEach(t=>{const txt=t.e+' '+t.t;const tw=x.measureText(txt).width+30;x.fillStyle=t.bg;x.strokeStyle=t.col;x.lineWidth=1;const bx=tx,by=tagY-18;x.beginPath();x.roundRect(bx,by,tw,36,18);x.fill();x.stroke();x.fillStyle=t.col;x.textAlign='left';x.fillText(txt,bx+15,tagY+6);tx+=tw+12;});
+  }
+  // Dimensions list
+  x.textAlign='left';let dy=760;
+  x.fillStyle='rgba(255,255,255,.25)';x.font='500 14px "Space Mono",monospace';
+  x.fillText('// RISK BREAKDOWN',80,dy);dy+=35;
+  dims.forEach(d=>{const col=dimCol(d.pct);const barW=600;
+    x.fillStyle='rgba(255,255,255,.5)';x.font='400 20px sans-serif';
+    x.fillText(d.name,80,dy);
+    x.fillStyle='rgba(255,255,255,.06)';x.beginPath();x.roundRect(280,dy-12,barW,16,8);x.fill();
+    x.fillStyle=col;x.beginPath();x.roundRect(280,dy-12,barW*d.pct/100,16,8);x.fill();
+    x.textAlign='right';x.fillStyle=col;x.font='bold 18px "Space Mono",monospace';
+    x.fillText(d.pct+'%',barW+310,dy+1);x.textAlign='left';
+    dy+=42;
+  });
+  // Bottom
+  x.textAlign='center';
+  x.fillStyle='rgba(255,255,255,.15)';x.font='400 16px "Space Mono",monospace';
+  x.fillText('猝死指数测试 💀 Sudden Death Index v5.0',cx,H-80);
+  x.fillStyle='rgba(255,255,255,.1)';x.font='400 14px "Space Mono",monospace';
+  x.fillText('测试纯属娱乐 · 不构成医学建议',cx,H-50);
+  // Download
+  try{
+    const link=document.createElement('a');link.download=`sudden-death-index-${score}.png`;
+    link.href=c.toDataURL('image/png');link.click();
+    const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);
+  }catch(e){navigator.clipboard.writeText('图片生成失败，已复制文字结果');shareResult();}
+}
 function retryQuiz(){if(praf)cancelAnimationFrame(praf);canv.classList.remove('active');pts=[];startQuiz();}
 </script>
 </body>
