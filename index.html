@@ -814,6 +814,28 @@ html.light .holo-card{background:linear-gradient(135deg,rgba(var(--ar),var(--ag)
 html.light .holo-score{color:#1a1a2e;}
 html.light .holo-val{color:rgba(0,0,0,.6);}
 
+/* ══ SCORE PIE CHART ══ */
+.score-pie{width:80px;height:80px;border-radius:50%;position:relative;margin:10px auto;}
+.score-pie-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Space Mono',monospace;color:var(--text);}
+
+/* ══ COMPLETION TIME ══ */
+.completion-time{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:var(--dim);padding:6px 14px;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:100px;margin-top:8px;}
+.completion-time .ct-val{font-family:'Space Mono',monospace;font-weight:700;color:var(--accent);}
+
+/* ══ DANGER OPTION PULSE ══ */
+@keyframes dangerOptionPulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.3)}70%{box-shadow:0 0 0 8px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+.eg-item.danger-pulse{animation:dangerOptionPulse 1s ease-out;}
+
+/* ══ HEALTH PASSPORT ══ */
+.passport-card{background:linear-gradient(145deg,rgba(var(--ar),var(--ag),var(--ab),.06),rgba(var(--ar),var(--ag),var(--ab),.02));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.15);border-radius:12px;padding:16px;margin-bottom:14px;font-family:'Space Mono',monospace;font-size:10px;line-height:1.8;color:var(--dim);}
+.passport-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed rgba(var(--ar),var(--ag),var(--ab),.15);}
+.passport-title{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--accent);}
+.passport-row{display:flex;justify-content:space-between;padding:2px 0;}
+.passport-key{color:rgba(255,255,255,.35);}
+.passport-val{color:rgba(255,255,255,.7);}
+html.light .passport-key{color:rgba(0,0,0,.35);}
+html.light .passport-val{color:rgba(0,0,0,.6);}
+
 /* ══ WISDOM QUOTE ══ */
 .wisdom-card{background:rgba(255,255,255,.015);border:1px solid var(--card-border);border-radius:16px;padding:20px 24px;margin-bottom:14px;text-align:center;position:relative;}
 .wisdom-quote{font-size:14px;font-style:italic;line-height:1.8;color:rgba(255,255,255,.55);margin-bottom:10px;}
@@ -4736,6 +4758,144 @@ document.addEventListener('dblclick',e=>{
   dim.style.boxShadow=dim.style.boxShadow?'':'0 0 20px rgba(var(--ar),var(--ag),var(--ab),.2)';
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
+
+// ════ QUIZ COMPLETION TIME TRACKER ════
+(function(){
+  let quizStartTime=null;
+  // Detect quiz start
+  const origStart=window.startQuiz;
+  if(origStart){
+    window.startQuiz=function(){
+      quizStartTime=Date.now();
+      origStart.apply(this,arguments);
+    };
+  }
+  // Show time on result
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    if(!quizStartTime)return;
+    const elapsed=Math.round((Date.now()-quizStartTime)/1000);
+    const mins=Math.floor(elapsed/60);
+    const secs=elapsed%60;
+    const timeStr=mins>0?`${mins}分${secs}秒`:`${secs}秒`;
+    setTimeout(()=>{
+      const rs0=document.getElementById('rs0');
+      if(!rs0||document.getElementById('comp-time'))return;
+      const el=document.createElement('div');
+      el.id='comp-time';
+      el.className='completion-time';
+      el.innerHTML=`⏱️ 完成用时 <span class="ct-val">${timeStr}</span>`;
+      el.style.cssText+='display:flex;justify-content:center;margin-top:8px;';
+      rs0.appendChild(el);
+      // Speed achievement
+      if(elapsed<120&&typeof unlockAchievement==='function'){
+        unlockAchievement('speedster','⚡','闪电手','2分钟内完成所有题目');
+      }
+      if(elapsed>600&&typeof unlockAchievement==='function'){
+        unlockAchievement('thinker','🤔','深思熟虑','花了超过10分钟仔细答题');
+      }
+    },1500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ DANGER OPTION VISUAL PULSE ════
+(function(){
+  const origPick=pickGrid;
+  pickGrid=function(i){
+    origPick(i);
+    const q=curQ(),o=q.opts[i];
+    const s=o.s!==undefined?o.s:i;
+    if(s>=4){
+      const items=document.querySelectorAll('.eg-item');
+      const item=items[i];
+      if(item){
+        item.classList.remove('danger-pulse');
+        void item.offsetWidth;
+        item.classList.add('danger-pulse');
+      }
+    }
+  };
+})();
+
+// ════ HEALTH PASSPORT (COMPACT SUMMARY) ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('passport-section'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const best=dims.reduce((a,b)=>b.pct<a.pct?b:a);
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      const bodyAge=Math.round(age*(1+score/200));
+      const grade=score>=80?'F':score>=65?'D':score>=45?'C':score>=25?'B':'A';
+      const hist=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+      const testCount=hist.length;
+      const el=document.createElement('div');
+      el.id='passport-section';
+      el.className='rs on';
+      el.innerHTML=`<div class="passport-card">
+        <div class="passport-header"><span class="passport-title">HEALTH PASSPORT</span><span style="font-size:16px;">${score>=70?'🔴':score>=40?'🟡':'🟢'}</span></div>
+        <div class="passport-row"><span class="passport-key">SCORE</span><span class="passport-val">${score}/100 (${grade})</span></div>
+        <div class="passport-row"><span class="passport-key">REAL_AGE</span><span class="passport-val">${age}</span></div>
+        <div class="passport-row"><span class="passport-key">BODY_AGE</span><span class="passport-val">${bodyAge}</span></div>
+        <div class="passport-row"><span class="passport-key">TOP_RISK</span><span class="passport-val" style="color:#ef4444">${worst.name.split(' ')[1]} (${worst.pct}%)</span></div>
+        <div class="passport-row"><span class="passport-key">BEST_DIM</span><span class="passport-val" style="color:#34d399">${best.name.split(' ')[1]} (${best.pct}%)</span></div>
+        <div class="passport-row"><span class="passport-key">TESTS</span><span class="passport-val">#${testCount}</span></div>
+        <div class="passport-row"><span class="passport-key">ISSUED</span><span class="passport-val">${new Date().toISOString().slice(0,10)}</span></div>
+        <div style="text-align:center;margin-top:10px;font-size:8px;letter-spacing:2px;color:rgba(var(--ar),var(--ag),var(--ab),.3);">SDI NETWORK · CERTIFIED · v10.0</div>
+      </div>`;
+      const rs13=document.getElementById('rs13');
+      if(rs13){rs13.parentNode.insertBefore(el,rs13);}
+    },2500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ SCORE MINI PIE CHART ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('score-pie-section'))return;
+      const dims=calcDims();
+      const total=dims.reduce((s,d)=>s+d.pct,0);
+      if(total===0)return;
+      const colors=['#818cf8','#60a5fa','#34d399','#fbbf24','#f59e0b','#ef4444','#ec4899'];
+      let gradientParts=[];
+      let cumPct=0;
+      dims.forEach((d,i)=>{
+        const pct=(d.pct/total)*100;
+        gradientParts.push(`${colors[i]} ${cumPct}% ${cumPct+pct}%`);
+        cumPct+=pct;
+      });
+      const el=document.createElement('div');
+      el.id='score-pie-section';
+      el.className='rs on';
+      el.style.cssText='text-align:center;margin-bottom:14px;';
+      el.innerHTML=`<div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 风险构成 · RISK COMPOSITION</div>
+        <div class="score-pie" style="background:conic-gradient(${gradientParts.join(',')});">
+          <div class="score-pie-label" style="background:var(--bg);width:50px;height:50px;border-radius:50%;margin:auto;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">100%</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px;">
+          ${dims.map((d,i)=>`<span style="font-size:9px;color:${colors[i]};display:flex;align-items:center;gap:3px;"><span style="width:6px;height:6px;border-radius:50%;background:${colors[i]};display:inline-block;"></span>${d.name.split(' ')[1]} ${Math.round((d.pct/total)*100)}%</span>`).join('')}
+        </div>`;
+      // Insert after the quiz recap card or rs1
+      const recap=document.getElementById('quiz-recap');
+      const target=recap||document.getElementById('rs1');
+      if(target&&target.nextSibling){target.parentNode.insertBefore(el,target.nextSibling);}
+    },1300);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
 
 // ════ PROGRESSIVE QUIZ INTENSITY ════
 (function(){
