@@ -135,6 +135,12 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
 .cat-splash-name{font-size:30px;font-weight:900;margin-bottom:10px;color:var(--accent);transition:color .3s;}
 .cat-splash-desc{font-size:14px;color:var(--dim);line-height:1.8;max-width:360px;margin:0 auto 20px;}
 .cat-splash-count{font-size:12px;font-weight:500;color:var(--dim);}
+.cat-splash-timer{width:40px;height:40px;margin:14px auto 0;position:relative;}
+.cat-splash-timer svg{width:100%;height:100%;transform:rotate(-90deg);}
+.cat-splash-timer circle{fill:none;stroke-width:3;}
+.cat-splash-timer .timer-bg{stroke:rgba(255,255,255,.06);}
+.cat-splash-timer .timer-fill{stroke:var(--accent);stroke-linecap:round;stroke-dasharray:113;stroke-dashoffset:0;animation:timerCountdown 2s linear forwards;}
+@keyframes timerCountdown{from{stroke-dashoffset:0}to{stroke-dashoffset:113}}
 
 /* ══ PROGRESS ══ */
 .progress-wrap{width:100%;margin-bottom:18px;}
@@ -663,7 +669,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
   <div class="title-sub">SUDDEN DEATH INDEX · v7.3</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
-  <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div></div>
+  <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div><div class="dc-group"><span class="dc-digit" id="dc-secs">--</span><span class="dc-label">SECS</span></div></div>
   <div class="warning-box"><span class="warning-icon">⚠️</span><div class="warning-text"><b>健康提示：</b>本测试为娱乐性健康评估，结果不构成医学诊断。但如果你测完之后感到不适，那可能不是巧合。高分用户建议认真预约体检。</div></div>
   <div class="live-stats">
     <div class="lstat"><span class="lstat-num">58</span><span class="lstat-lbl">全国平均指数</span></div>
@@ -718,6 +724,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="cat-splash-desc" id="cs-desc">每一个夜晚都在悄悄影响明天的你</div>
     <div class="cat-splash-warn" id="cs-warn" style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,100,100,.5);margin-top:10px;margin-bottom:10px;letter-spacing:.5px;opacity:0;transition:opacity .6s .5s;"></div>
     <div class="cat-splash-count" id="cs-count">共 4 题</div>
+    <div class="cat-splash-timer"><svg viewBox="0 0 40 40"><circle class="timer-bg" cx="20" cy="20" r="18"/><circle class="timer-fill" id="cs-timer" cx="20" cy="20" r="18"/></svg></div>
   </div>
 </section>
 
@@ -847,16 +854,15 @@ function updateDeathClock(){
   const now=new Date();const bornYear=now.getFullYear()-age;
   const born=new Date(bornYear,0,1);
   const diff=now-born;
-  const years=age;
   const totalDays=Math.floor(diff/864e5);
-  const hours=now.getHours();
-  const mins=now.getMinutes();
-  document.getElementById('dc-years').textContent=years;
+  document.getElementById('dc-years').textContent=age;
   document.getElementById('dc-days').textContent=totalDays.toLocaleString();
-  document.getElementById('dc-hours').textContent=String(hours).padStart(2,'0');
-  document.getElementById('dc-mins').textContent=String(mins).padStart(2,'0');
+  document.getElementById('dc-hours').textContent=String(now.getHours()).padStart(2,'0');
+  document.getElementById('dc-mins').textContent=String(now.getMinutes()).padStart(2,'0');
+  const secEl=document.getElementById('dc-secs');
+  if(secEl)secEl.textContent=String(now.getSeconds()).padStart(2,'0');
 }
-updateDeathClock();setInterval(updateDeathClock,60000);
+updateDeathClock();setInterval(updateDeathClock,1000);// tick every second
 document.getElementById('age-input')?.addEventListener('input',updateDeathClock);
 
 // Floating symbols on landing page
@@ -934,13 +940,36 @@ function playSlider(){
   gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.08);
   osc.start(audioCtx.currentTime);osc.stop(audioCtx.currentTime+0.08);
 }
+function playHover(){
+  if(!soundOn)return;ensureAudio();
+  const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+  osc.connect(gain);gain.connect(audioCtx.destination);
+  osc.frequency.value=880;osc.type='sine';
+  gain.gain.setValueAtTime(0.03,audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.05);
+  osc.start(audioCtx.currentTime);osc.stop(audioCtx.currentTime+0.05);
+}
+function playSuccess(){
+  if(!soundOn)return;ensureAudio();
+  [523,659,784].forEach((f,i)=>{
+    const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+    osc.connect(gain);gain.connect(audioCtx.destination);
+    osc.frequency.value=f;osc.type='sine';
+    const t=audioCtx.currentTime+i*.1;
+    gain.gain.setValueAtTime(0.12,t);gain.gain.exponentialRampToValueAtTime(0.001,t+.2);
+    osc.start(t);osc.stop(t+.2);
+  });
+}
 function toggleSound(){
   soundOn=!soundOn;ensureAudio();
   const btn=document.getElementById('sound-btn');
   btn.textContent=soundOn?'🔊 音效':'🔇 音效';
   btn.className='sound-btn'+(soundOn?' on':'');
   if(soundOn)playClick(1);
+  try{localStorage.setItem('sdi-sound',soundOn?'1':'0');}catch(e){}
 }
+// Restore sound preference
+try{if(localStorage.getItem('sdi-sound')==='1'){soundOn=true;const btn=document.getElementById('sound-btn');if(btn){btn.textContent='🔊 音效';btn.className='sound-btn on';}}}catch(e){}
 
 // Ripple
 function addRipple(el,e){const r=document.createElement('span');r.className='ripple';const rect=el.getBoundingClientRect();const sz=Math.max(rect.width,rect.height)*1.8;r.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-rect.left-sz/2}px;top:${e.clientY-rect.top-sz/2}px;`;el.appendChild(r);setTimeout(()=>r.remove(),500);}
@@ -1623,6 +1652,9 @@ function showCatSplash(cat,cb){
     card.style.borderColor=d.color+'25';
     card.style.boxShadow=`0 4px 32px rgba(0,0,0,.4),0 0 80px ${d.color}12`;
   }
+  // Reset timer ring animation and tint
+  const timerEl=document.getElementById('cs-timer');
+  if(timerEl){timerEl.style.stroke=d.color||'var(--accent)';timerEl.style.animation='none';void timerEl.offsetWidth;timerEl.style.animation='timerCountdown 2s linear forwards';}
   go('sec-cat-splash','anim-up');
   if(splashTimer)clearTimeout(splashTimer);
   splashTimer=setTimeout(cb,2000);
@@ -1683,6 +1715,7 @@ function renderQ(){
     body.innerHTML=`<div class="${gridClass}">${q.opts.map((o,i)=>`<div class="eg-item${ans[qi]===i?' sel':''}" data-idx="${i}"><span class="eg-emoji">${o.e}</span><div class="eg-label">${o.l.replace('\n','<br>')}</div></div>`).join('')}</div>`;
     body.querySelectorAll('.eg-item').forEach(el=>{
       el.addEventListener('click',e=>{addRipple(el,e);pickGrid(parseInt(el.dataset.idx));});
+      el.addEventListener('mouseenter',playHover);
     });
   }
   setReady(ans[qi]!==undefined);
@@ -1744,7 +1777,7 @@ function nextQ(){
     const oldCat=curQ().cat;fi++;const newCat=curQ().cat;
     if(newCat!==oldCat&&!Q[curQi()].branch){showCatSplash(newCat,()=>{go('sec-question','anim-in');renderQ();window.scrollTo({top:0,behavior:'smooth'});});}
     else{const card=document.getElementById('q-card');card.style.animation='slideOut .2s ease both';setTimeout(()=>{renderQ();card.style.animation='slideIn .25s ease both';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{card.style.animation='';},300);},200);}
-  }else showLoading();
+  }else{playSuccess();showLoading();}
 }
 
 // Touch swipe
