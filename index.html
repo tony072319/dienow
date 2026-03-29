@@ -748,6 +748,25 @@ html.light .rx-section{border-top-color:rgba(0,0,0,.06);}
 html.light .section-divider path{stroke:rgba(0,0,0,.1);}
 html.light .sd-skull{color:rgba(0,0,0,.08);}
 html.light .fun-tag{border-color:currentColor!important;}
+html.light #health-receipt>div{background:#fff!important;color:#222!important;border-color:#ccc!important;}
+html.light #wanted-poster>div{box-shadow:0 4px 20px rgba(0,0,0,.1)!important;}
+html.light #health-gauge svg text{fill:rgba(0,0,0,.3)!important;}
+html.light #news-ticker{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.06);}
+html.light #tap-area{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.08)!important;}
+html.light #scroll-top-fab{background:rgba(255,255,255,.9);border-color:rgba(0,0,0,.08);color:#666;}
+
+/* ══ SMOOTH CARD HOVER GLOW ══ */
+.rs{position:relative;}
+.rs::before{content:'';position:absolute;inset:-1px;border-radius:inherit;background:conic-gradient(from 0deg,transparent,rgba(var(--ar),var(--ag),var(--ab),.08),transparent);opacity:0;transition:opacity .4s;pointer-events:none;z-index:-1;}
+.rs:hover::before{opacity:1;}
+
+/* ══ PRINT STYLES ══ */
+@media print{
+  body{background:#fff!important;color:#000!important;}
+  .theme-toggle,.res-nav,.back-to-top,#scroll-top-fab,#news-ticker,#particle-canvas,#noise-overlay,#vignette,#ambient,.parallax-orb{display:none!important;}
+  .rs{break-inside:avoid;border-color:#ddd!important;background:#fff!important;}
+  .card{box-shadow:none!important;border:1px solid #ddd!important;background:#fff!important;}
+}
 
 /* ══ THEME TOGGLE ══ */
 .theme-toggle{position:fixed;top:16px;right:16px;z-index:200;width:42px;height:42px;border-radius:50%;border:1px solid var(--card-border);background:var(--card-bg);backdrop-filter:blur(12px);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .3s;box-shadow:0 2px 12px rgba(0,0,0,.15);}
@@ -8544,6 +8563,182 @@ ${line}
     }
     lastTap=now;
   },{passive:true});
+})();
+
+// ════ "HEALTH STOCK MARKET" CHART ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-stock'))return;
+      try{
+        const history=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+        if(history.length<2)return;
+        const scores=history.map(h=>h.score);
+        const latest=scores[scores.length-1];
+        const prev=scores[scores.length-2];
+        const change=latest-prev;
+        const pctChange=((change/Math.max(1,prev))*100).toFixed(1);
+        const isUp=change>0;
+        const maxScore=Math.max(...scores,100);
+        const minScore=Math.min(...scores,0);
+        const range=maxScore-minScore||1;
+        // Generate SVG sparkline
+        const w=240,h=60;
+        const points=scores.map((s,i)=>{
+          const x=(i/(scores.length-1))*w;
+          const y=h-((s-minScore)/range)*h;
+          return `${x},${y}`;
+        }).join(' ');
+        const el=document.createElement('div');
+        el.id='health-stock';
+        el.className='rs on';
+        el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div>
+            <div style="font-size:9px;color:var(--dim);letter-spacing:2px;">SDI:HEALTH</div>
+            <div style="display:flex;align-items:baseline;gap:8px;">
+              <span style="font-size:22px;font-weight:900;color:var(--text);">${latest}</span>
+              <span style="font-size:11px;font-weight:700;color:${isUp?'#ef4444':'#4ade80'};">${isUp?'▲':'▼'} ${Math.abs(change)} (${isUp?'+':''}${pctChange}%)</span>
+            </div>
+          </div>
+          <div style="font-size:9px;color:var(--dim);text-align:right;">
+            <div>${isUp?'📈 危险上升':'📉 风险下降'}</div>
+            <div>${scores.length} 次检测</div>
+          </div>
+        </div>
+        <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:60px;">
+          <defs>
+            <linearGradient id="stockGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${isUp?'#ef4444':'#4ade80'}" stop-opacity=".3"/>
+              <stop offset="100%" stop-color="${isUp?'#ef4444':'#4ade80'}" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <polygon points="0,${h} ${points} ${w},${h}" fill="url(#stockGrad)"/>
+          <polyline points="${points}" fill="none" stroke="${isUp?'#ef4444':'#4ade80'}" stroke-width="2" stroke-linejoin="round"/>
+          ${scores.map((s,i)=>{
+            const x=(i/(scores.length-1))*w;
+            const y=h-((s-minScore)/range)*h;
+            return `<circle cx="${x}" cy="${y}" r="${i===scores.length-1?3:1.5}" fill="${i===scores.length-1?(isUp?'#ef4444':'#4ade80'):'rgba(255,255,255,.3)'}"/>`;
+          }).join('')}
+        </svg>
+        <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--dim);margin-top:2px;">
+          <span>第1次</span><span>第${scores.length}次</span>
+        </div>`;
+        const rs0=document.getElementById('rs0');
+        if(rs0)rs0.parentNode.insertBefore(el,rs0.nextSibling);
+      }catch(e){}
+    },1600);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH HAIKU" GENERATOR ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('health-haiku'))return;
+      const score=calcScore();
+      const haikus=[
+        // Low score (healthy)
+        {range:[0,30],poems:[
+          ['晨光洒窗台','身轻如燕心自在','健康是真爱'],
+          ['春风拂面来','规律作息无忧碍','青春永不败'],
+          ['一杯清水甜','身体无恙心自安','快乐每一天'],
+        ]},
+        // Medium score
+        {range:[30,60],poems:[
+          ['夜半手机亮','身体悄悄在记账','该把债还上'],
+          ['外卖又一单','腰围渐宽心渐烦','改变趁今晚'],
+          ['咖啡续命长','久坐不动骨头凉','起身走两趟'],
+        ]},
+        // High score (dangerous)
+        {range:[60,101],poems:[
+          ['凌晨三点半','肝脏默默把泪弹','求你早点关'],
+          ['作死成习惯','身体警报响不断','ICU相见'],
+          ['熬夜如打仗','器官纷纷交辞状','再见在天堂'],
+        ]},
+      ];
+      const group=haikus.find(h=>score>=h.range[0]&&score<h.range[1])||haikus[1];
+      const poem=group.poems[Math.floor(Math.random()*group.poems.length)];
+      const el=document.createElement('div');
+      el.id='health-haiku';
+      el.className='rs on';
+      el.innerHTML=`<div style="text-align:center;padding:12px 0;">
+        <div style="font-size:9px;letter-spacing:4px;color:var(--dim);margin-bottom:12px;">— 健 康 俳 句 —</div>
+        <div style="font-size:15px;color:rgba(255,255,255,.7);line-height:2.5;font-style:italic;">
+          ${poem.map((line,i)=>`<div style="opacity:0;animation:fadeUp .5s ease ${0.3+i*0.4}s forwards;">${line}</div>`).join('')}
+        </div>
+        <div style="width:40px;height:1px;background:rgba(255,255,255,.1);margin:12px auto 0;"></div>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(10,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },4500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ QUIZ PROGRESS MOTIVATIONAL MILESTONES ════
+(function(){
+  const milestones={
+    5:'已完成1/6！热身结束，正式开始',
+    10:'三分之一了！保持诚实',
+    15:'一半了！中场休息一下深呼吸',
+    20:'三分之二！胜利在望',
+    25:'最后几题了！冲刺！',
+  };
+  let shown={};
+  const origNextQ=window.nextQ;
+  if(!origNextQ)return;
+  window.nextQ=function(){
+    origNextQ.apply(this,arguments);
+    const qNum=document.querySelector('.q-num')?.textContent;
+    const num=parseInt(qNum);
+    if(milestones[num]&&!shown[num]){
+      shown[num]=true;
+      const msg=milestones[num];
+      const el=document.createElement('div');
+      el.style.cssText='position:fixed;top:80px;left:50%;transform:translateX(-50%) scale(0.8);background:rgba(var(--ar),var(--ag),var(--ab),.12);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.3);border-radius:16px;padding:8px 18px;font-size:11px;color:var(--accent);z-index:200;backdrop-filter:blur(8px);transition:all .3s cubic-bezier(.34,1.56,.64,1);opacity:0;';
+      el.textContent=`🎯 ${msg}`;
+      document.body.appendChild(el);
+      requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='translateX(-50%) scale(1)';});
+      setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(-50%) scale(0.8) translateY(-10px)';setTimeout(()=>el.remove(),300);},2500);
+    }
+  };
+})();
+
+// ════ ENHANCED LANDING: FLOATING HEALTH TIPS BUBBLES ════
+(function(){
+  const tips=['多喝水 💧','站起来走走 🚶','深呼吸 🧘','看看远处 👀','伸个懒腰 🙆','笑一笑 😊'];
+  const sec=document.getElementById('sec-intro');
+  if(!sec)return;
+  function spawnBubble(){
+    if(!sec.classList.contains('active'))return;
+    const tip=tips[Math.floor(Math.random()*tips.length)];
+    const bubble=document.createElement('div');
+    const x=20+Math.random()*60;
+    bubble.style.cssText=`position:absolute;left:${x}%;bottom:0;font-size:10px;color:rgba(255,255,255,.15);white-space:nowrap;pointer-events:none;animation:bubbleFloat 8s linear forwards;z-index:0;`;
+    bubble.textContent=tip;
+    sec.style.position='relative';
+    sec.style.overflow='hidden';
+    sec.appendChild(bubble);
+    setTimeout(()=>bubble.remove(),8000);
+  }
+  // Add bubble animation
+  const style=document.createElement('style');
+  style.textContent='@keyframes bubbleFloat{0%{opacity:0;transform:translateY(0)}10%{opacity:.2}90%{opacity:.1}100%{opacity:0;transform:translateY(-400px) translateX(30px)}}';
+  document.head.appendChild(style);
+  setInterval(spawnBubble,4000);
+  setTimeout(spawnBubble,2000);
 })();
 
 // ════ PREFERS-REDUCED-MOTION RESPECT ════
