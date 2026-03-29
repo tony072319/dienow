@@ -3247,6 +3247,72 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ SHARE BUTTON CONFETTI ════
+(function(){
+  document.addEventListener('click',e=>{
+    const btn=e.target.closest('.btn-share');
+    if(!btn)return;
+    // Mini confetti burst from button
+    const rect=btn.getBoundingClientRect();
+    const cx=rect.left+rect.width/2,cy=rect.top;
+    const colors=[[124,110,240],[52,211,153],[251,191,36],[96,165,250],[244,114,182]];
+    for(let i=0;i<15;i++){
+      const[r,g,b]=colors[i%colors.length];
+      pts.push({x:cx,y:cy+window.scrollY,vx:(Math.random()-.5)*3,vy:-Math.random()*3-1,sz:Math.random()*2+1,al:.7,r,g,b,life:0,max:60+Math.random()*40,cross:Math.random()<.2,rot:Math.random()*Math.PI});
+    }
+  });
+})();
+
+// ════ LOADING SCREEN MATRIX RAIN ════
+(function(){
+  let matrixIv=null;
+  const obs=new MutationObserver(()=>{
+    const isLoading=document.getElementById('sec-loading')?.classList.contains('active');
+    if(isLoading&&!matrixIv){startMatrix();}
+    else if(!isLoading&&matrixIv){clearInterval(matrixIv);matrixIv=null;}
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  function startMatrix(){
+    const chars='ACGT01猝死指数测试DEADBEEF💀☠️⚰️';
+    const columns=Math.floor(window.innerWidth/14);
+    const drops=new Array(columns).fill(0);
+    matrixIv=setInterval(()=>{
+      if(!document.getElementById('sec-loading')?.classList.contains('active')){clearInterval(matrixIv);matrixIv=null;return;}
+      for(let i=0;i<2;i++){
+        const col=Math.floor(Math.random()*columns);
+        const ch=chars[Math.floor(Math.random()*chars.length)];
+        const el=document.createElement('span');
+        el.textContent=ch;
+        el.style.cssText=`position:fixed;left:${col*14}px;top:-20px;font-family:'Space Mono',monospace;font-size:12px;color:rgba(var(--ar),var(--ag),var(--ab),.15);pointer-events:none;z-index:1;animation:matrixFall ${1.5+Math.random()*2}s linear forwards;`;
+        document.body.appendChild(el);
+        setTimeout(()=>el.remove(),4000);
+      }
+    },100);
+  }
+  const style=document.createElement('style');
+  style.textContent='@keyframes matrixFall{0%{top:-20px;opacity:.3}80%{opacity:.15}100%{top:100vh;opacity:0}}';
+  document.head.appendChild(style);
+})();
+
+// ════ AUTO-SAVE RESULT TO HISTORY ON RESULT VIEW ════
+// (Enhance existing history save to include more data)
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    // Update OG meta for sharing (dynamic)
+    try{
+      const score=calcScore();
+      const ogDesc=document.querySelector('meta[property="og:description"]');
+      if(ogDesc)ogDesc.content=`我的猝死指数是${score}分，你敢测吗？`;
+      const twDesc=document.querySelector('meta[name="twitter:description"]');
+      if(twDesc)twDesc.content=`我的猝死指数是${score}分，你敢测吗？`;
+    }catch(e){}
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ HEALTH DASHBOARD QUICK SUMMARY ════
 (function(){
   const obs=new MutationObserver(()=>{
