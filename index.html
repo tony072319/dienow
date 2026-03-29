@@ -4779,6 +4779,55 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ RANDOM MOTIVATIONAL POPUP DURING QUIZ ════
+(function(){
+  const messages=[
+    {text:'加油，每道题都在帮你更了解自己。',icon:'💪'},
+    {text:'诚实作答，结果才有意义。',icon:'🎯'},
+    {text:'你已经比大多数人多了一步——至少你在关注健康。',icon:'👣'},
+    {text:'不管结果如何，改变随时都可以开始。',icon:'🌱'},
+    {text:'测试不是审判，而是一面镜子。',icon:'🪞'},
+  ];
+  let lastShown=0;
+  const origNextQ=window.nextQ;
+  if(!origNextQ)return;
+  const wrappedNextQ=function(){
+    origNextQ.apply(this,arguments);
+    const now=Date.now();
+    if(now-lastShown<30000)return; // Max once per 30s
+    if(Math.random()>0.15)return; // 15% chance
+    lastShown=now;
+    const msg=messages[Math.floor(Math.random()*messages.length)];
+    const popup=document.createElement('div');
+    popup.style.cssText='position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:10px 18px;font-size:11px;color:rgba(255,255,255,.6);z-index:200;backdrop-filter:blur(12px);display:flex;align-items:center;gap:8px;animation:fadeUp .3s ease;box-shadow:0 4px 20px rgba(0,0,0,.3);';
+    popup.innerHTML=`<span style="font-size:16px;">${msg.icon}</span><span>${msg.text}</span>`;
+    document.body.appendChild(popup);
+    setTimeout(()=>{popup.style.opacity='0';popup.style.transition='opacity .3s';setTimeout(()=>popup.remove(),300);},2500);
+  };
+  window.nextQ=wrappedNextQ;
+})();
+
+// ════ ENHANCED LOADING ORGAN SCAN ════
+(function(){
+  // Add more dramatic organ scan messages based on answers
+  const origShowLoading=window.showLoading;
+  if(!origShowLoading)return;
+  window.showLoading=function(){
+    origShowLoading.apply(this,arguments);
+    // Add a final dramatic message
+    const stageEl=document.getElementById('load-stage');
+    if(stageEl){
+      const score=calcScore();
+      setTimeout(()=>{
+        if(score>=80)stageEl.textContent='⚠️ 检测到多项临界指标…';
+        else if(score>=60)stageEl.textContent='正在计算风险权重矩阵…';
+        else if(score>=40)stageEl.textContent='你的数据比平均值要好一些…';
+        else stageEl.textContent='✓ 各项指标运行正常…';
+      },2000);
+    }
+  };
+})();
+
 // ════ FUN "HEALTH ZODIAC" BASED ON WORST DIMENSION COMBO ════
 (function(){
   const obs=new MutationObserver(()=>{
