@@ -287,6 +287,21 @@ section.active {
   font-size: 14px;
   line-height: 1.45;
   text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.opt .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(var(--ar),var(--ag),var(--ab),0.25);
+  transform: scale(0);
+  animation: rippleAnim 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes rippleAnim {
+  to { transform: scale(4); opacity: 0; }
 }
 
 .opt:hover {
@@ -1340,7 +1355,7 @@ function renderQuestion() {
     const hasEmoji = q.opts[0].match(/[\u{1F300}-\u{1FFFF}]/u);
     body.innerHTML = `<div class="options">${
       q.opts.map((opt,i) => `
-        <div class="opt${answers[qi]===i?' selected':''}" onclick="selectOpt(${i})">
+        <div class="opt${answers[qi]===i?' selected':''}" onclick="selectOpt(${i}, event)">
           <div class="opt-dot"></div>
           <span>${opt}</span>
         </div>`).join('')
@@ -1356,7 +1371,7 @@ function renderQuestion() {
   btn.textContent = flowIndex === questionFlow.length - 1 ? '查看结果 →' : '下一题 →';
 }
 
-function selectOpt(i) {
+function selectOpt(i, e) {
   const qi = currentQIndex();
   answers[qi] = i;
 
@@ -1366,6 +1381,20 @@ function selectOpt(i) {
   document.querySelectorAll('.opt').forEach((el,idx) => {
     el.classList.toggle('selected', idx===i);
   });
+
+  // Ripple effect
+  if (e) {
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+    el.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 500);
+  }
 
   const btn = document.getElementById('btn-next');
   btn.className = 'btn-next ready';
