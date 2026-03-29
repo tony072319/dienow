@@ -4779,6 +4779,113 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ EMOJI ANSWER SUMMARY ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('emoji-summary'))return;
+      const answers=Object.entries(ans).filter(([k,v])=>v!==undefined).sort((a,b)=>Number(a[0])-Number(b[0]));
+      if(answers.length<10)return;
+      const emojiMap={0:'🟢',1:'🟡',2:'🟠',3:'🔴',4:'💀'};
+      const strip=answers.map(([k,v])=>emojiMap[Math.min(v,4)]||'⚪').join('');
+      const el=document.createElement('div');
+      el.id='emoji-summary';
+      el.className='rs on';
+      el.style.cssText='text-align:center;margin-bottom:14px;padding:14px;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;';
+      el.innerHTML=`<div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);margin-bottom:8px;">// 答题DNA</div>
+        <div style="font-size:14px;letter-spacing:2px;line-height:1.8;word-break:break-all;">${strip}</div>
+        <div style="display:flex;justify-content:center;gap:12px;margin-top:8px;">
+          <span style="font-size:9px;color:var(--dim);">🟢 安全</span>
+          <span style="font-size:9px;color:var(--dim);">🟡 轻微</span>
+          <span style="font-size:9px;color:var(--dim);">🟠 中等</span>
+          <span style="font-size:9px;color:var(--dim);">🔴 高危</span>
+          <span style="font-size:9px;color:var(--dim);">💀 极危</span>
+        </div>`;
+      const rs12e=document.getElementById('rs12e');
+      if(rs12e){rs12e.parentNode.insertBefore(el,rs12e);}
+    },2400);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ IMPACT ANALYSIS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('impact-analysis'))return;
+      const dims=calcDims();
+      const score=calcScore();
+      // Calculate how much each dimension contributes and potential improvement
+      const totalPct=dims.reduce((s,d)=>s+d.pct,0);
+      const sorted=[...dims].sort((a,b)=>b.pct-a.pct);
+      const topImpact=sorted.slice(0,3).map(d=>{
+        const contribution=Math.round((d.pct/Math.max(totalPct,1))*100);
+        const potentialDrop=Math.round(score*(d.pct/Math.max(totalPct,1))*.6);
+        return{...d,contribution,potentialDrop};
+      });
+      const el=document.createElement('div');
+      el.id='impact-analysis';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(96,165,250,.03);border:1px solid rgba(96,165,250,.1);border-radius:16px;padding:20px;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(96,165,250,.5);margin-bottom:12px;">📊 IMPACT ANALYSIS · 改善一项能降多少分？</div>
+        ${topImpact.map((d,i)=>`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;${i<topImpact.length-1?'border-bottom:1px solid rgba(255,255,255,.03);':''}">
+          <span style="font-size:18px;">${d.name.split(' ')[0]}</span>
+          <div style="flex:1;">
+            <div style="font-size:12px;color:rgba(255,255,255,.6);">${d.name.split(' ')[1]}</div>
+            <div style="font-size:10px;color:var(--dim);">贡献了总分的 ${d.contribution}%</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:#34d399;">-${d.potentialDrop}</div>
+            <div style="font-size:9px;color:var(--dim);">预计可降</div>
+          </div>
+        </div>`).join('')}
+        <div style="text-align:center;margin-top:12px;font-size:10px;color:var(--dim);font-style:italic;">改善最差维度的效果 > 均匀提升所有维度</div>
+      </div>`;
+      const rs10=document.getElementById('rs10');
+      if(rs10){rs10.parentNode.insertBefore(el,rs10);}
+    },2200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ MIDNIGHT COUNTDOWN ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('midnight-countdown'))return;
+      const el=document.createElement('div');
+      el.id='midnight-countdown';
+      el.style.cssText='text-align:center;font-size:10px;color:var(--dim);margin-bottom:10px;font-family:"Space Mono",monospace;letter-spacing:1px;';
+      function updateCountdown(){
+        const now=new Date();
+        const midnight=new Date(now);midnight.setHours(24,0,0,0);
+        const diff=midnight-now;
+        const h=Math.floor(diff/3600000);
+        const m=Math.floor((diff%3600000)/60000);
+        const s=Math.floor((diff%60000)/1000);
+        el.textContent=`⏳ 距离新的一天还有 ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} — 改变从明天开始？不，从现在开始。`;
+      }
+      updateCountdown();
+      const iv=setInterval(()=>{
+        if(!document.getElementById('sec-result')?.classList.contains('active')){clearInterval(iv);return;}
+        updateCountdown();
+      },1000);
+      const rs13=document.getElementById('rs13');
+      if(rs13){rs13.parentNode.insertBefore(el,rs13);}
+    },3000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ HIGH SCORE AUTOPSY REPORT ════
 (function(){
   const obs=new MutationObserver(()=>{
