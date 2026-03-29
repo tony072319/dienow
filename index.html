@@ -891,6 +891,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="rs" id="rs7c"><div class="lastwords-card"><div class="lw-quote" id="lw-quote"></div><div class="lw-attr" id="lw-attr"></div></div></div>
     <div class="rs" id="rs7d"><div class="survival-card"><div class="sec-label" style="color:#34d399;margin-bottom:12px">🌱 如果你从今天开始改变</div><div class="survival-items" id="survival-items"></div><div class="survival-note">以上数据基于流行病学模型估算，每改变一个维度，你的未来都会被重写。</div></div></div>
     <div class="rs" id="rs7e"><div class="profession-card"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">📊 你的风险相当于</div><div class="profession-items" id="profession-items"></div></div></div>
+    <div class="rs" id="rs7f"><div style="background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 人群对比</div><div id="demo-compare" style="display:flex;flex-direction:column;gap:12px;"></div></div></div>
     <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
     <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v7.4 · AUTOMATED REPORT</div></div></div>
     <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#f59e0b;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
@@ -2346,6 +2347,19 @@ function showResult(){
     const lbl=Math.abs(diff)<=8?'≈ 相近':diff>0?`+${diff} 更高`:`${diff} 更低`;
     profEl.innerHTML+=`<div class="prof-item"><span class="prof-icon">${p.icon}</span><div class="prof-body"><div class="prof-name">${p.name}</div><div class="prof-risk">典型风险：${p.desc}（平均指数 ${p.avg}）</div></div><span class="prof-match ${cls}">${lbl}</span></div>`;
   });
+  // Demographic comparison bars
+  const demoEl=document.getElementById('demo-compare');demoEl.innerHTML='';
+  const demos=[
+    {label:'🇨🇳 全国平均',avg:52},{label:'🏙️ 一线城市白领',avg:58},
+    {label:`👤 ${ageGroup}岁同龄人`,avg:ageAvg},{label:'👨‍💻 互联网从业者',avg:65},
+    {label:'🧘 健康达人群体',avg:18},{label:'💀 你的分数',avg:score,isUser:true},
+  ];
+  demos.forEach(d=>{
+    const col=d.isUser?(score<30?'#34d399':score<60?'#fbbf24':'#ef4444'):'rgba(255,255,255,.25)';
+    const w=Math.max(5,d.avg)+'%';
+    const bold=d.isUser?'font-weight:700;':'';
+    demoEl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;${bold}"><span style="font-size:12px;color:${d.isUser?col:'#bbb'};width:130px;flex-shrink:0;text-align:right;">${d.label}</span><div style="flex:1;height:8px;background:rgba(255,255,255,.04);border-radius:10px;overflow:hidden;"><div style="height:100%;width:${w};background:${col};border-radius:10px;transition:width 1s cubic-bezier(.25,.8,.25,1);box-shadow:${d.isUser?'0 0 10px '+col+'60':'none'};"></div></div><span style="font-family:'Space Mono',monospace;font-size:11px;color:${col};width:30px;">${d.avg}</span></div>`;
+  });
   document.getElementById('doctor-text').textContent=getDoctorNote(score,dims,arch);
   const rxEl=document.getElementById('rx-items');rxEl.innerHTML='';
   getRx(dims).forEach((r,i)=>{rxEl.innerHTML+=`<div class="rx-item"><span class="rx-num">${i+1}</span><span><b style="color:var(--accent)">${r.dim}：</b>${r.rx}</span></div>`;});
@@ -2525,7 +2539,7 @@ function showResult(){
     {icon:'🎯',label:'危险比率',val:`${totalQ>0?Math.round(dangerCount/totalQ*100):0}%`},
   ].map(s=>`<div style="background:rgba(255,255,255,.03);border-radius:10px;padding:10px;"><span style="font-size:16px">${s.icon}</span><div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--accent);margin:4px 0">${s.val}</div><div style="font-size:10px;color:var(--dim)">${s.label}</div></div>`).join('');
   go('sec-result','anim-fade');clearProgress();playReveal(score);
-  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs4b','rs4c','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs8','rs9','rs9b','rs10','rs10b','rs11','rs12','rs12b','rs12c','rs12c2','rs12d','rs12e','rs12f','rs13'];
+  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs4b','rs4c','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs7f','rs8','rs9','rs9b','rs10','rs10b','rs11','rs12','rs12b','rs12c','rs12c2','rs12d','rs12e','rs12f','rs13'];
   // First few sections animate on timer; rest use Intersection Observer for scroll-reveal
   const timerCount=5;
   rsIds.slice(0,timerCount).forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),300+i*140);});
