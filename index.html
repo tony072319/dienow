@@ -4779,6 +4779,114 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ HIGH SCORE AUTOPSY REPORT ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('autopsy-report'))return;
+      const score=calcScore();
+      if(score<75)return; // Only for high scores
+      const dims=calcDims();
+      const sorted=[...dims].sort((a,b)=>b.pct-a.pct);
+      const top3=sorted.slice(0,3);
+      const cod=top3.map(d=>d.name.split(' ')[1]).join(' + ');
+      const age=parseInt(document.getElementById('age-input')?.value)||28;
+      const el=document.createElement('div');
+      el.id='autopsy-report';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.12);border-radius:16px;padding:22px;font-family:'Space Mono',monospace;">
+        <div style="text-align:center;font-size:10px;letter-spacing:4px;color:rgba(239,68,68,.5);margin-bottom:14px;border-bottom:1px dashed rgba(239,68,68,.1);padding-bottom:12px;">⚠ PRELIMINARY AUTOPSY REPORT ⚠</div>
+        <div style="font-size:10px;color:var(--dim);line-height:2.2;">
+          <div><span style="color:rgba(239,68,68,.4);">SUBJECT:</span> 匿名用户, ${age}岁</div>
+          <div><span style="color:rgba(239,68,68,.4);">RISK_INDEX:</span> ${score}/100 <span style="color:#ef4444;">[CRITICAL]</span></div>
+          <div><span style="color:rgba(239,68,68,.4);">PRIMARY_COD:</span> ${cod} 综合征</div>
+          <div><span style="color:rgba(239,68,68,.4);">CONTRIBUTING:</span> ${top3.map(d=>`${d.name.split(' ')[1]}(${d.pct}%)`).join(', ')}</div>
+          <div><span style="color:rgba(239,68,68,.4);">PROGNOSIS:</span> ${score>=90?'极其不乐观':'需要立即干预'}</div>
+          <div><span style="color:rgba(239,68,68,.4);">RECOMMENDATION:</span> IMMEDIATE LIFESTYLE INTERVENTION</div>
+        </div>
+        <div style="text-align:center;margin-top:14px;font-size:9px;color:rgba(239,68,68,.3);">// 本报告为模拟生成，请勿当真——但也别完全不当回事</div>
+      </div>`;
+      const rs7=document.getElementById('rs7');
+      if(rs7){rs7.parentNode.insertBefore(el,rs7);}
+    },1800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ MICRO-CHALLENGE GENERATOR ════
+(function(){
+  const challenges=[
+    {text:'今天喝8杯水（至少2升）',diff:'简单',icon:'💧',color:'#34d399'},
+    {text:'午饭后散步15分钟',diff:'简单',icon:'🚶',color:'#34d399'},
+    {text:'今晚11点前放下手机',diff:'中等',icon:'📱',color:'#fbbf24'},
+    {text:'做20个深蹲',diff:'中等',icon:'🏋️',color:'#fbbf24'},
+    {text:'今天不喝任何含咖啡因的饮料',diff:'困难',icon:'☕',color:'#f59e0b'},
+    {text:'连续3天每天步行超过6000步',diff:'困难',icon:'👟',color:'#f59e0b'},
+    {text:'这周找一个朋友面对面聊天',diff:'中等',icon:'💬',color:'#fbbf24'},
+    {text:'今天做5分钟冥想或深呼吸练习',diff:'简单',icon:'🧘',color:'#34d399'},
+    {text:'今天的午餐和晚餐都自己做',diff:'困难',icon:'🍳',color:'#f59e0b'},
+    {text:'睡前写下今天3件值得感恩的事',diff:'简单',icon:'📝',color:'#34d399'},
+    {text:'工作每45分钟站起来活动一次',diff:'中等',icon:'⏰',color:'#fbbf24'},
+    {text:'今天不叫外卖',diff:'中等',icon:'🍱',color:'#fbbf24'},
+    {text:'睡前不看任何社交媒体',diff:'困难',icon:'🔕',color:'#f59e0b'},
+    {text:'今天走楼梯代替电梯',diff:'中等',icon:'🪜',color:'#fbbf24'},
+  ];
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('micro-challenge'))return;
+      // Pick 3 challenges based on day
+      const dayIdx=Math.floor(Date.now()/(1000*60*60*24));
+      const picked=[];
+      for(let i=0;i<3;i++){
+        picked.push(challenges[(dayIdx*3+i)%challenges.length]);
+      }
+      const el=document.createElement('div');
+      el.id='micro-challenge';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(52,211,153,.03);border:1px solid rgba(52,211,153,.1);border-radius:16px;padding:20px;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(52,211,153,.5);margin-bottom:12px;">🎯 TODAY'S MICRO-CHALLENGES</div>
+        ${picked.map(c=>`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03);">
+          <span style="font-size:20px;">${c.icon}</span>
+          <div style="flex:1;"><div style="font-size:12px;color:rgba(255,255,255,.6);">${c.text}</div></div>
+          <span style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:100px;background:${c.color}15;color:${c.color};border:1px solid ${c.color}25;">${c.diff}</span>
+        </div>`).join('')}
+        <div style="text-align:center;margin-top:12px;font-size:10px;color:var(--dim);">完成任意一个，你就赢了今天</div>
+      </div>`;
+      const rs12d=document.getElementById('rs12d');
+      if(rs12d){rs12d.parentNode.insertBefore(el,rs12d);}
+    },2700);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ ANIMATED HEARTBEAT IN RESULT HEADER ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const rs0=document.getElementById('rs0');
+      if(!rs0||document.getElementById('result-heartbeat'))return;
+      const score=calcScore();
+      const bpm=60+Math.round(score*.6); // 60-120 BPM based on score
+      const col=score>=70?'#ef4444':score>=40?'#f59e0b':'#34d399';
+      const beat=document.createElement('div');
+      beat.id='result-heartbeat';
+      beat.style.cssText=`display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;font-size:10px;color:${col};`;
+      beat.innerHTML=`<span style="animation:livePulse ${60/bpm}s ease-in-out infinite;display:inline-block;">❤️</span><span style="font-family:'Space Mono',monospace;letter-spacing:1px;">${bpm} BPM</span>`;
+      rs0.appendChild(beat);
+    },600);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ DYNAMIC TAB TITLE ════
 (function(){
   const origTitle=document.title;
