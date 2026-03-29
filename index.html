@@ -466,7 +466,8 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .load-stage{font-size:11px;font-weight:500;color:rgba(255,255,255,.4);margin-top:14px;min-height:18px;letter-spacing:.3px;transition:opacity .3s;}
 .load-organ{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(var(--ar),var(--ag),var(--ab),.06);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:100px;font-size:11px;font-weight:500;color:var(--accent);margin:4px 3px;opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s;}
 .load-organ.scanned{opacity:1;transform:scale(1);}
-.load-organ.danger{color:#ef4444;border-color:rgba(255,68,68,.2);background:rgba(255,68,68,.06);}
+.load-organ.danger{color:#ef4444;border-color:rgba(255,68,68,.2);background:rgba(255,68,68,.06);animation:organDanger 1s ease infinite;}
+@keyframes organDanger{0%,100%{box-shadow:none}50%{box-shadow:0 0 12px rgba(239,68,68,.25);}}
 .load-organs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:14px;}
 
 /* ══ DEATH CLOCK ══ */
@@ -782,13 +783,28 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
     <div class="rs" id="rs11"><div class="sec-label" style="color:var(--dim);margin-bottom:10px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px">// 七维分析 · 点击展开建议</div><div class="dims-grid" id="dims-grid"></div></div>
     <div class="rs" id="rs12"><div class="advice-card"><div class="sec-label" style="color:var(--accent);margin-bottom:12px">// 综合改善建议</div><ul class="advice-list" id="advice-list"></ul></div></div>
-    <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
+    <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-share" onclick="encodeResultToURL()">🔗 分享链接</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
   </div>
 </section>
 </div>
 <div class="toast" id="toast">已复制到剪贴板 ✓</div>
 
 <script>
+// ════ PWA MANIFEST (inline) ════
+(function(){
+  const manifest={name:'猝死指数测试',short_name:'猝死指数',start_url:'.',display:'standalone',background_color:'#0f1117',theme_color:'#0f1117',
+    icons:[{src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💀</text></svg>',sizes:'any',type:'image/svg+xml'}]};
+  const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+  const link=document.createElement('link');link.rel='manifest';link.href=URL.createObjectURL(blob);
+  document.head.appendChild(link);
+})();
+// Register minimal offline SW
+if('serviceWorker' in navigator){
+  const swCode='self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{if(res.ok){const c=res.clone();caches.open("sdi-v1").then(cache=>cache.put(e.request,c));}return res;}).catch(()=>new Response("离线模式",{headers:{"Content-Type":"text/plain"}}))))});';
+  const swBlob=new Blob([swCode],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
+}
+
 // ════ PARTICLES ════
 const canv=document.getElementById('particle-canvas'),ctx2=canv.getContext('2d');
 let pts=[],praf,ptSpd=1,ptRate=.18;
@@ -1759,9 +1775,13 @@ function showLoading(){
     el.innerHTML=o.e+' '+o.n;organsEl.appendChild(el);
   });
   const iv=setInterval(()=>{
-    pct=Math.min(pct+Math.random()*5+2,96);
+    const spd=pct<60?Math.random()*5+2:pct<85?Math.random()*3+1:Math.random()*1.5+.5;
+    pct=Math.min(pct+spd,96);
     pEl.textContent=Math.round(pct)+'%';
     sEl.textContent=msgs[mi++%msgs.length];
+    // Fade color to red as pct increases
+    const red=Math.round(124+(239-124)*(pct/100)),green=Math.round(110+(68-110)*(pct/100)),blue=Math.round(240+(68-240)*(pct/100));
+    pEl.style.color=`rgb(${red},${green},${blue})`;
   },450);
   // Scan organs one by one
   organs.forEach((o,i)=>{
@@ -2137,7 +2157,30 @@ function playReveal(score){
     osc.start(t);osc.stop(t+.35);
   });
 }
-function retryQuiz(){if(praf)cancelAnimationFrame(praf);canv.classList.remove('active');pts=[];startQuiz();}
+function retryQuiz(){if(praf)cancelAnimationFrame(praf);canv.classList.remove('active');pts=[];history.replaceState(null,'',location.pathname);startQuiz();}
+
+// ════ URL RESULT ENCODING ════
+function encodeResultToURL(){
+  const score=calcScore(),dims=calcDims();
+  const data={s:score,d:dims.map(d=>d.pct),a:userAge};
+  const hash=btoa(JSON.stringify(data));
+  const url=location.origin+location.pathname+'#r='+hash;
+  if(navigator.share){navigator.share({title:'猝死指数测试 💀',text:`我的猝死指数是${score}分，你敢测吗？`,url}).catch(()=>{});}
+  else{navigator.clipboard.writeText(url).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}).catch(()=>{});}
+}
+// Check URL hash on load for shared results
+(function checkURLResult(){
+  const hash=location.hash;if(!hash.startsWith('#r='))return;
+  try{
+    const data=JSON.parse(atob(hash.slice(3)));
+    if(data.s===undefined)return;
+    // Show a simple "someone shared their result" banner
+    const bar=document.createElement('div');bar.className='resume-bar';
+    bar.innerHTML=`<span>有人分享了他的猝死指数：<b style="color:#ef4444">${data.s}分</b></span><button onclick="this.parentElement.remove()">我也要测</button>`;
+    document.getElementById('sec-intro').prepend(bar);
+    history.replaceState(null,'',location.pathname);
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
