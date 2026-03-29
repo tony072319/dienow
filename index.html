@@ -39,8 +39,7 @@ body{background:linear-gradient(180deg,#0f1117 0%,#131620 50%,#0f1117 100%);back
 #particle-canvas.active{opacity:1;}
 .parallax-orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;transition:transform .1s ease,background 1.2s ease;}
 
-.wrap{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:32px 20px 60px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-@media(min-width:1200px){.wrap{max-width:960px;padding:32px 40px 60px;}}
+.wrap{position:relative;z-index:2;max-width:1100px;width:100%;margin:0 auto;padding:32px 40px 60px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 @media(max-width:480px){.wrap{padding:16px 12px 40px;}}
 
 section{display:none;width:100%;}
@@ -826,6 +825,47 @@ html.light .streak-bar{background:rgba(239,68,68,.05)!important;color:rgba(180,4
 html.light .dc-sep{color:rgba(200,40,40,.35)!important;}
 html.light .age-btn{background:rgba(0,0,0,.05)!important;border-color:rgba(0,0,0,.1)!important;color:#333!important;}
 html.light .age-row{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.08)!important;}
+/* Light mode: all text classes with hardcoded light colors */
+html.light .tcard-quote{color:#555!important;}
+html.light .arch-desc{color:#444!important;}
+html.light .prophecy-text{color:#444!important;}
+html.light .doctor-text{color:#333!important;}
+html.light .rx-item{color:#444!important;}
+html.light .rx-title{color:rgba(0,0,0,.45)!important;}
+html.light .doctor-sig{color:#666!important;border-top-color:rgba(0,0,0,.1)!important;}
+html.light .doctor-card::before{color:rgba(0,0,0,.06)!important;}
+html.light .dim-desc{color:#444!important;border-bottom-color:rgba(0,0,0,.08)!important;}
+html.light .dim-tips li{color:#444!important;}
+html.light .advice-list li{color:#333!important;}
+html.light .body-legend-item{color:#444!important;}
+html.light .obituary-text{color:#444!important;}
+html.light .obituary-card::after{color:rgba(0,0,0,.05)!important;}
+html.light .lw-quote{color:#1a1a2e!important;}
+html.light .lw-quote::before,html.light .lw-quote::after{color:rgba(200,40,40,.2)!important;}
+html.light .surv-action{color:#333!important;}
+html.light .prof-name{color:#333!important;}
+html.light .survival-item{border-bottom-color:rgba(0,0,0,.06)!important;}
+html.light .prof-item{border-bottom-color:rgba(0,0,0,.06)!important;}
+html.light .score-lbl{color:rgba(0,0,0,.4)!important;}
+html.light .ring-bg{stroke:rgba(0,0,0,.08)!important;}
+html.light .tl-text{color:#444!important;}
+html.light .tl-item::before{background:rgba(0,0,0,.08)!important;}
+html.light .dim-item:hover{border-color:rgba(0,0,0,.15)!important;}
+html.light .combo-sub{color:rgba(0,0,0,.5)!important;}
+html.light .trend-title{color:var(--dim)!important;}
+html.light .disclaimer{color:#666!important;}
+html.light .survival-note{color:#666!important;}
+html.light .obituary-footer{color:#888!important;}
+html.light .body-svg-wrap svg rect,html.light .body-svg-wrap svg ellipse{fill:rgba(0,0,0,.05)!important;stroke:rgba(0,0,0,.12)!important;}
+html.light .body-svg-wrap svg #bh-heart{fill:rgba(239,68,68,.1)!important;stroke:rgba(239,68,68,.25)!important;}
+html.light .body-svg-wrap svg #bh-stomach{fill:rgba(245,158,11,.08)!important;stroke:rgba(245,158,11,.18)!important;}
+html.light .body-svg-wrap svg #bh-brain{fill:rgba(168,85,247,.08)!important;stroke:rgba(168,85,247,.18)!important;}
+html.light .trend-svg text{fill:var(--dim)!important;}
+html.light #r-grid-g line,html.light #r-grid-g polygon{stroke:rgba(0,0,0,.06)!important;}
+html.light #r-axes-g line{stroke:rgba(0,0,0,.08)!important;}
+html.light .dim-gauge .gauge-bg{stroke:rgba(0,0,0,.08)!important;}
+html.light .prof-risk{color:#666!important;}
+html.light .tl-item::before{background:rgba(0,0,0,.08)!important;}
 
 /* ══ SMOOTH CARD HOVER GLOW ══ */
 .rs{position:relative;}
@@ -1278,9 +1318,9 @@ html.light .achievement-name{color:#1a1a2e;}
 <section id="sec-result">
   <div class="card" id="res-card">
     <div class="animated-border"></div>
-    <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>TIME_ELAPSED: <span id="rpt-time">—</span><br>RISK_DNA: <span id="rpt-dna" style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.25)">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
+    <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>TIME_ELAPSED: <span id="rpt-time">—</span><br>RISK_DNA: <span id="rpt-dna" style="font-size:9px;letter-spacing:1px;color:var(--dim)">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
     <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div><div class="dim-chips" id="dim-chips"></div><div class="fun-tags-section"><div class="fun-tags-label">// 你的标签</div><div class="fun-tags" id="fun-tags"></div></div><div class="achievements" id="achievements"></div><div class="score-rank"><span>你的位置在全部测试者中</span><div class="score-rank-bar"><div class="score-rank-marker" id="score-rank-marker" style="left:0%"></div></div><div class="score-rank-labels"><span>健康达人</span><span>亚健康</span><span>高危</span><span>极危</span></div></div></div></div>
-    <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">你的健康人格</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div><div id="arch-traits" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center;"></div><div id="arch-compat" style="font-size:12px;color:var(--dim);text-align:center;margin-top:10px;line-height:1.7;padding:10px;background:rgba(255,255,255,.02);border-radius:12px;border:1px solid rgba(255,255,255,.04);"></div></div>
+    <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">你的健康人格</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div><div id="arch-traits" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center;"></div><div id="arch-compat" style="font-size:12px;color:var(--dim);text-align:center;margin-top:10px;line-height:1.7;padding:10px;background:var(--card-bg);border-radius:12px;border:1px solid var(--card-border);"></div></div>
     <div class="rs" id="rs3"><div class="percentile-banner"><div class="pct-bar-wrap"><div class="pct-bar-bg"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div><div class="pct-text" id="pct-text">—</div></div><div class="pct-num" id="pct-num">—</div></div><div class="pct-subs" id="pct-subs"></div></div>
     <div class="rs" id="rs4"><div class="vitals-row"><div class="vital"><span class="vital-icon">🧬</span><span class="vital-val" id="v-bodyage">—</span><span class="vital-lbl">身体年龄</span></div><div class="vital"><span class="vital-icon">❤️</span><span class="vital-val" id="v-heart">—</span><span class="vital-lbl">心脏负荷</span></div><div class="vital"><span class="vital-icon">🔋</span><span class="vital-val" id="v-recovery">—</span><span class="vital-lbl">恢复力</span></div><div class="vital"><span class="vital-icon">🧠</span><span class="vital-val" id="v-stress">—</span><span class="vital-lbl">神经紧张</span></div></div><div class="risk-tags" id="risk-tags"></div></div>
     <div class="rs" id="rs4b"><div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 你的年龄 vs 身体年龄</div><div class="age-compare"><div style="text-align:center;flex-shrink:0;"><div style="font-size:10px;color:var(--dim);margin-bottom:4px;">实际年龄</div><div id="age-real" style="font-size:22px;font-weight:700;font-family:'Space Mono',monospace;color:#60a5fa;">--</div></div><div style="flex:1;"><div class="age-bar"><div class="age-marker" id="age-real-m" style="left:0%;background:rgba(96,165,250,.15);border-color:#60a5fa;">📅</div><div class="age-marker" id="age-body-m" style="left:0%;background:rgba(239,68,68,.15);border-color:#ef4444;">💀</div></div><div class="age-label-row"><span>20岁</span><span>40岁</span><span>60岁</span><span>80岁</span></div></div><div style="text-align:center;flex-shrink:0;"><div style="font-size:10px;color:var(--dim);margin-bottom:4px;">身体年龄</div><div id="age-body" style="font-size:22px;font-weight:700;font-family:'Space Mono',monospace;color:#ef4444;">--</div></div></div></div>
@@ -1290,13 +1330,13 @@ html.light .achievement-name{color:#1a1a2e;}
     <div class="rs" id="rs6"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 各维度风险贡献</div><div class="radar-wrap"><svg id="radar-svg" viewBox="-10 -10 320 320" xmlns="http://www.w3.org/2000/svg"><defs><filter id="r-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="r-fill-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="100%" stop-color="var(--accent)" stop-opacity=".08"/></radialGradient></defs><g id="r-grid-g"></g><g id="r-axes-g"></g><polygon id="r-poly" points="150,150" fill="url(#r-fill-grad)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" filter="url(#r-glow)"/><g id="r-dots-g"></g><g id="r-labels-g"></g></svg></div><div class="contrib-chart" id="contrib-chart"></div></div>
     <div class="section-divider"><span class="sd-skull">💀</span><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg><span class="sd-skull">💀</span></div>
     <div class="rs" id="rs7"><div class="prophecy-card"><div class="sec-label" style="color:#f87171">☠ &nbsp;死亡预言</div><div class="prophecy-text" id="prophecy-text"></div><div class="prophecy-moment" id="prophecy-moment"></div></div></div>
-    <div class="rs" id="rs7b"><div class="obituary-card" id="obituary-card"><div class="sec-label" style="color:rgba(255,255,255,.25)">📜 讣告预览 · OBITUARY PREVIEW</div><div class="obituary-text" id="obituary-text"></div><div class="obituary-footer">—— 来自未来的档案</div></div></div>
+    <div class="rs" id="rs7b"><div class="obituary-card" id="obituary-card"><div class="sec-label" style="color:var(--dim)">📜 讣告预览 · OBITUARY PREVIEW</div><div class="obituary-text" id="obituary-text"></div><div class="obituary-footer">—— 来自未来的档案</div></div></div>
     <div class="rs" id="rs7c"><div class="lastwords-card"><div class="lw-quote" id="lw-quote"></div><div class="lw-attr" id="lw-attr"></div></div></div>
     <div class="rs" id="rs7d"><div class="survival-card"><div class="sec-label" style="color:#34d399;margin-bottom:12px">🌱 如果你从今天开始改变</div><div class="survival-items" id="survival-items"></div><div class="survival-note">以上数据基于流行病学模型估算，每改变一个维度，你的未来都会被重写。</div></div></div>
     <div class="rs" id="rs7e"><div class="profession-card"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">📊 你的风险相当于</div><div class="profession-items" id="profession-items"></div></div></div>
-    <div class="rs" id="rs7f"><div style="background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 人群对比</div><div id="demo-compare" style="display:flex;flex-direction:column;gap:12px;"></div></div></div>
+    <div class="rs" id="rs7f"><div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 人群对比</div><div id="demo-compare" style="display:flex;flex-direction:column;gap:12px;"></div></div></div>
     <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
-    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v13.0 · AUTOMATED REPORT</div></div></div>
+    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:var(--dim)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v13.0 · AUTOMATED REPORT</div></div></div>
     <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#f59e0b;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
     <div class="rs" id="rs9b"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 风险趋势模拟</div><div class="trend-card"><div class="trend-header"><span class="trend-title">如果维持当前生活方式</span><span class="trend-badge" id="trend-badge">↗ 上升</span></div><svg class="trend-svg" id="trend-svg" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="trend-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><line x1="0" y1="30" x2="400" y2="30" stroke="rgba(239,68,68,.08)" stroke-dasharray="4,4"/><line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,.04)" stroke-dasharray="4,4"/><line x1="0" y1="90" x2="400" y2="90" stroke="rgba(52,211,153,.08)" stroke-dasharray="4,4"/><text x="395" y="28" text-anchor="end" fill="rgba(239,68,68,.2)" font-size="8">高危</text><text x="395" y="88" text-anchor="end" fill="rgba(52,211,153,.2)" font-size="8">安全</text><path id="trend-area" fill="url(#trend-grad)" d=""/><path id="trend-line" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" d=""/><g id="trend-dots"></g></svg><div class="trend-labels"><span>现在</span><span>3个月</span><span>6个月</span><span>1年</span><span>2年</span></div></div></div>
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
@@ -1304,12 +1344,12 @@ html.light .achievement-name{color:#1a1a2e;}
     <div class="rs" id="rs10b"><div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 七维风险仪表盘</div><div class="dim-gauge-grid" id="dim-gauge-grid"></div></div>
     <div class="rs" id="rs11"><div class="sec-label" style="color:var(--dim);margin-bottom:10px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px">// 七维分析 · 点击展开建议</div><div class="dims-grid" id="dims-grid"></div></div>
     <div class="rs" id="rs12"><div class="advice-card"><div class="sec-label" style="color:var(--accent);margin-bottom:12px">// 综合改善建议</div><ul class="advice-list" id="advice-list"></ul></div></div>
-    <div class="rs" id="rs12b"><div style="text-align:center;padding:16px 20px;margin-bottom:14px;background:rgba(var(--ar),var(--ag),var(--ab),.03);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.08);border-radius:16px;"><div style="font-size:22px;margin-bottom:6px;">🔮</div><div id="health-fortune" style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.7;"></div></div><div class="daily-tip" id="daily-tip" style="background:rgba(var(--ar),var(--ag),var(--ab),.04);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:8px;text-transform:uppercase">// 今日一句</div><div id="daily-tip-text" style="font-size:14px;line-height:1.8;color:#c8c8c8;font-style:italic;"></div></div></div>
-    <div class="rs" id="rs12c"><div style="background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 如果你是……</div><div id="what-if-items" style="display:flex;flex-direction:column;gap:10px;"></div></div></div>
+    <div class="rs" id="rs12b"><div style="text-align:center;padding:16px 20px;margin-bottom:14px;background:rgba(var(--ar),var(--ag),var(--ab),.03);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.08);border-radius:16px;"><div style="font-size:22px;margin-bottom:6px;">🔮</div><div id="health-fortune" style="font-size:13px;color:var(--dim);line-height:1.7;"></div></div><div class="daily-tip" id="daily-tip" style="background:rgba(var(--ar),var(--ag),var(--ab),.04);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:8px;text-transform:uppercase">// 今日一句</div><div id="daily-tip-text" style="font-size:14px;line-height:1.8;color:var(--dim);font-style:italic;"></div></div></div>
+    <div class="rs" id="rs12c"><div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 如果你是……</div><div id="what-if-items" style="display:flex;flex-direction:column;gap:10px;"></div></div></div>
     <div class="rs" id="rs12c2"><div style="background:linear-gradient(135deg,rgba(52,211,153,.03),rgba(16,185,129,.01));border:1px solid rgba(52,211,153,.1);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:#34d399;margin-bottom:14px">🗺️ 改善路线图</div><div id="roadmap" style="display:flex;flex-direction:column;gap:14px;"></div></div></div>
-    <div class="rs" id="rs12d"><div style="background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.04),rgba(var(--ar),var(--ag),var(--ab),.01));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:20px;padding:24px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--accent);margin-bottom:14px">🎯 本周健康挑战</div><div id="weekly-challenge" style="font-size:18px;font-weight:700;color:#e8e8e8;line-height:1.6;margin-bottom:10px;"></div><div id="challenge-desc" style="font-size:12px;color:var(--dim);line-height:1.7;"></div><div id="challenge-diff" style="margin-top:12px;font-size:11px;font-weight:600;letter-spacing:1px;"></div></div></div>
-    <div class="rs" id="rs12e"><div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 本次测试统计</div><div id="session-stats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"></div></div></div>
-    <div class="rs" id="rs12f"><div style="background:rgba(239,68,68,.02);border:1px solid rgba(239,68,68,.08);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.4);margin-bottom:8px;">⏰ 体检提醒</div><div id="checkup-msg" style="font-size:13px;color:#bbb;line-height:1.7;"></div><div style="margin-top:12px;font-size:11px;color:var(--dim);font-style:italic;" id="checkup-items"></div></div></div>
+    <div class="rs" id="rs12d"><div style="background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.04),rgba(var(--ar),var(--ag),var(--ab),.01));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:20px;padding:24px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--accent);margin-bottom:14px">🎯 本周健康挑战</div><div id="weekly-challenge" style="font-size:18px;font-weight:700;color:var(--text);line-height:1.6;margin-bottom:10px;"></div><div id="challenge-desc" style="font-size:12px;color:var(--dim);line-height:1.7;"></div><div id="challenge-diff" style="margin-top:12px;font-size:11px;font-weight:600;letter-spacing:1px;"></div></div></div>
+    <div class="rs" id="rs12e"><div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 本次测试统计</div><div id="session-stats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"></div></div></div>
+    <div class="rs" id="rs12f"><div style="background:rgba(239,68,68,.02);border:1px solid rgba(239,68,68,.08);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.4);margin-bottom:8px;">⏰ 体检提醒</div><div id="checkup-msg" style="font-size:13px;color:var(--dim);line-height:1.7;"></div><div style="margin-top:12px;font-size:11px;color:var(--dim);font-style:italic;" id="checkup-items"></div></div></div>
     <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-share" onclick="encodeResultToURL()">🔗 分享链接</button><button class="btn-share" onclick="shareTextArt()">🎨 文字海报</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
   </div>
 </section>
@@ -2829,11 +2869,14 @@ function showResult(){
     {label:`👤 ${ageGroup}岁同龄人`,avg:ageAvg},{label:'👨‍💻 互联网从业者',avg:65},
     {label:'🧘 健康达人群体',avg:18},{label:'💀 你的分数',avg:score,isUser:true},
   ];
+  const isLightMode=document.documentElement.classList.contains('light');
   demos.forEach(d=>{
-    const col=d.isUser?(score<30?'#34d399':score<60?'#fbbf24':'#ef4444'):'rgba(255,255,255,.25)';
+    const col=d.isUser?(score<30?'#34d399':score<60?'#fbbf24':'#ef4444'):(isLightMode?'rgba(0,0,0,.3)':'rgba(255,255,255,.25)');
     const w=Math.max(5,d.avg)+'%';
     const bold=d.isUser?'font-weight:700;':'';
-    demoEl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;${bold}"><span style="font-size:12px;color:${d.isUser?col:'#bbb'};width:130px;flex-shrink:0;text-align:right;">${d.label}</span><div style="flex:1;height:8px;background:rgba(255,255,255,.04);border-radius:10px;overflow:hidden;"><div style="height:100%;width:${w};background:${col};border-radius:10px;transition:width 1s cubic-bezier(.25,.8,.25,1);box-shadow:${d.isUser?'0 0 10px '+col+'60':'none'};"></div></div><span style="font-family:'Space Mono',monospace;font-size:11px;color:${col};width:30px;">${d.avg}</span></div>`;
+    const labelCol=d.isUser?col:(isLightMode?'#555':'#bbb');
+    const barBg=isLightMode?'rgba(0,0,0,.06)':'rgba(255,255,255,.04)';
+    demoEl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;${bold}"><span style="font-size:12px;color:${labelCol};width:130px;flex-shrink:0;text-align:right;">${d.label}</span><div style="flex:1;height:8px;background:${barBg};border-radius:10px;overflow:hidden;"><div style="height:100%;width:${w};background:${col};border-radius:10px;transition:width 1s cubic-bezier(.25,.8,.25,1);box-shadow:${d.isUser?'0 0 10px '+col+'60':'none'};"></div></div><span style="font-family:'Space Mono',monospace;font-size:11px;color:${col};width:30px;">${d.avg}</span></div>`;
   });
   // Animated typing for doctor note
   (function(){
@@ -2891,7 +2934,7 @@ function showResult(){
       const col=v<30?'#34d399':v<55?'#fbbf24':v<75?'#f59e0b':'#ef4444';
       const c=document.createElementNS(ns,'circle');
       c.setAttribute('cx',xs[i].toFixed(1));c.setAttribute('cy',ys[i].toFixed(1));
-      c.setAttribute('r','4');c.setAttribute('fill',col);c.setAttribute('stroke','#fff');c.setAttribute('stroke-width','1.5');
+      c.setAttribute('r','4');c.setAttribute('fill',col);c.setAttribute('stroke',document.documentElement.classList.contains('light')?'#fff':'#fff');c.setAttribute('stroke-width','1.5');
       dotsG.appendChild(c);
       if(i>0){const t=document.createElementNS(ns,'text');t.setAttribute('x',xs[i].toFixed(1));t.setAttribute('y',(ys[i]-10).toFixed(1));t.setAttribute('text-anchor','middle');t.setAttribute('fill',col);t.setAttribute('font-size','9');t.setAttribute('font-weight','bold');t.textContent=Math.round(v);dotsG.appendChild(t);}
     });
@@ -2911,7 +2954,7 @@ function showResult(){
   ].filter(w=>w.cond).slice(0,4);
   const wifEl=document.getElementById('what-if-items');wifEl.innerHTML='';
   whatIfs.forEach(w=>{
-    wifEl.innerHTML+=`<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);"><span style="font-size:24px;flex-shrink:0;">${w.icon}</span><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:#e0e0e0;margin-bottom:3px;">${w.title}</div><div style="font-size:12px;color:var(--dim);line-height:1.6;">${w.effect}</div></div></div>`;
+    wifEl.innerHTML+=`<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--card-border);"><span style="font-size:24px;flex-shrink:0;">${w.icon}</span><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">${w.title}</div><div style="font-size:12px;color:var(--dim);line-height:1.6;">${w.effect}</div></div></div>`;
   });
   // Health fortune based on score
   const fortunes={
@@ -2939,7 +2982,7 @@ function showResult(){
   const worstKey=dims[0]?.key;
   const factPool=funFacts[worstKey]||funFacts.sleep;
   const factEl=document.createElement('div');
-  factEl.style.cssText='background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:12px;padding:14px 18px;margin-bottom:14px;font-size:12px;color:#aaa;line-height:1.7;text-align:center;';
+  factEl.style.cssText='background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:14px 18px;margin-bottom:14px;font-size:12px;color:var(--dim);line-height:1.7;text-align:center;';
   factEl.innerHTML=`<span style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:6px;">💡 你知道吗</span>${factPool[Math.floor(Math.random()*factPool.length)]}`;
   document.getElementById('roadmap')?.parentElement.parentElement.insertBefore(factEl,document.getElementById('roadmap')?.parentElement);
   // Improvement roadmap
@@ -2953,7 +2996,7 @@ function showResult(){
     {t:'📅 第12月',title:'全面提升',desc:`如果坚持到这里，你的猝死指数预计可降低 ${Math.round(score*.25)}-${Math.round(score*.4)} 分。这不是预测，是很多人的实际经历。`,col:'#60a5fa'},
   ];
   roadmapData.forEach((r,i)=>{
-    roadmap.innerHTML+=`<div style="display:flex;gap:14px;align-items:flex-start;"><div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:${r.col};margin-top:7px;box-shadow:0 0 8px ${r.col}40;"></div><div><div style="font-size:12px;font-weight:700;color:${r.col};margin-bottom:2px;">${r.t} · ${r.title}</div><div style="font-size:12px;color:#aaa;line-height:1.7;">${r.desc}</div></div></div>`;
+    roadmap.innerHTML+=`<div style="display:flex;gap:14px;align-items:flex-start;"><div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:${r.col};margin-top:7px;box-shadow:0 0 8px ${r.col}40;"></div><div><div style="font-size:12px;font-weight:700;color:${r.col};margin-bottom:2px;">${r.t} · ${r.title}</div><div style="font-size:12px;color:var(--dim);line-height:1.7;">${r.desc}</div></div></div>`;
   });
   // Weekly health challenge
   const challenges=[
@@ -2982,7 +3025,7 @@ function showResult(){
       const q=Q[parseInt(qi)];if(!q)return;
       const col=v>=4?'#ef4444':v>=3?'#f59e0b':'#fbbf24';
       const medal=['🥇','🥈','🥉','4️⃣','5️⃣'][i]||'';
-      dbH+=`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;"><span>${medal}</span><span style="flex:1;color:#bbb">${q.text.slice(0,20)}${q.text.length>20?'…':''}</span><span style="font-family:'Space Mono',monospace;font-weight:700;color:${col}">${'💀'.repeat(Math.min(v,5))}</span></div>`;
+      dbH+=`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--card-border);font-size:12px;"><span>${medal}</span><span style="flex:1;color:var(--dim)">${q.text.slice(0,20)}${q.text.length>20?'…':''}</span><span style="font-family:'Space Mono',monospace;font-weight:700;color:${col}">${'💀'.repeat(Math.min(v,5))}</span></div>`;
     });
     dbEl.innerHTML=dbH;
     const statsParent=document.getElementById('session-stats')?.parentElement;
@@ -3042,7 +3085,7 @@ function showResult(){
     {icon:'🎯',label:'危险比率',val:`${totalQ>0?Math.round(dangerCount/totalQ*100):0}%`},
     {icon:'⭐',label:'觉醒XP',val:`${xp} · Lv${xpLevel}`},
     {icon:'🎓',label:'觉醒等级',val:xpTitle},
-  ].map(s=>`<div style="background:rgba(255,255,255,.03);border-radius:10px;padding:10px;"><span style="font-size:16px">${s.icon}</span><div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--accent);margin:4px 0">${s.val}</div><div style="font-size:10px;color:var(--dim)">${s.label}</div></div>`).join('');
+  ].map(s=>`<div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;padding:10px;"><span style="font-size:16px">${s.icon}</span><div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--accent);margin:4px 0">${s.val}</div><div style="font-size:10px;color:var(--dim)">${s.label}</div></div>`).join('');
   go('sec-result','anim-fade');clearProgress();playReveal(score);
   const rsIds=['rs0','rs1','rs2','rs3','rs4','rs4b','rs4c','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs7f','rs8','rs9','rs9b','rs10','rs10b','rs11','rs12','rs12b','rs12c','rs12c2','rs12d','rs12e','rs12f','rs13'];
   // First few sections animate on timer; rest use Intersection Observer for scroll-reveal
@@ -4514,7 +4557,7 @@ function updateFavicon(score){
       el.innerHTML=`<div style="text-align:center;padding:10px 0;">
         <div style="font-size:40px;transition:transform .5s cubic-bezier(.34,1.56,.64,1);" id="cookie-emoji">🥠</div>
         <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);margin:8px 0 4px;">健康签语饼</div>
-        <div id="fortune-text" style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .5s;opacity:0;">「${fortune}」</div>
+        <div id="fortune-text" style="font-size:12px;color:var(--dim);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .5s;opacity:0;">「${fortune}」</div>
         <div id="fortune-hint" style="font-size:10px;color:var(--dim);margin-top:4px;">点击打开</div>
       </div>`;
       el.addEventListener('click',function(){
@@ -4577,10 +4620,10 @@ function updateFavicon(score){
       el.className='rs on';
       el.innerHTML=`<div style="text-align:center;padding:12px 0;">
         <div style="font-size:9px;letter-spacing:4px;color:var(--dim);margin-bottom:12px;">— 健 康 俳 句 —</div>
-        <div style="font-size:15px;color:rgba(255,255,255,.7);line-height:2.5;font-style:italic;">
+        <div style="font-size:15px;color:var(--text);line-height:2.5;font-style:italic;">
           ${poem.map((line,i)=>`<div style="opacity:0;animation:fadeUp .5s ease ${0.3+i*0.4}s forwards;">${line}</div>`).join('')}
         </div>
-        <div style="width:40px;height:1px;background:rgba(255,255,255,.1);margin:12px auto 0;"></div>
+        <div style="width:40px;height:1px;background:var(--card-border);margin:12px auto 0;"></div>
       </div>`;
       const target=document.getElementById('rs0')?.parentNode;
       if(target){
@@ -4617,15 +4660,15 @@ function updateFavicon(score){
       el.id='movie-rating';
       el.className='rs on';
       el.innerHTML=`<div style="display:flex;gap:14px;align-items:flex-start;">
-        <div style="width:60px;height:85px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:1px solid rgba(255,255,255,.08);">🎬</div>
+        <div style="width:60px;height:85px;background:var(--card-bg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:1px solid var(--card-border);">🎬</div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;">${r.title}</div>
           <div style="font-size:10px;color:#f59e0b;letter-spacing:2px;margin-bottom:4px;">${starsHTML}</div>
           <div style="display:flex;gap:6px;margin-bottom:6px;">
-            <span style="font-size:9px;background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;color:var(--dim);">${r.genre}</span>
+            <span style="font-size:9px;background:rgba(var(--ar),var(--ag),var(--ab),.06);padding:1px 6px;border-radius:4px;color:var(--dim);">${r.genre}</span>
             <span style="font-size:9px;background:rgba(239,68,68,.08);padding:1px 6px;border-radius:4px;color:#ef4444;">${score>=50?'R级':'PG-13'}</span>
           </div>
-          <div style="font-size:10px;color:rgba(255,255,255,.45);line-height:1.6;">${r.review}</div>
+          <div style="font-size:10px;color:var(--dim);line-height:1.6;">${r.review}</div>
         </div>
       </div>`;
       const target=document.getElementById('rs0')?.parentNode;
@@ -4704,17 +4747,23 @@ function updateFavicon(score){
       el.id='tarot-card';
       el.className='rs on';
       el.style.cursor='pointer';
-      el.innerHTML=`<div style="width:200px;margin:0 auto;background:linear-gradient(135deg,#1a1040,#2d1b69);border:2px solid ${tarot.color}44;border-radius:14px;padding:20px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.4);cursor:pointer;transition:all .4s ease;position:relative;overflow:hidden;" id="tarot-front">
-        <div style="font-size:9px;letter-spacing:4px;color:${tarot.color};opacity:.6;">HEALTH TAROT</div>
+      const isLight=document.documentElement.classList.contains('light');
+      const frontBg=isLight?'linear-gradient(135deg,#e8e0f0,#d5c8e8)':'linear-gradient(135deg,#1a1040,#2d1b69)';
+      const backBg=isLight?'linear-gradient(135deg,#ddd5ea,#c8b8e0)':'linear-gradient(135deg,#0d0d1a,#1a1040)';
+      const hintCol=isLight?'rgba(0,0,0,.35)':'rgba(255,255,255,.3)';
+      const cardTextCol=isLight?'#1a1a2e':'#fff';
+      const adviceCol=isLight?'rgba(0,0,0,.6)':'rgba(255,255,255,.55)';
+      el.innerHTML=`<div style="width:200px;margin:0 auto;background:${frontBg};border:2px solid ${tarot.color}44;border-radius:14px;padding:20px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.15);cursor:pointer;transition:all .4s ease;position:relative;overflow:hidden;" id="tarot-front">
+        <div style="font-size:9px;letter-spacing:4px;color:${tarot.color};${isLight?'':'opacity:.6;'}">HEALTH TAROT</div>
         <div style="font-size:48px;margin:16px 0;">🔮</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3);">点击翻牌</div>
+        <div style="font-size:10px;color:${hintCol};">点击翻牌</div>
       </div>
-      <div id="tarot-back" style="display:none;width:200px;margin:0 auto;background:linear-gradient(135deg,#0d0d1a,#1a1040);border:2px solid ${tarot.color};border-radius:14px;padding:20px;text-align:center;box-shadow:0 8px 32px ${tarot.color}33;animation:fadeUp .5s ease;">
+      <div id="tarot-back" style="display:none;width:200px;margin:0 auto;background:${backBg};border:2px solid ${tarot.color};border-radius:14px;padding:20px;text-align:center;box-shadow:0 8px 32px ${tarot.color}33;animation:fadeUp .5s ease;">
         <div style="font-size:10px;color:${tarot.color};letter-spacing:3px;font-family:serif;">${tarot.num}</div>
-        <div style="font-size:16px;font-weight:700;color:#fff;margin:10px 0 6px;">${tarot.card}</div>
+        <div style="font-size:16px;font-weight:700;color:${cardTextCol};margin:10px 0 6px;">${tarot.card}</div>
         <div style="font-size:11px;color:${tarot.color};margin-bottom:10px;">${tarot.meaning}</div>
         <div style="width:40px;height:1px;background:${tarot.color}44;margin:0 auto 10px;"></div>
-        <div style="font-size:11px;color:rgba(255,255,255,.55);line-height:1.8;">${tarot.advice}</div>
+        <div style="font-size:11px;color:${adviceCol};line-height:1.8;">${tarot.advice}</div>
       </div>`;
       el.addEventListener('click',()=>{
         const front=document.getElementById('tarot-front');
@@ -4764,6 +4813,7 @@ function updateFavicon(score){
       const def=Math.round((100-best.pct)*0.6);
       const spd=Math.round(50+Math.random()*30);
       const serialNum=`#${String(Math.floor(Math.random()*9000+1000)).padStart(4,'0')}`;
+      const isLight=document.documentElement.classList.contains('light');
       const el=document.createElement('div');
       el.id='trading-card';
       el.className='rs on';
@@ -4771,31 +4821,31 @@ function updateFavicon(score){
         <div style="position:absolute;top:0;left:0;right:0;height:100%;background:linear-gradient(135deg,transparent 40%,${rarity.border}22 50%,transparent 60%);pointer-events:none;"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
           <div style="font-size:9px;color:${rarity.color};font-weight:700;letter-spacing:2px;">${rarity.name}</div>
-          <div style="font-size:8px;color:rgba(255,255,255,.2);">${serialNum}</div>
+          <div style="font-size:8px;color:rgba(255,255,255,.4);">${serialNum}</div>
         </div>
         <div style="text-align:center;padding:12px 0;background:rgba(0,0,0,.3);border-radius:8px;margin-bottom:8px;">
           <div style="font-size:36px;">💀</div>
           <div style="font-size:11px;font-weight:700;color:#fff;margin-top:4px;">${age}岁测试者</div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px;">
-          <div style="text-align:center;background:rgba(255,255,255,.03);padding:4px;border-radius:4px;">
+          <div style="text-align:center;background:rgba(255,255,255,.06);padding:4px;border-radius:4px;">
             <div style="font-size:12px;font-weight:900;color:#ef4444;">${hp}</div>
-            <div style="font-size:7px;color:var(--dim);">HP</div>
+            <div style="font-size:7px;color:rgba(255,255,255,.5);">HP</div>
           </div>
-          <div style="text-align:center;background:rgba(255,255,255,.03);padding:4px;border-radius:4px;">
+          <div style="text-align:center;background:rgba(255,255,255,.06);padding:4px;border-radius:4px;">
             <div style="font-size:12px;font-weight:900;color:#f59e0b;">${atk}</div>
-            <div style="font-size:7px;color:var(--dim);">ATK</div>
+            <div style="font-size:7px;color:rgba(255,255,255,.5);">ATK</div>
           </div>
-          <div style="text-align:center;background:rgba(255,255,255,.03);padding:4px;border-radius:4px;">
+          <div style="text-align:center;background:rgba(255,255,255,.06);padding:4px;border-radius:4px;">
             <div style="font-size:12px;font-weight:900;color:#3b82f6;">${def}</div>
-            <div style="font-size:7px;color:var(--dim);">DEF</div>
+            <div style="font-size:7px;color:rgba(255,255,255,.5);">DEF</div>
           </div>
-          <div style="text-align:center;background:rgba(255,255,255,.03);padding:4px;border-radius:4px;">
+          <div style="text-align:center;background:rgba(255,255,255,.06);padding:4px;border-radius:4px;">
             <div style="font-size:12px;font-weight:900;color:#4ade80;">${spd}</div>
-            <div style="font-size:7px;color:var(--dim);">SPD</div>
+            <div style="font-size:7px;color:rgba(255,255,255,.5);">SPD</div>
           </div>
         </div>
-        <div style="font-size:9px;color:rgba(255,255,255,.3);line-height:1.5;">
+        <div style="font-size:9px;color:rgba(255,255,255,.5);line-height:1.5;">
           <b style="color:${rarity.color};">特技:</b> ${worst.name.split(' ')[1]}弱化 · ${best.name.split(' ')[1]}防御<br>
           <b style="color:${rarity.color};">属性:</b> 猝死指数 ${score} · 综合战力 ${hp+def+spd}
         </div>
