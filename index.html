@@ -3247,6 +3247,72 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ DANGER ALARM ON LOADING COMPLETE (high scores) ════
+(function(){
+  const origShowResult=window.showResult;
+  if(!origShowResult)return;
+  // Wrap showResult to add a dramatic alarm for very high scores
+  const wrappedShowResult=function(){
+    origShowResult.apply(this,arguments);
+    const score=calcScore();
+    if(score>=80&&soundOn){
+      // Alarm sound: alternating high tones
+      ensureAudio();
+      for(let i=0;i<4;i++){
+        const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+        osc.connect(gain);gain.connect(audioCtx.destination);
+        osc.frequency.value=i%2===0?880:660;osc.type='square';
+        const t=audioCtx.currentTime+.5+i*.15;
+        gain.gain.setValueAtTime(0.06,t);gain.gain.exponentialRampToValueAtTime(0.001,t+.12);
+        osc.start(t);osc.stop(t+.12);
+      }
+    }
+  };
+  window.showResult=wrappedShowResult;
+})();
+
+// ════ ENHANCED OPTION FEEDBACK: SCREEN TINT ════
+(function(){
+  const origPick=pickGrid;
+  pickGrid=function(i){
+    origPick(i);
+    const q=curQ(),o=q.opts[i];
+    const s=o.s!==undefined?o.s:i;
+    // Subtle screen tint based on selection
+    if(s>=4){
+      document.body.style.transition='background .5s';
+      document.body.style.background='linear-gradient(180deg,#1a0808 0%,#131620 50%,#0f1117 100%)';
+      setTimeout(()=>{document.body.style.background='';},800);
+    }else if(s===0){
+      document.body.style.transition='background .5s';
+      document.body.style.background='linear-gradient(180deg,#081a0e 0%,#131620 50%,#0f1117 100%)';
+      setTimeout(()=>{document.body.style.background='';},800);
+    }
+  };
+})();
+
+// ════ ENHANCED AGE EASTER EGGS ════
+(function(){
+  const origCheckAge=window.checkAgeEgg;
+  if(!origCheckAge)return;
+  const extraEggs={
+    '42':'生命、宇宙以及一切的答案。顺便测个猝死指数。',
+    '100':'一百岁？要么你说谎了，要么你不需要这个测试。',
+    '16':'花样年华。趁年轻养好习惯比什么都重要。',
+    '69':'( ͡° ͜ʖ ͡°) …好了好了，认真测试。',
+    '13':'未成年请在家长指导下测试。开玩笑的。',
+  };
+  window.checkAgeEgg=function(){
+    origCheckAge();
+    const val=document.getElementById('age-input')?.value;
+    const egg=extraEggs[val];
+    if(egg){
+      const el=document.getElementById('age-egg');
+      if(el){el.textContent=egg;el.classList.add('show');}
+    }
+  };
+})();
+
 // ════ GRAVITY EASTER EGG: SHAKE PHONE TO SCATTER ELEMENTS ════
 (function(){
   if(!window.DeviceMotionEvent)return;
