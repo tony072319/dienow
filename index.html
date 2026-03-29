@@ -795,6 +795,36 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
 .cpill{transition:all .2s;cursor:default;}
 .cpill:hover{background:rgba(var(--ar),var(--ag),var(--ab),.08);border-color:rgba(var(--ar),var(--ag),var(--ab),.25);transform:translateY(-2px) scale(1.02);box-shadow:0 4px 16px rgba(var(--ar),var(--ag),var(--ab),.08);}
 
+/* ══ DAILY HEALTH TIP ══ */
+.health-tip{background:linear-gradient(135deg,rgba(52,211,153,.06),rgba(96,165,250,.04));border:1px solid rgba(52,211,153,.12);border-radius:16px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;font-size:12px;line-height:1.7;color:rgba(255,255,255,.7);opacity:0;transform:translateY(8px);animation:tipFadeIn .6s .8s ease both;}
+.health-tip-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+.health-tip-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(52,211,153,.7);margin-bottom:4px;}
+html.light .health-tip{background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(96,165,250,.05));border-color:rgba(52,211,153,.18);color:rgba(0,0,0,.6);}
+html.light .health-tip-label{color:rgba(16,120,80,.8);}
+@keyframes tipFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ══ ACHIEVEMENT NOTIFICATION ══ */
+.achievement-popup{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-120px);z-index:600;background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.15),var(--card-bg));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.3);border-radius:18px;padding:14px 24px;display:flex;align-items:center;gap:14px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 10px 40px rgba(0,0,0,.4),0 0 30px rgba(var(--ar),var(--ag),var(--ab),.1);transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .3s;pointer-events:none;}
+.achievement-popup.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.achievement-popup.hide{transform:translateX(-50%) translateY(-20px);opacity:0;transition:transform .3s ease-in,opacity .3s;}
+.achievement-icon{font-size:28px;animation:achieveSpin .6s ease;}
+.achievement-info{display:flex;flex-direction:column;gap:2px;}
+.achievement-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);}
+.achievement-name{font-size:14px;font-weight:700;color:#fff;}
+.achievement-desc{font-size:10px;color:var(--dim);}
+@keyframes achieveSpin{0%{transform:rotateY(0)}50%{transform:rotateY(180deg) scale(1.2)}100%{transform:rotateY(360deg)}}
+html.light .achievement-popup{background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.1),rgba(255,255,255,.95));border-color:rgba(var(--ar),var(--ag),var(--ab),.2);box-shadow:0 10px 40px rgba(0,0,0,.1);}
+html.light .achievement-name{color:#1a1a2e;}
+
+/* ══ TYPING SUBTITLE ══ */
+.title-sub-typing{display:inline;}
+.title-sub-cursor{display:inline-block;width:2px;height:1em;background:var(--accent);margin-left:2px;animation:cursorBlink .6s ease-in-out infinite alternate;vertical-align:middle;}
+@keyframes cursorBlink{from{opacity:1}to{opacity:0}}
+
+/* ══ FLOATING ACTION HINTS ══ */
+.action-hint{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--card-bg);border:1px solid var(--card-border);border-radius:100px;padding:8px 18px;font-size:11px;color:var(--dim);backdrop-filter:blur(12px);z-index:100;opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;}
+.action-hint.show{opacity:1;transform:translateX(-50%) translateY(-8px);}
+
 /* ══ PRINT STYLES ══ */
 @media print{
   body{background:#fff!important;color:#000!important;}
@@ -927,6 +957,8 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
   <div class="combo-sub" id="combo-sub">你在全力冲刺...</div>
 </div>
 
+<div class="achievement-popup" id="achieve-popup"><span class="achievement-icon" id="achieve-icon">🏆</span><div class="achievement-info"><span class="achievement-label">ACHIEVEMENT UNLOCKED</span><span class="achievement-name" id="achieve-name">—</span><span class="achievement-desc" id="achieve-desc">—</span></div></div>
+<div class="action-hint" id="action-hint"></div>
 <div class="wrap">
 
 <!-- ══ LANDING ══ -->
@@ -934,10 +966,11 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
   <div class="floating-symbols" id="float-syms"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v8.5</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v9.0</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div><div class="dc-group"><span class="dc-digit" id="dc-secs">--</span><span class="dc-label">SECS</span></div></div>
   <div class="live-feed" id="live-feed"></div>
+  <div id="daily-health-tip"></div>
   <div class="warning-box"><span class="warning-icon">⚠️</span><div class="warning-text"><b>健康提示：</b>本测试为娱乐性健康评估，结果不构成医学诊断。但如果你测完之后感到不适，那可能不是巧合。高分用户建议认真预约体检。</div></div>
   <div class="live-stats">
     <div class="lstat"><span class="lstat-num">58</span><span class="lstat-lbl">全国平均指数</span></div>
@@ -983,7 +1016,7 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
   </div>
   <div class="age-row"><span class="age-label">你今年多大？（影响身体年龄与同龄人对比）</span><div class="age-input-wrap"><div class="age-btns"><button class="age-btn" onclick="adjAge(1)">▲</button><button class="age-btn" onclick="adjAge(-1)">▼</button></div><input class="age-input" id="age-input" type="number" min="16" max="70" value="28" oninput="checkAgeEgg()"><span class="age-suffix">岁</span></div></div>
   <div class="age-egg" id="age-egg"></div>
-  <button class="start-btn" onclick="startQuiz()"><span>💉</span><span>开始检测</span></button>
+  <button class="start-btn" onclick="startQuiz()" aria-label="开始猝死指数测试"><span>💉</span><span>开始检测</span></button>
   <div class="start-disclaimer">预计用时 5 分钟 · 结果仅供娱乐参考 · 高分请认真对待</div>
 </section>
 
@@ -1022,11 +1055,11 @@ html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
     <div class="reaction-line" id="reaction-line"></div>
     <div class="next-row">
       <div style="display:flex;align-items:center;gap:10px;">
-        <button class="btn-prev" id="btn-prev" onclick="prevQ()">← 上一题</button>
+        <button class="btn-prev" id="btn-prev" onclick="prevQ()" aria-label="返回上一题">← 上一题</button>
         <button class="sound-btn" id="sound-btn" onclick="toggleSound()">🔇 音效</button>
         <span class="skip-hint" id="skip-hint">已记录，可继续</span>
       </div>
-      <button class="btn-next" id="btn-next" onclick="nextQ()">下一题 →</button>
+      <button class="btn-next" id="btn-next" onclick="nextQ()" aria-label="前往下一题">下一题 →</button>
     </div>
     <div class="kb-hint">键盘快捷键: 1-6 选择 · Enter/→ 下一题 · ←/Backspace 上一题</div>
   </div>
@@ -2894,7 +2927,7 @@ function downloadCard(){
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v8.5 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v9.0 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -4637,6 +4670,198 @@ document.addEventListener('dblclick',e=>{
   dim.style.boxShadow=dim.style.boxShadow?'':'0 0 20px rgba(var(--ar),var(--ag),var(--ab),.2)';
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
+
+// ════ DAILY HEALTH TIP ════
+(function(){
+  const tips=[
+    {icon:'💧',text:'人体60%是水。每天喝够8杯水，你的肾脏会对你比较客气。'},
+    {icon:'🌙',text:'睡前1小时放下手机。蓝光会骗你的大脑以为太阳还没落山。'},
+    {icon:'🚶',text:'每坐1小时站起来活动5分钟。你的腰椎正在默默计算赔偿金。'},
+    {icon:'🥦',text:'每天吃够5种颜色的蔬果。不，辣条不算红色蔬菜。'},
+    {icon:'😤',text:'深呼吸4秒，憋住7秒，呼出8秒。这比骂人解压有效且不犯法。'},
+    {icon:'🏃',text:'世卫组织建议每周150分钟中等强度运动。走路去冰箱不算。'},
+    {icon:'☀️',text:'每天晒15分钟太阳。维生素D不是程序员自带技能。'},
+    {icon:'🧠',text:'大脑在睡眠时清除代谢废物。熬夜 = 让垃圾在脑子里过夜。'},
+    {icon:'❤️',text:'成年人静息心率60-100次/分。如果你经常心跳过快，可能不是恋爱。'},
+    {icon:'🦴',text:'25岁后骨密度开始下降。补钙不如现在就开始负重训练。'},
+    {icon:'👁️',text:'每20分钟看20英尺外物体20秒。你的眼睛也需要呼吸。'},
+    {icon:'🫁',text:'戒烟1年后心脏病风险降低一半。你的肺正在写求救信。'},
+    {icon:'🧘',text:'冥想5分钟能降低皮质醇水平。你的压力激素正在加班。'},
+    {icon:'🍵',text:'绿茶中的儿茶素是天然抗氧化剂。但奶茶里的糖会抵消一切好处。'},
+    {icon:'😴',text:'午睡20分钟能提升下午效率。但超过30分钟你会更困——这是科学。'},
+    {icon:'🫀',text:'每天久坐超过8小时，全因死亡风险增加60%。你的椅子是慢性杀手。'},
+    {icon:'🧂',text:'中国人平均每天吃盐10g，推荐上限是5g。你的血压想跟你谈谈。'},
+    {icon:'🍌',text:'钾能帮助排出多余钠。每天一根香蕉，比吵架降压更文明。'},
+    {icon:'🦷',text:'牙周病与心脏病相关。刷牙不是可选任务，是保命操作。'},
+    {icon:'🌿',text:'接触自然环境20分钟可降低压力荷尔蒙。楼下公园比朋友圈有用。'},
+    {icon:'🎵',text:'听音乐能降低血压和焦虑。但深夜单曲循环emo歌曲不算养生。'},
+  ];
+  const dayIdx=Math.floor(Date.now()/(1000*60*60*24))%tips.length;
+  const tip=tips[dayIdx];
+  const el=document.getElementById('daily-health-tip');
+  if(el){
+    el.innerHTML=`<div class="health-tip"><span class="health-tip-icon">${tip.icon}</span><div><div class="health-tip-label">TODAY\'S HEALTH TIP</div>${tip.text}</div></div>`;
+  }
+})();
+
+// ════ ACHIEVEMENT NOTIFICATION SYSTEM ════
+(function(){
+  const achieveQueue=[];
+  let achieveShowing=false;
+  window.showAchievement=function(icon,name,desc){
+    achieveQueue.push({icon,name,desc});
+    if(!achieveShowing)processQueue();
+  };
+  function processQueue(){
+    if(!achieveQueue.length){achieveShowing=false;return;}
+    achieveShowing=true;
+    const{icon,name,desc}=achieveQueue.shift();
+    const popup=document.getElementById('achieve-popup');
+    if(!popup){achieveShowing=false;return;}
+    document.getElementById('achieve-icon').textContent=icon;
+    document.getElementById('achieve-name').textContent=name;
+    document.getElementById('achieve-desc').textContent=desc;
+    popup.classList.remove('hide');
+    popup.classList.add('show');
+    if(soundOn){try{ensureAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='triangle';const t=audioCtx.currentTime;[523.25,659.25,783.99].forEach((f,i)=>{o.frequency.setValueAtTime(f,t+i*.12);});g.gain.setValueAtTime(.08,t);g.gain.exponentialRampToValueAtTime(.001,t+.5);o.start(t);o.stop(t+.5);}catch(e){}}
+    setTimeout(()=>{popup.classList.remove('show');popup.classList.add('hide');setTimeout(()=>{processQueue();},400);},3000);
+  }
+  // Track achievements with localStorage
+  const achieved=new Set(JSON.parse(localStorage.getItem('sdi-achievements')||'[]'));
+  window.unlockAchievement=function(id,icon,name,desc){
+    if(achieved.has(id))return false;
+    achieved.add(id);
+    try{localStorage.setItem('sdi-achievements',JSON.stringify([...achieved]));}catch(e){}
+    showAchievement(icon,name,desc);
+    return true;
+  };
+  // Achievement triggers
+  // 1. First quiz completion
+  const origShowResult=window.showResult;
+  if(origShowResult){
+    window.showResult=function(){
+      origShowResult.apply(this,arguments);
+      unlockAchievement('first-test','🎯','初次检测','完成了你的第一次猝死指数测试');
+      const score=calcScore();
+      if(score>=90)unlockAchievement('danger-zone','☠️','极度危险','猝死指数超过90分');
+      if(score<=10)unlockAchievement('immortal','🛡️','不死之身','猝死指数低于10分');
+      if(score===69)unlockAchievement('nice','😏','Nice','猝死指数恰好69分');
+      if(score===42)unlockAchievement('answer','🌌','终极答案','猝死指数恰好42分');
+      // Speed runner
+      const hist=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+      if(hist.length>=3)unlockAchievement('regular','📋','常客','完成3次以上测试');
+      if(hist.length>=10)unlockAchievement('addict','🔬','沉迷检测','完成10次以上测试');
+    };
+  }
+  // 2. Night owl - testing between midnight and 5am
+  const hour=new Date().getHours();
+  if(hour>=0&&hour<5){
+    setTimeout(()=>{unlockAchievement('night-owl','🦉','夜猫子','在凌晨时分进行测试');},2000);
+  }
+  // 3. Theme toggle
+  const origToggle=window.toggleTheme;
+  if(origToggle){
+    window.toggleTheme=function(){
+      origToggle.apply(this,arguments);
+      unlockAchievement('theme-switch','🎨','主题达人','切换了明暗主题');
+    };
+  }
+})();
+
+// ════ TYPING SUBTITLE EFFECT ════
+(function(){
+  const subtitles=[
+    'SUDDEN DEATH INDEX · v9.0',
+    '你离猝死还有多远？',
+    '30题 · 7维度 · 1份残酷报告',
+    '熬夜测试本身就是加分项',
+    '高分不是勋章，是警告',
+    '你的身体正在写辞职信',
+    '每一个选项都在计算概率',
+    '测试有风险，高分需体检',
+  ];
+  const subEl=document.querySelector('.title-sub');
+  if(!subEl)return;
+  let idx=0,charIdx=0,deleting=false,timeout;
+  function tick(){
+    const txt=subtitles[idx];
+    if(!deleting){
+      charIdx++;
+      subEl.innerHTML=txt.slice(0,charIdx)+'<span class="title-sub-cursor"></span>';
+      if(charIdx>=txt.length){timeout=setTimeout(()=>{deleting=true;tick();},2500);return;}
+      timeout=setTimeout(tick,40+Math.random()*30);
+    }else{
+      charIdx--;
+      subEl.innerHTML=txt.slice(0,charIdx)+'<span class="title-sub-cursor"></span>';
+      if(charIdx<=0){deleting=false;idx=(idx+1)%subtitles.length;timeout=setTimeout(tick,300);return;}
+      timeout=setTimeout(tick,20);
+    }
+  }
+  // Start after 3 seconds on landing
+  setTimeout(()=>{
+    if(!document.getElementById('sec-intro')?.classList.contains('active'))return;
+    deleting=true;charIdx=subtitles[0].length;
+    tick();
+  },3000);
+  // Stop when leaving landing page
+  const obs=new MutationObserver(()=>{
+    if(!document.getElementById('sec-intro')?.classList.contains('active')){clearTimeout(timeout);obs.disconnect();}
+  });
+  obs.observe(document.getElementById('sec-intro'),{attributes:true,attributeFilter:['class']});
+})();
+
+// ════ ACCESSIBILITY ENHANCEMENTS ════
+(function(){
+  // Add ARIA attributes to key sections
+  const secIntro=document.getElementById('sec-intro');
+  if(secIntro)secIntro.setAttribute('aria-label','猝死指数测试首页');
+  const secQ=document.getElementById('sec-question');
+  if(secQ){secQ.setAttribute('role','form');secQ.setAttribute('aria-label','测试题目');}
+  const secResult=document.getElementById('sec-result');
+  if(secResult){secResult.setAttribute('role','region');secResult.setAttribute('aria-label','测试结果');}
+  // Add aria-live region for dynamic updates
+  const qText=document.getElementById('q-text');
+  if(qText)qText.setAttribute('aria-live','polite');
+  const toast=document.getElementById('toast');
+  if(toast)toast.setAttribute('aria-live','assertive');
+  // Ensure skip links for keyboard users
+  const pbar=document.querySelector('.pbar-outer');
+  if(pbar)pbar.setAttribute('role','progressbar');
+})();
+
+// ════ CONTEXTUAL ACTION HINTS ════
+(function(){
+  const hint=document.getElementById('action-hint');
+  if(!hint)return;
+  let hintTimeout;
+  function showHint(text,duration){
+    hint.textContent=text;
+    hint.classList.add('show');
+    clearTimeout(hintTimeout);
+    hintTimeout=setTimeout(()=>{hint.classList.remove('show');},duration||3000);
+  }
+  // Show hint on first visit
+  const visited=localStorage.getItem('sdi-visited');
+  if(!visited){
+    setTimeout(()=>{
+      if(document.getElementById('sec-intro')?.classList.contains('active')){
+        showHint('向下滚动查看更多信息，或直接点击开始检测',4000);
+      }
+    },2000);
+    try{localStorage.setItem('sdi-visited','1');}catch(e){}
+  }
+  // Show keyboard hint when entering quiz
+  const obs=new MutationObserver(()=>{
+    if(document.getElementById('sec-question')?.classList.contains('active')){
+      if(!localStorage.getItem('sdi-kb-hint')){
+        setTimeout(()=>showHint('键盘 1-6 快速选择 · Enter 下一题 · Backspace 上一题',4000),600);
+        try{localStorage.setItem('sdi-kb-hint','1');}catch(e){}
+      }
+      obs.disconnect();
+    }
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
 
 // Check URL hash on load for shared results
 (function checkURLResult(){
