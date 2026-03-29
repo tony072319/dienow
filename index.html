@@ -120,6 +120,8 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
 @keyframes btnBreathe{0%,100%{box-shadow:0 0 30px rgba(var(--ar),var(--ag),var(--ab),.2),0 4px 24px rgba(0,0,0,.4)}50%{box-shadow:0 0 50px rgba(var(--ar),var(--ag),var(--ab),.4),0 4px 24px rgba(0,0,0,.4)}}
 .start-btn{animation:btnBreathe 2.5s ease-in-out infinite;}
 .start-disclaimer{font-size:11px;color:var(--dim);margin-top:14px;text-align:center;letter-spacing:.3px;}
+.kb-hint{font-size:10px;color:rgba(255,255,255,.12);text-align:center;margin-top:8px;letter-spacing:.5px;}
+@media(max-width:768px){.kb-hint{display:none;}}
 .test-cards{overflow:hidden;position:relative;}
 .test-scroll-inner{display:flex;gap:8px;animation:testimonialScroll 18s linear infinite;width:max-content;}
 .test-scroll-inner:hover{animation-play-state:paused;}
@@ -761,6 +763,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
       </div>
       <button class="btn-next" id="btn-next" onclick="nextQ()">下一题 →</button>
     </div>
+    <div class="kb-hint">键盘快捷键: 1-6 选择 · Enter/→ 下一题 · ←/Backspace 上一题</div>
   </div>
 </section>
 
@@ -1517,6 +1520,10 @@ const PROFESSIONS=[
   {icon:'🎓',name:'985在读博士生',avg:58,desc:'精神压力+作息紊乱+社交缺失'},
   {icon:'👩‍🏫',name:'高中班主任',avg:55,desc:'情绪消耗+久站+长期高压'},
   {icon:'🧑‍🍳',name:'餐饮店老板',avg:60,desc:'超长工时+饮食反常+烟酒应酬'},
+  {icon:'🎮',name:'游戏主播',avg:66,desc:'日夜颠倒+久坐+情绪波动'},
+  {icon:'🏗️',name:'建筑工地工人',avg:52,desc:'体力消耗大+安全风险+饮食粗糙'},
+  {icon:'✈️',name:'民航飞行员',avg:45,desc:'时差紊乱+辐射+高度精神集中'},
+  {icon:'🎨',name:'自由插画师',avg:38,desc:'作息自由+久坐+社交较少'},
   {icon:'🧘',name:'瑜伽教练',avg:18,desc:'规律运动+饮食健康+情绪稳定'},
   {icon:'👨‍🌾',name:'有机农场主',avg:15,desc:'户外运动+健康饮食+低压生活'},
 ];
@@ -1961,7 +1968,8 @@ function showResult(){
   applyTheme(score/100);
   // Score-based particle effects
   if(score>=70){ptSpd=1+((score-70)/30)*.8;ptRate=.25+((score-70)/30)*.2;dangerPtMode=true;}
-  else if(score<25){ptSpd=.6;ptRate=.3;dangerPtMode=false;curRGB=[52,211,153];}// green celebration particles
+  else if(score<15){ptSpd=.5;ptRate=.4;dangerPtMode=false;curRGB=[52,211,153];burstConfetti();}
+  else if(score<25){ptSpd=.6;ptRate=.3;dangerPtMode=false;curRGB=[52,211,153];}
   else{ptSpd=1;ptRate=.18;dangerPtMode=false;}
   startPts();
   document.getElementById('res-card').classList.toggle('danger-mode',score>=80);
@@ -2249,6 +2257,14 @@ function playReveal(score){
     gain.gain.setValueAtTime(0.15,t);gain.gain.exponentialRampToValueAtTime(0.001,t+.35);
     osc.start(t);osc.stop(t+.35);
   });
+}
+function burstConfetti(){
+  // Launch colorful confetti particles for S-grade celebration
+  const colors=[[52,211,153],[163,230,53],[96,165,250],[251,191,36],[244,114,182]];
+  for(let i=0;i<40;i++){
+    const [r,g,b]=colors[i%colors.length];
+    pts.push({x:canv.width/2+(Math.random()-.5)*200,y:canv.height/2,vx:(Math.random()-.5)*4,vy:-Math.random()*5-2,sz:Math.random()*3+1.5,al:.8,r,g,b,life:0,max:120+Math.random()*80,cross:false,rot:0});
+  }
 }
 function retryQuiz(){if(praf)cancelAnimationFrame(praf);canv.classList.remove('active');pts=[];history.replaceState(null,'',location.pathname);startQuiz();}
 
