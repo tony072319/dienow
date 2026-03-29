@@ -41,6 +41,12 @@ section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--ar),var(--ag),var(--ab),.45),transparent);transition:background 1s;}
 .card.danger-mode{animation:dangerPulse 2.5s ease-in-out infinite;border-color:rgba(255,0,68,.18);}
 @keyframes dangerPulse{0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 28px 80px rgba(0,0,0,.55),0 0 60px rgba(255,0,68,.05);}50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 28px 80px rgba(0,0,0,.55),0 0 110px rgba(255,0,68,.2);}}
+@keyframes screenShake{0%,100%{transform:translateX(0)}10%{transform:translate(-4px,2px)}20%{transform:translate(4px,-2px)}30%{transform:translate(-3px,-3px)}40%{transform:translate(3px,3px)}50%{transform:translate(-4px,1px)}60%{transform:translate(2px,-2px)}70%{transform:translate(-1px,3px)}80%{transform:translate(3px,-1px)}90%{transform:translate(-2px,2px)}}
+@keyframes ringCrack{0%{opacity:0;transform:scale(.95)}50%{opacity:1}100%{opacity:.7;transform:scale(1)}}
+@keyframes redPulseGlow{0%,100%{filter:drop-shadow(0 0 15px rgba(255,0,68,.3))}50%{filter:drop-shadow(0 0 40px rgba(255,0,68,.7)) drop-shadow(0 0 80px rgba(255,0,68,.3))}}
+.screen-shake{animation:screenShake .6s ease-out!important;}
+.score-ring-wrap.extreme .ring-fill{animation:redPulseGlow 2s ease-in-out infinite;}
+.score-ring-wrap.extreme::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(255,0,68,.15);animation:redPulseGlow 2.5s ease-in-out infinite .3s;pointer-events:none;}
 
 /* ══ LANDING ══ */
 .live-row{display:flex;align-items:center;gap:10px;margin-bottom:26px;}
@@ -314,7 +320,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .contrib-bar{height:100%;border-radius:10px;transition:width 1s ease;box-shadow:0 0 8px currentColor;}
 .contrib-val{font-family:'Space Mono',monospace;font-size:10px;width:28px;flex-shrink:0;text-align:right;}
 .radar-wrap{display:flex;justify-content:center;margin-bottom:16px;}
-.radar-wrap svg{width:100%;max-width:280px;height:auto;}
+.radar-wrap svg{width:100%;max-width:300px;height:auto;filter:drop-shadow(0 0 20px rgba(var(--ar),var(--ag),var(--ab),.15));}
 .prophecy-card{background:rgba(255,0,68,.035);border:1px solid rgba(255,0,68,.12);border-radius:16px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden;}
 .prophecy-card::after{content:'☠';position:absolute;right:14px;bottom:8px;font-size:64px;opacity:.04;pointer-events:none;line-height:1;}
 .sec-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
@@ -483,7 +489,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="rs" id="rs3"><div class="percentile-banner"><div class="pct-bar-wrap"><div class="pct-bar-bg"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div><div class="pct-text" id="pct-text">—</div></div><div class="pct-num" id="pct-num">—</div></div></div>
     <div class="rs" id="rs4"><div class="vitals-row"><div class="vital"><span class="vital-icon">🧬</span><span class="vital-val" id="v-bodyage">—</span><span class="vital-lbl">身体年龄</span></div><div class="vital"><span class="vital-icon">❤️</span><span class="vital-val" id="v-heart">—</span><span class="vital-lbl">心脏负荷</span></div><div class="vital"><span class="vital-icon">🔋</span><span class="vital-val" id="v-recovery">—</span><span class="vital-lbl">恢复力</span></div><div class="vital"><span class="vital-icon">🧠</span><span class="vital-val" id="v-stress">—</span><span class="vital-lbl">神经紧张</span></div></div><div class="risk-tags" id="risk-tags"></div></div>
     <div class="rs" id="rs5"><div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 身体系统风险</div><div class="systems-grid" id="systems-grid"></div></div>
-    <div class="rs" id="rs6"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 各维度风险贡献</div><div class="radar-wrap"><svg id="radar-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><g id="r-grid-g"></g><g id="r-axes-g"></g><polygon id="r-poly" points="150,150" fill="rgba(255,0,68,.1)" stroke="#ff4444" stroke-width="1.5" stroke-linejoin="round"/><g id="r-labels-g"></g></svg></div><div class="contrib-chart" id="contrib-chart"></div></div>
+    <div class="rs" id="rs6"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 各维度风险贡献</div><div class="radar-wrap"><svg id="radar-svg" viewBox="-10 -10 320 320" xmlns="http://www.w3.org/2000/svg"><defs><filter id="r-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="r-fill-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="100%" stop-color="var(--accent)" stop-opacity=".08"/></radialGradient></defs><g id="r-grid-g"></g><g id="r-axes-g"></g><polygon id="r-poly" points="150,150" fill="url(#r-fill-grad)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" filter="url(#r-glow)"/><g id="r-dots-g"></g><g id="r-labels-g"></g></svg></div><div class="contrib-chart" id="contrib-chart"></div></div>
     <div class="rs" id="rs7"><div class="prophecy-card"><div class="sec-label" style="color:#ff4466">☠ &nbsp;死亡预言</div><div class="prophecy-text" id="prophecy-text"></div><div class="prophecy-moment" id="prophecy-moment"></div></div></div>
     <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v5.0 · AUTOMATED REPORT</div></div></div>
     <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#ff9900;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
@@ -499,11 +505,11 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 <script>
 // ════ PARTICLES ════
 const canv=document.getElementById('particle-canvas'),ctx2=canv.getContext('2d');
-let pts=[],praf;
+let pts=[],praf,ptSpd=1,ptRate=.18;
 function resC(){canv.width=innerWidth;canv.height=innerHeight;}resC();addEventListener('resize',resC);
 let curRGB=[0,255,136];
-function mkPt(){const[r,g,b]=curRGB;return{x:Math.random()*canv.width,y:canv.height+10,vx:(Math.random()-.5)*.5,vy:-Math.random()*.9-.3,sz:Math.random()*1.6+.4,al:Math.random()*.45+.1,r,g,b,life:0,max:180+Math.random()*220};}
-function animP(){ctx2.clearRect(0,0,canv.width,canv.height);if(Math.random()<.18)pts.push(mkPt());pts=pts.filter(p=>p.life<p.max);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life++;const fade=Math.min(1,(p.max-p.life)/60);ctx2.beginPath();ctx2.arc(p.x,p.y,p.sz,0,Math.PI*2);ctx2.fillStyle=`rgba(${p.r},${p.g},${p.b},${p.al*fade})`;ctx2.fill();});praf=requestAnimationFrame(animP);}
+function mkPt(){const[r,g,b]=curRGB;return{x:Math.random()*canv.width,y:canv.height+10,vx:(Math.random()-.5)*.5*ptSpd,vy:(-Math.random()*.9-.3)*ptSpd,sz:Math.random()*1.6+.4,al:Math.random()*.45+.1,r,g,b,life:0,max:180+Math.random()*220};}
+function animP(){ctx2.clearRect(0,0,canv.width,canv.height);if(Math.random()<ptRate)pts.push(mkPt());pts=pts.filter(p=>p.life<p.max);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life++;const fade=Math.min(1,(p.max-p.life)/60);ctx2.beginPath();ctx2.arc(p.x,p.y,p.sz,0,Math.PI*2);ctx2.fillStyle=`rgba(${p.r},${p.g},${p.b},${p.al*fade})`;ctx2.fill();});praf=requestAnimationFrame(animP);}
 function startPts(){canv.classList.add('active');animP();}
 addEventListener('mousemove',e=>{const mx=(e.clientX/innerWidth-.5)*30,my=(e.clientY/innerHeight-.5)*20;document.getElementById('orb1').style.transform=`translate(${mx*.6}px,${my*.6}px)`;document.getElementById('orb2').style.transform=`translate(${-mx*.4}px,${-my*.4}px)`;});
 let liveN=8247;setInterval(()=>{liveN+=Math.floor(Math.random()*3);document.getElementById('live-count').textContent=liveN.toLocaleString();},4000);
@@ -1105,7 +1111,28 @@ function calcScore(){
 function calcDims(){return DIM_MAP.map(d=>{const vals=d.idx.map(i=>ans[i]!==undefined?ans[i]+1:1);const cnt=d.idx.length,raw=vals.reduce((s,v)=>s+v,0);const pct=Math.round((raw-cnt)/(cnt*4)*100);return{...d,pct};});}
 function dimCol(p){return p<30?'#00ff88':p<55?'#88ee00':p<75?'#ff8800':'#ff4444';}
 function dimStatus(p){return p<30?'良好':p<55?'一般':p<75?'偏高':'危险';}
-function drawRadar(dims,accentCol){const cx=150,cy=150,R=100,n=dims.length;const ang=i=>(Math.PI*2*i/n)-Math.PI/2;const gGrid=document.getElementById('r-grid-g'),gAxes=document.getElementById('r-axes-g'),gLabels=document.getElementById('r-labels-g'),poly=document.getElementById('r-poly');const ns='http://www.w3.org/2000/svg';gGrid.innerHTML='';[.25,.5,.75,1].forEach(v=>{const pts=dims.map((_,i)=>`${(cx+R*v*Math.cos(ang(i))).toFixed(1)},${(cy+R*v*Math.sin(ang(i))).toFixed(1)}`).join(' ');const el=document.createElementNS(ns,'polygon');el.setAttribute('points',pts);el.setAttribute('fill','none');el.setAttribute('stroke','rgba(255,255,255,.07)');el.setAttribute('stroke-width','1');gGrid.appendChild(el);});gAxes.innerHTML='';dims.forEach((_,i)=>{const a=ang(i),el=document.createElementNS(ns,'line');el.setAttribute('x1',cx);el.setAttribute('y1',cy);el.setAttribute('x2',(cx+R*Math.cos(a)).toFixed(1));el.setAttribute('y2',(cy+R*Math.sin(a)).toFixed(1));el.setAttribute('stroke','rgba(255,255,255,.1)');el.setAttribute('stroke-width','1');gAxes.appendChild(el);});gLabels.innerHTML='';const LR=118;dims.forEach((d,i)=>{const a=ang(i),lx=(cx+LR*Math.cos(a)).toFixed(1),ly=(cy+LR*Math.sin(a)).toFixed(1);const name=d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key;const t1=document.createElementNS(ns,'text');t1.setAttribute('x',lx);t1.setAttribute('y',(parseFloat(ly)-6).toFixed(1));t1.setAttribute('text-anchor','middle');t1.setAttribute('dominant-baseline','central');t1.setAttribute('fill','rgba(255,255,255,.55)');t1.setAttribute('font-size','10');t1.textContent=name;const t2=document.createElementNS(ns,'text');t2.setAttribute('x',lx);t2.setAttribute('y',(parseFloat(ly)+7).toFixed(1));t2.setAttribute('text-anchor','middle');t2.setAttribute('dominant-baseline','central');t2.setAttribute('fill',dimCol(d.pct));t2.setAttribute('font-size','9');t2.setAttribute('font-weight','bold');t2.textContent=d.pct+'%';gLabels.appendChild(t1);gLabels.appendChild(t2);});poly.setAttribute('fill',accentCol+'22');poly.setAttribute('stroke',accentCol);poly.setAttribute('stroke-width','1.5');const t0=performance.now();(function frame(now){const p=Math.min((now-t0)/900,1),e=1-Math.pow(1-p,3);poly.setAttribute('points',dims.map((d,i)=>{const a=ang(i),v=(d.pct/100)*e;return`${(cx+R*v*Math.cos(a)).toFixed(1)},${(cy+R*v*Math.sin(a)).toFixed(1)}`;}).join(' '));if(p<1)requestAnimationFrame(frame);})(t0);}
+function drawRadar(dims,accentCol){
+  const cx=150,cy=150,R=110,n=dims.length,ns='http://www.w3.org/2000/svg';
+  const ang=i=>(Math.PI*2*i/n)-Math.PI/2;
+  const gGrid=document.getElementById('r-grid-g'),gAxes=document.getElementById('r-axes-g'),gLabels=document.getElementById('r-labels-g'),gDots=document.getElementById('r-dots-g'),poly=document.getElementById('r-poly');
+  // Grid rings
+  gGrid.innerHTML='';
+  [.25,.5,.75,1].forEach((v,ri)=>{const pts=dims.map((_,i)=>`${(cx+R*v*Math.cos(ang(i))).toFixed(1)},${(cy+R*v*Math.sin(ang(i))).toFixed(1)}`).join(' ');const el=document.createElementNS(ns,'polygon');el.setAttribute('points',pts);el.setAttribute('fill','none');el.setAttribute('stroke',ri===3?'rgba(255,255,255,.18)':'rgba(255,255,255,.08)');el.setAttribute('stroke-width',ri===3?'1.5':'0.8');if(ri<3)el.setAttribute('stroke-dasharray','3,4');gGrid.appendChild(el);});
+  // Axes
+  gAxes.innerHTML='';
+  dims.forEach((_,i)=>{const a=ang(i),el=document.createElementNS(ns,'line');el.setAttribute('x1',cx);el.setAttribute('y1',cy);el.setAttribute('x2',(cx+R*Math.cos(a)).toFixed(1));el.setAttribute('y2',(cy+R*Math.sin(a)).toFixed(1));el.setAttribute('stroke','rgba(255,255,255,.06)');el.setAttribute('stroke-width','1');gAxes.appendChild(el);});
+  // Labels
+  gLabels.innerHTML='';const LR=R+22;
+  dims.forEach((d,i)=>{const a=ang(i),lx=cx+LR*Math.cos(a),ly=cy+LR*Math.sin(a);const emoji=d.name.slice(0,2);const name=d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key;const col=dimCol(d.pct);const t1=document.createElementNS(ns,'text');t1.setAttribute('x',lx.toFixed(1));t1.setAttribute('y',(ly-7).toFixed(1));t1.setAttribute('text-anchor','middle');t1.setAttribute('dominant-baseline','central');t1.setAttribute('fill','rgba(255,255,255,.7)');t1.setAttribute('font-size','11');t1.textContent=emoji+name;const t2=document.createElementNS(ns,'text');t2.setAttribute('x',lx.toFixed(1));t2.setAttribute('y',(ly+8).toFixed(1));t2.setAttribute('text-anchor','middle');t2.setAttribute('dominant-baseline','central');t2.setAttribute('fill',col);t2.setAttribute('font-size','11');t2.setAttribute('font-weight','bold');t2.textContent=d.pct+'%';gLabels.appendChild(t1);gLabels.appendChild(t2);});
+  // Animate polygon + dots
+  gDots.innerHTML='';
+  const dots=dims.map((d,i)=>{const c=document.createElementNS(ns,'circle');c.setAttribute('r','3.5');c.setAttribute('fill',dimCol(d.pct));c.setAttribute('stroke','#fff');c.setAttribute('stroke-width','1');c.setAttribute('filter','url(#r-glow)');c.setAttribute('cx',cx);c.setAttribute('cy',cy);gDots.appendChild(c);return c;});
+  const t0=performance.now();
+  (function frame(now){const p=Math.min((now-t0)/1000,1),e=1-Math.pow(1-p,3);
+    const pts=dims.map((d,i)=>{const a=ang(i),v=(d.pct/100)*e,px=cx+R*v*Math.cos(a),py=cy+R*v*Math.sin(a);dots[i].setAttribute('cx',px.toFixed(1));dots[i].setAttribute('cy',py.toFixed(1));return`${px.toFixed(1)},${py.toFixed(1)}`;}).join(' ');
+    poly.setAttribute('points',pts);if(p<1)requestAnimationFrame(frame);
+  })(t0);
+}
 function calcSystems(dims){const get=k=>dims.find(d=>d.key===k)?.pct||0;return[{icon:'❤️',name:'心血管系统',risk:Math.round((get('work')*.4+get('stress')*.35+get('exercise')*.25)),note:'长期压力和缺乏运动是心血管疾病的主要非遗传风险因素'},{icon:'🦴',name:'肌肉骨骼系统',risk:Math.round((get('exercise')*.5+get('work')*.3+get('stress')*.2)),note:'久坐和缺乏运动加速肌肉萎缩和骨密度下降'},{icon:'🫁',name:'代谢与内分泌',risk:Math.round((get('diet')*.4+get('sleep')*.3+get('habit')*.3)),note:'睡眠、饮食和嗜好共同决定代谢健康'},{icon:'🧠',name:'神经与情绪',risk:Math.round((get('stress')*.4+get('emotion')*.4+get('sleep')*.2)),note:'长期高皮质醇直接影响大脑结构和情绪调节'}];}
 function calcTimeline(s){if(s<20)return[{t:'现在',txt:'身体状况良好，各主要器官运作正常',col:'#00ff88'},{t:'5-10年后',txt:'如保持现有习惯，预计维持良好状态',col:'#00ff88'},{t:'10年后',txt:'以当前轨迹，身体年龄与实际年龄接近',col:'#88ee00'}];if(s<40)return[{t:'现在',txt:'整体状况良好，部分维度有改善空间',col:'#88ee00'},{t:'2-3年后',txt:'如不改变，可能开始出现慢性疲劳或轻度代谢异常',col:'#ffcc00'},{t:'5年后',txt:'亚健康症状可能固化，改变难度增加',col:'#ff8800'}];if(s<60)return[{t:'现在',txt:'身体正在发出明显信号，多项指标偏高',col:'#ffcc00'},{t:'1-2年后',txt:'如不改变，慢性病风险显著上升',col:'#ff8800'},{t:'3-5年后',txt:'心血管或代谢方面可能需要医疗干预',col:'#ff4444'}];if(s<80)return[{t:'现在',txt:'多项指标已超出安全范围',col:'#ff8800'},{t:'6-18个月',txt:'如不改变，可能面临重大健康事件触发点',col:'#ff4444'},{t:'2-3年后',txt:'不改变的话，预计有严重医疗问题需要处理',col:'#ff0044'}];return[{t:'现在',txt:'当前状态已接近临界点，时间窗口非常紧迫',col:'#ff4444'},{t:'数月内',txt:'如不立即改变，身体可能发出最终警告',col:'#ff0044'},{t:'现在就开始',txt:'哪怕改变一件事，也会影响这个轨迹',col:'#ff8800'}];}
 function getDoctorNote(s,dims,arch){const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);const wl=worst.name.replace(/^../,'');if(s<20)return`患者整体生活习惯良好，各主要指标在正常范围内。建议保持现有作息与运动习惯，每年进行常规体检以建立健康基线。无需特殊干预。`;if(s<40)return`患者整体状况尚可，${wl}维度存在一定风险，建议在此方面做出针对性调整。定期体检，关注血压与睡眠质量变化。`;if(s<60)return`患者呈现典型亚健康状态，${wl}维度风险尤为突出（${worst.pct}%）。结合体质类型「${arch?.name||'—'}」，判断患者处于慢性消耗状态。建议立即制定改善计划，优先处理睡眠与运动问题。`;if(s<80)return`患者多项生活方式指标超出健康阈值，${wl}及相关维度显示高风险信号。体质类型「${arch?.name||'—'}」提示存在系统性风险叠加。强烈建议本月内完成心血管及代谢相关检查。`;return`患者生活方式评估结果严峻，猝死指数${s}/100，体质类型「${arch?.name||'—'}」。${wl}维度达到${worst.pct}%高风险水平。当前状态已超出亚健康范畴，进入临床关注区间。建议立即就医，不宜延迟。`;}
@@ -1113,8 +1140,15 @@ function getDoctorNote(s,dims,arch){const worst=dims.reduce((a,b)=>b.pct>a.pct?b
 function showResult(){
   const score=calcScore(),level=LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
   const dims=calcDims();const dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
-  applyTheme(score/100);startPts();
+  applyTheme(score/100);
+  // High-score particle effects
+  if(score>=70){ptSpd=1+((score-70)/30)*.8;ptRate=.25+((score-70)/30)*.2;}else{ptSpd=1;ptRate=.18;}
+  startPts();
   document.getElementById('res-card').classList.toggle('danger-mode',score>=80);
+  // Screen shake for very high scores
+  if(score>=80){const rc=document.getElementById('res-card');rc.classList.add('screen-shake');setTimeout(()=>rc.classList.remove('screen-shake'),700);}
+  // Extreme ring glow for 90+
+  document.querySelector('.score-ring-wrap')?.classList.toggle('extreme',score>=90);
   document.getElementById('rpt-id').textContent='#'+Math.random().toString(36).substr(2,6).toUpperCase();
   document.getElementById('rpt-date').textContent=new Date().toISOString().split('T')[0].replace(/-/g,'.');
   const stamp=document.getElementById('rpt-stamp');
