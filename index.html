@@ -3141,7 +3141,7 @@ function encodeResultToURL(){
 (function(){
   const feed=document.getElementById('live-feed');if(!feed)return;
   const cities=['北京','上海','广州','深圳','杭州','成都','武汉','南京','长沙','西安','重庆','苏州','天津','郑州','厦门'];
-  const actions=['刚刚完成了测试','获得了 {s} 分','测出了 {g} 级','被贴上了"久坐世界纪录挑战者"标签','看完结果沉默了3分钟'];
+  const actions=['刚刚完成了测试','获得了 {s} 分','测出了 {g} 级','被贴上了"久坐世界纪录挑战者"标签','看完结果沉默了3分钟','把结果截图发了朋友圈','看完预言后立刻预约了体检','表示不服想重测','把链接转发给了同事','获得了"夜猫子"成就','决定今晚早睡','正在疯狂截图中'];
   const grades=['S','A','B','C','D','F'];
   function genMsg(){
     const city=cities[Math.floor(Math.random()*cities.length)];
@@ -4736,6 +4736,108 @@ document.addEventListener('dblclick',e=>{
   dim.style.boxShadow=dim.style.boxShadow?'':'0 0 20px rgba(var(--ar),var(--ag),var(--ab),.2)';
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
+
+// ════ PROGRESSIVE QUIZ INTENSITY ════
+(function(){
+  // Gradually change the quiz background vignette as answers become more dangerous
+  const origPick=pickGrid;
+  pickGrid=function(i){
+    origPick(i);
+    // Calculate running danger average
+    const answered=Object.values(ans).filter(v=>v!==undefined);
+    if(!answered.length)return;
+    const avg=answered.reduce((s,v)=>s+v,0)/answered.length;
+    const intensity=Math.min(1,avg/4); // 0-1 scale
+    // Adjust ambient gradient
+    const ambientEl=document.getElementById('ambient');
+    if(ambientEl){
+      const r=Math.round(124+115*intensity);
+      const g=Math.round(110-60*intensity);
+      const b=Math.round(240-180*intensity);
+      ambientEl.style.background=`radial-gradient(ellipse 72% 32% at 50% 0%,rgba(${r},${g},${b},.${Math.round(10+intensity*8)}) 0%,transparent 70%)`;
+    }
+    // Subtle card border color shift
+    const qCard=document.getElementById('q-card');
+    if(qCard&&intensity>.5){
+      qCard.style.borderColor=`rgba(239,68,68,${(intensity-.5)*.2})`;
+    }else if(qCard){
+      qCard.style.borderColor='';
+    }
+  };
+})();
+
+// ════ SCORE IMPROVEMENT CELEBRATION ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      try{
+        const hist=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+        if(hist.length<2)return;
+        const prev=hist[hist.length-2];
+        const curr=hist[hist.length-1];
+        if(!prev||!curr)return;
+        const improvement=prev.s-curr.s;
+        if(improvement>=5){
+          // Show improvement banner
+          const banner=document.createElement('div');
+          banner.style.cssText='text-align:center;padding:16px;margin:10px 0;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(16,185,129,.04));border:1px solid rgba(52,211,153,.2);border-radius:16px;animation:fadeUp .5s ease;';
+          banner.innerHTML=`<div style="font-size:24px;margin-bottom:6px;">🎉</div><div style="font-size:14px;font-weight:700;color:#34d399;">进步了 ${improvement} 分！</div><div style="font-size:11px;color:var(--dim);margin-top:4px;">上次 ${prev.s} 分 → 这次 ${curr.s} 分，继续保持！</div>`;
+          const rs1=document.getElementById('rs1');
+          if(rs1)rs1.appendChild(banner);
+          // Green confetti
+          if(typeof celebrateLowScore==='function'&&typeof pts!=='undefined'){
+            const cols=[[52,211,153],[34,211,153],[163,230,53],[96,165,250]];
+            for(let i=0;i<20;i++){
+              const[r,g,b]=cols[i%cols.length];
+              const canvEl=document.getElementById('particle-canvas');
+              if(canvEl)pts.push({x:canvEl.width/2+(Math.random()-.5)*300,y:canvEl.height*.3,vx:(Math.random()-.5)*3,vy:-Math.random()*3-1,sz:Math.random()*2+1,al:.6,r,g,b,life:0,max:120+Math.random()*80,cross:false,rot:0});
+            }
+          }
+          if(typeof unlockAchievement==='function'){
+            unlockAchievement('improver','📈','健康进步者','猝死指数比上次降低了5分以上');
+          }
+        }
+      }catch(e){}
+    },2000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ FUN HEALTH HOROSCOPE ════
+(function(){
+  const horoscopes=[
+    {range:[0,20],texts:['今日运势：金光闪闪。你的健康能量充沛，连细菌都绕道走。','你的健康护盾今天满级。去分享一点好运给那些加班的同事吧。','今日宜：一切正常活动。忌：替别人担心。']},
+    {range:[21,40],texts:['今日运势：晴转多云。保持现有节奏就好，别作死。','你的身体今天在稳定运行，但别掉以轻心——它随时可能提出抗议。','今日宜：按时吃饭。忌：说"今天就不运动了"。']},
+    {range:[41,60],texts:['今日运势：多云有雷。你的身体在发出温和警告，建议认真对待。','你的免疫系统今天在加班，你最好也给它发点加班费（维生素C什么的）。','今日宜：早点睡觉。忌：继续刷手机到凌晨。']},
+    {range:[61,80],texts:['今日运势：暴风雨预警。你的身体正在写投诉信，收件人是你。','今天不适合做任何冒险的事。包括：熬夜、喝酒、以及看银行账户。','今日宜：立刻预约体检。忌：假装一切都好。']},
+    {range:[81,100],texts:['今日运势：红色预警。你的身体已经在准备罢工通知了。','建议今天对自己好一点，因为你的身体可能不会给你太多机会了。','今日宜：写遗书（开玩笑的）。但说真的，请去看医生。']},
+  ];
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('horoscope-section'))return;
+      const score=calcScore();
+      const group=horoscopes.find(h=>score>=h.range[0]&&score<=h.range[1]);
+      if(!group)return;
+      const text=group.texts[new Date().getDate()%group.texts.length];
+      const el=document.createElement('div');
+      el.id='horoscope-section';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:linear-gradient(135deg,rgba(168,85,247,.04),rgba(124,110,240,.02));border:1px solid rgba(168,85,247,.12);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(168,85,247,.5);margin-bottom:8px;">🔮 TODAY\'S HEALTH HOROSCOPE</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.8;">${text}</div>
+      </div>`;
+      const rs12b=document.getElementById('rs12b');
+      if(rs12b){rs12b.parentNode.insertBefore(el,rs12b);}
+    },2200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
 
 // ════ HOLOGRAPHIC HEALTH CARD ════
 (function(){
