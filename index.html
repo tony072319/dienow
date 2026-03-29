@@ -143,6 +143,15 @@ section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
 .mini-danger.show{opacity:1;}
 .danger-skulls{letter-spacing:2px;font-size:12px;}
 
+/* ══ STEP DOTS (game-level map) ══ */
+.step-dots{display:flex;gap:3px;align-items:center;margin-top:10px;justify-content:center;flex-wrap:wrap;}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.08);transition:all .3s;flex-shrink:0;}
+.step-dot.done{background:var(--accent);box-shadow:0 0 6px rgba(var(--ar),var(--ag),var(--ab),.4);}
+.step-dot.current{background:var(--accent);transform:scale(1.4);box-shadow:0 0 10px rgba(var(--ar),var(--ag),var(--ab),.6);animation:dotPulse 1.2s ease-in-out infinite;}
+.step-dot.danger-done{background:#ef4444;box-shadow:0 0 6px rgba(239,68,68,.4);}
+.step-sep{width:1px;height:12px;background:rgba(255,255,255,.08);margin:0 2px;flex-shrink:0;}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 6px rgba(var(--ar),var(--ag),var(--ab),.4)}50%{box-shadow:0 0 14px rgba(var(--ar),var(--ag),var(--ab),.8)}}
+
 /* ══ QUESTION CARD ══ */
 .q-cat{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);opacity:.7;margin-bottom:14px;transition:color .8s;}
 .q-num{font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:rgba(255,255,255,.04);position:absolute;top:24px;right:28px;line-height:1;pointer-events:none;}
@@ -688,6 +697,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="pbar-outer"><div class="pbar-inner" id="pbar" style="width:0%"></div></div>
     <div class="mini-danger" id="mini-danger"><span class="danger-skulls" id="danger-skulls"></span><span id="danger-label"></span></div>
     <div class="streak-bar" id="streak-bar"><span class="streak-fire">🔥</span><span id="streak-text">连续高危作答中…</span></div>
+    <div class="step-dots" id="step-dots"></div>
   </div>
   <div class="card" id="q-card">
     <div class="live-risk-badge" id="lrb"><div class="lrb-dot" id="lrb-dot"></div><span class="lrb-val" id="lrb-val">0%</span></div>
@@ -1292,6 +1302,13 @@ const FUN_TAGS=[
   {e:'🤖',t:'工作机器人疑似体',col:'#66aadd',bg:'rgba(102,170,221,.1)',match:()=>ans[4]>=3&&ans[7]>=3&&ans[8]>=3,why:'你已经很难证明自己不是一个工作AI了'},
   {e:'💤',t:'梦境speedrun玩家',col:'#7755cc',bg:'rgba(119,85,204,.1)',match:()=>ans[1]>=3&&ans[3]>=3,why:'别人做梦，你连梦的加载画面都看不到'},
   {e:'🍜',t:'泡面美食家',col:'#ddaa33',bg:'rgba(221,170,51,.1)',match:()=>ans[13]>=4,why:'你已经能分辨出12种泡面的口感差异了'},
+  {e:'🧟',t:'周末植物人',col:'#7c8a5c',bg:'rgba(124,138,92,.1)',match:()=>ans[11]>=3&&ans[30]>=3,why:'你的周末活动范围不超过床到冰箱的距离'},
+  {e:'🎭',t:'职业微笑者',col:'#e879a8',bg:'rgba(232,121,168,.1)',match:()=>ans[23]>=3&&ans[8]>=2,why:'你在工位上的微笑比你的996更令人心碎'},
+  {e:'🧠',t:'内卷受害者',col:'#a78bfa',bg:'rgba(167,139,250,.1)',match:()=>ans[4]>=3&&ans[16]>=3&&ans[25]>=3,why:'你被卷了，你的身体也被卷了'},
+  {e:'🍕',t:'深夜觅食者',col:'#fb923c',bg:'rgba(251,146,60,.1)',match:()=>ans[0]>=3&&ans[12]>=2,why:'凌晨一点下单外卖是你最后的仪式感'},
+  {e:'🐌',t:'新陈代谢摆烂者',col:'#94a3b8',bg:'rgba(148,163,184,.1)',match:()=>ans[9]>=3&&ans[12]>=3&&ans[15]>=2,why:'你的基础代谢率已经在考虑退休了'},
+  {e:'💊',t:'养生朋克',col:'#c084fc',bg:'rgba(192,132,252,.1)',match:()=>ans[20]>=2&&ans[14]>=2&&ans[10]>=1,why:'熬最晚的夜，吃最贵的保健品'},
+  {e:'🫁',t:'电子肺',col:'#64748b',bg:'rgba(100,116,139,.1)',match:()=>ans[20]>=3&&ans[21]>=2,why:'你的肺比城市空气净化器工作得更辛苦'},
 ];
 
 const ACHIEVEMENTS=[
@@ -1303,6 +1320,9 @@ const ACHIEVEMENTS=[
   {id:'caffeine_god',icon:'☕',name:'咖啡因之神',col:'#cc8844',bg:'rgba(204,136,68,.08)',border:'rgba(204,136,68,.25)',rare:'R',match:()=>ans[14]>=4&&ans[15]>=3,desc:'重度咖啡依赖+严重缺水'},
   {id:'numb',icon:'🧊',name:'疼痛免疫者',col:'#6688aa',bg:'rgba(102,136,170,.08)',border:'rgba(102,136,170,.25)',rare:'R',match:()=>ans[28]>=3&&ans[27]>=3,desc:'身体信号全部忽略+不做体检'},
   {id:'balance',icon:'⚖️',name:'完美平衡',col:'#fbbf24',bg:'rgba(251,191,36,.08)',border:'rgba(251,191,36,.25)',rare:'SR',match:()=>{const d=calcDims();const ps=d.map(x=>x.pct);return Math.max(...ps)-Math.min(...ps)<15;},desc:'所有维度风险差距不超过15%'},
+  {id:'fullhouse',icon:'🃏',name:'满贯收集者',col:'#f472b6',bg:'rgba(244,114,182,.08)',border:'rgba(244,114,182,.25)',rare:'SSR',match:()=>{const d=calcDims();return d.every(x=>x.pct>=50);},desc:'所有7个维度风险都超过50%'},
+  {id:'paradox',icon:'🔮',name:'薛定谔的健康',col:'#a78bfa',bg:'rgba(167,139,250,.08)',border:'rgba(167,139,250,.25)',rare:'R',match:()=>ans[27]>=3&&ans[28]>=3,desc:'不做体检+忽略身体信号'},
+  {id:'nocturnal',icon:'🦇',name:'夜行动物',col:'#818cf8',bg:'rgba(129,140,248,.08)',border:'rgba(129,140,248,.25)',rare:'R',match:()=>ans[0]>=3&&ans[2]>=3,desc:'睡得晚+睡眠质量差'},
 ];
 
 // ════ OBITUARY / LAST WORDS / SURVIVAL ════
@@ -1381,13 +1401,13 @@ function getProfComparison(score){
 
 // ════ STATE ════
 const CAT_SPLASH={
-  '😴 睡眠习惯':{icon:'😴',name:'睡眠习惯',desc:'每一个深夜都在悄悄重写你明天的剧本',warn:'每少睡1小时，心血管疾病风险+11%',count:4},
-  '💼 工作强度':{icon:'💼',name:'工作强度',desc:'你在用多少生命，换取多少绩效',warn:'每周工作>55小时，中风风险+33%',count:4},
-  '🏃 运动频率':{icon:'🏃',name:'运动频率',desc:'你的身体上一次真正被使用是什么时候',warn:'久坐每多1小时，全因死亡率+2%',count:3},
-  '🍔 饮食习惯':{icon:'🍔',name:'饮食习惯',desc:'你送进身体里的每一口，都是一个选择',warn:'不规律饮食使代谢综合征风险×2.3',count:4},
-  '🧠 压力水平':{icon:'🧠',name:'压力水平',desc:'你的神经系统已经连续加班多少天了',warn:'长期高皮质醇使大脑海马体萎缩6-8%',count:4},
-  '🚬 不良嗜好':{icon:'🚬',name:'不良嗜好',desc:'你知道哪些习惯在消耗你，但还是没戒',warn:'烟酒+久坐使预期寿命缩短7-15年',count:3},
-  '😰 情绪状态':{icon:'😰',name:'情绪状态',desc:'你上一次真正感到平静，是什么时候',warn:'长期孤独的健康危害等同于每天抽15支烟',count:4},
+  '😴 睡眠习惯':{icon:'😴',name:'睡眠习惯',desc:'每一个深夜都在悄悄重写你明天的剧本',warn:'每少睡1小时，心血管疾病风险+11%',count:4,color:'#818cf8',num:1},
+  '💼 工作强度':{icon:'💼',name:'工作强度',desc:'你在用多少生命，换取多少绩效',warn:'每周工作>55小时，中风风险+33%',count:4,color:'#f59e0b',num:2},
+  '🏃 运动频率':{icon:'🏃',name:'运动频率',desc:'你的身体上一次真正被使用是什么时候',warn:'久坐每多1小时，全因死亡率+2%',count:3,color:'#34d399',num:3},
+  '🍔 饮食习惯':{icon:'🍔',name:'饮食习惯',desc:'你送进身体里的每一口，都是一个选择',warn:'不规律饮食使代谢综合征风险×2.3',count:4,color:'#fb923c',num:4},
+  '🧠 压力水平':{icon:'🧠',name:'压力水平',desc:'你的神经系统已经连续加班多少天了',warn:'长期高皮质醇使大脑海马体萎缩6-8%',count:4,color:'#f87171',num:5},
+  '🚬 不良嗜好':{icon:'🚬',name:'不良嗜好',desc:'你知道哪些习惯在消耗你，但还是没戒',warn:'烟酒+久坐使预期寿命缩短7-15年',count:3,color:'#a78bfa',num:6},
+  '😰 情绪状态':{icon:'😰',name:'情绪状态',desc:'你上一次真正感到平静，是什么时候',warn:'长期孤独的健康危害等同于每天抽15支烟',count:4,color:'#60a5fa',num:7},
 };
 
 let flow=[],fi=0,ans={},svals={},branchDone=false,userAge=28;
@@ -1488,11 +1508,21 @@ function resumeQuiz(save){
 function showCatSplash(cat,cb){
   const d=CAT_SPLASH[cat];if(!d)return cb();
   document.getElementById('cs-icon').textContent=d.icon;
-  document.getElementById('cs-name').textContent=d.name;
+  const nameEl=document.getElementById('cs-name');
+  nameEl.textContent=d.name;
+  nameEl.style.color=d.color||'var(--accent)';
   document.getElementById('cs-desc').textContent=d.desc;
   const warnEl=document.getElementById('cs-warn');
   if(d.warn){warnEl.textContent='⚠️ '+d.warn;warnEl.style.opacity='1';}else{warnEl.style.opacity='0';}
-  document.getElementById('cs-count').textContent=`共 ${d.count} 题`;
+  // Show progress: which dimension number out of 7
+  const totalDims=Object.keys(CAT_SPLASH).length;
+  document.getElementById('cs-count').textContent=`维度 ${d.num||'?'}/${totalDims} · 共 ${d.count} 题`;
+  // Tint the card with dim color
+  const card=document.querySelector('#sec-cat-splash .card');
+  if(card&&d.color){
+    card.style.borderColor=d.color+'25';
+    card.style.boxShadow=`0 4px 32px rgba(0,0,0,.4),0 0 80px ${d.color}12`;
+  }
   go('sec-cat-splash','anim-up');
   if(splashTimer)clearTimeout(splashTimer);
   splashTimer=setTimeout(cb,2000);
@@ -1512,6 +1542,21 @@ function renderQ(){
   document.getElementById('q-text').textContent=q.text;
   document.getElementById('q-num').textContent=String(fi+1).padStart(2,'0');
   document.getElementById('pbar').style.width=(fi/total*100)+'%';
+  // Step dots
+  const dotsEl=document.getElementById('step-dots');
+  if(dotsEl){
+    let html='';let lastCat='';
+    for(let i=0;i<total;i++){
+      const qi2=flow[i],q2=Q[qi2];
+      if(q2.cat!==lastCat&&lastCat)html+='<span class="step-sep"></span>';
+      lastCat=q2.cat;
+      const isDone=ans[qi2]!==undefined;
+      const isDanger=isDone&&(ans[qi2]>=3);
+      const cls=i===fi?'current':isDanger?'danger-done':isDone?'done':'';
+      html+=`<span class="step-dot ${cls}"></span>`;
+    }
+    dotsEl.innerHTML=html;
+  }
   document.getElementById('branch-flag').style.display=q.branch?'block':'none';
   const scBox=document.getElementById('q-scenario');
   if(q.scenario){scBox.textContent=q.scenario;scBox.style.display='block';}else scBox.style.display='none';
