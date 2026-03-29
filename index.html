@@ -71,6 +71,22 @@ section.active {
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.card.slide-right { animation: slideInRight 0.35s cubic-bezier(.25,.8,.25,1) both; }
+.card.slide-left  { animation: slideInLeft 0.35s cubic-bezier(.25,.8,.25,1) both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -1077,6 +1093,8 @@ function insertBranch() {
   }
 }
 
+let slideDir = 'right'; // 'right' for next, 'left' for prev
+
 function currentQIndex() { return questionFlow[flowIndex]; }
 
 function startQuiz() {
@@ -1098,6 +1116,12 @@ function renderQuestion() {
   const qi = currentQIndex();
   const q = Q[qi];
   const total = questionFlow.length;
+
+  // Apply slide animation to card
+  const card = document.getElementById('q-card');
+  card.classList.remove('slide-right', 'slide-left');
+  void card.offsetWidth; // force reflow
+  card.classList.add(slideDir === 'right' ? 'slide-right' : 'slide-left');
 
   document.getElementById('q-counter').textContent = `${flowIndex+1} / ${total}`;
   document.getElementById('q-category').textContent = q.cat;
@@ -1187,6 +1211,7 @@ function selectOpt(i) {
 
 function prevQuestion() {
   if (flowIndex > 0) {
+    slideDir = 'left';
     flowIndex--;
     renderQuestion();
     window.scrollTo({ top:0, behavior:'smooth' });
@@ -1198,8 +1223,8 @@ function nextQuestion() {
   if (answers[qi] === undefined) return;
 
   if (flowIndex < questionFlow.length - 1) {
+    slideDir = 'right';
     flowIndex++;
-    // Recount for display (flow may have changed)
     renderQuestion();
     window.scrollTo({ top:0, behavior:'smooth' });
   } else {
