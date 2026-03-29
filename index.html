@@ -2,8 +2,18 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>猝死指数测试 💀</title>
+<meta name="description" content="你离猝死还有多远？30道题，7个维度，一份残酷但真实的健康生活方式报告。">
+<meta name="theme-color" content="#0a0a0f">
+<meta property="og:title" content="猝死指数测试 💀 Sudden Death Index">
+<meta property="og:description" content="30道题，7个维度，测测你的猝死指数有多高。测完建议认真对待。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="猝死指数测试 💀">
+<meta name="twitter:description" content="我的猝死指数是___分，你敢测吗？">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
@@ -251,6 +261,9 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .btn-next.ready:active{transform:scale(.97);}
 
 /* Sound toggle */
+.btn-prev{padding:7px 14px;border-radius:100px;font-family:inherit;font-size:12px;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--dim);transition:all .2s;}
+.btn-prev:hover{background:rgba(255,255,255,.08);color:#fff;}
+.btn-prev.hide{display:none;}
 .sound-btn{
   background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
   border-radius:100px;padding:6px 12px;cursor:pointer;
@@ -390,6 +403,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .btn-share:hover{background:rgba(255,255,255,.09);transform:translateY(-1px);}
 .btn-retry{background:linear-gradient(135deg,#ff0044,#cc0033);border:none;color:#fff;padding:12px 28px;border-radius:100px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 0 28px rgba(255,0,68,.3);}
 .btn-retry:hover{transform:translateY(-1px);box-shadow:0 0 44px rgba(255,0,68,.45);}
+.disclaimer{font-size:10px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.7;font-family:'Space Mono',monospace;letter-spacing:.3px;opacity:.6;}
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);border-radius:100px;padding:10px 24px;font-size:13px;color:var(--accent);pointer-events:none;opacity:0;transition:all .3s;white-space:nowrap;z-index:200;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
@@ -493,6 +507,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="reaction-line" id="reaction-line"></div>
     <div class="next-row">
       <div style="display:flex;align-items:center;gap:10px;">
+        <button class="btn-prev" id="btn-prev" onclick="prevQ()">← 上一题</button>
         <button class="sound-btn" id="sound-btn" onclick="toggleSound()">🔇 音效</button>
         <span class="skip-hint" id="skip-hint">已记录，可继续</span>
       </div>
@@ -528,7 +543,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
     <div class="rs" id="rs11"><div class="sec-label" style="color:var(--dim);margin-bottom:10px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px">// 七维分析 · 点击展开建议</div><div class="dims-grid" id="dims-grid"></div></div>
     <div class="rs" id="rs12"><div class="advice-card"><div class="sec-label" style="color:var(--accent);margin-bottom:12px">// 综合改善建议</div><ul class="advice-list" id="advice-list"></ul></div></div>
-    <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div></div>
+    <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
   </div>
 </section>
 </div>
@@ -1159,6 +1174,7 @@ function renderQ(){
   }
   setReady(ans[qi]!==undefined);
   document.getElementById('btn-next').textContent=fi===flow.length-1?'查看结果 →':'下一题 →';
+  document.getElementById('btn-prev').classList.toggle('hide',fi===0);
 }
 
 function setReady(y){document.getElementById('btn-next').className='btn-next'+(y?' ready':'');}
@@ -1181,6 +1197,9 @@ function pickGrid(i){
   if(o.r)showReaction(o.r);
 }
 
+function prevQ(){
+  if(fi>0){fi--;renderQ();window.scrollTo({top:0,behavior:'smooth'});}
+}
 function nextQ(){
   if(ans[curQi()]===undefined)return;
   if(fi<flow.length-1){
