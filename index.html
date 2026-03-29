@@ -8059,6 +8059,256 @@ ${line}
   obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
 
+// ════ "HEALTH WANTED POSTER" ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('wanted-poster'))return;
+      const score=calcScore();
+      const dims=calcDims();
+      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+      const bounty=Math.round(score*score*1.5+Math.random()*1000);
+      const aliases=['夜猫子','外卖之王','久坐达人','压力山大','咖啡因依赖者','维生素D逃犯','运动绝缘体','情绪过山车'];
+      const alias=aliases[Math.floor(Math.random()*aliases.length)];
+      const el=document.createElement('div');
+      el.id='wanted-poster';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:linear-gradient(180deg,#f5e6c8 0%,#e8d5a8 100%);color:#3a2a1a;padding:20px;border-radius:4px;text-align:center;font-family:Georgia,'Times New Roman',serif;position:relative;box-shadow:0 4px 20px rgba(0,0,0,.3);border:3px double #8b7355;">
+        <div style="font-size:9px;letter-spacing:6px;color:#8b7355;border-bottom:1px solid #c4a97a;padding-bottom:6px;">★ ★ ★ 健 康 通 缉 令 ★ ★ ★</div>
+        <div style="font-size:28px;font-weight:900;margin:10px 0 4px;letter-spacing:4px;text-shadow:1px 1px 0 rgba(0,0,0,.1);">WANTED</div>
+        <div style="font-size:10px;color:#8b7355;letter-spacing:2px;">DEAD OR ALIVE (preferably alive)</div>
+        <div style="margin:14px auto;width:80px;height:80px;background:#e0d0b0;border-radius:50%;border:2px solid #8b7355;display:flex;align-items:center;justify-content:center;font-size:40px;">💀</div>
+        <div style="font-size:11px;color:#5a4a3a;margin-bottom:4px;">代号：<b>${alias}</b></div>
+        <div style="font-size:10px;color:#8b7355;margin-bottom:10px;">猝死指数：${score} | 头号罪行：${worst.name}</div>
+        <div style="background:rgba(0,0,0,.06);padding:8px;border-radius:4px;font-size:10px;line-height:1.8;color:#5a4a3a;">
+          罪状：${worst.pct>=60?'严重忽视'+worst.name.split(' ')[1]+'健康':'多项健康指标异常'}<br>
+          危险等级：${'⭐'.repeat(Math.min(5,Math.ceil(score/20)))}<br>
+          赏金：${bounty.toLocaleString()} 健康币
+        </div>
+        <div style="margin-top:10px;font-size:9px;color:#8b7355;border-top:1px solid #c4a97a;padding-top:6px;">如有线索请联系最近的健身房或医院</div>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(6,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },3500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ MICRO-IMPROVEMENTS TRACKER ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('micro-improve'))return;
+      const dims=calcDims();
+      const worst3=dims.sort((a,b)=>b.pct-a.pct).slice(0,3);
+      const tips={
+        '😴 睡眠':['今晚提前15分钟上床','睡前1小时不看手机','把卧室温度调低1-2度'],
+        '💼 工作':['每50分钟站起来活动5分钟','午休时离开工位走走','下班后不再看工作消息'],
+        '🏃 运动':['今天走路超过5000步','做10个深蹲，现在就做','爬楼梯代替坐电梯'],
+        '🍜 饮食':['今天多喝一杯水','下一餐加一份蔬菜','少点一份甜品'],
+        '😰 压力':['做3次深呼吸，现在','今天跟一个朋友聊聊天','写下3件今天感恩的事'],
+        '🚬 习惯':['今天少喝一杯咖啡','比昨天早睡10分钟','减少一次刷手机时间'],
+        '💔 情绪':['听一首喜欢的音乐','出门晒5分钟太阳','对镜子笑一下（不是开玩笑）'],
+      };
+      const el=document.createElement('div');
+      el.id='micro-improve';
+      el.className='rs on';
+      let tipHTML='';
+      worst3.forEach(d=>{
+        const dimTips=tips[d.name]||['保持关注这个维度'];
+        const tip=dimTips[Math.floor(Math.random()*dimTips.length)];
+        tipHTML+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+          <div style="font-size:16px;flex-shrink:0;">${d.name.split(' ')[0]}</div>
+          <div>
+            <div style="font-size:10px;color:var(--dim);">${d.name.split(' ')[1]||d.name}</div>
+            <div style="font-size:11px;color:var(--text);margin-top:2px;">→ ${tip}</div>
+          </div>
+          <label style="margin-left:auto;flex-shrink:0;cursor:pointer;">
+            <input type="checkbox" style="display:none;" onchange="this.parentElement.querySelector('span').textContent=this.checked?'✅':'○'">
+            <span style="font-size:16px;">○</span>
+          </label>
+        </div>`;
+      });
+      el.innerHTML=`<div style="text-align:center;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);">🎯 今日微改善</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.35);">从最小的改变开始，打勾完成</div>
+      </div>${tipHTML}`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(3,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },1800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ RESULT PAGE BACKGROUND COLOR SHIFT BASED ON SCORE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const score=calcScore();
+      if(score>=70){
+        // Subtle red tint for dangerous scores
+        document.body.style.background=`linear-gradient(180deg,#1a0f0f 0%,#131620 50%,#1a0f0f 100%)`;
+      }else if(score>=50){
+        // Warm warning
+        document.body.style.background=`linear-gradient(180deg,#171410 0%,#131620 50%,#171410 100%)`;
+      }
+      // Reset on leaving result page
+      const obs2=new MutationObserver(()=>{
+        if(!sec.classList.contains('active')){
+          document.body.style.background='';
+          obs2.disconnect();
+        }
+      });
+      obs2.observe(sec,{attributes:true,attributeFilter:['class']});
+    },500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ SCREEN SHAKE ON HIGH SCORE REVEAL ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const score=calcScore();
+      if(score>=75){
+        const style=document.createElement('style');
+        style.textContent=`@keyframes screenShake{0%,100%{transform:translateX(0)}10%{transform:translateX(-3px) rotate(-0.5deg)}20%{transform:translateX(3px) rotate(0.5deg)}30%{transform:translateX(-2px)}40%{transform:translateX(2px)}50%{transform:translateX(-1px)}}.screen-shake{animation:screenShake .4s ease-in-out;}`;
+        document.head.appendChild(style);
+        document.body.classList.add('screen-shake');
+        setTimeout(()=>document.body.classList.remove('screen-shake'),500);
+      }
+    },1200);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ LONG-PRESS RESULT CARD TO SCREENSHOT MODE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const card=document.getElementById('res-card');
+      if(!card)return;
+      let pressTimer;
+      card.addEventListener('touchstart',()=>{
+        pressTimer=setTimeout(()=>{
+          // Toggle "screenshot mode" - hide non-essential UI
+          const nav=document.querySelector('.res-nav');
+          const fab=document.getElementById('scroll-top-fab');
+          const theme=document.querySelector('.theme-toggle');
+          [nav,fab,theme].forEach(el=>{if(el)el.style.display=el.style.display==='none'?'':'none';});
+          // Show toast
+          const toast=document.createElement('div');
+          toast.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--card-bg);border:1px solid var(--card-border);padding:6px 16px;border-radius:20px;font-size:10px;color:var(--dim);z-index:300;animation:fadeUp .3s;';
+          toast.textContent=nav?.style.display==='none'?'📸 截图模式 · 再次长按恢复':'已恢复正常显示';
+          document.body.appendChild(toast);
+          setTimeout(()=>toast.remove(),2000);
+        },800);
+      },{passive:true});
+      card.addEventListener('touchend',()=>clearTimeout(pressTimer),{passive:true});
+      card.addEventListener('touchmove',()=>clearTimeout(pressTimer),{passive:true});
+    },500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ QUIZ: DANGER SOUND ESCALATION ════
+(function(){
+  let dangerCount=0;
+  const origPickGrid=window.pickGrid;
+  if(!origPickGrid)return;
+  window.pickGrid=function(btn,val){
+    origPickGrid.apply(this,arguments);
+    if(val>=3)dangerCount++;
+    if(dangerCount>0&&dangerCount%5===0){
+      // Play escalating warning tone
+      try{
+        const ctx=new(window.AudioContext||window.webkitAudioContext)();
+        const osc=ctx.createOscillator();
+        const gain=ctx.createGain();
+        osc.connect(gain);gain.connect(ctx.destination);
+        osc.type='sawtooth';
+        osc.frequency.setValueAtTime(200+dangerCount*20,ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400+dangerCount*30,ctx.currentTime+0.2);
+        gain.gain.setValueAtTime(0.04,ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);
+        osc.start();osc.stop(ctx.currentTime+0.3);
+      }catch(e){}
+    }
+  };
+})();
+
+// ════ RANDOM "DID YOU SURVIVE?" TAUNT ON RETURN ════
+(function(){
+  try{
+    const lastVisit=parseInt(localStorage.getItem('sdi-last-visit'))||0;
+    const now=Date.now();
+    localStorage.setItem('sdi-last-visit',now);
+    if(lastVisit===0)return;
+    const daysSince=Math.floor((now-lastVisit)/(1000*60*60*24));
+    if(daysSince<1)return;
+    const taunts=[
+      `${daysSince}天没见，还活着呢？`,
+      `消失了${daysSince}天，我以为……算了。`,
+      `${daysSince}天了，你的猝死指数可能已经变了。`,
+      `好久不见！这${daysSince}天你有改善生活习惯吗？`,
+      `${daysSince}天后归来，是变健康了还是更作死了？`,
+    ];
+    const taunt=taunts[Math.floor(Math.random()*taunts.length)];
+    setTimeout(()=>{
+      const sec=document.getElementById('sec-intro');
+      if(!sec?.classList.contains('active'))return;
+      const el=document.createElement('div');
+      el.style.cssText='text-align:center;font-size:10px;color:var(--dim);margin-bottom:8px;opacity:0;animation:fadeUp .5s ease .5s forwards;';
+      el.textContent=taunt;
+      const startBtn=sec.querySelector('.start-btn')||sec.querySelector('button');
+      if(startBtn)startBtn.parentNode.insertBefore(el,startBtn);
+    },800);
+  }catch(e){}
+})();
+
+// ════ ENHANCED OPTION SELECTION: DESELECT OTHER OPTIONS VISUALLY ════
+(function(){
+  const origPickGrid=window.pickGrid;
+  if(!origPickGrid)return;
+  window.pickGrid=function(btn,val){
+    origPickGrid.apply(this,arguments);
+    // Dim non-selected options
+    const grid=btn.closest('[class^="egrid"]');
+    if(!grid)return;
+    const items=grid.querySelectorAll('.eg-item');
+    items.forEach(item=>{
+      if(item!==btn&&!item.classList.contains('dim')){
+        item.classList.add('dim');
+      }
+    });
+  };
+})();
+
 // Check URL hash on load for shared results
 (function checkURLResult(){
   const hash=location.hash;if(!hash.startsWith('#r='))return;
