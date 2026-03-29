@@ -452,6 +452,10 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .btn-retry{background:linear-gradient(135deg,#ef4444,#dc2626);border:none;color:#fff;padding:13px 30px;border-radius:100px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 0 28px rgba(239,68,68,.25);}
 .btn-retry:hover{transform:translateY(-1px);box-shadow:0 0 44px rgba(239,68,68,.45);}
 .disclaimer{font-size:11px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.7;letter-spacing:.2px;opacity:.6;}
+/* ══ RESULT SECTION SLIDE-UP ══ */
+.rs{transform:translateY(16px);opacity:0;transition:transform .5s cubic-bezier(.25,.8,.25,1),opacity .5s ease;}
+.rs.on{transform:none;opacity:1;}
+
 /* ══ SCROLL PROGRESS BAR ══ */
 #scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.7));z-index:500;width:0%;transition:width .15s ease-out,opacity .3s;pointer-events:none;opacity:0;box-shadow:0 0 10px rgba(var(--ar),var(--ag),var(--ab),.4);}
 #scroll-progress.active{opacity:1;}
@@ -877,7 +881,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
   <div class="card" id="res-card">
     <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>TIME_ELAPSED: <span id="rpt-time">—</span><br>RISK_DNA: <span id="rpt-dna" style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.25)">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
     <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div><div class="dim-chips" id="dim-chips"></div><div class="fun-tags-section"><div class="fun-tags-label">// 你的标签</div><div class="fun-tags" id="fun-tags"></div></div><div class="achievements" id="achievements"></div><div class="score-rank"><span>你的位置在全部测试者中</span><div class="score-rank-bar"><div class="score-rank-marker" id="score-rank-marker" style="left:0%"></div></div><div class="score-rank-labels"><span>健康达人</span><span>亚健康</span><span>高危</span><span>极危</span></div></div></div></div>
-    <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">你的健康人格</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div></div>
+    <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">你的健康人格</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div><div id="arch-traits" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center;"></div><div id="arch-compat" style="font-size:12px;color:var(--dim);text-align:center;margin-top:10px;line-height:1.7;padding:10px;background:rgba(255,255,255,.02);border-radius:12px;border:1px solid rgba(255,255,255,.04);"></div></div>
     <div class="rs" id="rs3"><div class="percentile-banner"><div class="pct-bar-wrap"><div class="pct-bar-bg"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div><div class="pct-text" id="pct-text">—</div></div><div class="pct-num" id="pct-num">—</div></div><div class="pct-subs" id="pct-subs"></div></div>
     <div class="rs" id="rs4"><div class="vitals-row"><div class="vital"><span class="vital-icon">🧬</span><span class="vital-val" id="v-bodyage">—</span><span class="vital-lbl">身体年龄</span></div><div class="vital"><span class="vital-icon">❤️</span><span class="vital-val" id="v-heart">—</span><span class="vital-lbl">心脏负荷</span></div><div class="vital"><span class="vital-icon">🔋</span><span class="vital-val" id="v-recovery">—</span><span class="vital-lbl">恢复力</span></div><div class="vital"><span class="vital-icon">🧠</span><span class="vital-val" id="v-stress">—</span><span class="vital-lbl">神经紧张</span></div></div><div class="risk-tags" id="risk-tags"></div></div>
     <div class="rs" id="rs4b"><div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 你的年龄 vs 身体年龄</div><div class="age-compare"><div style="text-align:center;flex-shrink:0;"><div style="font-size:10px;color:var(--dim);margin-bottom:4px;">实际年龄</div><div id="age-real" style="font-size:22px;font-weight:700;font-family:'Space Mono',monospace;color:#60a5fa;">--</div></div><div style="flex:1;"><div class="age-bar"><div class="age-marker" id="age-real-m" style="left:0%;background:rgba(96,165,250,.15);border-color:#60a5fa;">📅</div><div class="age-marker" id="age-body-m" style="left:0%;background:rgba(239,68,68,.15);border-color:#ef4444;">💀</div></div><div class="age-label-row"><span>20岁</span><span>40岁</span><span>60岁</span><span>80岁</span></div></div><div style="text-align:center;flex-shrink:0;"><div style="font-size:10px;color:var(--dim);margin-bottom:4px;">身体年龄</div><div id="age-body" style="font-size:22px;font-weight:700;font-family:'Space Mono',monospace;color:#ef4444;">--</div></div></div></div>
@@ -907,7 +911,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="rs" id="rs12d"><div style="background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.04),rgba(var(--ar),var(--ag),var(--ab),.01));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:20px;padding:24px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--accent);margin-bottom:14px">🎯 本周健康挑战</div><div id="weekly-challenge" style="font-size:18px;font-weight:700;color:#e8e8e8;line-height:1.6;margin-bottom:10px;"></div><div id="challenge-desc" style="font-size:12px;color:var(--dim);line-height:1.7;"></div><div id="challenge-diff" style="margin-top:12px;font-size:11px;font-weight:600;letter-spacing:1px;"></div></div></div>
     <div class="rs" id="rs12e"><div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 本次测试统计</div><div id="session-stats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"></div></div></div>
     <div class="rs" id="rs12f"><div style="background:rgba(239,68,68,.02);border:1px solid rgba(239,68,68,.08);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.4);margin-bottom:8px;">⏰ 体检提醒</div><div id="checkup-msg" style="font-size:13px;color:#bbb;line-height:1.7;"></div><div style="margin-top:12px;font-size:11px;color:var(--dim);font-style:italic;" id="checkup-items"></div></div></div>
-    <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-share" onclick="encodeResultToURL()">🔗 分享链接</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
+    <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-share" onclick="encodeResultToURL()">🔗 分享链接</button><button class="btn-share" onclick="shareTextArt()">🎨 文字海报</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
   </div>
 </section>
 </div>
@@ -2244,6 +2248,32 @@ function showResult(){
   document.getElementById('arch-name').textContent=arch.name;document.getElementById('arch-name').style.color=arch.color;
   document.getElementById('arch-desc').textContent=arch.desc;document.getElementById('arch-badge').textContent=arch.badge;
   document.getElementById('arch-badge').style.color=arch.color;document.getElementById('arch-badge').style.borderColor=arch.border;
+  // Personality traits
+  const traitMap={
+    burner:['💼 工作狂','🔥 高产出','⚡ 精力透支','🫠 休息困难'],
+    ghost:['📱 数字依赖','🌙 昼夜颠倒','👻 社交回避','🧠 信息过载'],
+    zombie:['🍕 饮食随意','🛋️ 运动缺乏','🚚 外卖依赖','😴 体能下降'],
+    anxious:['😰 持续焦虑','🧠 过度思虑','💭 负面预期','😣 情绪波动'],
+    fossil:['🪑 久坐成性','💻 屏幕依赖','🦴 关节僵硬','🐌 代谢缓慢'],
+    night:['🌙 深夜活跃','💭 思维活跃','😴 日间疲倦','🎭 情绪内耗'],
+    puncher:['💪 硬撑习惯','🤐 情绪压抑','🏋️ 高耐受力','⚠️ 忽视信号'],
+    phantom:['👤 存在感低','🤫 沉默寡言','📊 默默付出','😶 情绪隐藏'],
+    hedonist:['🎰 即时满足','🍔 感官驱动','📱 多巴胺依赖','⏰ 拖延倾向'],
+    timebomb:['💣 多维风险','⏱️ 倒计时中','🎭 表面正常','⚡ 随时触发'],
+    declining:['📉 缓慢下滑','😐 自我麻痹','🔄 习惯固化','❓ 方向模糊'],
+    model:['☠️ 全面危险','🚨 紧急状态','📋 急需改变','⏰ 时间紧迫'],
+  };
+  const traitsEl=document.getElementById('arch-traits');traitsEl.innerHTML='';
+  (traitMap[arch.key]||['❓ 独特类型']).forEach(t=>{
+    traitsEl.innerHTML+=`<span style="font-size:11px;padding:4px 10px;background:${arch.bg||'rgba(255,255,255,.04)'};border:1px solid ${arch.border||'rgba(255,255,255,.08)'};border-radius:100px;color:${arch.color||'#aaa'}">${t}</span>`;
+  });
+  // Compatible archetype
+  const compatMap={burner:'night',ghost:'fossil',zombie:'anxious',anxious:'hedonist',fossil:'ghost',night:'burner',puncher:'phantom',phantom:'puncher',hedonist:'anxious',timebomb:'model',declining:'declining',model:'timebomb'};
+  const compatKey=compatMap[arch.key]||'declining';
+  const compatArch=ARCHETYPES.find(a=>a.key===compatKey);
+  if(compatArch){
+    document.getElementById('arch-compat').innerHTML=`<span style="font-size:10px;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:4px;">最常见搭配</span>${compatArch.icon} <b style="color:${compatArch.color}">${compatArch.name}</b> — 你们经常出现在同一个办公室里`;
+  }
   const pp=Math.min(98,Math.round(score*.82+Math.random()*5));
   const pCol=score<30?'#34d399':score<55?'#fbbf24':score<75?'#f59e0b':'#ef4444';
   const pBar=document.getElementById('pct-bar');pBar.style.background=pCol;pBar.style.width='0%';setTimeout(()=>pBar.style.width=pp+'%',600);
@@ -2726,6 +2756,22 @@ function burstConfetti(){
     const [r,g,b]=colors[i%colors.length];
     pts.push({x:canv.width/2+(Math.random()-.5)*200,y:canv.height/2,vx:(Math.random()-.5)*4,vy:-Math.random()*5-2,sz:Math.random()*3+1.5,al:.8,r,g,b,life:0,max:120+Math.random()*80,cross:false,rot:0});
   }
+}
+function shareTextArt(){
+  const score=calcScore(),level=LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
+  const dims=calcDims();
+  const bar=v=>{const filled=Math.round(v/100*10);return '█'.repeat(filled)+'░'.repeat(10-filled);};
+  const dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
+  const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
+  let art=`\n┌─────────────────────────┐\n│   💀 猝死指数测试 v7.4   │\n├─────────────────────────┤\n│                         │\n│     SCORE: ${String(score).padStart(3,' ')} / 100      │\n│     GRADE: ${level.grade.padEnd(12,' ')}  │\n│     ${level.label.padEnd(19,' ')} │\n│                         │\n├── 七维风险 ──────────────┤\n`;
+  dims.forEach(d=>{
+    const name=(d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key).padEnd(4,'　');
+    art+=`│ ${name} ${bar(d.pct)} ${String(d.pct).padStart(3,' ')}% │\n`;
+  });
+  art+=`├─────────────────────────┤\n│ ${arch.icon} ${arch.name.padEnd(18,' ')}  │\n└─────────────────────────┘\n\n你敢测吗？ 👉 猝死指数测试`;
+  navigator.clipboard.writeText(art).then(()=>{
+    const t=document.getElementById('toast');t.textContent='文字海报已复制 ✓';t.classList.add('show');setTimeout(()=>{t.classList.remove('show');t.textContent='已复制到剪贴板 ✓';},2200);
+  }).catch(()=>{});
 }
 function retryQuiz(){if(praf)cancelAnimationFrame(praf);canv.classList.remove('active');pts=[];history.replaceState(null,'',location.pathname);startQuiz();}
 
