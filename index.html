@@ -3247,6 +3247,87 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ CURSOR SKULL TRAIL (result page, desktop) ════
+(function(){
+  if('ontouchstart' in window)return;
+  let isResult=false;
+  const obs=new MutationObserver(()=>{
+    isResult=!!document.getElementById('sec-result')?.classList.contains('active');
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  let lastTrail=0;
+  document.addEventListener('mousemove',e=>{
+    if(!isResult)return;
+    const now=Date.now();
+    if(now-lastTrail<120)return;
+    lastTrail=now;
+    const el=document.createElement('span');
+    el.textContent='💀';
+    el.style.cssText=`position:fixed;left:${e.clientX+12}px;top:${e.clientY-8}px;font-size:10px;pointer-events:none;z-index:999;opacity:.3;transition:all 1s;`;
+    document.body.appendChild(el);
+    requestAnimationFrame(()=>{el.style.opacity='0';el.style.transform='translateY(-20px) scale(.5)';});
+    setTimeout(()=>el.remove(),1000);
+  });
+})();
+
+// ════ LANDING PAGE: ANIMATED STAT COUNTER WITH DELAY ════
+(function(){
+  // Make category pills react to hover with slight tilt
+  document.querySelectorAll('.cpill').forEach(pill=>{
+    pill.addEventListener('mousemove',e=>{
+      const rect=pill.getBoundingClientRect();
+      const x=(e.clientX-rect.left)/rect.width-.5;
+      pill.style.transform=`translateY(-2px) rotateY(${x*8}deg)`;
+    });
+    pill.addEventListener('mouseleave',()=>{
+      pill.style.transform='';
+    });
+  });
+})();
+
+// ════ RESULT CARD: RANDOM GLITCH FLICKER ════
+(function(){
+  let flickerIv=null;
+  const obs=new MutationObserver(()=>{
+    const isResult=document.getElementById('sec-result')?.classList.contains('active');
+    const score=isResult?parseInt(document.getElementById('score-num')?.textContent||'0'):0;
+    if(isResult&&score>=70&&!flickerIv){
+      flickerIv=setInterval(()=>{
+        if(!document.getElementById('sec-result')?.classList.contains('active')){clearInterval(flickerIv);flickerIv=null;return;}
+        if(Math.random()<.08){
+          const card=document.getElementById('res-card');
+          if(card){
+            card.style.filter='brightness(1.1) hue-rotate(5deg)';
+            setTimeout(()=>{card.style.filter='';},60);
+          }
+        }
+      },200);
+    }else if(!isResult&&flickerIv){clearInterval(flickerIv);flickerIv=null;}
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ LANDING: CLICK STAT TO SEE FUN FACT ════
+(function(){
+  const facts=[
+    ['🧠 中国每年约54万人心源性猝死','💤 人一生有1/3时间在睡觉','🏃 每天运动30分钟可降低35%猝死风险'],
+    ['📊 97分是本测试历史最高记录','💀 中国猝死率在全球排名前列','⚡ 年轻人猝死案例近年增长26%'],
+    ['📋 30道题覆盖7个健康维度','🔬 测试基于流行病学数据设计','📈 已有超过10万人完成测试'],
+  ];
+  document.querySelectorAll('.lstat').forEach((stat,i)=>{
+    stat.style.cursor='pointer';
+    stat.addEventListener('click',()=>{
+      const fact=facts[i]?.[Math.floor(Math.random()*3)]||'';
+      if(!fact)return;
+      const tip=document.createElement('div');
+      tip.style.cssText='position:absolute;bottom:100%;left:50%;transform:translateX(-50%) translateY(-4px);background:rgba(0,0,0,.9);border:1px solid var(--card-border);border-radius:10px;padding:10px 14px;font-size:11px;color:#ccc;white-space:nowrap;z-index:100;animation:feedSlideIn .3s;pointer-events:none;';
+      tip.textContent=fact;
+      stat.style.position='relative';stat.appendChild(tip);
+      setTimeout(()=>tip.remove(),2500);
+    });
+  });
+})();
+
 // ════ PERSONALITY COMPATIBILITY CHECK SHARE ════
 (function(){
   const obs=new MutationObserver(()=>{
