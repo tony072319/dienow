@@ -240,6 +240,8 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
 .eg-item:hover .eg-emoji{transform:scale(1.15);}
 .eg-item.sel .eg-emoji{transform:scale(1.15);}
 .eg-label{font-size:12px;font-weight:500;color:rgba(255,255,255,.5);line-height:1.4;transition:color .15s;}
+.eg-danger-dot{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:2px;}
+.eg-danger-dot span{width:4px;height:4px;border-radius:50%;background:rgba(239,68,68,.4);}
 .eg-item.sel .eg-label{color:rgba(255,255,255,.85);}
 .eg-item.dim{opacity:.4;transform:scale(.94);filter:grayscale(.3);pointer-events:auto;}
 
@@ -311,7 +313,9 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .sound-btn.on{color:var(--accent);border-color:rgba(var(--ar),var(--ag),var(--ab),.3);}
 
 /* ══ LOADING ══ */
-#sec-loading .card{text-align:center;padding:64px 40px;}
+#sec-loading .card{text-align:center;padding:64px 40px;position:relative;overflow:hidden;}
+#sec-loading .card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanLine 2s linear infinite;opacity:.6;}
+@keyframes scanLine{0%{top:0}100%{top:100%}}
 .load-title{font-size:17px;font-weight:700;margin-bottom:6px;}
 .load-sub{font-size:13px;color:var(--dim);margin-bottom:28px;}
 .ecg-outer{width:100%;height:56px;overflow:hidden;margin-bottom:28px;}
@@ -1782,7 +1786,7 @@ function renderQ(){
     document.getElementById('skip-hint').classList.remove('show');
     const cnt=q.opts.length;
     const gridClass=cnt===6?'egrid-6':cnt===4?'egrid-4':'egrid-5';
-    body.innerHTML=`<div class="${gridClass}">${q.opts.map((o,i)=>`<div class="eg-item${ans[qi]===i?' sel':''}" data-idx="${i}"><span class="eg-emoji">${o.e}</span><div class="eg-label">${o.l.replace('\n','<br>')}</div></div>`).join('')}</div>`;
+    body.innerHTML=`<div class="${gridClass}">${q.opts.map((o,i)=>{const s=o.s!==undefined?o.s:i;const dots=s>=3?`<div class="eg-danger-dot">${'<span></span>'.repeat(Math.min(s-2,3))}</div>`:'';return`<div class="eg-item${ans[qi]===i?' sel':''}${ans[qi]===i&&s>=3?' danger-sel':''}" data-idx="${i}"><span class="eg-emoji">${o.e}</span><div class="eg-label">${o.l.replace('\n','<br>')}</div>${dots}</div>`;}).join('')}</div>`;
     body.querySelectorAll('.eg-item').forEach(el=>{
       el.addEventListener('click',e=>{addRipple(el,e);pickGrid(parseInt(el.dataset.idx));});
       el.addEventListener('mouseenter',playHover);
