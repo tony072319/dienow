@@ -456,6 +456,16 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .rs{transform:translateY(16px);opacity:0;transition:transform .5s cubic-bezier(.25,.8,.25,1),opacity .5s ease;}
 .rs.on{transform:none;opacity:1;}
 
+/* ══ ANIMATED RESULT HEADER GRADIENT ══ */
+.res-header{position:relative;}
+.res-header::before{content:'';position:absolute;top:-40px;left:-40px;right:-40px;height:300px;background:radial-gradient(ellipse 70% 200px at 50% 20%,rgba(var(--ar),var(--ag),var(--ab),.08) 0%,transparent 70%);pointer-events:none;z-index:0;animation:headerGlow 4s ease-in-out infinite alternate;}
+@keyframes headerGlow{0%{opacity:.5;transform:scale(1)}100%{opacity:1;transform:scale(1.05)}}
+
+/* ══ OPTION HOVER GLOW ══ */
+.eg-item::before{content:'';position:absolute;inset:-2px;border-radius:20px;background:conic-gradient(from var(--border-angle,0deg),transparent 60%,rgba(var(--ar),var(--ag),var(--ab),.2) 70%,transparent 80%);opacity:0;transition:opacity .3s;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;padding:2px;pointer-events:none;}
+.eg-item:hover::before{opacity:1;animation:borderSpin 4s linear infinite;}
+.eg-item.sel::before{opacity:0!important;}
+
 /* ══ SCROLL PROGRESS BAR ══ */
 #scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.7));z-index:500;width:0%;transition:width .15s ease-out,opacity .3s;pointer-events:none;opacity:0;box-shadow:0 0 10px rgba(var(--ar),var(--ag),var(--ab),.4);}
 #scroll-progress.active{opacity:1;}
@@ -2548,6 +2558,19 @@ function showResult(){
   document.getElementById('checkup-msg').textContent=checkupMsgs[ckLevel];
   const ckItems=dims.sort((a,b)=>b.pct-a.pct).slice(0,3).flatMap(d=>checkupItems[d.key]||[]).slice(0,5);
   document.getElementById('checkup-items').textContent=ckItems.length?'建议检查：'+ckItems.join(' · '):'';
+  // XP calculation - health awareness points
+  let xp=50;// base XP for completing test
+  xp+=Object.values(ans).filter(v=>v<=1).length*5;// safe answers reward
+  xp+=achMatched.length*20;// achievements bonus
+  xp+=matched.length*10;// tags bonus
+  if(score<30)xp+=30;// low risk bonus
+  if(quizStartTime&&(Date.now()-quizStartTime)>120000)xp+=10;// took time thinking
+  const xpLevel=xp<80?1:xp<130?2:xp<180?3:xp<250?4:5;
+  const xpTitle=['','新手观察者','健康学徒','风险管理师','养生专家','生命守护者'][xpLevel];
+  try{
+    const totalXP=parseInt(localStorage.getItem('sdi-xp')||'0')+xp;
+    localStorage.setItem('sdi-xp',String(totalXP));
+  }catch(e){}
   // Session stats
   const ssEl=document.getElementById('session-stats');
   const dangerCount=Object.values(ans).filter(v=>v>=3).length;
@@ -2567,6 +2590,8 @@ function showResult(){
     {icon:'🏆',label:'解锁成就',val:`${achCount}个`},
     {icon:'📊',label:'历史测试',val:`第${histLen2}次`},
     {icon:'🎯',label:'危险比率',val:`${totalQ>0?Math.round(dangerCount/totalQ*100):0}%`},
+    {icon:'⭐',label:'觉醒XP',val:`${xp} · Lv${xpLevel}`},
+    {icon:'🎓',label:'觉醒等级',val:xpTitle},
   ].map(s=>`<div style="background:rgba(255,255,255,.03);border-radius:10px;padding:10px;"><span style="font-size:16px">${s.icon}</span><div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--accent);margin:4px 0">${s.val}</div><div style="font-size:10px;color:var(--dim)">${s.label}</div></div>`).join('');
   go('sec-result','anim-fade');clearProgress();playReveal(score);
   const rsIds=['rs0','rs1','rs2','rs3','rs4','rs4b','rs4c','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs7f','rs8','rs9','rs9b','rs10','rs10b','rs11','rs12','rs12b','rs12c','rs12c2','rs12d','rs12e','rs12f','rs13'];
@@ -2592,6 +2617,16 @@ function showResult(){
     hist.push({score,ts:Date.now()});
     if(hist.length>10)hist.splice(0,hist.length-10);
     localStorage.setItem('sdi-history',JSON.stringify(hist));
+    // Daily streak tracking
+    const today=new Date().toISOString().split('T')[0];
+    const lastDay=localStorage.getItem('sdi-lastday')||'';
+    const streak=parseInt(localStorage.getItem('sdi-streak')||'0');
+    const yesterday=new Date(Date.now()-864e5).toISOString().split('T')[0];
+    if(today!==lastDay){
+      localStorage.setItem('sdi-lastday',today);
+      if(lastDay===yesterday)localStorage.setItem('sdi-streak',String(streak+1));
+      else if(lastDay!==today)localStorage.setItem('sdi-streak','1');
+    }
   }catch(e){}
   clearProgress();// Clear in-progress save
 }
