@@ -1071,7 +1071,7 @@ html.light .achievement-name{color:#1a1a2e;}
   <div class="time-greeting" id="time-greeting"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v9.0</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v11.0</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div><div class="dc-group"><span class="dc-digit" id="dc-secs">--</span><span class="dc-label">SECS</span></div></div>
   <div class="live-feed" id="live-feed"></div>
@@ -3035,7 +3035,7 @@ function downloadCard(){
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v9.0 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v11.0 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -4779,6 +4779,88 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ SCORE CONTEXT COMPARISON ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('score-context'))return;
+      const score=calcScore();
+      const contexts=[
+        {label:'如果这是考试分数',val:score>=60?'不及格（及格线60分）':'及格',icon:'📝',col:score>=60?'#ef4444':'#34d399'},
+        {label:'如果这是手机电量',val:score>=70?'该充电了':score>=40?'还能撑一会儿':'电量充足',icon:'🔋',col:score>=70?'#ef4444':score>=40?'#fbbf24':'#34d399'},
+        {label:'如果这是服务器负载',val:score>=80?'即将宕机':score>=60?'性能告警':score>=40?'负载偏高':'运行正常',icon:'🖥️',col:score>=80?'#ef4444':score>=60?'#f59e0b':score>=40?'#fbbf24':'#34d399'},
+        {label:'如果这是天气温度(°C)',val:score>=60?'中暑警告':score>=35?'需要空调':score>=20?'舒适':'有点冷',icon:'🌡️',col:score>=60?'#ef4444':score>=35?'#f59e0b':'#60a5fa'},
+        {label:'如果这是辣度(Scoville万)',val:score>=80?'死神辣椒级':score>=60?'朝天椒级':score>=30?'老干妈级':'番茄酱级',icon:'🌶️',col:score>=80?'#ef4444':score>=60?'#f59e0b':'#34d399'},
+      ];
+      const el=document.createElement('div');
+      el.id='score-context';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:20px;">
+        <div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 如果你的分数是…</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${contexts.map(c=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,.02);border-radius:10px;">
+            <span style="font-size:18px;">${c.icon}</span>
+            <div style="flex:1;"><div style="font-size:10px;color:var(--dim);">${c.label}</div><div style="font-size:12px;font-weight:600;color:${c.col}">${c.val}</div></div>
+            <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--dim);">${score}</span>
+          </div>`).join('')}
+        </div>
+      </div>`;
+      const rs12c=document.getElementById('rs12c');
+      if(rs12c){rs12c.parentNode.insertBefore(el,rs12c);}
+    },2400);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ OPTION DIMENSION HINT ════
+(function(){
+  // Show which dimension each question affects when hovering the category badge
+  const origRenderQ=window.renderQ;
+  if(!origRenderQ)return;
+  window.renderQ=function(){
+    origRenderQ.apply(this,arguments);
+    const catEl=document.getElementById('q-cat-top');
+    if(catEl){
+      catEl.style.cursor='help';
+      catEl.title='此题影响该维度的风险评分';
+    }
+  };
+})();
+
+// ════ ANIMATED COUNTDOWN ON LANDING ════
+(function(){
+  // Add a subtle "next test" countdown if user has tested before
+  try{
+    const hist=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+    if(hist.length===0)return;
+    const lastTest=hist[hist.length-1];
+    const lastTime=lastTest.t||Date.now();
+    const nextRecommended=lastTime+7*24*60*60*1000; // Recommend retest after 7 days
+    const now=Date.now();
+    if(now<nextRecommended){
+      const daysLeft=Math.ceil((nextRecommended-now)/(24*60*60*1000));
+      const intro=document.getElementById('sec-intro');
+      if(!intro)return;
+      const badge=document.createElement('div');
+      badge.style.cssText='text-align:center;font-size:10px;color:var(--dim);margin-bottom:8px;padding:6px 14px;background:rgba(var(--ar),var(--ag),var(--ab),.03);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.08);border-radius:100px;display:inline-block;opacity:0;animation:tipFadeIn .5s 1s ease both;';
+      badge.textContent=`📅 上次测试分数 ${lastTest.s} 分 · 建议 ${daysLeft} 天后复测`;
+      const startBtn=intro.querySelector('.start-btn');
+      if(startBtn)startBtn.before(badge);
+    }else{
+      const intro=document.getElementById('sec-intro');
+      if(!intro)return;
+      const badge=document.createElement('div');
+      badge.style.cssText='text-align:center;font-size:10px;color:#f59e0b;margin-bottom:8px;padding:6px 14px;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.15);border-radius:100px;display:inline-block;opacity:0;animation:tipFadeIn .5s 1s ease both;';
+      badge.textContent=`⏰ 距上次测试已超过7天，是时候复测了！`;
+      const startBtn=intro.querySelector('.start-btn');
+      if(startBtn)startBtn.before(badge);
+    }
+  }catch(e){}
+})();
+
 // ════ RESULT PARTICLES COLOR SHIFT ════
 (function(){
   const obs=new MutationObserver(()=>{
@@ -5189,7 +5271,7 @@ document.addEventListener('dblclick',e=>{
         <div class="passport-row"><span class="passport-key">BEST_DIM</span><span class="passport-val" style="color:#34d399">${best.name.split(' ')[1]} (${best.pct}%)</span></div>
         <div class="passport-row"><span class="passport-key">TESTS</span><span class="passport-val">#${testCount}</span></div>
         <div class="passport-row"><span class="passport-key">ISSUED</span><span class="passport-val">${new Date().toISOString().slice(0,10)}</span></div>
-        <div style="text-align:center;margin-top:10px;font-size:8px;letter-spacing:2px;color:rgba(var(--ar),var(--ag),var(--ab),.3);">SDI NETWORK · CERTIFIED · v10.0</div>
+        <div style="text-align:center;margin-top:10px;font-size:8px;letter-spacing:2px;color:rgba(var(--ar),var(--ag),var(--ab),.3);">SDI NETWORK · CERTIFIED · v11.0</div>
       </div>`;
       const rs13=document.getElementById('rs13');
       if(rs13){rs13.parentNode.insertBefore(el,rs13);}
@@ -5780,7 +5862,7 @@ document.addEventListener('dblclick',e=>{
 // ════ TYPING SUBTITLE EFFECT ════
 (function(){
   const subtitles=[
-    'SUDDEN DEATH INDEX · v9.0',
+    'SUDDEN DEATH INDEX · v11.0',
     '你离猝死还有多远？',
     '30题 · 7维度 · 1份残酷报告',
     '熬夜测试本身就是加分项',
