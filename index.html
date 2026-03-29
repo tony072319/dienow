@@ -1090,7 +1090,7 @@ html.light .achievement-name{color:#1a1a2e;}
   <div class="time-greeting" id="time-greeting"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v17.0</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v18.0</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div><div class="dc-group"><span class="dc-digit" id="dc-secs">--</span><span class="dc-label">SECS</span></div></div>
   <div class="live-feed" id="live-feed"></div>
@@ -3054,7 +3054,7 @@ function downloadCard(){
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v17.0 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v18.0 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -7521,7 +7521,7 @@ document.addEventListener('dblclick',e=>{
 // ════ TYPING SUBTITLE EFFECT ════
 (function(){
   const subtitles=[
-    'SUDDEN DEATH INDEX · v17.0',
+    'SUDDEN DEATH INDEX · v18.0',
     '你离猝死还有多远？',
     '30题 · 7维度 · 1份残酷报告',
     '熬夜测试本身就是加分项',
@@ -9976,6 +9976,131 @@ ${dims.map(d=>`║ ${d.name.padEnd(9,' ')} ${'█'.repeat(Math.round(d.pct/10))}
       const rs0=document.getElementById('rs0');
       if(rs0)rs0.parentNode.insertBefore(el,rs0.nextSibling);
     },400);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH GRADES PER QUESTION" (expandable) ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('q-grades'))return;
+      if(!window.A||!window.QS)return;
+      const answers=window.A;
+      const questions=window.QS;
+      let rows='';
+      let totalMax=0,totalVal=0;
+      answers.forEach((a,i)=>{
+        if(!questions[i])return;
+        const q=questions[i];
+        const maxVal=Math.max(...q.opts.map(o=>o.val));
+        const pct=maxVal>0?Math.round((a.val/maxVal)*100):0;
+        totalMax+=maxVal;totalVal+=a.val;
+        const color=pct>=75?'#ef4444':pct>=50?'#f59e0b':pct>=25?'#facc15':'#4ade80';
+        rows+=`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.02);font-size:10px;">
+          <span style="color:var(--dim);width:20px;text-align:right;flex-shrink:0;">${i+1}</span>
+          <span style="flex:1;color:rgba(255,255,255,.4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${q.text.slice(0,25)}…</span>
+          <span style="width:30px;text-align:right;color:${color};font-weight:700;">${pct}%</span>
+        </div>`;
+      });
+      const el=document.createElement('div');
+      el.id='q-grades';
+      el.className='rs on';
+      el.innerHTML=`<details>
+        <summary style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);text-align:center;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:6px;">
+          📝 逐题得分明细 <span style="font-size:9px;color:rgba(255,255,255,.2);">点击展开</span>
+        </summary>
+        <div style="margin-top:8px;max-height:300px;overflow-y:auto;">${rows}</div>
+        <div style="text-align:center;font-size:9px;color:var(--dim);margin-top:6px;">总危险值: ${totalVal}/${totalMax} (${Math.round(totalVal/Math.max(1,totalMax)*100)}%)</div>
+      </details>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target)target.appendChild(el);
+    },3000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ CONFETTI ON VERY LOW SCORE (celebration!) ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const score=calcScore();
+      if(score>25)return;
+      // Celebrate low score with confetti!
+      const colors=['#4ade80','#60a5fa','#f59e0b','#a855f7','#ec4899'];
+      for(let i=0;i<40;i++){
+        const c=document.createElement('div');
+        const color=colors[Math.floor(Math.random()*colors.length)];
+        const x=Math.random()*100;
+        const delay=Math.random()*2;
+        const duration=2+Math.random()*2;
+        const size=4+Math.random()*6;
+        c.style.cssText=`position:fixed;left:${x}%;top:-10px;width:${size}px;height:${size}px;background:${color};border-radius:${Math.random()>.5?'50%':'0'};z-index:999;pointer-events:none;animation:confettiFall ${duration}s ease-in ${delay}s forwards;opacity:.8;`;
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),(duration+delay+1)*1000);
+      }
+      const style=document.createElement('style');
+      style.textContent=`@keyframes confettiFall{to{transform:translateY(110vh) rotate(${360+Math.random()*720}deg);opacity:0;}}`;
+      document.head.appendChild(style);
+    },1500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "FINAL VERDICT" DRAMATIC REVEAL ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('final-verdict'))return;
+      const score=calcScore();
+      const verdicts=[
+        {range:[0,15],text:'无罪释放',sub:'法庭认为你的生活方式无可指摘。',icon:'⚖️',color:'#4ade80'},
+        {range:[15,30],text:'缓期执行',sub:'有一些小问题，但你还有很长的路要走。',icon:'⚖️',color:'#60a5fa'},
+        {range:[30,50],text:'有期徒刑',sub:'你的身体判你"健康有期徒刑"，刑期取决于你的改变。',icon:'⚖️',color:'#f59e0b'},
+        {range:[50,70],text:'重刑犯',sub:'你的生活方式已经构成了对身体的"严重伤害罪"。',icon:'⚖️',color:'#f97316'},
+        {range:[70,85],text:'无期徒刑',sub:'除非立即上诉（改变习惯），否则你的健康将被终身监禁。',icon:'⚖️',color:'#ef4444'},
+        {range:[85,101],text:'死刑判决',sub:'法庭最终裁定……不过别怕，这个判决可以上诉——从现在开始改变。',icon:'⚖️',color:'#dc2626'},
+      ];
+      const v=verdicts.find(v=>score>=v.range[0]&&score<v.range[1])||verdicts[3];
+      const el=document.createElement('div');
+      el.id='final-verdict';
+      el.className='rs on';
+      el.innerHTML=`<div style="text-align:center;padding:16px 0;">
+        <div style="font-size:9px;letter-spacing:4px;color:var(--dim);margin-bottom:8px;">─── 最 终 裁 决 ───</div>
+        <div style="font-size:28px;margin-bottom:4px;">${v.icon}</div>
+        <div style="font-size:20px;font-weight:900;color:${v.color};letter-spacing:3px;margin-bottom:8px;">${v.text}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.45);line-height:1.8;max-width:280px;margin:0 auto;">${v.sub}</div>
+        <div style="width:60px;height:1px;background:rgba(255,255,255,.06);margin:12px auto 0;"></div>
+      </div>`;
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target)target.appendChild(el);
+    },6500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ SMART SCROLL RESTORATION ════
+(function(){
+  // When returning to result page, restore scroll position
+  let savedScroll=0;
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(sec?.classList.contains('active')){
+      if(savedScroll>0){
+        setTimeout(()=>window.scrollTo(0,savedScroll),100);
+      }
+    }else{
+      savedScroll=window.scrollY;
+    }
   });
   obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
