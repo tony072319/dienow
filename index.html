@@ -814,6 +814,23 @@ html.light .holo-card{background:linear-gradient(135deg,rgba(var(--ar),var(--ag)
 html.light .holo-score{color:#1a1a2e;}
 html.light .holo-val{color:rgba(0,0,0,.6);}
 
+/* ══ RISK WEATHER FORECAST ══ */
+.risk-forecast{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:8px;margin-bottom:14px;}
+.forecast-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:12px;transition:transform .2s;}
+.forecast-item:hover{transform:translateY(-2px);}
+.forecast-icon{font-size:22px;}
+.forecast-name{font-size:9px;color:var(--dim);text-align:center;}
+.forecast-temp{font-size:11px;font-weight:700;font-family:'Space Mono',monospace;}
+
+/* ══ GRADIENT WARNING TEXT ══ */
+.gradient-warning{background:linear-gradient(90deg,#ef4444,#f59e0b,#ef4444);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradientShift 3s ease infinite;}
+@keyframes gradientShift{0%{background-position:0% center}50%{background-position:100% center}100%{background-position:0% center}}
+
+/* ══ STREAK BADGE ══ */
+.streak-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:.5px;}
+.streak-badge.fire{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(239,68,68,.08));border:1px solid rgba(245,158,11,.2);color:#f59e0b;}
+.streak-badge.ice{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.15);color:#60a5fa;}
+
 /* ══ SCORE PIE CHART ══ */
 .score-pie{width:80px;height:80px;border-radius:50%;position:relative;margin:10px auto;}
 .score-pie-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Space Mono',monospace;color:var(--text);}
@@ -2342,8 +2359,11 @@ function getPersonalizedLoadMsgs(){
   else if(preScore>=60)msgs.push('ACTIVATING SECONDARY ANALYSIS MODULE');
   else if(preScore<20)msgs.push('✓ 系统表示：难得见到这么健康的样本');
   msgs.push('CROSS-REFERENCING ALL DIMENSIONS');
+  msgs.push('与全国数据库交叉比对中');
   msgs.push('生成你的死亡预言书');
+  msgs.push('正在撰写你的讣告草稿（但愿用不上）');
   msgs.push('ENCRYPTING CONFIDENTIAL REPORT');
+  msgs.push('为你匹配健康人格原型');
   msgs.push('FINALIZING REPORT');
   return msgs;
 }
@@ -4758,6 +4778,118 @@ document.addEventListener('dblclick',e=>{
   dim.style.boxShadow=dim.style.boxShadow?'':'0 0 20px rgba(var(--ar),var(--ag),var(--ab),.2)';
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
+
+// ════ RISK WEATHER FORECAST ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('forecast-section'))return;
+      const dims=calcDims();
+      const weatherFor=pct=>{
+        if(pct>=80)return{icon:'🌋',label:'灾难级',col:'#ef4444'};
+        if(pct>=65)return{icon:'⛈️',label:'暴风雨',col:'#f59e0b'};
+        if(pct>=45)return{icon:'🌧️',label:'阴雨',col:'#fbbf24'};
+        if(pct>=25)return{icon:'⛅',label:'多云',col:'#60a5fa'};
+        return{icon:'☀️',label:'晴朗',col:'#34d399'};
+      };
+      const el=document.createElement('div');
+      el.id='forecast-section';
+      el.className='rs on';
+      el.innerHTML=`<div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 健康天气预报 · HEALTH FORECAST</div>
+        <div class="risk-forecast">${dims.map(d=>{
+          const w=weatherFor(d.pct);
+          return`<div class="forecast-item"><span class="forecast-icon">${w.icon}</span><span class="forecast-name">${d.name.split(' ')[1]}</span><span class="forecast-temp" style="color:${w.col}">${d.pct}%</span></div>`;
+        }).join('')}</div>`;
+      const rs4=document.getElementById('rs4');
+      if(rs4){rs4.parentNode.insertBefore(el,rs4);}
+    },1400);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ DAILY TEST STREAK ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      try{
+        const today=new Date().toISOString().slice(0,10);
+        const streakData=JSON.parse(localStorage.getItem('sdi-streak')||'{"last":"","count":0}');
+        const yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
+        if(streakData.last===today){/* already counted */}
+        else if(streakData.last===yesterday){
+          streakData.count++;streakData.last=today;
+        }else{
+          streakData.count=1;streakData.last=today;
+        }
+        localStorage.setItem('sdi-streak',JSON.stringify(streakData));
+        if(streakData.count>=2){
+          const rs0=document.getElementById('rs0');
+          if(!rs0||document.getElementById('streak-badge-el'))return;
+          const badge=document.createElement('div');
+          badge.id='streak-badge-el';
+          badge.style.cssText='text-align:center;margin-top:8px;';
+          const isFire=streakData.count>=3;
+          badge.innerHTML=`<span class="streak-badge ${isFire?'fire':'ice'}">${isFire?'🔥':'❄️'} 连续测试第 ${streakData.count} 天</span>`;
+          rs0.appendChild(badge);
+          if(streakData.count>=7&&typeof unlockAchievement==='function'){
+            unlockAchievement('weekly-streak','📅','一周不落','连续7天进行测试');
+          }
+        }
+      }catch(e){}
+    },1800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ GRADIENT WARNING ON HIGH SCORE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const score=calcScore();
+      if(score>=75){
+        const levelEl=document.getElementById('res-level');
+        if(levelEl)levelEl.classList.add('gradient-warning');
+      }
+    },1000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ SOCIAL SHARE PRESETS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('share-presets'))return;
+      const score=calcScore();
+      const grade=score>=80?'F':score>=65?'D':score>=45?'C':score>=25?'B':'A';
+      const messages=[
+        `我的猝死指数是${score}分(${grade}级)，你敢测吗？💀`,
+        `刚测了猝死指数，${score}分。${score>=60?'我先去买保险了。':'还行，暂时死不了。'}`,
+        `测试结果出来了：${score}分。${score>=70?'医生说让我写遗嘱。':'医生表示还能抢救。'}`
+      ];
+      const el=document.createElement('div');
+      el.id='share-presets';
+      el.style.cssText='display:flex;flex-direction:column;gap:8px;margin-top:12px;';
+      el.innerHTML=messages.map(m=>`<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:10px;cursor:pointer;transition:border-color .2s;font-size:11px;color:var(--dim);" onclick="navigator.clipboard?.writeText(this.dataset.msg);const t=document.getElementById('toast');t.textContent='文案已复制 ✓';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500);" data-msg="${m.replace(/"/g,'&quot;')}"><span style="font-size:14px;">📋</span>${m}</div>`).join('');
+      const rs13=document.getElementById('rs13');
+      const btns=rs13?.querySelector('.res-btns');
+      if(btns)btns.after(el);
+    },2800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
 
 // ════ QUIZ COMPLETION TIME TRACKER ════
 (function(){
