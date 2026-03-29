@@ -436,6 +436,19 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .surv-gain{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;}
 .survival-note{font-size:10px;color:var(--dim);margin-top:12px;font-style:italic;line-height:1.6;}
 
+/* ══ PROFESSION CARD ══ */
+.profession-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:22px;margin-bottom:14px;}
+.prof-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.prof-item:last-child{border-bottom:none;}
+.prof-icon{font-size:24px;flex-shrink:0;width:36px;text-align:center;}
+.prof-body{flex:1;}
+.prof-name{font-size:13px;font-weight:600;color:#e0e0e0;margin-bottom:2px;}
+.prof-risk{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);}
+.prof-match{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;flex-shrink:0;padding:3px 10px;border-radius:100px;border:1px solid;}
+.prof-match.close{color:#ffcc00;border-color:rgba(255,204,0,.3);background:rgba(255,204,0,.06);}
+.prof-match.over{color:#ff4444;border-color:rgba(255,68,68,.3);background:rgba(255,68,68,.06);}
+.prof-match.under{color:#00ff88;border-color:rgba(0,255,136,.3);background:rgba(0,255,136,.06);}
+
 /* ══ LOADING STAGE TEXT ══ */
 .load-stage{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-top:12px;min-height:18px;letter-spacing:.5px;transition:opacity .3s;}
 .load-organ{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(var(--ar),var(--ag),var(--ab),.06);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.15);border-radius:100px;font-size:10px;font-family:'Space Mono',monospace;color:var(--accent);margin:4px 3px;opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s;}
@@ -509,6 +522,22 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
   .egrid-6{grid-template-columns:repeat(2,1fr);}
   .egrid-5{grid-template-columns:repeat(2,1fr);}
   .egrid-5>.eg-item:nth-child(-n+5){grid-column:span 1;}
+  .pct-subs{flex-direction:column;}
+  .death-clock{flex-wrap:wrap;justify-content:center;gap:4px;}
+  .dc-digit{font-size:12px;padding:3px 5px;min-width:24px;}
+  .lw-quote{font-size:15px;}
+  .lw-quote::before{font-size:30px;top:-10px;left:-4px;}
+  .obituary-text{font-size:13px;line-height:1.85;}
+  .survival-item{gap:10px;}
+  .prof-item{flex-wrap:wrap;gap:8px;}
+  .prof-match{font-size:9px;}
+  .load-organs{gap:3px;}
+  .load-organ{font-size:9px;padding:3px 8px;}
+  .fun-tags{gap:6px;}
+  .fun-tag{font-size:10px;padding:4px 10px;}
+  .achievements{gap:6px;}
+  .ach{font-size:10px;padding:4px 10px;}
+  .streak-bar{font-size:10px;padding:4px 10px;}
 }
 </style>
 </head>
@@ -645,6 +674,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="rs" id="rs7b"><div class="obituary-card" id="obituary-card"><div class="sec-label" style="color:rgba(255,255,255,.25)">📜 讣告预览 · OBITUARY PREVIEW</div><div class="obituary-text" id="obituary-text"></div><div class="obituary-footer">—— 来自未来的档案</div></div></div>
     <div class="rs" id="rs7c"><div class="lastwords-card"><div class="lw-quote" id="lw-quote"></div><div class="lw-attr" id="lw-attr"></div></div></div>
     <div class="rs" id="rs7d"><div class="survival-card"><div class="sec-label" style="color:#00ff88;margin-bottom:12px">🌱 如果你从今天开始改变</div><div class="survival-items" id="survival-items"></div><div class="survival-note">以上数据基于流行病学模型估算，每改变一个维度，你的未来都会被重写。</div></div></div>
+    <div class="rs" id="rs7e"><div class="profession-card"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">📊 你的风险相当于</div><div class="profession-items" id="profession-items"></div></div></div>
     <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v6.0 · AUTOMATED REPORT</div></div></div>
     <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#ff9900;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
@@ -1248,6 +1278,26 @@ const SURVIVAL_DATA={
   emotion:{icon:'💬',action:'每周与朋友深度交谈一次',gain:'+1.2 年预期寿命',col:'#00ccff'},
 };
 
+const PROFESSIONS=[
+  {icon:'👨‍💻',name:'互联网大厂程序员',avg:68,desc:'996+久坐+外卖+咖啡'},
+  {icon:'🏥',name:'三甲医院住院医',avg:72,desc:'36小时连班+高压+饮食不规律'},
+  {icon:'📊',name:'投行分析师',avg:74,desc:'全年无休+高压+社交匮乏'},
+  {icon:'🚚',name:'外卖骑手',avg:62,desc:'体力透支+饮食不规律+风险驾驶'},
+  {icon:'🎓',name:'985在读博士生',avg:58,desc:'精神压力+作息紊乱+社交缺失'},
+  {icon:'👩‍🏫',name:'高中班主任',avg:55,desc:'情绪消耗+久站+长期高压'},
+  {icon:'🧑‍🍳',name:'餐饮店老板',avg:60,desc:'超长工时+饮食反常+烟酒应酬'},
+  {icon:'🧘',name:'瑜伽教练',avg:18,desc:'规律运动+饮食健康+情绪稳定'},
+  {icon:'👨‍🌾',name:'有机农场主',avg:15,desc:'户外运动+健康饮食+低压生活'},
+];
+function getProfComparison(score){
+  const sorted=[...PROFESSIONS].sort((a,b)=>Math.abs(a.avg-score)-Math.abs(b.avg-score));
+  const closest=sorted.slice(0,2);
+  const healthiest=PROFESSIONS.filter(p=>p.avg<30).slice(0,1);
+  const result=[...closest];
+  if(!result.find(p=>p.avg<30)&&healthiest.length)result.push(healthiest[0]);
+  return result.slice(0,3);
+}
+
 // ════ STATE ════
 const CAT_SPLASH={
   '😴 睡眠习惯':{icon:'😴',name:'睡眠习惯',desc:'每一个深夜都在悄悄重写你明天的剧本',warn:'每少睡1小时，心血管疾病风险+11%',count:4},
@@ -1293,6 +1343,17 @@ function updateTheme(){
     document.getElementById('lrb-dot').style.background=col;
     document.getElementById('lrb-val').style.color=col;
   }
+  // Question card danger gradient
+  const qCard=document.getElementById('q-card');
+  if(qCard){
+    if(pct>.5){
+      const int=Math.min((pct-.5)*2,1);
+      qCard.style.borderColor=`rgba(255,${Math.round(68-68*int)},${Math.round(68-68*int)},${.06+int*.12})`;
+      qCard.style.boxShadow=`inset 0 1px 0 rgba(255,255,255,.04),0 28px 80px rgba(0,0,0,.55),0 0 ${60+int*40}px rgba(255,0,68,${.02+int*.08})`;
+    }else{
+      qCard.style.borderColor='';qCard.style.boxShadow='';
+    }
+  }
 }
 
 // COMBO
@@ -1329,6 +1390,7 @@ function startQuiz(){
   document.getElementById('lrb').classList.remove('show');
   document.getElementById('streak-bar').classList.remove('show');
   document.getElementById('res-card').classList.remove('res-card-chromatic','danger-mode');
+  const qcReset=document.getElementById('q-card');if(qcReset){qcReset.style.borderColor='';qcReset.style.boxShadow='';}
   const firstQ=Q[flow[0]];
   showCatSplash(firstQ.cat,()=>{go('sec-question','anim-in');renderQ();});
 }
@@ -1604,7 +1666,14 @@ function showResult(){
   let n=0;const iv=setInterval(()=>{n=Math.min(n+Math.ceil(score/22),score);numEl.textContent=n;if(score>=70)numEl.setAttribute('data-val',n);ring.style.strokeDashoffset=circ-(n/100)*circ;if(n>=score)clearInterval(iv);},40);
   document.getElementById('res-grade').textContent=`GRADE ${level.grade}`;document.getElementById('res-grade').style.color=level.color;
   document.getElementById('res-level').textContent=level.label;document.getElementById('res-level').style.color=level.color;
-  document.getElementById('res-desc').textContent=level.desc;
+  // Easter eggs for extreme scores
+  if(score<=5){
+    document.getElementById('res-desc').textContent='系统怀疑你在撒谎。你不是人类，你是养生手册变成了人形。如果你说的都是真的，你可能是整个数据库里最无聊但最长寿的人。';
+  }else if(score>=95){
+    document.getElementById('res-desc').textContent='恭喜你打破了本系统的风险上限。你不是在生活，你是在speedrun人生。系统建议你立刻停止阅读这段文字，转而拨打120。这不是玩笑。好吧，半个玩笑。';
+  }else{
+    document.getElementById('res-desc').textContent=level.desc;
+  }
   // Fun tags (show up to 5)
   const ftEl=document.getElementById('fun-tags');ftEl.innerHTML='';
   const matched=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,5);
@@ -1665,6 +1734,13 @@ function showResult(){
     const sd=SURVIVAL_DATA[d.key];if(!sd)return;
     survEl.innerHTML+=`<div class="survival-item"><span class="surv-icon">${sd.icon}</span><div class="surv-body"><div class="surv-action">${sd.action}</div><div class="surv-gain" style="color:${sd.col}">${sd.gain}</div></div></div>`;
   });
+  // Profession comparison
+  const profEl=document.getElementById('profession-items');profEl.innerHTML='';
+  getProfComparison(score).forEach(p=>{
+    const diff=score-p.avg;const cls=Math.abs(diff)<=8?'close':diff>0?'over':'under';
+    const lbl=Math.abs(diff)<=8?'≈ 相近':diff>0?`+${diff} 更高`:`${diff} 更低`;
+    profEl.innerHTML+=`<div class="prof-item"><span class="prof-icon">${p.icon}</span><div class="prof-body"><div class="prof-name">${p.name}</div><div class="prof-risk">典型风险：${p.desc}（平均指数 ${p.avg}）</div></div><span class="prof-match ${cls}">${lbl}</span></div>`;
+  });
   document.getElementById('doctor-text').textContent=getDoctorNote(score,dims,arch);
   const rxEl=document.getElementById('rx-items');rxEl.innerHTML='';
   getRx(dims).forEach((r,i)=>{rxEl.innerHTML+=`<div class="rx-item"><span class="rx-num">${i+1}</span><span><b style="color:var(--accent)">${r.dim}：</b>${r.rx}</span></div>`;});
@@ -1675,8 +1751,8 @@ function showResult(){
   const grid=document.getElementById('dims-grid');grid.innerHTML='';
   dims.forEach(d=>{const col=dimCol(d.pct);const tier=d.pct>=65?'high':d.pct>=30?'mid':'low';const desc=DIM_DESC[d.key]?.[tier]||'';const el=document.createElement('div');el.className='dim-item';el.innerHTML=`<div class="dim-name">${d.name}</div><div class="dim-bar-bg"><div class="dim-bar" style="width:0%;background:${col}" data-pct="${d.pct}"></div></div><div class="dim-footer"><span class="dim-pct" style="color:${col}">${d.pct}%</span><span class="dim-status">${dimStatus(d.pct)}</span></div><div class="dim-expand">${desc?`<div class="dim-desc">${desc}</div>`:''}<ul class="dim-tips">${(d.tips||[]).map(t=>`<li>${t}</li>`).join('')}</ul></div>`;el.onclick=()=>el.classList.toggle('expanded');grid.appendChild(el);});
   document.getElementById('advice-list').innerHTML=level.advice.map(a=>`<li>${a}</li>`).join('');
-  go('sec-result','anim-fade');clearProgress();
-  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs6','rs7','rs7b','rs7c','rs7d','rs8','rs9','rs10','rs11','rs12','rs13'];
+  go('sec-result','anim-fade');clearProgress();playReveal(score);
+  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs5','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs8','rs9','rs10','rs11','rs12','rs13'];
   rsIds.forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),180+i*100);});
   setTimeout(()=>{document.querySelectorAll('.dim-bar,.contrib-bar').forEach(b=>b.style.width=b.dataset.pct+'%');},400);
 }
@@ -1698,87 +1774,121 @@ function downloadCard(){
   const score=calcScore(),level=LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
   const dims=calcDims(),dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
   const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
-  const matched=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,3);
-  const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;
+  const matched=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,4);
+  const lw=getLastWords(score);
+  const W=1080,H=1920,c=document.createElement('canvas');c.width=W;c.height=H;
   const x=c.getContext('2d');
   // Background
   x.fillStyle='#0a0a0f';x.fillRect(0,0,W,H);
-  // Subtle grid
-  x.strokeStyle='rgba(255,255,255,.03)';x.lineWidth=1;
+  // Grid
+  x.strokeStyle='rgba(255,255,255,.025)';x.lineWidth=1;
   for(let i=0;i<W;i+=40){x.beginPath();x.moveTo(i,0);x.lineTo(i,H);x.stroke();}
   for(let i=0;i<H;i+=40){x.beginPath();x.moveTo(0,i);x.lineTo(W,i);x.stroke();}
   // Top glow
-  const grd=x.createRadialGradient(W/2,0,0,W/2,0,500);
-  grd.addColorStop(0,level.color+'22');grd.addColorStop(1,'transparent');
-  x.fillStyle=grd;x.fillRect(0,0,W,400);
-  // Title
+  const grd=x.createRadialGradient(W/2,0,0,W/2,0,600);
+  grd.addColorStop(0,level.color+'28');grd.addColorStop(1,'transparent');
+  x.fillStyle=grd;x.fillRect(0,0,W,500);
+  // Bottom danger glow for high scores
+  if(score>=60){const bg=x.createRadialGradient(W/2,H,0,W/2,H,500);bg.addColorStop(0,'rgba(255,0,68,.12)');bg.addColorStop(1,'transparent');x.fillStyle=bg;x.fillRect(0,H-500,W,500);}
+  const cx=W/2;
+  // Header
   x.textAlign='center';
-  x.fillStyle='rgba(255,255,255,.3)';x.font='500 24px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · REPORT',W/2,60);
+  x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
+  x.fillText('SUDDEN DEATH INDEX · v6.1 · CLASSIFIED REPORT',cx,50);
+  // Divider
+  x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
-  const cx=W/2,cy=230,r=100;
-  x.strokeStyle='rgba(255,255,255,.06)';x.lineWidth=6;
+  const cy=210,r=110;
+  x.strokeStyle='rgba(255,255,255,.05)';x.lineWidth=7;
   x.beginPath();x.arc(cx,cy,r,0,Math.PI*2);x.stroke();
-  x.strokeStyle=level.color;x.lineWidth=6;x.lineCap='round';
-  x.beginPath();x.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+(Math.PI*2*score/100));x.stroke();
-  x.shadowColor=level.color;x.shadowBlur=20;
+  x.strokeStyle=level.color;x.lineWidth=7;x.lineCap='round';
+  x.shadowColor=level.color;x.shadowBlur=25;
   x.beginPath();x.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+(Math.PI*2*score/100));x.stroke();
   x.shadowBlur=0;
   // Score number
-  x.fillStyle=level.color;x.font='bold 72px "Space Mono",monospace';
-  x.fillText(score,cx,cy+20);
-  x.fillStyle='rgba(255,255,255,.3)';x.font='500 16px "Space Mono",monospace';
-  x.fillText('DEATH INDEX',cx,cy+50);
-  // Grade
-  x.fillStyle=level.color;x.font='bold 28px "Space Mono",monospace';
-  x.fillText(`GRADE ${level.grade} — ${level.label}`,cx,cy+r+50);
-  // Archetype
-  x.fillStyle='rgba(255,255,255,.5)';x.font='400 20px sans-serif';
-  x.fillText(`${arch.icon} ${arch.name}`,cx,cy+r+90);
-  // Mini radar
-  const rcx=W/2,rcy=520,rr=120,n=dims.length;
-  const ang=i=>(Math.PI*2*i/n)-Math.PI/2;
-  // Radar grid
-  [.25,.5,.75,1].forEach((v,ri)=>{x.strokeStyle=ri===3?'rgba(255,255,255,.12)':'rgba(255,255,255,.05)';x.lineWidth=ri===3?1.5:1;x.beginPath();dims.forEach((_,i)=>{const a=ang(i);const px=rcx+rr*v*Math.cos(a),py=rcy+rr*v*Math.sin(a);i===0?x.moveTo(px,py):x.lineTo(px,py);});x.closePath();x.stroke();});
-  // Radar data
-  x.fillStyle=level.color+'33';x.strokeStyle=level.color;x.lineWidth=2;
-  x.beginPath();dims.forEach((d,i)=>{const a=ang(i),v=d.pct/100;const px=rcx+rr*v*Math.cos(a),py=rcy+rr*v*Math.sin(a);i===0?x.moveTo(px,py):x.lineTo(px,py);});x.closePath();x.fill();x.stroke();
-  // Radar dots + labels
-  dims.forEach((d,i)=>{const a=ang(i),v=d.pct/100;const px=rcx+rr*v*Math.cos(a),py=rcy+rr*v*Math.sin(a);const col=dimCol(d.pct);x.fillStyle=col;x.beginPath();x.arc(px,py,4,0,Math.PI*2);x.fill();const lx=rcx+(rr+28)*Math.cos(a),ly=rcy+(rr+28)*Math.sin(a);x.textAlign='center';x.fillStyle='rgba(255,255,255,.6)';x.font='400 16px sans-serif';const name=d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key;x.fillText(name,lx,ly-6);x.fillStyle=col;x.font='bold 14px "Space Mono",monospace';x.fillText(d.pct+'%',lx,ly+14);});
-  // Fun tags
-  if(matched.length){
-    let tagY=690;x.textAlign='center';
-    const tagStrs=matched.map(t=>t.e+' '+t.t);
-    x.font='400 22px sans-serif';
-    const totalW=tagStrs.reduce((s,t)=>s+x.measureText(t).width+40,0)-20;
-    let tx=cx-totalW/2;
-    matched.forEach(t=>{const txt=t.e+' '+t.t;const tw=x.measureText(txt).width+30;x.fillStyle=t.bg;x.strokeStyle=t.col;x.lineWidth=1;const bx=tx,by=tagY-18;x.beginPath();x.roundRect(bx,by,tw,36,18);x.fill();x.stroke();x.fillStyle=t.col;x.textAlign='left';x.fillText(txt,bx+15,tagY+6);tx+=tw+12;});
-  }
-  // Dimensions list
-  x.textAlign='left';let dy=760;
+  x.fillStyle=level.color;x.font='bold 80px "Space Mono",monospace';
+  x.fillText(score,cx,cy+25);
   x.fillStyle='rgba(255,255,255,.25)';x.font='500 14px "Space Mono",monospace';
-  x.fillText('// RISK BREAKDOWN',80,dy);dy+=35;
-  dims.forEach(d=>{const col=dimCol(d.pct);const barW=600;
-    x.fillStyle='rgba(255,255,255,.5)';x.font='400 20px sans-serif';
+  x.fillText('DEATH INDEX',cx,cy+52);
+  // Grade + label
+  x.fillStyle=level.color;x.font='bold 30px "Space Mono",monospace';
+  x.fillText(`GRADE ${level.grade}`,cx,cy+r+45);
+  x.fillStyle='rgba(255,255,255,.5)';x.font='600 22px sans-serif';
+  x.fillText(level.label,cx,cy+r+78);
+  // Archetype
+  x.fillStyle=arch.color||'rgba(255,255,255,.5)';x.font='400 20px sans-serif';
+  x.fillText(`${arch.icon} ${arch.name}`,cx,cy+r+112);
+  // Fun tags
+  let tagY=cy+r+148;
+  if(matched.length){
+    x.font='400 20px sans-serif';
+    matched.forEach(t=>{
+      const txt=t.e+' '+t.t;const tw=x.measureText(txt).width+28;
+      x.fillStyle=t.bg||'rgba(255,255,255,.05)';x.strokeStyle=t.col;x.lineWidth=1;
+      x.beginPath();x.roundRect(cx-tw/2,tagY-16,tw,34,17);x.fill();x.stroke();
+      x.fillStyle=t.col;x.textAlign='center';x.fillText(txt,cx,tagY+6);
+      tagY+=42;
+    });
+  }
+  // Radar
+  tagY+=10;
+  const rcx=W/2,rcy=tagY+130,rr=115,n=dims.length;
+  const ang=i=>(Math.PI*2*i/n)-Math.PI/2;
+  [.25,.5,.75,1].forEach((v,ri)=>{x.strokeStyle=ri===3?'rgba(255,255,255,.12)':'rgba(255,255,255,.04)';x.lineWidth=ri===3?1.5:1;x.beginPath();dims.forEach((_,i)=>{const a=ang(i);const px=rcx+rr*v*Math.cos(a),py=rcy+rr*v*Math.sin(a);i===0?x.moveTo(px,py):x.lineTo(px,py);});x.closePath();x.stroke();});
+  x.fillStyle=level.color+'30';x.strokeStyle=level.color;x.lineWidth=2;
+  x.beginPath();dims.forEach((d,i)=>{const a=ang(i),v=d.pct/100;const px=rcx+rr*v*Math.cos(a),py=rcy+rr*v*Math.sin(a);i===0?x.moveTo(px,py):x.lineTo(px,py);});x.closePath();x.fill();x.stroke();
+  dims.forEach((d,i)=>{const a=ang(i),v=d.pct/100;const px=rcx+rr*v*Math.cos(a),py=rcy+rr*v*Math.sin(a);const col=dimCol(d.pct);x.fillStyle=col;x.beginPath();x.arc(px,py,4,0,Math.PI*2);x.fill();const lx=rcx+(rr+30)*Math.cos(a),ly=rcy+(rr+30)*Math.sin(a);x.textAlign='center';x.fillStyle='rgba(255,255,255,.55)';x.font='400 15px sans-serif';const name=d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key;x.fillText(name,lx,ly-6);x.fillStyle=col;x.font='bold 14px "Space Mono",monospace';x.fillText(d.pct+'%',lx,ly+12);});
+  // Dim bars
+  let dy=rcy+rr+60;
+  x.fillStyle='rgba(255,255,255,.18)';x.font='500 13px "Space Mono",monospace';x.textAlign='left';
+  x.fillText('// RISK BREAKDOWN',80,dy);dy+=30;
+  dims.forEach(d=>{const col=dimCol(d.pct);const barW=580;
+    x.fillStyle='rgba(255,255,255,.45)';x.font='400 18px sans-serif';x.textAlign='left';
     x.fillText(d.name,80,dy);
-    x.fillStyle='rgba(255,255,255,.06)';x.beginPath();x.roundRect(280,dy-12,barW,16,8);x.fill();
-    x.fillStyle=col;x.beginPath();x.roundRect(280,dy-12,barW*d.pct/100,16,8);x.fill();
-    x.textAlign='right';x.fillStyle=col;x.font='bold 18px "Space Mono",monospace';
-    x.fillText(d.pct+'%',barW+310,dy+1);x.textAlign='left';
-    dy+=42;
+    x.fillStyle='rgba(255,255,255,.05)';x.beginPath();x.roundRect(280,dy-11,barW,14,7);x.fill();
+    x.fillStyle=col;x.beginPath();x.roundRect(280,dy-11,barW*d.pct/100,14,7);x.fill();
+    x.textAlign='right';x.fillStyle=col;x.font='bold 16px "Space Mono",monospace';
+    x.fillText(d.pct+'%',barW+310,dy);x.textAlign='left';dy+=36;
   });
-  // Bottom
-  x.textAlign='center';
-  x.fillStyle='rgba(255,255,255,.15)';x.font='400 16px "Space Mono",monospace';
-  x.fillText('猝死指数测试 💀 Sudden Death Index v6.0',cx,H-80);
-  x.fillStyle='rgba(255,255,255,.1)';x.font='400 14px "Space Mono",monospace';
-  x.fillText('测试纯属娱乐 · 不构成医学建议',cx,H-50);
+  // Last words quote
+  dy+=20;
+  x.strokeStyle='rgba(255,0,68,.15)';x.lineWidth=1;x.beginPath();x.moveTo(120,dy);x.lineTo(W-120,dy);x.stroke();
+  dy+=35;
+  x.textAlign='center';x.fillStyle='rgba(255,255,255,.12)';x.font='italic 120px Georgia,serif';
+  x.fillText('"',cx-220,dy+20);
+  x.fillStyle='rgba(255,255,255,.7)';x.font='600 20px sans-serif';
+  // Word wrap the quote
+  const words=lw.q.split('');let line='',lines=[];
+  for(const ch of words){line+=ch;if(x.measureText(line).width>700){lines.push(line);line='';}};if(line)lines.push(line);
+  lines.forEach((l,i)=>{x.fillText(l,cx,dy+i*30);});
+  dy+=lines.length*30+16;
+  x.fillStyle='rgba(255,255,255,.3)';x.font='400 14px "Space Mono",monospace';
+  x.fillText(lw.a,cx,dy);
+  // Footer
+  x.fillStyle='rgba(255,255,255,.12)';x.font='400 15px "Space Mono",monospace';
+  x.fillText('猝死指数测试 💀 Sudden Death Index v6.1',cx,H-70);
+  x.fillStyle='rgba(255,255,255,.08)';x.font='400 13px "Space Mono",monospace';
+  x.fillText('测试纯属娱乐 · 不构成医学建议 · 你敢测吗？',cx,H-42);
   // Download
   try{
     const link=document.createElement('a');link.download=`sudden-death-index-${score}.png`;
     link.href=c.toDataURL('image/png');link.click();
     const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);
   }catch(e){navigator.clipboard.writeText('图片生成失败，已复制文字结果');shareResult();}
+}
+function playReveal(score){
+  if(!soundOn)return;ensureAudio();
+  // Dramatic reveal: ascending tone that ends high for low scores, descending ominous for high
+  const base=score>=60?120:score>=30?300:600;
+  const type=score>=60?'sawtooth':'sine';
+  [0,.12,.24].forEach((d,i)=>{
+    const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+    osc.connect(gain);gain.connect(audioCtx.destination);
+    osc.frequency.value=score>=60?base+i*15:base-i*80;osc.type=type;
+    const t=audioCtx.currentTime+d;
+    gain.gain.setValueAtTime(0.15,t);gain.gain.exponentialRampToValueAtTime(0.001,t+.35);
+    osc.start(t);osc.stop(t+.35);
+  });
 }
 function retryQuiz(){if(praf)cancelAnimationFrame(praf);canv.classList.remove('active');pts=[];startQuiz();}
 </script>
