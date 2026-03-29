@@ -717,6 +717,43 @@ input[type=range]::-moz-range-thumb {
 
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* ── BACK BUTTON ── */
+.btn-back {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--dim);
+  padding: 12px 22px;
+  border-radius: 100px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+  visibility: hidden;
+}
+
+.btn-back.visible {
+  visibility: visible;
+}
+
+.btn-back:hover {
+  border-color: rgba(255,255,255,0.22);
+  color: var(--text);
+}
+
+/* ── SLIDE ANIMATIONS ── */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.slide-in-right { animation: slideInRight 0.32s cubic-bezier(.25,.8,.25,1) both; }
+.slide-in-left  { animation: slideInLeft  0.32s cubic-bezier(.25,.8,.25,1) both; }
+
 @media (max-width: 480px) {
   .card { padding: 24px 18px; }
   .dims { grid-template-columns: 1fr; }
@@ -759,7 +796,8 @@ input[type=range]::-moz-range-thumb {
       <div class="category-tag" id="q-cat-tag"></div>
       <div class="q-text" id="q-text"></div>
       <div id="q-body"></div>
-      <div style="display:flex;justify-content:flex-end;margin-top:4px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+        <button class="btn-back" id="btn-back" onclick="prevQuestion()">← 上一题</button>
         <button class="btn-next" id="btn-next" onclick="nextQuestion()">下一题 →</button>
       </div>
     </div>
@@ -1047,39 +1085,55 @@ const LEVELS = [
 ];
 
 // Death prophecy lookup
+// Keys are always two dimension keys joined with '+', sorted alphabetically.
+// Dimension keys: checkup, diet, emotion, exercise, habit, lifestyle, sleep, stress, work
 const PROPHECIES = {
+  // sleep combos (sleep starts with 'sl', comes after 'em','ex','ha','di','ch')
   'sleep+work':    '某个周三凌晨，你正在改第八版PPT，手指突然停了——不是因为完成了，而是因为你记不起上次睡够8小时是什么时候。下一次这个感觉出现时，你可能已经在急诊室的床上了。',
   'sleep+stress':  '你的大脑已经开发出一项新技能：在入睡前30分钟内，同时处理三年前的社死瞬间和明天10点的汇报。持续这样下去，某天早上你会发现自己爬不起来——不是懒，是真的爬不起来。',
-  'sleep+diet':    '你在用咖啡续命、用外卖填肚子、用熬夜预支明天的精力。你的细胞每天都在透支。这种生活方式有个学名：用明天的生命换今天的KPI。',
-  'sleep+exercise':'你既不睡觉也不运动，身体的修复机制和代谢系统同时罢工。你的每个细胞都在用沉默表达愤怒，直到某天它们集体发出一声响亮的抗议。',
-  'sleep+emotion': '失眠和情绪低落正在互相喂养——越睡不好越焦虑，越焦虑越睡不着。这个循环有出口，但你需要主动去找，而不是等它自己结束。',
-  'work+stress':   '你的身体已经在内部开过会，决议如下：下一次大病将在某个最不合时宜的时刻到来——可能是重要项目截止日的前一天晚上，或者某次关键会议的当天早上。',
-  'work+exercise': '你最近一次心跳加速，是因为收到了老板的消息，而不是因为运动。你的心脏已经只被恐惧激活，而不是被健康激活。这不是一个好信号。',
-  'work+diet':     '外卖平台的算法已经精准预测了你的每一顿饭。你的胃默默记住了：什么叫做长期被敷衍。它正在考虑采取行动。',
-  'work+emotion':  '你把所有精力都给了工作，留给自己的只有疲惫。某天你会发现，你已经很久没有做过一件只是因为喜欢而做的事情了。那一天离你并不遥远。',
-  'stress+emotion':'你已经很久没有因为真正开心而笑了。大部分时候你只是在模拟一个状态还好的人。这需要消耗大量能量——这些能量本应该用于真正地活着。',
-  'stress+diet':   '你的胃正在经历无休止的夜班——不规律进食加上持续的压力激素。你的消化系统已经写好了辞职信，只差一个合适的时机递交。',
-  'exercise+diet': '你的身体缺乏运动产生的代谢消耗，同时摄入了过量的垃圾热量。这个组合正在悄悄重塑你的血脂和血糖。你的心血管系统正在用沉默记账。',
+  'diet+sleep':    '你在用咖啡续命、用外卖填肚子、用熬夜预支明天的精力。你的细胞每天都在透支。这种生活方式有个学名：用明天的生命换今天的KPI。',
+  'exercise+sleep':'你既不睡觉也不运动，身体的修复机制和代谢系统同时罢工。你的每个细胞都在用沉默表达愤怒，直到某天它们集体发出一声响亮的抗议。',
+  'emotion+sleep': '失眠和情绪低落正在互相喂养——越睡不好越焦虑，越焦虑越睡不着。这个循环有出口，但你需要主动去找，而不是等它自己结束。',
+  'habit+sleep':   '你熬夜，还有不良嗜好。深夜是人最脆弱的时候，而你选择在最脆弱的时候继续消耗自己。你的身体正在用沉默记录这一切，直到某天大声说出来。',
+  // work combos
+  'stress+work':   '你的身体已经在内部开过会，决议如下：下一次大病将在某个最不合时宜的时刻到来——可能是重要项目截止日的前一天晚上，或者某次关键会议的当天早上。',
+  'exercise+work': '你最近一次心跳加速，是因为收到了老板的消息，而不是因为运动。你的心脏已经只被恐惧激活，而不是被健康激活。这不是一个好信号。',
+  'diet+work':     '外卖平台的算法已经精准预测了你的每一顿饭。你的胃默默记住了：什么叫做长期被敷衍。它正在考虑采取行动，只是还没想好用哪种方式。',
+  'emotion+work':  '你把所有精力都给了工作，留给自己的只有疲惫。某天你会发现，你已经很久没有做过一件只是因为喜欢而做的事情了。那一天离你并不遥远。',
+  'habit+work':    '高强度工作，然后用烟酒或咖啡因来"放松"——这不是放松，这是在用加速老化来逃避疲惫。你的肝脏、心脏正在同时超负荷运转，而你管这叫减压。',
+  // stress combos
+  'emotion+stress':'你已经很久没有因为真正开心而笑了。大部分时候你只是在模拟一个状态还好的人。这需要消耗大量能量——这些能量本应该用于真正地活着。',
+  'diet+stress':   '你的胃不仅要消化不健康的食物，还要消化你的焦虑。应激状态下，消化系统是最先妥协的器官。某天你会突然发现，什么东西都让你感到不适。',
+  'exercise+stress':'你的皮质醇水平长期偏高，而你没有任何方式来释放它。运动是最有效的压力出口，但你没有在用它。这些积累的压力激素正在你的血管里悄悄工作，记账从不出错。',
+  'habit+stress':  '你用不良嗜好来对抗压力，但这只是把一种伤害换成了另一种伤害。真正的压力没有减少，反而多了一层身体上的损伤，两份账单同时到期。',
+  // exercise combos
+  'diet+exercise': '你的身体缺乏运动产生的代谢消耗，同时摄入了过量的垃圾热量。这个组合正在悄悄重塑你的血脂和血糖。你的心血管系统正在用沉默记账。',
   'exercise+habit':'你不运动，还有不良嗜好。你的身体正在用两种方式同时走向终点：一种是缓慢退化，另一种是主动加速。',
-  'exercise+emotion':'你的皮质醇长期处于高位，但你既没有战斗也没有逃跑。没有运动来释放这些压力激素，它们正在慢慢腐蚀你的心血管和免疫系统。',
+  'emotion+exercise':'你的皮质醇长期处于高位，但你既没有战斗也没有逃跑。没有运动来释放这些压力激素，它们正在慢慢腐蚀你的心血管和免疫系统。',
+  // diet combos
   'diet+habit':    '你吃得不好，还有各种嗜好在消耗你。你的肝脏、肾脏和消化系统正在联合罢工，只是时间早晚的问题。',
-  'habit+emotion': '不良嗜好往往是情绪问题的出口。你用这些方式麻痹自己，但麻痹本身也在消耗你剩余的生命力。',
+  'diet+emotion':  '情绪性进食和饮食混乱是一个危险组合。你的身体正在用进食来填补情感的空洞，而这两种饥饿都无法被真正满足。',
+  // emotion combos
+  'emotion+habit': '不良嗜好往往是情绪问题的出口。你用这些方式麻痹自己，但麻痹本身也在消耗你剩余的生命力。',
 };
 
 function generateProphecy(dimResults) {
   const sorted = [...dimResults].sort((a,b)=>b.pct-a.pct);
   const top2 = sorted.slice(0,2).map(d=>d.key).sort();
   const key = top2.join('+');
-  return PROPHECIES[key] || PROPHECIES['work+stress'];
+  return PROPHECIES[key] || PROPHECIES['stress+work'];
 }
 
 const CROSS_ANALYSIS = {
   'sleep+work':    '长期睡眠不足 × 工作强度过高：皮质醇异常分泌、心血管负担加重。你感受到的"累"只是表面，正在发生的是持续性器官损伤。',
   'sleep+stress':  '睡眠差 × 持续高压：这是一个经典的死循环。你的交感神经系统几乎全天候激活，正在加速细胞老化和免疫系统崩溃。',
-  'work+exercise': '久坐 × 完全不运动：下背痛、颈椎病、代谢综合征的温床。你的骨骼肌肉系统正在静默地退化，退化到一定程度就无法逆转。',
-  'stress+emotion':'长期高压 × 情绪问题：心理和生理都在同时崩溃。这种组合是抑郁症和慢性疾病的高危前兆，需要立即寻求支持。',
-  'sleep+diet':    '睡眠不足 × 饮食差：这两个维度互相放大风险。睡眠不足会增加食欲和垃圾食品偏好；不良饮食又会影响睡眠质量。你被困在一个恶性循环里。',
-  'work+habit':    '工作强度高 × 不良嗜好：高强度工作已经在消耗你，而你选择用烟酒或垃圾食品来"放松"，这相当于一边灭火一边浇油。',
+  'exercise+work': '久坐 × 完全不运动：下背痛、颈椎病、代谢综合征的温床。你的骨骼肌肉系统正在静默地退化，退化到一定程度就无法逆转。',
+  'emotion+stress':'长期高压 × 情绪问题：心理和生理都在同时崩溃。这种组合是抑郁症和慢性疾病的高危前兆，需要立即寻求支持。',
+  'diet+sleep':    '睡眠不足 × 饮食差：这两个维度互相放大风险。睡眠不足会增加食欲和垃圾食品偏好；不良饮食又会影响睡眠质量。你被困在一个恶性循环里。',
+  'habit+work':    '工作强度高 × 不良嗜好：高强度工作已经在消耗你，而你选择用烟酒或垃圾食品来"放松"，这相当于一边灭火一边浇油。',
+  'diet+stress':   '饮食差 × 压力过高：应激激素直接影响消化功能，加上不健康的食物，你的肠胃正在进行双重折磨。胃溃疡不是突然发生的。',
+  'emotion+exercise':'情绪低落 × 缺乏运动：运动是抑郁和焦虑最有效的天然解药，而你放弃了它。这两个维度正在互相拖累，形成一个难以打破的消极循环。',
+  'diet+work':     '饮食混乱 × 工作强度高：你的身体在高速运转，但燃料质量极差。这不是节能，是在损耗发动机本身。',
 };
 
 function generateCrossAnalysis(dimResults) {
@@ -1090,7 +1144,7 @@ function generateCrossAnalysis(dimResults) {
   }
   if (high.length === 2) {
     const keys = high.map(d=>d.key).sort().join('+');
-    return CROSS_ANALYSIS[keys] || `${high[0].name.replace(/^../,'')} × ${high[1].name.replace(/^../,'')}：这两个高危维度组合在一起，风险被放大而不是叠加。它们在互相喂养，你需要同时处理两个问题，而不是先解决一个。`;
+    return CROSS_ANALYSIS[keys] || `${high[0].name.replace(/^\S+\s/,'')} × ${high[1].name.replace(/^\S+\s/,'')}：这两个高危维度组合在一起，风险被放大而不是叠加。它们在互相喂养，你需要同时处理两个问题，而不是先解决一个。`;
   }
   return null;
 }
@@ -1133,7 +1187,13 @@ function show(id) {
   document.getElementById(id).classList.add('active');
 }
 
-function renderQuestion() {
+function renderQuestion(dir) {
+  // Card slide animation
+  const card = document.getElementById('q-card');
+  card.classList.remove('slide-in-right', 'slide-in-left');
+  void card.offsetWidth; // force reflow
+  card.classList.add(dir === 'back' ? 'slide-in-left' : 'slide-in-right');
+
   const qi = currentQIndex();
   const q = Q[qi];
   const total = questionFlow.length;
@@ -1201,6 +1261,9 @@ function renderQuestion() {
   const isAnswered = answers[qi] !== undefined;
   btn.className = 'btn-next' + (isAnswered ? ' ready' : '');
   btn.textContent = flowIndex === questionFlow.length - 1 ? '查看结果 →' : '下一题 →';
+
+  const backBtn = document.getElementById('btn-back');
+  if (backBtn) backBtn.className = 'btn-back' + (flowIndex > 0 ? ' visible' : '');
 }
 
 function selectOpt(i) {
@@ -1227,8 +1290,7 @@ function nextQuestion() {
 
   if (flowIndex < questionFlow.length - 1) {
     flowIndex++;
-    // Recount for display (flow may have changed)
-    renderQuestion();
+    renderQuestion('forward');
     window.scrollTo({ top:0, behavior:'smooth' });
   } else {
     showLoading();
@@ -1384,6 +1446,13 @@ function makeTags(dimResults) {
   if (g('sleep') >= 60 && g('work') >= 60) tags.push('用命换KPI');
   if (g('exercise') >= 60 && g('diet') >= 60) tags.push('亚健康代言人');
   return tags.slice(0, 4);
+}
+
+function prevQuestion() {
+  if (flowIndex <= 0) return;
+  flowIndex--;
+  renderQuestion('back');
+  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
 function retryQuiz() { startQuiz(); }
