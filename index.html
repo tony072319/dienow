@@ -588,7 +588,14 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 /* ══ LOADING SCREEN ENHANCED ══ */
 .load-title{background:linear-gradient(135deg,#fff 40%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
+  .lecg-svg,.ecg-svg,.test-scroll-inner{animation:none!important;}
+}
+
 @media(max-width:520px){
+  .wrap{padding:24px 16px calc(40px + env(safe-area-inset-bottom));}
   .card{padding:24px 18px;}
   .dims-grid,.systems-grid{grid-template-columns:1fr;}
   .vitals-row{grid-template-columns:repeat(2,1fr);}
@@ -596,6 +603,8 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
   .egrid-6{grid-template-columns:repeat(2,1fr);}
   .egrid-5{grid-template-columns:repeat(2,1fr);}
   .egrid-5>.eg-item:nth-child(-n+5){grid-column:span 1;}
+  .eg-item{min-height:90px;padding:16px 10px 14px;}
+  .eg-emoji{font-size:34px;margin-bottom:8px;}
   .pct-subs{flex-direction:column;}
   .death-clock{flex-wrap:wrap;justify-content:center;gap:4px;}
   .dc-digit{font-size:12px;padding:3px 5px;min-width:24px;}
@@ -612,6 +621,20 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
   .achievements{gap:6px;}
   .ach{font-size:10px;padding:4px 10px;}
   .streak-bar{font-size:10px;padding:4px 10px;}
+  .step-dots{gap:2px;}
+  .step-dot{width:6px;height:6px;}
+  .step-sep{height:8px;}
+  .glitch-title{font-size:clamp(32px,8vw,52px);}
+  .start-btn{padding:16px 40px;font-size:16px;}
+  .radar-wrap svg{max-width:260px;}
+  .archetype-card{padding:18px;gap:14px;}
+  .arch-icon{font-size:40px;}
+  .arch-name{font-size:18px;}
+  .next-row{gap:8px;}
+  .btn-next{padding:11px 24px;font-size:14px;}
+  .btn-prev{padding:6px 12px;font-size:11px;}
+  .res-btns{gap:8px;}
+  .btn-share,.btn-retry{padding:10px 22px;font-size:13px;}
 }
 </style>
 </head>
@@ -634,7 +657,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
   <div class="floating-symbols" id="float-syms"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v7.0</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v7.3</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div></div>
   <div class="warning-box"><span class="warning-icon">⚠️</span><div class="warning-text"><b>健康提示：</b>本测试为娱乐性健康评估，结果不构成医学诊断。但如果你测完之后感到不适，那可能不是巧合。高分用户建议认真预约体检。</div></div>
@@ -753,7 +776,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
     <div class="rs" id="rs7d"><div class="survival-card"><div class="sec-label" style="color:#34d399;margin-bottom:12px">🌱 如果你从今天开始改变</div><div class="survival-items" id="survival-items"></div><div class="survival-note">以上数据基于流行病学模型估算，每改变一个维度，你的未来都会被重写。</div></div></div>
     <div class="rs" id="rs7e"><div class="profession-card"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">📊 你的风险相当于</div><div class="profession-items" id="profession-items"></div></div></div>
     <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
-    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v7.0 · AUTOMATED REPORT</div></div></div>
+    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v7.3 · AUTOMATED REPORT</div></div></div>
     <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#f59e0b;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
     <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
@@ -830,7 +853,23 @@ document.getElementById('age-input')?.addEventListener('input',updateDeathClock)
 })();
 
 // ════ RESTORE ════
-(function(){const save=loadProgress();if(save){const bar=document.createElement('div');bar.className='resume-bar';bar.innerHTML=`<span>检测到未完成的测试（${Object.keys(save.ans).length}题已答）</span><button onclick="resumeQuiz(loadProgress());this.parentElement.remove()">继续</button><button onclick="clearProgress();this.parentElement.remove()">重新开始</button>`;document.getElementById('sec-intro').prepend(bar);}})();
+(function(){
+  const save=loadProgress();
+  if(save){const bar=document.createElement('div');bar.className='resume-bar';bar.innerHTML=`<span>检测到未完成的测试（${Object.keys(save.ans).length}题已答）</span><button onclick="resumeQuiz(loadProgress());this.parentElement.remove()">继续</button><button onclick="clearProgress();this.parentElement.remove()">重新开始</button>`;document.getElementById('sec-intro').prepend(bar);}
+  else{
+    // Show previous result if available
+    try{
+      const prev=JSON.parse(localStorage.getItem('sdi-result'));
+      if(prev&&prev.score!==undefined){
+        const ago=Math.round((Date.now()-prev.ts)/36e5);
+        const timeStr=ago<1?'刚刚':ago<24?ago+'小时前':Math.round(ago/24)+'天前';
+        const bar=document.createElement('div');bar.className='resume-bar';
+        bar.innerHTML=`<span>上次测试结果：<b style="color:var(--accent)">${prev.score}分 ${prev.grade}</b>（${timeStr}）</span><button onclick="this.parentElement.remove()">知道了</button><button onclick="localStorage.removeItem('sdi-result');this.parentElement.remove()">清除记录</button>`;
+        document.getElementById('sec-intro').prepend(bar);
+      }
+    }catch(e){}
+  }
+})();
 
 // ════ COLOR ════
 const CSTOPS=[[124,110,240],[59,130,246],[245,158,11],[239,68,68],[220,38,38]];
@@ -1817,8 +1856,10 @@ function showResult(){
   const score=calcScore(),level=LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
   const dims=calcDims();const dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
   applyTheme(score/100);
-  // High-score particle effects
-  if(score>=70){ptSpd=1+((score-70)/30)*.8;ptRate=.25+((score-70)/30)*.2;dangerPtMode=true;}else{ptSpd=1;ptRate=.18;dangerPtMode=false;}
+  // Score-based particle effects
+  if(score>=70){ptSpd=1+((score-70)/30)*.8;ptRate=.25+((score-70)/30)*.2;dangerPtMode=true;}
+  else if(score<25){ptSpd=.6;ptRate=.3;dangerPtMode=false;curRGB=[52,211,153];}// green celebration particles
+  else{ptSpd=1;ptRate=.18;dangerPtMode=false;}
   startPts();
   document.getElementById('res-card').classList.toggle('danger-mode',score>=80);
   document.getElementById('res-card').classList.toggle('res-card-chromatic',score>=75);
@@ -1953,6 +1994,9 @@ function showResult(){
   const levelEl=document.getElementById('res-level');
   if(levelEl){levelEl.style.transform='scale(0)';levelEl.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';setTimeout(()=>{levelEl.style.transform='scale(1)';},1500);}
   setTimeout(()=>{document.querySelectorAll('.dim-bar,.contrib-bar').forEach(b=>b.style.width=b.dataset.pct+'%');},400);
+  // Cache result for revisits
+  try{localStorage.setItem('sdi-result',JSON.stringify({score,grade:level.grade,label:level.label,dims:dims.map(d=>({key:d.key,name:d.name,pct:d.pct})),ts:Date.now()}));}catch(e){}
+  clearProgress();// Clear in-progress save
 }
 
 function typewriter(id,text,speed=18){const el=document.getElementById(id);el.textContent='';el.classList.add('type-cursor');let i=0;const iv=setInterval(()=>{el.textContent+=text[i++];if(i>=text.length){clearInterval(iv);el.classList.remove('type-cursor');}},speed);}
@@ -1964,8 +2008,13 @@ function shareResult(){
   const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
   const tags=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,3).map(t=>t.e+t.t);
   const tagLine=tags.length?'\n标签：'+tags.join(' · '):'';
-  const text=`【猝死指数测试 v7.0 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}\n\n${level.desc}\n\n你敢测吗？👉`;
-  navigator.clipboard.writeText(text).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);});
+  const text=`【猝死指数测试 v7.3 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}\n\n${level.desc}\n\n你敢测吗？👉`;
+  // Try native share first (mobile), fall back to clipboard
+  if(navigator.share){
+    navigator.share({title:'猝死指数测试 💀',text}).catch(()=>{});
+  }else{
+    navigator.clipboard.writeText(text).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}).catch(()=>{});
+  }
 }
 
 function downloadCard(){
@@ -1992,7 +2041,7 @@ function downloadCard(){
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v7.0 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v7.3 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -2064,7 +2113,7 @@ function downloadCard(){
   x.fillText(lw.a,cx,dy);
   // Footer
   x.fillStyle='rgba(255,255,255,.12)';x.font='400 15px "Space Mono",monospace';
-  x.fillText('猝死指数测试 💀 Sudden Death Index v7.0',cx,H-70);
+  x.fillText('猝死指数测试 💀 Sudden Death Index v7.3',cx,H-70);
   x.fillStyle='rgba(255,255,255,.08)';x.font='400 13px "Space Mono",monospace';
   x.fillText('测试纯属娱乐 · 不构成医学建议 · 你敢测吗？',cx,H-42);
   // Download
