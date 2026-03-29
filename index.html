@@ -24,6 +24,8 @@
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+:focus:not(:focus-visible){outline:none;}
 body{background:linear-gradient(180deg,#0f1117 0%,#131620 50%,#0f1117 100%);background-attachment:fixed;color:var(--text);font-family:'Inter','PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;min-height:100vh;overflow-x:hidden;transition:background 1.2s ease;}
 
 /* ══ NOISE GRAIN TEXTURE ══ */
@@ -99,7 +101,8 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
 .cpill-num{font-size:10px;color:var(--dim);}
 .testimonials{width:100%;margin-bottom:24px;}
 .test-title{font-size:11px;font-weight:500;letter-spacing:3px;color:var(--dim);margin-bottom:12px;text-align:center;text-transform:uppercase;}
-.tcard{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:16px;width:210px;flex-shrink:0;}
+.tcard{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:16px;width:210px;flex-shrink:0;transition:border-color .3s,transform .2s;}
+.tcard:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.2);transform:translateY(-2px);}
 .tcard-quote{font-size:12px;line-height:1.7;color:#aaa;margin-bottom:10px;font-style:italic;}
 .tcard-meta{display:flex;align-items:center;gap:8px;}
 .tcard-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
@@ -119,6 +122,7 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
 @keyframes shimmer{to{transform:translateX(220%);}}
 .start-btn:hover{transform:translateY(-3px);box-shadow:0 0 60px rgba(var(--ar),var(--ag),var(--ab),.45),0 8px 32px rgba(0,0,0,.4);}
 .start-btn:active{transform:scale(.97);}
+.start-btn:focus-visible{outline:2px solid var(--accent);outline-offset:4px;}
 @keyframes btnBreathe{0%,100%{box-shadow:0 0 30px rgba(var(--ar),var(--ag),var(--ab),.2),0 4px 24px rgba(0,0,0,.4)}50%{box-shadow:0 0 50px rgba(var(--ar),var(--ag),var(--ab),.4),0 4px 24px rgba(0,0,0,.4)}}
 .start-btn{animation:btnBreathe 2.5s ease-in-out infinite;}
 .start-disclaimer{font-size:11px;color:var(--dim);margin-top:14px;text-align:center;letter-spacing:.3px;}
@@ -227,6 +231,9 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
   font-size:12px;font-weight:700;color:var(--accent);
   transition:color .4s;
 }
+.eg-item.sel.danger-sel{border-color:#ef4444;box-shadow:0 8px 32px rgba(239,68,68,.15),inset 0 0 30px rgba(239,68,68,.04);}
+.eg-item.sel.danger-sel::before{color:#ef4444;}
+.eg-item.sel.danger-sel::after{background:linear-gradient(135deg,rgba(239,68,68,0),rgba(239,68,68,.06));}
 .eg-emoji{font-size:42px;display:block;margin-bottom:10px;line-height:1;transition:transform .2s;}
 .eg-item:hover .eg-emoji{transform:scale(1.15);}
 .eg-item.sel .eg-emoji{transform:scale(1.15);}
@@ -1815,7 +1822,11 @@ function pickGrid(i){
   const o=q.opts[i];
   ans[qi]=o.s!==undefined?o.s:i;
   if(qi===4&&ans[qi]>=3)insertBranch();
-  document.querySelectorAll('.eg-item').forEach((el,idx)=>{el.classList.toggle('sel',idx===i);el.classList.toggle('dim',idx!==i);});
+  document.querySelectorAll('.eg-item').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+    el.classList.toggle('dim',idx!==i);
+    el.classList.toggle('danger-sel',idx===i&&ans[qi]>=3);
+  });
   // Haptic feedback on mobile
   if(navigator.vibrate)navigator.vibrate(ans[qi]>=3?[30,20,30]:15);
   setReady(true);
