@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>猝死指数测试 💀</title>
 <meta name="description" content="你离猝死还有多远？30道题，7个维度，一份残酷但真实的健康生活方式报告。">
-<meta name="theme-color" content="#0a0a0f">
+<meta name="theme-color" content="#0f1117">
 <meta property="og:title" content="猝死指数测试 💀 Sudden Death Index">
 <meta property="og:description" content="30道题，7个维度，测测你的猝死指数有多高。测完建议认真对待。">
 <meta property="og:type" content="website">
@@ -15,30 +15,27 @@
 <meta name="twitter:description" content="我的猝死指数是___分，你敢测吗？">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap');
 
 :root {
-  --bg:#060606;--accent:#00ff88;--ar:0;--ag:255;--ab:136;
-  --text:#e0e0e0;--dim:#484848;--danger:#ff0044;
-  --card-bg:rgba(255,255,255,.028);--card-border:rgba(255,255,255,.06);
+  --bg:#0f1117;--bg2:#171a24;--accent:#7c6ef0;--ar:124;--ag:110;--ab:240;
+  --text:#e8eaf0;--dim:#6b7280;--danger:#ef4444;
+  --card-bg:rgba(23,26,36,.88);--card-border:rgba(255,255,255,.08);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:#060606;color:var(--text);font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;min-height:100vh;overflow-x:hidden;transition:background 1.2s ease;}
+body{background:linear-gradient(180deg,#0f1117 0%,#131620 50%,#0f1117 100%);background-attachment:fixed;color:var(--text);font-family:'Inter','PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;min-height:100vh;overflow-x:hidden;transition:background 1.2s ease;}
 
 /* ══ NOISE GRAIN TEXTURE ══ */
-#noise-overlay{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.035;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px;}
+#noise-overlay{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.015;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px;}
 
-#grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(var(--ar),var(--ag),var(--ab),.02) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--ar),var(--ag),var(--ab),.02) 1px,transparent 1px);background-size:48px 48px;animation:gridMove 28s linear infinite;}
-@keyframes gridMove{to{transform:translate(48px,48px);}}
-#scanlines{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.13) 3px,rgba(0,0,0,.13) 4px);opacity:.3;}
-#vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 88% 88% at 50% 50%,transparent 48%,rgba(0,0,0,.68) 100%);}
-#ambient{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 72% 32% at 50% 0%,rgba(var(--ar),var(--ag),var(--ab),.08) 0%,transparent 70%);transition:background 1.2s ease;}
+#vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 90% 90% at 50% 50%,transparent 55%,rgba(0,0,0,.4) 100%);}
+#ambient{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 72% 32% at 50% 0%,rgba(var(--ar),var(--ag),var(--ab),.1) 0%,transparent 70%);transition:background 1.2s ease;}
 #particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 1s;}
 #particle-canvas.active{opacity:1;}
-.parallax-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;transition:transform .1s ease,background 1.2s ease;}
+.parallax-orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;transition:transform .1s ease,background 1.2s ease;}
 
-.wrap{position:relative;z-index:2;max-width:700px;margin:0 auto;padding:28px 16px 52px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.wrap{position:relative;z-index:2;max-width:640px;margin:0 auto;padding:32px 20px 60px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 
 section{display:none;width:100%;}
 section.active{display:flex;flex-direction:column;align-items:center;}
@@ -50,53 +47,53 @@ section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
 @keyframes slideOut{from{opacity:1;transform:none}to{opacity:0;transform:translateX(-36px)}}
 @keyframes fadeUp {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 
-.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);padding:38px 34px;width:100%;box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 28px 80px rgba(0,0,0,.55),0 0 60px rgba(var(--ar),var(--ag),var(--ab),.06);transition:box-shadow 1s,border-color .5s;position:relative;overflow:hidden;}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--ar),var(--ag),var(--ab),.45),transparent);transition:background 1s;}
-.card.danger-mode{animation:dangerPulse 2.5s ease-in-out infinite;border-color:rgba(255,0,68,.18);}
-@keyframes dangerPulse{0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 28px 80px rgba(0,0,0,.55),0 0 60px rgba(255,0,68,.05);}50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 28px 80px rgba(0,0,0,.55),0 0 110px rgba(255,0,68,.2);}}
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:24px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:36px 32px;width:100%;box-shadow:0 4px 32px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.03);transition:box-shadow 1s,border-color .5s;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--ar),var(--ag),var(--ab),.2),transparent);transition:background 1s;}
+.card.danger-mode{animation:dangerPulse 2.5s ease-in-out infinite;border-color:rgba(239,68,68,.15);}
+@keyframes dangerPulse{0%,100%{box-shadow:0 4px 32px rgba(0,0,0,.4),0 0 40px rgba(239,68,68,.04);}50%{box-shadow:0 4px 32px rgba(0,0,0,.4),0 0 80px rgba(239,68,68,.12);}}
 @keyframes screenShake{0%,100%{transform:translateX(0)}10%{transform:translate(-4px,2px)}20%{transform:translate(4px,-2px)}30%{transform:translate(-3px,-3px)}40%{transform:translate(3px,3px)}50%{transform:translate(-4px,1px)}60%{transform:translate(2px,-2px)}70%{transform:translate(-1px,3px)}80%{transform:translate(3px,-1px)}90%{transform:translate(-2px,2px)}}
 @keyframes ringCrack{0%{opacity:0;transform:scale(.95)}50%{opacity:1}100%{opacity:.7;transform:scale(1)}}
-@keyframes redPulseGlow{0%,100%{filter:drop-shadow(0 0 15px rgba(255,0,68,.3))}50%{filter:drop-shadow(0 0 40px rgba(255,0,68,.7)) drop-shadow(0 0 80px rgba(255,0,68,.3))}}
+@keyframes redPulseGlow{0%,100%{filter:drop-shadow(0 0 15px rgba(239,68,68,.3))}50%{filter:drop-shadow(0 0 40px rgba(239,68,68,.7)) drop-shadow(0 0 80px rgba(239,68,68,.3))}}
 .screen-shake{animation:screenShake .6s ease-out!important;}
 .score-ring-wrap.extreme .ring-fill{animation:redPulseGlow 2s ease-in-out infinite;}
-.score-ring-wrap.extreme::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(255,0,68,.15);animation:redPulseGlow 2.5s ease-in-out infinite .3s;pointer-events:none;}
+.score-ring-wrap.extreme::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(239,68,68,.15);animation:redPulseGlow 2.5s ease-in-out infinite .3s;pointer-events:none;}
 
 /* ══ LANDING ══ */
 .live-row{display:flex;align-items:center;gap:10px;margin-bottom:26px;}
-.live-dot{width:7px;height:7px;border-radius:50%;background:#ff4466;box-shadow:0 0 10px #ff446680;animation:livePulse 1.2s ease-in-out infinite;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(var(--ar),var(--ag),var(--ab),.5);animation:livePulse 1.2s ease-in-out infinite;}
 @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
-.live-text{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#ff4466;}
-.live-count{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);margin-left:4px;}
+.live-text{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);}
+.live-count{font-size:11px;color:var(--dim);margin-left:4px;}
 .glitch-title{font-size:clamp(40px,9vw,68px);font-weight:900;line-height:1.1;text-align:center;color:#fff;letter-spacing:-1px;margin-bottom:8px;position:relative;}
 .glitch-title::before,.glitch-title::after{content:attr(data-text);position:absolute;top:0;left:0;right:0;overflow:hidden;clip:rect(0,0,0,0);}
-.glitch-title::before{left:2px;text-shadow:-2px 0 #ff0044;animation:g1 5s infinite;}
-.glitch-title::after {left:-2px;text-shadow:2px 0 #00ccff;animation:g2 5s infinite;}
+.glitch-title::before{left:2px;text-shadow:-2px 0 #ef4444;animation:g1 5s infinite;}
+.glitch-title::after {left:-2px;text-shadow:2px 0 #60a5fa;animation:g2 5s infinite;}
 @keyframes g1{0%,88%,100%{clip:rect(0,9999px,0,0)}90%{clip:rect(12px,9999px,32px,0);transform:translate(-2px)}93%{clip:rect(52px,9999px,72px,0);transform:translate(2px)}96%{clip:rect(24px,9999px,44px,0);transform:translate(-2px)}}
 @keyframes g2{0%,88%,100%{clip:rect(0,9999px,0,0)}89%{clip:rect(42px,9999px,62px,0);transform:translate(2px)}92%{clip:rect(6px,9999px,26px,0);transform:translate(-2px)}95%{clip:rect(62px,9999px,82px,0);transform:translate(2px)}}
-.skull-anim{display:inline-block;animation:hb 1.5s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(255,0,68,.75));}
+.skull-anim{display:inline-block;animation:hb 1.5s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(239,68,68,.75));}
 @keyframes hb{0%,100%{transform:scale(1) rotate(0deg)}14%{transform:scale(1.28) rotate(-4deg)}28%{transform:scale(1)}42%{transform:scale(1.16) rotate(3deg)}56%{transform:scale(1)}}
-.title-sub{font-family:'Space Mono',monospace;font-size:clamp(10px,2vw,13px);letter-spacing:6px;color:rgba(255,255,255,.18);text-transform:uppercase;text-align:center;margin-bottom:20px;}
+.title-sub{font-size:clamp(10px,2vw,12px);font-weight:500;letter-spacing:5px;color:rgba(255,255,255,.22);text-transform:uppercase;text-align:center;margin-bottom:20px;}
 .landing-ecg{width:100%;height:44px;overflow:hidden;margin-bottom:24px;opacity:.35;}
 .lecg-svg{width:200%;height:100%;animation:ecgScroll 1.8s linear infinite;}
 .lecg-path{fill:none;stroke:var(--accent);stroke-width:1.5;transition:stroke .8s;}
 @keyframes ecgScroll{to{transform:translateX(-50%);}}
-.warning-box{background:rgba(255,0,68,.04);border:1px solid rgba(255,0,68,.15);border-radius:12px;padding:14px 18px;margin-bottom:24px;width:100%;display:flex;align-items:flex-start;gap:12px;}
+.warning-box{background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.12);border-radius:16px;padding:16px 20px;margin-bottom:24px;width:100%;display:flex;align-items:flex-start;gap:12px;}
 .warning-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
-.warning-text{font-size:12px;color:rgba(255,150,150,.7);line-height:1.7;font-family:'Space Mono',monospace;}
-.warning-text b{color:#ff6688;}
+.warning-text{font-size:12px;color:rgba(255,160,160,.65);line-height:1.8;}
+.warning-text b{color:#f87171;}
 .live-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;margin-bottom:24px;}
-.lstat{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:14px 12px;text-align:center;}
-.lstat-num{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--accent);display:block;transition:color .8s;}
-.lstat-lbl{font-size:11px;color:var(--dim);margin-top:3px;display:block;}
+.lstat{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:16px 12px;text-align:center;}
+.lstat-num{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--accent);display:block;transition:color .8s;}
+.lstat-lbl{font-size:11px;color:var(--dim);margin-top:4px;display:block;}
 .cat-preview{width:100%;margin-bottom:24px;}
-.cat-preview-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--dim);margin-bottom:12px;text-align:center;text-transform:uppercase;}
+.cat-preview-title{font-size:11px;font-weight:500;letter-spacing:3px;color:var(--dim);margin-bottom:12px;text-align:center;text-transform:uppercase;}
 .cat-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
-.cpill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:100px;padding:7px 14px;font-size:12px;transition:all .2s;cursor:default;}
-.cpill:hover{background:rgba(var(--ar),var(--ag),var(--ab),.07);border-color:rgba(var(--ar),var(--ag),var(--ab),.2);transform:translateY(-1px);}
-.cpill-num{font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);}
+.cpill{display:flex;align-items:center;gap:7px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:100px;padding:8px 16px;font-size:12px;font-weight:500;transition:all .2s;cursor:default;}
+.cpill:hover{background:rgba(var(--ar),var(--ag),var(--ab),.08);border-color:rgba(var(--ar),var(--ag),var(--ab),.25);transform:translateY(-2px);}
+.cpill-num{font-size:10px;color:var(--dim);}
 .testimonials{width:100%;margin-bottom:24px;}
-.test-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--dim);margin-bottom:12px;text-align:center;text-transform:uppercase;}
-.tcard{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:14px;width:200px;flex-shrink:0;}
+.test-title{font-size:11px;font-weight:500;letter-spacing:3px;color:var(--dim);margin-bottom:12px;text-align:center;text-transform:uppercase;}
+.tcard{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:16px;width:210px;flex-shrink:0;}
 .tcard-quote{font-size:12px;line-height:1.7;color:#aaa;margin-bottom:10px;font-style:italic;}
 .tcard-meta{display:flex;align-items:center;gap:8px;}
 .tcard-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
@@ -111,46 +108,46 @@ section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
 .age-btns{display:flex;flex-direction:column;gap:3px;}
 .age-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:5px;color:#fff;cursor:pointer;font-size:10px;width:22px;height:18px;display:flex;align-items:center;justify-content:center;transition:background .15s;}
 .age-btn:hover{background:rgba(255,255,255,.14);}
-.start-btn{display:inline-flex;align-items:center;gap:10px;padding:16px 44px;border:none;border-radius:100px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--accent);color:#000;box-shadow:0 0 40px rgba(var(--ar),var(--ag),var(--ab),.4),0 4px 24px rgba(0,0,0,.5);transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden;}
+.start-btn{display:inline-flex;align-items:center;gap:10px;padding:18px 52px;border:none;border-radius:100px;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;background:linear-gradient(135deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.75));color:#fff;box-shadow:0 0 40px rgba(var(--ar),var(--ag),var(--ab),.3),0 4px 24px rgba(0,0,0,.4);transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden;}
 .start-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transform:translateX(-100%);animation:shimmer 2.5s ease infinite;}
 @keyframes shimmer{to{transform:translateX(220%);}}
-.start-btn:hover{transform:translateY(-3px);box-shadow:0 0 60px rgba(var(--ar),var(--ag),var(--ab),.55),0 8px 32px rgba(0,0,0,.5);}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 0 60px rgba(var(--ar),var(--ag),var(--ab),.45),0 8px 32px rgba(0,0,0,.4);}
 .start-btn:active{transform:scale(.97);}
-@keyframes btnBreathe{0%,100%{box-shadow:0 0 30px rgba(var(--ar),var(--ag),var(--ab),.3),0 4px 24px rgba(0,0,0,.5)}50%{box-shadow:0 0 55px rgba(var(--ar),var(--ag),var(--ab),.6),0 4px 24px rgba(0,0,0,.5),0 0 80px rgba(var(--ar),var(--ag),var(--ab),.2)}}
+@keyframes btnBreathe{0%,100%{box-shadow:0 0 30px rgba(var(--ar),var(--ag),var(--ab),.2),0 4px 24px rgba(0,0,0,.4)}50%{box-shadow:0 0 50px rgba(var(--ar),var(--ag),var(--ab),.4),0 4px 24px rgba(0,0,0,.4)}}
 .start-btn{animation:btnBreathe 2.5s ease-in-out infinite;}
-.start-disclaimer{font-size:10px;color:var(--dim);margin-top:12px;font-family:'Space Mono',monospace;text-align:center;letter-spacing:.5px;}
+.start-disclaimer{font-size:11px;color:var(--dim);margin-top:14px;text-align:center;letter-spacing:.3px;}
 .test-cards{overflow:hidden;position:relative;}
 .test-scroll-inner{display:flex;gap:8px;animation:testimonialScroll 18s linear infinite;width:max-content;}
 .test-scroll-inner:hover{animation-play-state:paused;}
 @keyframes testimonialScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.age-egg{font-size:11px;color:#ff9900;margin-top:6px;opacity:0;transition:opacity .4s;font-family:'Space Mono',monospace;text-align:center;}
+.age-egg{font-size:11px;color:#f59e0b;margin-top:6px;opacity:0;transition:opacity .4s;font-family:'Space Mono',monospace;text-align:center;}
 .age-egg.show{opacity:1;}
 
 /* ══ CATEGORY SPLASH ══ */
 #sec-cat-splash .card{text-align:center;padding:52px 40px;}
 .cat-splash-icon{font-size:64px;margin-bottom:16px;display:block;animation:catIconPop .5s cubic-bezier(.34,1.56,.64,1) both .1s;}
 @keyframes catIconPop{from{transform:scale(0) rotate(-10deg)}to{transform:scale(1) rotate(0deg)}}
-.cat-splash-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;}
-.cat-splash-name{font-size:28px;font-weight:900;margin-bottom:10px;color:var(--accent);transition:color .3s;}
-.cat-splash-desc{font-size:14px;color:var(--dim);line-height:1.75;max-width:360px;margin:0 auto 20px;}
-.cat-splash-count{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);}
+.cat-splash-label{font-size:11px;font-weight:600;letter-spacing:4px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;}
+.cat-splash-name{font-size:30px;font-weight:900;margin-bottom:10px;color:var(--accent);transition:color .3s;}
+.cat-splash-desc{font-size:14px;color:var(--dim);line-height:1.8;max-width:360px;margin:0 auto 20px;}
+.cat-splash-count{font-size:12px;font-weight:500;color:var(--dim);}
 
 /* ══ PROGRESS ══ */
 .progress-wrap{width:100%;margin-bottom:18px;}
 .progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.p-counter{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);}
-.p-cat{font-size:12px;color:var(--accent);transition:color .8s;}
-.pbar-outer{width:100%;height:2px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden;}
-.pbar-inner{height:100%;background:var(--accent);border-radius:10px;transition:width .55s cubic-bezier(.25,.8,.25,1);box-shadow:0 0 12px rgba(var(--ar),var(--ag),var(--ab),.8);}
-.mini-danger{display:flex;align-items:center;gap:6px;margin-top:8px;font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);opacity:0;transition:opacity .4s;}
+.p-counter{font-family:'Space Mono',monospace;font-size:12px;color:var(--dim);font-weight:700;}
+.p-cat{font-size:13px;font-weight:600;color:var(--accent);transition:color .8s;}
+.pbar-outer{width:100%;height:6px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;}
+.pbar-inner{height:100%;background:linear-gradient(90deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.7));border-radius:10px;transition:width .55s cubic-bezier(.25,.8,.25,1);box-shadow:0 0 16px rgba(var(--ar),var(--ag),var(--ab),.5);}
+.mini-danger{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;color:var(--dim);opacity:0;transition:opacity .4s;}
 .mini-danger.show{opacity:1;}
 .danger-skulls{letter-spacing:2px;font-size:12px;}
 
 /* ══ QUESTION CARD ══ */
-.q-cat{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);opacity:.6;margin-bottom:14px;transition:color .8s;}
+.q-cat{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);opacity:.7;margin-bottom:14px;transition:color .8s;}
 .q-num{font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:rgba(255,255,255,.04);position:absolute;top:24px;right:28px;line-height:1;pointer-events:none;}
 .q-text{font-size:clamp(17px,3.8vw,21px);font-weight:700;line-height:1.5;margin-bottom:22px;color:#f2f2f2;letter-spacing:-.3px;}
-.branch-tag{display:inline-flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:#ff9900;background:rgba(255,153,0,.08);border:1px solid rgba(255,153,0,.2);border-radius:100px;padding:3px 12px;margin-bottom:12px;}
+.branch-tag{display:inline-flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:#f59e0b;background:rgba(255,153,0,.08);border:1px solid rgba(255,153,0,.2);border-radius:100px;padding:3px 12px;margin-bottom:12px;}
 .scenario-box{background:rgba(255,255,255,.02);border-left:2px solid rgba(var(--ar),var(--ag),var(--ab),.3);border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;font-size:13px;color:var(--dim);line-height:1.7;font-style:italic;transition:border-color .8s;}
 
 /* Live risk badge in corner */
@@ -179,36 +176,36 @@ section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
 .egrid-4{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px;}
 
 .eg-item{
-  background:rgba(255,255,255,.028);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:14px;padding:18px 10px 14px;
+  background:rgba(255,255,255,.035);
+  border:2px solid rgba(255,255,255,.06);
+  border-radius:18px;padding:22px 12px 18px;
   text-align:center;cursor:pointer;
-  transition:background .15s,border-color .15s,transform .15s,box-shadow .15s;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
   user-select:none;position:relative;overflow:hidden;
-  min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   animation:egItemIn .35s ease both;
 }
-.eg-item::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),0),rgba(var(--ar),var(--ag),var(--ab),.08));opacity:0;transition:opacity .15s;}
-.eg-item:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.3);transform:translateY(-3px);box-shadow:0 6px 20px rgba(var(--ar),var(--ag),var(--ab),.1);}
+.eg-item::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),0),rgba(var(--ar),var(--ag),var(--ab),.06));opacity:0;transition:opacity .2s;}
+.eg-item:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.35);transform:translateY(-6px) scale(1.02);box-shadow:0 12px 32px rgba(var(--ar),var(--ag),var(--ab),.12);}
 .eg-item:hover::after{opacity:1;}
 .eg-item.sel{
   background:rgba(var(--ar),var(--ag),var(--ab),.12);
-  border-color:rgba(var(--ar),var(--ag),var(--ab),.5);
-  transform:translateY(-3px);
-  box-shadow:0 6px 24px rgba(var(--ar),var(--ag),var(--ab),.18);
+  border-color:var(--accent);
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 8px 32px rgba(var(--ar),var(--ag),var(--ab),.2),inset 0 0 30px rgba(var(--ar),var(--ag),var(--ab),.04);
 }
 .eg-item.sel::after{opacity:1;}
 .eg-item.sel::before{
-  content:'✓';position:absolute;top:6px;right:8px;
-  font-size:10px;color:var(--accent);font-family:'Space Mono',monospace;
+  content:'✓';position:absolute;top:8px;right:10px;
+  font-size:12px;font-weight:700;color:var(--accent);
   transition:color .4s;
 }
-.eg-emoji{font-size:36px;display:block;margin-bottom:8px;line-height:1;transition:transform .2s;}
-.eg-item:hover .eg-emoji{transform:scale(1.12);}
-.eg-item.sel .eg-emoji{transform:scale(1.12);}
-.eg-label{font-size:11px;color:rgba(255,255,255,.45);line-height:1.4;transition:color .15s;}
-.eg-item.sel .eg-label{color:rgba(255,255,255,.8);}
-.eg-item.dim{opacity:.45;transform:scale(.95);filter:grayscale(.3);pointer-events:auto;}
+.eg-emoji{font-size:42px;display:block;margin-bottom:10px;line-height:1;transition:transform .2s;}
+.eg-item:hover .eg-emoji{transform:scale(1.15);}
+.eg-item.sel .eg-emoji{transform:scale(1.15);}
+.eg-label{font-size:12px;font-weight:500;color:rgba(255,255,255,.5);line-height:1.4;transition:color .15s;}
+.eg-item.sel .eg-label{color:rgba(255,255,255,.85);}
+.eg-item.dim{opacity:.4;transform:scale(.94);filter:grayscale(.3);pointer-events:auto;}
 
 /* Stagger delays */
 .eg-item:nth-child(1){animation-delay:.04s}
@@ -224,7 +221,7 @@ section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
 @keyframes rAnim{to{transform:scale(4);opacity:0;}}
 
 /* Reaction line */
-.reaction-line{height:20px;margin-bottom:12px;font-family:'Space Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.5px;opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s;}
+.reaction-line{height:22px;margin-bottom:12px;font-size:12px;font-weight:500;color:var(--accent);letter-spacing:.3px;opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s;}
 .reaction-line.show{opacity:1;transform:none;}
 
 /* ══ COMBO TOAST ══ */
@@ -236,32 +233,33 @@ section.anim-up  {animation:fadeUp .36s cubic-bezier(.25,.8,.25,1) both;}
   text-align:center;pointer-events:none;
   opacity:0;z-index:300;
   transition:all .2s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:0 0 60px rgba(255,0,68,.4);
+  box-shadow:0 0 60px rgba(239,68,68,.4);
 }
 .combo-toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
 .combo-icon{display:block;font-size:40px;margin-bottom:6px;animation:comboBounce .4s ease infinite alternate;}
 @keyframes comboBounce{from{transform:translateY(0)}to{transform:translateY(-4px)}}
-.combo-title{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--danger);letter-spacing:2px;}
-.combo-sub{font-size:12px;color:rgba(255,255,255,.5);margin-top:4px;font-family:'Space Mono',monospace;}
+.combo-title{font-size:17px;font-weight:800;color:var(--danger);letter-spacing:1px;}
+.combo-sub{font-size:12px;color:rgba(255,255,255,.5);margin-top:4px;}
 
 /* ══ SLIDER ══ */
 .slider-sec{margin-bottom:8px;}
 .sl-big{font-family:'Space Mono',monospace;font-size:54px;font-weight:700;color:var(--accent);text-align:center;display:block;line-height:1;transition:color .25s;}
 .sl-comment{font-size:13px;color:var(--dim);text-align:center;min-height:22px;margin:6px 0 20px;font-style:italic;}
 .range-wrap{padding:6px 0;}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:rgba(255,255,255,.08);border-radius:10px;outline:none;cursor:pointer;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--accent);cursor:pointer;margin-top:-10.5px;box-shadow:0 0 18px rgba(var(--ar),var(--ag),var(--ab),.75);}
-input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;border:none;background:var(--accent);cursor:pointer;box-shadow:0 0 18px rgba(var(--ar),var(--ag),var(--ab),.75);}
-.range-labels{display:flex;justify-content:space-between;margin-top:10px;font-size:10px;color:var(--dim);font-family:'Space Mono',monospace;}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:8px;background:linear-gradient(90deg,rgba(var(--ar),var(--ag),var(--ab),.2),rgba(239,68,68,.2));border-radius:10px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:var(--accent);cursor:pointer;margin-top:-10px;box-shadow:0 0 24px rgba(var(--ar),var(--ag),var(--ab),.6),0 2px 8px rgba(0,0,0,.3);}
+input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;border:none;background:var(--accent);cursor:pointer;box-shadow:0 0 24px rgba(var(--ar),var(--ag),var(--ab),.6),0 2px 8px rgba(0,0,0,.3);}
+.range-labels{display:flex;justify-content:space-between;margin-top:10px;font-size:11px;color:var(--dim);}
 
 /* ══ NEXT / SOUND ══ */
 .next-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
-.skip-hint{font-size:11px;color:var(--dim);font-family:'Space Mono',monospace;opacity:0;transition:opacity .3s;}
+.skip-hint{font-size:11px;color:var(--dim);opacity:0;transition:opacity .3s;}
 .skip-hint.show{opacity:1;}
-.btn-next{padding:11px 30px;border-radius:100px;font-family:inherit;font-size:14px;cursor:not-allowed;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:var(--dim);transition:all .2s;}
-.btn-next.ready{cursor:pointer;background:var(--accent);border-color:transparent;color:#000;font-weight:700;box-shadow:0 0 28px rgba(var(--ar),var(--ag),var(--ab),.35);}
-.btn-next.ready:hover{transform:translateY(-2px);}
-.btn-next.ready:active{transform:scale(.97);}
+.btn-next{padding:13px 34px;border-radius:100px;font-family:inherit;font-size:15px;font-weight:600;cursor:not-allowed;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:var(--dim);transition:all .25s;}
+.btn-next.ready{cursor:pointer;background:linear-gradient(135deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.75));border-color:transparent;color:#fff;box-shadow:0 0 28px rgba(var(--ar),var(--ag),var(--ab),.3);animation:btnReady 2s ease-in-out infinite;}
+@keyframes btnReady{0%,100%{box-shadow:0 0 20px rgba(var(--ar),var(--ag),var(--ab),.25)}50%{box-shadow:0 0 40px rgba(var(--ar),var(--ag),var(--ab),.45);transform:translateY(-2px)}}
+.btn-next.ready:hover{transform:translateY(-3px);animation:none;box-shadow:0 0 45px rgba(var(--ar),var(--ag),var(--ab),.5);}
+.btn-next.ready:active{transform:scale(.97);animation:none;}
 
 /* Sound toggle */
 .btn-prev{padding:7px 14px;border-radius:100px;font-family:inherit;font-size:12px;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--dim);transition:all .2s;}
@@ -272,7 +270,6 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
   border-radius:100px;padding:6px 12px;cursor:pointer;
   font-size:12px;color:var(--dim);transition:all .2s;
   display:flex;align-items:center;gap:5px;
-  font-family:'Space Mono',monospace;
 }
 .sound-btn:hover{background:rgba(255,255,255,.09);}
 .sound-btn.on{color:var(--accent);border-color:rgba(var(--ar),var(--ag),var(--ab),.3);}
@@ -284,19 +281,19 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .ecg-outer{width:100%;height:56px;overflow:hidden;margin-bottom:28px;}
 .ecg-svg{width:200%;height:100%;animation:ecgScroll 1.8s linear infinite;}
 .ecg-path{fill:none;stroke:var(--accent);stroke-width:2.2;filter:drop-shadow(0 0 6px rgba(var(--ar),var(--ag),var(--ab),.9));transition:stroke .8s;}
-.load-pct{font-family:'Space Mono',monospace;font-size:36px;font-weight:700;color:var(--accent);margin-bottom:6px;transition:color .8s;}
-.load-status{font-family:'Space Mono',monospace;font-size:10px;color:rgba(var(--ar),var(--ag),var(--ab),.6);letter-spacing:3px;text-transform:uppercase;}
+.load-pct{font-family:'Space Mono',monospace;font-size:40px;font-weight:700;color:var(--accent);margin-bottom:8px;transition:color .8s;}
+.load-status{font-size:11px;font-weight:600;color:rgba(var(--ar),var(--ag),var(--ab),.6);letter-spacing:2px;text-transform:uppercase;}
 
 /* ══ RESULT ══ */
 .rs{opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s;}
 .rs.on{opacity:1;transform:none;}
 .report-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.06);}
-.report-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);line-height:1.8;letter-spacing:.5px;}
+.report-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);line-height:1.9;letter-spacing:.5px;}
 .report-meta span{color:rgba(255,255,255,.35);}
-.report-stamp{font-family:'Space Mono',monospace;font-size:11px;color:var(--danger);border:1px solid rgba(255,0,68,.3);border-radius:6px;padding:4px 10px;letter-spacing:2px;text-transform:uppercase;opacity:.7;}
-.report-stamp.safe{color:#00ff88;border-color:rgba(0,255,136,.3);}
+.report-stamp{font-family:'Space Mono',monospace;font-size:11px;color:var(--danger);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:5px 12px;letter-spacing:2px;text-transform:uppercase;opacity:.8;}
+.report-stamp.safe{color:#34d399;border-color:rgba(52,211,153,.3);}
 .res-header{text-align:center;margin-bottom:24px;}
-.res-grade{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--accent);opacity:.5;margin-bottom:18px;transition:color .8s;}
+.res-grade{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--accent);opacity:.6;margin-bottom:18px;transition:color .8s;}
 .score-ring-wrap{width:164px;height:164px;margin:0 auto 20px;position:relative;display:flex;align-items:center;justify-content:center;}
 .score-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);}
 .ring-bg{fill:none;stroke:rgba(255,255,255,.05);stroke-width:3;}
@@ -322,23 +319,23 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .pct-bar-wrap{flex:1;}
 .pct-bar-bg{height:5px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;}
 .pct-bar-fill{height:100%;border-radius:10px;transition:width 1.2s .5s cubic-bezier(.25,.8,.25,1);}
-.pct-text{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);margin-top:6px;}
+.pct-text{font-size:11px;color:var(--dim);margin-top:6px;}
 .pct-num{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;flex-shrink:0;}
 .pct-subs{width:100%;display:flex;gap:8px;margin-top:12px;}
 .pct-sub{flex:1;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;text-align:center;}
 .pct-sub-val{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;display:block;margin-bottom:3px;}
 .pct-sub-lbl{font-size:10px;color:var(--dim);line-height:1.4;}
 .vitals-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
-.vital{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:13px;padding:14px 10px;text-align:center;}
+.vital{background:rgba(255,255,255,.03);border:1px solid var(--card-border);border-radius:16px;padding:16px 10px;text-align:center;}
 .vital-icon{font-size:18px;display:block;margin-bottom:5px;}
 .vital-val{font-family:'Space Mono',monospace;font-size:17px;font-weight:700;display:block;line-height:1;}
 .vital-lbl{font-size:9px;color:var(--dim);display:block;margin-top:4px;letter-spacing:.5px;}
 .risk-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;justify-content:center;}
-.rtag{font-size:10px;font-family:'Space Mono',monospace;padding:4px 12px;border-radius:100px;border:1px solid;animation:tagIn .4s ease both;}
+.rtag{font-size:10px;font-weight:600;padding:5px 14px;border-radius:100px;border:1px solid;animation:tagIn .4s ease both;}
 @keyframes tagIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
-.rtag.high{color:#ff4466;background:rgba(255,68,102,.08);border-color:rgba(255,68,102,.25);}
-.rtag.med {color:#ffaa00;background:rgba(255,170,0,.08);border-color:rgba(255,170,0,.25);}
-.rtag.low {color:#00ff88;background:rgba(0,255,136,.08);border-color:rgba(0,255,136,.25);}
+.rtag.high{color:#f87171;background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2);}
+.rtag.med {color:#fbbf24;background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.2);}
+.rtag.low {color:#34d399;background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.25);}
 .systems-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;}
 .sys-item{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:13px;padding:16px;display:flex;align-items:flex-start;gap:12px;}
 .sys-icon{font-size:22px;flex-shrink:0;}
@@ -354,28 +351,28 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .contrib-val{font-family:'Space Mono',monospace;font-size:10px;width:28px;flex-shrink:0;text-align:right;}
 .radar-wrap{display:flex;justify-content:center;margin-bottom:16px;}
 .radar-wrap svg{width:100%;max-width:300px;height:auto;filter:drop-shadow(0 0 20px rgba(var(--ar),var(--ag),var(--ab),.15));}
-.prophecy-card{background:rgba(255,0,68,.035);border:1px solid rgba(255,0,68,.12);border-radius:16px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden;}
+.prophecy-card{background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.1);border-radius:20px;padding:24px;margin-bottom:14px;position:relative;overflow:hidden;}
 .prophecy-card::after{content:'☠';position:absolute;right:14px;bottom:8px;font-size:64px;opacity:.04;pointer-events:none;line-height:1;}
-.sec-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+.sec-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
 .prophecy-text{font-size:14px;line-height:1.9;color:#c8c8c8;min-height:40px;}
 .type-cursor::after{content:'▋';animation:blink .8s step-end infinite;font-size:13px;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.prophecy-moment{margin-top:12px;font-size:11px;font-family:'Space Mono',monospace;color:rgba(255,68,68,.65);letter-spacing:1px;}
-.doctor-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:22px;margin-bottom:14px;position:relative;}
-.doctor-card::before{content:'Rx';position:absolute;top:16px;right:20px;font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:rgba(255,255,255,.05);}
+.prophecy-moment{margin-top:12px;font-size:11px;font-weight:600;color:rgba(239,68,68,.6);letter-spacing:.5px;}
+.doctor-card{background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;position:relative;}
+.doctor-card::before{content:'Rx';position:absolute;top:16px;right:20px;font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:rgba(255,255,255,.04);}
 .doctor-text{font-size:13px;line-height:1.9;color:#b0b0b0;font-style:italic;}
-.doctor-sig{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);margin-top:12px;border-top:1px solid rgba(255,255,255,.05);padding-top:10px;letter-spacing:1px;}
+.doctor-sig{font-size:10px;color:var(--dim);margin-top:12px;border-top:1px solid rgba(255,255,255,.05);padding-top:10px;letter-spacing:.5px;}
 .rx-section{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,.08);}
-.rx-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.3);margin-bottom:10px;}
+.rx-title{font-size:10px;font-weight:600;letter-spacing:2px;color:rgba(255,255,255,.3);margin-bottom:10px;}
 .rx-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:12px;color:#b0b0b0;line-height:1.7;}
 .rx-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.2);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
-.timeline-card{background:rgba(255,136,0,.03);border:1px solid rgba(255,136,0,.12);border-radius:16px;padding:22px;margin-bottom:14px;}
+.timeline-card{background:rgba(245,158,11,.03);border:1px solid rgba(245,158,11,.1);border-radius:20px;padding:24px;margin-bottom:14px;}
 .tl-item{display:flex;gap:14px;position:relative;}
 .tl-item::before{content:'';position:absolute;left:11px;top:22px;bottom:-16px;width:1px;background:rgba(255,255,255,.08);}
 .tl-item:last-child::before{display:none;}
 .tl-dot{width:24px;height:24px;border-radius:50%;border:2px solid;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:2px;}
 .tl-body{padding-bottom:20px;}
-.tl-time{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;margin-bottom:4px;}
+.tl-time{font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:4px;}
 .tl-text{font-size:13px;color:#b8b8b8;line-height:1.65;}
 .priority-card{background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.07),rgba(var(--ar),var(--ag),var(--ab),.02));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.18);border-radius:16px;padding:22px;margin-bottom:14px;transition:border-color 1s,background 1s;}
 .priority-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent);opacity:.7;margin-bottom:8px;transition:color .8s;}
@@ -404,33 +401,33 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
 .btn-share{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:12px 28px;border-radius:100px;font-size:14px;cursor:pointer;transition:all .2s;font-family:inherit;}
 .btn-share:hover{background:rgba(255,255,255,.09);transform:translateY(-1px);}
-.btn-retry{background:linear-gradient(135deg,#ff0044,#cc0033);border:none;color:#fff;padding:12px 28px;border-radius:100px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 0 28px rgba(255,0,68,.3);}
-.btn-retry:hover{transform:translateY(-1px);box-shadow:0 0 44px rgba(255,0,68,.45);}
-.disclaimer{font-size:10px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.7;font-family:'Space Mono',monospace;letter-spacing:.3px;opacity:.6;}
+.btn-retry{background:linear-gradient(135deg,#ef4444,#dc2626);border:none;color:#fff;padding:13px 30px;border-radius:100px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;box-shadow:0 0 28px rgba(239,68,68,.25);}
+.btn-retry:hover{transform:translateY(-1px);box-shadow:0 0 44px rgba(239,68,68,.45);}
+.disclaimer{font-size:11px;color:var(--dim);text-align:center;margin-top:16px;line-height:1.7;letter-spacing:.2px;opacity:.6;}
 .resume-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(var(--ar),var(--ag),var(--ab),.08);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.2);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--text);}
 .resume-bar button{padding:5px 14px;border-radius:100px;font-size:11px;cursor:pointer;font-family:inherit;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;transition:all .15s;}
 .resume-bar button:first-of-type{background:var(--accent);border-color:transparent;color:#000;font-weight:600;}
 .resume-bar button:hover{transform:translateY(-1px);}
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);border-radius:100px;padding:10px 24px;font-size:13px;color:var(--accent);pointer-events:none;opacity:0;transition:all .3s;white-space:nowrap;z-index:200;}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:100px;padding:10px 24px;font-size:13px;color:var(--accent);pointer-events:none;opacity:0;transition:all .3s;white-space:nowrap;z-index:200;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* ══ OBITUARY CARD ══ */
-.obituary-card{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden;font-style:italic;}
+.obituary-card{background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;position:relative;overflow:hidden;font-style:italic;}
 .obituary-card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 24px,rgba(255,255,255,.015) 24px,rgba(255,255,255,.015) 25px);pointer-events:none;}
 .obituary-card::after{content:'R.I.P.';position:absolute;right:16px;bottom:10px;font-family:'Space Mono',monospace;font-size:48px;font-weight:700;color:rgba(255,255,255,.025);pointer-events:none;font-style:normal;}
 .obituary-text{font-size:14px;line-height:2;color:#b0b0b0;position:relative;z-index:1;min-height:50px;}
-.obituary-footer{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);margin-top:12px;text-align:right;font-style:normal;letter-spacing:1px;position:relative;z-index:1;}
+.obituary-footer{font-size:10px;color:var(--dim);margin-top:12px;text-align:right;font-style:normal;letter-spacing:.5px;position:relative;z-index:1;}
 
 /* ══ LAST WORDS ══ */
-.lastwords-card{background:linear-gradient(135deg,rgba(255,0,68,.03),rgba(200,0,100,.02));border:1px solid rgba(255,0,68,.1);border-radius:16px;padding:28px 24px;margin-bottom:14px;text-align:center;position:relative;}
+.lastwords-card{background:linear-gradient(135deg,rgba(239,68,68,.03),rgba(168,50,80,.02));border:1px solid rgba(239,68,68,.08);border-radius:20px;padding:30px 24px;margin-bottom:14px;text-align:center;position:relative;}
 .lastwords-card::before{content:'💬';position:absolute;top:12px;left:18px;font-size:20px;opacity:.15;}
 .lw-quote{font-size:18px;font-weight:700;line-height:1.7;color:#e8e8e8;margin-bottom:10px;position:relative;}
-.lw-quote::before{content:'"';font-size:42px;color:rgba(255,0,68,.2);position:absolute;top:-16px;left:-8px;font-family:Georgia,serif;line-height:1;}
-.lw-quote::after{content:'"';font-size:42px;color:rgba(255,0,68,.2);font-family:Georgia,serif;line-height:1;margin-left:4px;}
-.lw-attr{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:2px;}
+.lw-quote::before{content:'"';font-size:42px;color:rgba(239,68,68,.15);position:absolute;top:-16px;left:-8px;font-family:Georgia,serif;line-height:1;}
+.lw-quote::after{content:'"';font-size:42px;color:rgba(239,68,68,.15);font-family:Georgia,serif;line-height:1;margin-left:4px;}
+.lw-attr{font-size:11px;color:var(--dim);letter-spacing:1px;}
 
 /* ══ SURVIVAL CARD ══ */
-.survival-card{background:linear-gradient(135deg,rgba(0,255,136,.03),rgba(0,200,100,.02));border:1px solid rgba(0,255,136,.12);border-radius:16px;padding:22px;margin-bottom:14px;}
+.survival-card{background:linear-gradient(135deg,rgba(52,211,153,.03),rgba(16,185,129,.02));border:1px solid rgba(52,211,153,.1);border-radius:20px;padding:24px;margin-bottom:14px;}
 .survival-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);}
 .survival-item:last-child{border-bottom:none;}
 .surv-icon{font-size:22px;flex-shrink:0;}
@@ -440,52 +437,52 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .survival-note{font-size:10px;color:var(--dim);margin-top:12px;font-style:italic;line-height:1.6;}
 
 /* ══ PROFESSION CARD ══ */
-.profession-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:22px;margin-bottom:14px;}
+.profession-card{background:rgba(255,255,255,.025);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;}
 .prof-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);}
 .prof-item:last-child{border-bottom:none;}
 .prof-icon{font-size:24px;flex-shrink:0;width:36px;text-align:center;}
 .prof-body{flex:1;}
 .prof-name{font-size:13px;font-weight:600;color:#e0e0e0;margin-bottom:2px;}
 .prof-risk{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);}
-.prof-match{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;flex-shrink:0;padding:3px 10px;border-radius:100px;border:1px solid;}
-.prof-match.close{color:#ffcc00;border-color:rgba(255,204,0,.3);background:rgba(255,204,0,.06);}
-.prof-match.over{color:#ff4444;border-color:rgba(255,68,68,.3);background:rgba(255,68,68,.06);}
-.prof-match.under{color:#00ff88;border-color:rgba(0,255,136,.3);background:rgba(0,255,136,.06);}
+.prof-match{font-size:10px;font-weight:700;flex-shrink:0;padding:4px 12px;border-radius:100px;border:1px solid;}
+.prof-match.close{color:#fbbf24;border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.06);}
+.prof-match.over{color:#ef4444;border-color:rgba(255,68,68,.3);background:rgba(255,68,68,.06);}
+.prof-match.under{color:#34d399;border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.06);}
 
 /* ══ LOADING STAGE TEXT ══ */
-.load-stage{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-top:12px;min-height:18px;letter-spacing:.5px;transition:opacity .3s;}
-.load-organ{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(var(--ar),var(--ag),var(--ab),.06);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.15);border-radius:100px;font-size:10px;font-family:'Space Mono',monospace;color:var(--accent);margin:4px 3px;opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s;}
+.load-stage{font-size:11px;font-weight:500;color:rgba(255,255,255,.4);margin-top:14px;min-height:18px;letter-spacing:.3px;transition:opacity .3s;}
+.load-organ{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(var(--ar),var(--ag),var(--ab),.06);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:100px;font-size:11px;font-weight:500;color:var(--accent);margin:4px 3px;opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s;}
 .load-organ.scanned{opacity:1;transform:scale(1);}
-.load-organ.danger{color:#ff4444;border-color:rgba(255,68,68,.2);background:rgba(255,68,68,.06);}
+.load-organ.danger{color:#ef4444;border-color:rgba(255,68,68,.2);background:rgba(255,68,68,.06);}
 .load-organs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:14px;}
 
 /* ══ DEATH CLOCK ══ */
-.death-clock{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;}
-.dc-digit{background:rgba(255,0,68,.06);border:1px solid rgba(255,0,68,.15);border-radius:6px;padding:4px 7px;font-size:14px;font-weight:700;color:#ff6688;min-width:28px;text-align:center;font-variant-numeric:tabular-nums;}
-.dc-sep{color:rgba(255,0,68,.3);font-weight:700;font-size:14px;}
+.death-clock{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;font-size:11px;color:var(--dim);letter-spacing:.5px;}
+.dc-digit{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.12);border-radius:8px;padding:5px 8px;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:#f87171;min-width:28px;text-align:center;font-variant-numeric:tabular-nums;}
+.dc-sep{color:rgba(239,68,68,.25);font-weight:700;font-size:14px;}
 .dc-label{font-size:8px;color:var(--dim);text-align:center;letter-spacing:2px;margin-top:2px;}
 .dc-group{display:flex;flex-direction:column;align-items:center;}
 
 /* ══ GLITCH RESULT TEXT ══ */
 .glitch-score{position:relative;}
 .glitch-score::before,.glitch-score::after{content:attr(data-val);position:absolute;top:0;left:0;right:0;overflow:hidden;}
-.glitch-score::before{left:2px;text-shadow:-2px 0 #ff0044;animation:gScore 3s infinite;}
-.glitch-score::after{left:-2px;text-shadow:2px 0 #00ccff;animation:gScore2 3s infinite;}
+.glitch-score::before{left:2px;text-shadow:-2px 0 #ef4444;animation:gScore 3s infinite;}
+.glitch-score::after{left:-2px;text-shadow:2px 0 #60a5fa;animation:gScore2 3s infinite;}
 @keyframes gScore{0%,92%,100%{clip:rect(0,9999px,0,0)}94%{clip:rect(10px,9999px,30px,0);transform:translate(-3px)}97%{clip:rect(30px,9999px,50px,0);transform:translate(3px)}}
 @keyframes gScore2{0%,90%,100%{clip:rect(0,9999px,0,0)}93%{clip:rect(20px,9999px,40px,0);transform:translate(2px)}96%{clip:rect(5px,9999px,25px,0);transform:translate(-2px)}}
 
 /* ══ DANGER FLASH ══ */
 .danger-flash{position:fixed;inset:0;z-index:999;pointer-events:none;opacity:0;}
 .danger-flash.fire{animation:dFlash .35s ease-out;}
-@keyframes dFlash{0%{opacity:.18;background:radial-gradient(circle at 50% 50%,rgba(255,0,68,.4),transparent 70%)}100%{opacity:0;background:radial-gradient(circle at 50% 50%,rgba(255,0,68,0),transparent 70%)}}
+@keyframes dFlash{0%{opacity:.15;background:radial-gradient(circle at 50% 50%,rgba(239,68,68,.35),transparent 70%)}100%{opacity:0;background:radial-gradient(circle at 50% 50%,rgba(239,68,68,0),transparent 70%)}}
 .danger-flash.fire-strong{animation:dFlashStrong .5s ease-out;}
-@keyframes dFlashStrong{0%{opacity:.3;background:radial-gradient(circle at 50% 50%,rgba(255,0,68,.6),transparent 60%)}30%{opacity:.15}100%{opacity:0}}
+@keyframes dFlashStrong{0%{opacity:.25;background:radial-gradient(circle at 50% 50%,rgba(239,68,68,.5),transparent 60%)}30%{opacity:.12}100%{opacity:0}}
 
 /* ══ CHROMATIC ABERRATION (high score result) ══ */
-.chromatic .glitch-title::before{left:3px;text-shadow:-3px 0 #ff0044;animation:g1 2.5s infinite;}
-.chromatic .glitch-title::after{left:-3px;text-shadow:3px 0 #00ccff;animation:g2 2.5s infinite;}
+.chromatic .glitch-title::before{left:3px;text-shadow:-3px 0 #ef4444;animation:g1 2.5s infinite;}
+.chromatic .glitch-title::after{left:-3px;text-shadow:3px 0 #60a5fa;animation:g2 2.5s infinite;}
 .res-card-chromatic{animation:chromaShift 4s ease-in-out infinite;}
-@keyframes chromaShift{0%,100%{text-shadow:0 0 0 transparent}25%{text-shadow:1px 0 2px rgba(255,0,68,.15),-1px 0 2px rgba(0,200,255,.15)}50%{text-shadow:0 0 0 transparent}75%{text-shadow:-1px 0 2px rgba(255,0,68,.1),1px 0 2px rgba(0,200,255,.1)}}
+@keyframes chromaShift{0%,100%{text-shadow:0 0 0 transparent}25%{text-shadow:1px 0 2px rgba(239,68,68,.15),-1px 0 2px rgba(0,200,255,.15)}50%{text-shadow:0 0 0 transparent}75%{text-shadow:-1px 0 2px rgba(239,68,68,.1),1px 0 2px rgba(0,200,255,.1)}}
 .score-ring-wrap.extreme .score-num{animation:chromaShift 3s ease-in-out infinite;}
 
 /* ══ ACHIEVEMENTS ══ */
@@ -499,20 +496,20 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 
 /* ══ ENHANCED FUN TAGS ══ */
 .fun-tags-section{text-align:center;margin-top:6px;}
-.fun-tags-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:10px;text-transform:uppercase;}
+.fun-tags-label{font-size:10px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:10px;text-transform:uppercase;}
 .fun-tag{position:relative;overflow:hidden;}
 .fun-tag::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transition:left .6s;}
 .fun-tag:hover::after{left:120%;}
 
 /* ══ DEATH WARRANT HEADER ══ */
-.death-warrant{text-align:center;padding:8px 0 16px;margin-bottom:16px;border-bottom:1px solid rgba(255,0,68,.1);position:relative;}
-.death-warrant::before{content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,0,68,.25),transparent);}
-.dw-seal{font-size:48px;display:block;margin-bottom:6px;filter:drop-shadow(0 0 12px rgba(255,0,68,.3));animation:sealPulse 3s ease-in-out infinite;}
-@keyframes sealPulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 12px rgba(255,0,68,.3))}50%{transform:scale(1.05);filter:drop-shadow(0 0 20px rgba(255,0,68,.5))}}
-.dw-title{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:5px;color:rgba(255,0,68,.5);text-transform:uppercase;}
+.death-warrant{text-align:center;padding:8px 0 16px;margin-bottom:16px;border-bottom:1px solid rgba(239,68,68,.08);position:relative;}
+.death-warrant::before{content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(239,68,68,.2),transparent);}
+.dw-seal{font-size:48px;display:block;margin-bottom:6px;filter:drop-shadow(0 0 12px rgba(239,68,68,.25));animation:sealPulse 3s ease-in-out infinite;}
+@keyframes sealPulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 12px rgba(239,68,68,.25))}50%{transform:scale(1.05);filter:drop-shadow(0 0 20px rgba(239,68,68,.4))}}
+.dw-title{font-size:11px;font-weight:600;letter-spacing:4px;color:rgba(239,68,68,.45);text-transform:uppercase;}
 
 /* ══ STREAK INDICATOR ══ */
-.streak-bar{display:flex;align-items:center;gap:8px;margin-top:6px;padding:6px 12px;background:rgba(255,0,68,.04);border:1px solid rgba(255,0,68,.1);border-radius:8px;font-size:11px;font-family:'Space Mono',monospace;color:rgba(255,100,100,.6);opacity:0;transition:opacity .4s;letter-spacing:.5px;}
+.streak-bar{display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 14px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.1);border-radius:10px;font-size:11px;font-weight:600;color:rgba(239,100,100,.65);opacity:0;transition:opacity .4s;letter-spacing:.3px;}
 .streak-bar.show{opacity:1;}
 .streak-fire{animation:firePulse 1s ease infinite;font-size:14px;}
 @keyframes firePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
@@ -529,22 +526,19 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 .section-divider path{fill:none;stroke:var(--accent);stroke-width:1.5;transition:stroke .8s;}
 .sd-skull{font-size:10px;margin:0 8px;opacity:.3;line-height:1;}
 
-/* ══ CRT SCANLINE + FLICKER (high-danger results) ══ */
-.crt-mode #scanlines{opacity:.5!important;}
-.crt-mode .wrap{animation:crtFlicker 8s steps(1) infinite;}
-@keyframes crtFlicker{0%,97%,100%{opacity:1}97.5%{opacity:.92}98%{opacity:1}98.5%{opacity:.96}99%{opacity:1}}
-.crt-mode .card{box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 28px 80px rgba(0,0,0,.55),0 0 60px rgba(255,0,68,.08),inset 0 0 120px rgba(255,0,68,.015);}
-.crt-mode .score-num{text-shadow:0 0 10px currentColor,0 0 40px rgba(255,0,68,.2);}
+/* ══ HIGH-DANGER RESULT GLOW ══ */
+.danger-result .card{box-shadow:0 4px 32px rgba(0,0,0,.4),0 0 60px rgba(239,68,68,.06);}
+.danger-result .score-num{text-shadow:0 0 20px currentColor;}
 
 /* ══ ENHANCED CARD HOVER/GLOW STATES ══ */
 .sys-item{transition:border-color .25s,transform .2s,box-shadow .25s;}
 .sys-item:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3),0 0 20px rgba(var(--ar),var(--ag),var(--ab),.05);}
 .vital{transition:border-color .25s,transform .2s,box-shadow .25s;}
 .vital:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.2);transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.3);}
-.survival-card:hover{border-color:rgba(0,255,136,.25);box-shadow:0 0 30px rgba(0,255,136,.06);}
-.prophecy-card:hover{border-color:rgba(255,0,68,.25);box-shadow:0 0 30px rgba(255,0,68,.06);}
+.survival-card:hover{border-color:rgba(52,211,153,.25);box-shadow:0 0 30px rgba(52,211,153,.06);}
+.prophecy-card:hover{border-color:rgba(239,68,68,.25);box-shadow:0 0 30px rgba(239,68,68,.06);}
 .doctor-card:hover{border-color:rgba(255,255,255,.12);box-shadow:0 0 30px rgba(255,255,255,.03);}
-.timeline-card:hover{border-color:rgba(255,136,0,.2);box-shadow:0 0 30px rgba(255,136,0,.06);}
+.timeline-card:hover{border-color:rgba(245,158,11,.2);box-shadow:0 0 30px rgba(245,158,11,.06);}
 .profession-card:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.2);box-shadow:0 0 25px rgba(var(--ar),var(--ag),var(--ab),.05);}
 .prophecy-card,.doctor-card,.survival-card,.timeline-card,.profession-card,.obituary-card,.lastwords-card,.priority-card,.advice-card{transition:border-color .3s,box-shadow .3s,background .3s;}
 
@@ -565,7 +559,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 
 /* ══ ENHANCED SCORE RING: double ring + outer pulse ══ */
 .score-ring-wrap::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(var(--ar),var(--ag),var(--ab),.08);transition:border-color .8s;}
-.score-ring-wrap.extreme::before{border-color:rgba(255,0,68,.2);animation:outerRingPulse 2s ease-in-out infinite;}
+.score-ring-wrap.extreme::before{border-color:rgba(239,68,68,.2);animation:outerRingPulse 2s ease-in-out infinite;}
 @keyframes outerRingPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.06);opacity:1}}
 .score-ring-wrap::after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(var(--ar),var(--ag),var(--ab),.04);transition:border-color .8s;}
 
@@ -609,10 +603,10 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 </style>
 </head>
 <body>
-<div id="grid-bg"></div><div id="scanlines"></div><div id="vignette"></div><div id="ambient"></div><div id="noise-overlay"></div>
+<div id="vignette"></div><div id="ambient"></div><div id="noise-overlay"></div>
 <canvas id="particle-canvas"></canvas>
-<div class="parallax-orb" id="orb1" style="width:400px;height:400px;top:-100px;left:-100px;background:rgba(0,255,136,.04);"></div>
-<div class="parallax-orb" id="orb2" style="width:300px;height:300px;bottom:-80px;right:-80px;background:rgba(0,200,255,.03);"></div>
+<div class="parallax-orb" id="orb1" style="width:400px;height:400px;top:-100px;left:-100px;background:rgba(124,110,240,.05);"></div>
+<div class="parallax-orb" id="orb2" style="width:300px;height:300px;bottom:-80px;right:-80px;background:rgba(59,130,246,.04);"></div>
 <div class="danger-flash" id="danger-flash"></div>
 <div class="combo-toast" id="combo-toast">
   <span class="combo-icon" id="combo-icon">💀</span>
@@ -627,13 +621,13 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
   <div class="floating-symbols" id="float-syms"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v6.3</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v7.0</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div></div>
   <div class="warning-box"><span class="warning-icon">⚠️</span><div class="warning-text"><b>健康提示：</b>本测试为娱乐性健康评估，结果不构成医学诊断。但如果你测完之后感到不适，那可能不是巧合。高分用户建议认真预约体检。</div></div>
   <div class="live-stats">
     <div class="lstat"><span class="lstat-num">58</span><span class="lstat-lbl">全国平均指数</span></div>
-    <div class="lstat"><span class="lstat-num" style="color:#ff4444">97</span><span class="lstat-lbl">历史最高记录</span></div>
+    <div class="lstat"><span class="lstat-num" style="color:#ef4444">97</span><span class="lstat-lbl">历史最高记录</span></div>
     <div class="lstat"><span class="lstat-num">30</span><span class="lstat-lbl">道测试题目</span></div>
   </div>
   <div class="cat-preview">
@@ -652,20 +646,20 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="test-title">// 他们测完之后</div>
     <div class="test-cards">
       <div class="test-scroll-inner">
-        <div class="tcard"><div class="tcard-quote">"测完当晚把闹钟从15个减到3个。进步是有的。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,136,0,.15)">😮</div><div class="tcard-name">某大厂产品经理</div><div class="tcard-score" style="color:#ff8800">78分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"拿了S级，但感觉测试有问题。我明明很累。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(0,255,136,.1)">😌</div><div class="tcard-name">认证养生博主</div><div class="tcard-score" style="color:#00ff88">12分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"得了F，发给我妈，她终于停止催婚开始催我体检了。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,0,68,.1)">💀</div><div class="tcard-name">自由职业者</div><div class="tcard-score" style="color:#ff0044">91分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"测了三次，越来越高。可能是因为熬夜测试。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(0,180,255,.12)">🤯</div><div class="tcard-name">研究生在读</div><div class="tcard-score" style="color:#ffcc00">65分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"转给老板看了。他测了85分，终于批了年假。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,80,0,.12)">😈</div><div class="tcard-name">运营总监</div><div class="tcard-score" style="color:#ff8800">72分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"给我贴了'咖啡因依赖综合征'标签，我正端着第四杯美式看结果。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(204,136,68,.12)">☕</div><div class="tcard-name">前端开发工程师</div><div class="tcard-score" style="color:#ff8800">74分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"死亡预言那段太准了，准到我想举报。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,0,100,.1)">😱</div><div class="tcard-name">创业公司CTO</div><div class="tcard-score" style="color:#ff4444">83分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"全组一起测，结果互相没脸看。团建变成体检预约。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,200,0,.12)">🫠</div><div class="tcard-name">某互联网中层</div><div class="tcard-score" style="color:#ffcc00">69分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"测完当晚把闹钟从15个减到3个。进步是有的。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,136,0,.15)">😮</div><div class="tcard-name">某大厂产品经理</div><div class="tcard-score" style="color:#ff8800">78分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"拿了S级，但感觉测试有问题。我明明很累。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(0,255,136,.1)">😌</div><div class="tcard-name">认证养生博主</div><div class="tcard-score" style="color:#00ff88">12分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"得了F，发给我妈，她终于停止催婚开始催我体检了。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,0,68,.1)">💀</div><div class="tcard-name">自由职业者</div><div class="tcard-score" style="color:#ff0044">91分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"给我贴了'咖啡因依赖综合征'标签，我正端着第四杯美式看结果。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(204,136,68,.12)">☕</div><div class="tcard-name">前端开发工程师</div><div class="tcard-score" style="color:#ff8800">74分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"死亡预言那段太准了，准到我想举报。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,0,100,.1)">😱</div><div class="tcard-name">创业公司CTO</div><div class="tcard-score" style="color:#ff4444">83分</div></div></div>
-        <div class="tcard"><div class="tcard-quote">"全组一起测，结果互相没脸看。团建变成体检预约。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,200,0,.12)">🫠</div><div class="tcard-name">某互联网中层</div><div class="tcard-score" style="color:#ffcc00">69分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"测完当晚把闹钟从15个减到3个。进步是有的。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(245,158,11,.15)">😮</div><div class="tcard-name">某大厂产品经理</div><div class="tcard-score" style="color:#f59e0b">78分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"拿了S级，但感觉测试有问题。我明明很累。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(52,211,153,.1)">😌</div><div class="tcard-name">认证养生博主</div><div class="tcard-score" style="color:#34d399">12分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"得了F，发给我妈，她终于停止催婚开始催我体检了。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(239,68,68,.1)">💀</div><div class="tcard-name">自由职业者</div><div class="tcard-score" style="color:#ef4444">91分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"测了三次，越来越高。可能是因为熬夜测试。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(0,180,255,.12)">🤯</div><div class="tcard-name">研究生在读</div><div class="tcard-score" style="color:#fbbf24">65分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"转给老板看了。他测了85分，终于批了年假。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,80,0,.12)">😈</div><div class="tcard-name">运营总监</div><div class="tcard-score" style="color:#f59e0b">72分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"给我贴了'咖啡因依赖综合征'标签，我正端着第四杯美式看结果。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(204,136,68,.12)">☕</div><div class="tcard-name">前端开发工程师</div><div class="tcard-score" style="color:#f59e0b">74分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"死亡预言那段太准了，准到我想举报。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,0,100,.1)">😱</div><div class="tcard-name">创业公司CTO</div><div class="tcard-score" style="color:#ef4444">83分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"全组一起测，结果互相没脸看。团建变成体检预约。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,200,0,.12)">🫠</div><div class="tcard-name">某互联网中层</div><div class="tcard-score" style="color:#fbbf24">69分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"测完当晚把闹钟从15个减到3个。进步是有的。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(245,158,11,.15)">😮</div><div class="tcard-name">某大厂产品经理</div><div class="tcard-score" style="color:#f59e0b">78分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"拿了S级，但感觉测试有问题。我明明很累。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(52,211,153,.1)">😌</div><div class="tcard-name">认证养生博主</div><div class="tcard-score" style="color:#34d399">12分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"得了F，发给我妈，她终于停止催婚开始催我体检了。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(239,68,68,.1)">💀</div><div class="tcard-name">自由职业者</div><div class="tcard-score" style="color:#ef4444">91分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"给我贴了'咖啡因依赖综合征'标签，我正端着第四杯美式看结果。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(204,136,68,.12)">☕</div><div class="tcard-name">前端开发工程师</div><div class="tcard-score" style="color:#f59e0b">74分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"死亡预言那段太准了，准到我想举报。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,0,100,.1)">😱</div><div class="tcard-name">创业公司CTO</div><div class="tcard-score" style="color:#ef4444">83分</div></div></div>
+        <div class="tcard"><div class="tcard-quote">"全组一起测，结果互相没脸看。团建变成体检预约。"</div><div class="tcard-meta"><div class="tcard-avatar" style="background:rgba(255,200,0,.12)">🫠</div><div class="tcard-name">某互联网中层</div><div class="tcard-score" style="color:#fbbf24">69分</div></div></div>
       </div>
     </div>
   </div>
@@ -739,14 +733,14 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
     <div class="rs" id="rs5"><div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 身体系统风险</div><div class="systems-grid" id="systems-grid"></div></div>
     <div class="rs" id="rs6"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 各维度风险贡献</div><div class="radar-wrap"><svg id="radar-svg" viewBox="-10 -10 320 320" xmlns="http://www.w3.org/2000/svg"><defs><filter id="r-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="r-fill-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="100%" stop-color="var(--accent)" stop-opacity=".08"/></radialGradient></defs><g id="r-grid-g"></g><g id="r-axes-g"></g><polygon id="r-poly" points="150,150" fill="url(#r-fill-grad)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" filter="url(#r-glow)"/><g id="r-dots-g"></g><g id="r-labels-g"></g></svg></div><div class="contrib-chart" id="contrib-chart"></div></div>
     <div class="section-divider"><span class="sd-skull">💀</span><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg><span class="sd-skull">💀</span></div>
-    <div class="rs" id="rs7"><div class="prophecy-card"><div class="sec-label" style="color:#ff4466">☠ &nbsp;死亡预言</div><div class="prophecy-text" id="prophecy-text"></div><div class="prophecy-moment" id="prophecy-moment"></div></div></div>
+    <div class="rs" id="rs7"><div class="prophecy-card"><div class="sec-label" style="color:#f87171">☠ &nbsp;死亡预言</div><div class="prophecy-text" id="prophecy-text"></div><div class="prophecy-moment" id="prophecy-moment"></div></div></div>
     <div class="rs" id="rs7b"><div class="obituary-card" id="obituary-card"><div class="sec-label" style="color:rgba(255,255,255,.25)">📜 讣告预览 · OBITUARY PREVIEW</div><div class="obituary-text" id="obituary-text"></div><div class="obituary-footer">—— 来自未来的档案</div></div></div>
     <div class="rs" id="rs7c"><div class="lastwords-card"><div class="lw-quote" id="lw-quote"></div><div class="lw-attr" id="lw-attr"></div></div></div>
-    <div class="rs" id="rs7d"><div class="survival-card"><div class="sec-label" style="color:#00ff88;margin-bottom:12px">🌱 如果你从今天开始改变</div><div class="survival-items" id="survival-items"></div><div class="survival-note">以上数据基于流行病学模型估算，每改变一个维度，你的未来都会被重写。</div></div></div>
+    <div class="rs" id="rs7d"><div class="survival-card"><div class="sec-label" style="color:#34d399;margin-bottom:12px">🌱 如果你从今天开始改变</div><div class="survival-items" id="survival-items"></div><div class="survival-note">以上数据基于流行病学模型估算，每改变一个维度，你的未来都会被重写。</div></div></div>
     <div class="rs" id="rs7e"><div class="profession-card"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">📊 你的风险相当于</div><div class="profession-items" id="profession-items"></div></div></div>
     <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
-    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v6.3 · AUTOMATED REPORT</div></div></div>
-    <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#ff9900;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
+    <div class="rs" id="rs8"><div class="doctor-card"><div class="sec-label" style="color:rgba(255,255,255,.3)">// 临床评估备注</div><div class="doctor-text" id="doctor-text"></div><div class="rx-section"><div class="rx-title">PRESCRIPTION · 处方</div><div id="rx-items"></div></div><div class="doctor-sig">AI HEALTH ANALYSIS SYSTEM · SDI-v7.0 · AUTOMATED REPORT</div></div></div>
+    <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#f59e0b;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
     <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
     <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
     <div class="rs" id="rs11"><div class="sec-label" style="color:var(--dim);margin-bottom:10px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px">// 七维分析 · 点击展开建议</div><div class="dims-grid" id="dims-grid"></div></div>
@@ -762,7 +756,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bor
 const canv=document.getElementById('particle-canvas'),ctx2=canv.getContext('2d');
 let pts=[],praf,ptSpd=1,ptRate=.18;
 function resC(){canv.width=innerWidth;canv.height=innerHeight;}resC();addEventListener('resize',resC);
-let curRGB=[0,255,136];
+let curRGB=[52,211,153];
 let dangerPtMode=false;
 function mkPt(){const[r,g,b]=curRGB;const isCross=dangerPtMode&&Math.random()<.12;return{x:Math.random()*canv.width,y:canv.height+10,vx:(Math.random()-.5)*.5*ptSpd,vy:(-Math.random()*.9-.3)*ptSpd,sz:isCross?Math.random()*2+1.5:Math.random()*1.6+.4,al:Math.random()*.45+.1,r,g,b,life:0,max:180+Math.random()*220,cross:isCross,rot:Math.random()*Math.PI};}
 function animP(){ctx2.clearRect(0,0,canv.width,canv.height);if(Math.random()<ptRate)pts.push(mkPt());pts=pts.filter(p=>p.life<p.max);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life++;p.rot+=.008;const fade=Math.min(1,(p.max-p.life)/60);const col=`rgba(${p.r},${p.g},${p.b},${p.al*fade})`;if(p.cross){ctx2.save();ctx2.translate(p.x,p.y);ctx2.rotate(p.rot);ctx2.strokeStyle=col;ctx2.lineWidth=1;ctx2.beginPath();ctx2.moveTo(-p.sz,0);ctx2.lineTo(p.sz,0);ctx2.moveTo(0,-p.sz);ctx2.lineTo(0,p.sz);ctx2.stroke();ctx2.restore();}else{ctx2.beginPath();ctx2.arc(p.x,p.y,p.sz,0,Math.PI*2);ctx2.fillStyle=col;ctx2.fill();}});praf=requestAnimationFrame(animP);}
@@ -808,10 +802,10 @@ document.getElementById('age-input')?.addEventListener('input',updateDeathClock)
 (function(){const save=loadProgress();if(save){const bar=document.createElement('div');bar.className='resume-bar';bar.innerHTML=`<span>检测到未完成的测试（${Object.keys(save.ans).length}题已答）</span><button onclick="resumeQuiz(loadProgress());this.parentElement.remove()">继续</button><button onclick="clearProgress();this.parentElement.remove()">重新开始</button>`;document.getElementById('sec-intro').prepend(bar);}})();
 
 // ════ COLOR ════
-const CSTOPS=[[0,255,136],[200,255,0],[255,180,0],[255,80,0],[255,0,68]];
+const CSTOPS=[[124,110,240],[59,130,246],[245,158,11],[239,68,68],[220,38,38]];
 function lerp3(t,s){const n=s.length-1,i=Math.min(Math.floor(t*n),n-1),f=t*n-i;const[r1,g1,b1]=s[i],[r2,g2,b2]=s[i+1];return[Math.round(r1+(r2-r1)*f),Math.round(g1+(g2-g1)*f),Math.round(b1+(b2-b1)*f)];}
 function toHex([r,g,b]){return'#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');}
-function applyTheme(pct){const rgb=lerp3(pct,CSTOPS);curRGB=rgb;const[r,g,b]=rgb;const hex=toHex(rgb);const root=document.documentElement;root.style.setProperty('--accent',hex);root.style.setProperty('--ar',r);root.style.setProperty('--ag',g);root.style.setProperty('--ab',b);document.getElementById('ambient').style.background=`radial-gradient(ellipse 70% 32% at 50% 0%,rgba(${r},${g},${b},.09) 0%,transparent 70%)`;document.body.style.background=pct>.4?`radial-gradient(ellipse 70% 28% at 50% -5%,rgba(${r},${g},${b},.07) 0%,#060606 50%)`:'#060606';}
+function applyTheme(pct){const rgb=lerp3(pct,CSTOPS);curRGB=rgb;const[r,g,b]=rgb;const hex=toHex(rgb);const root=document.documentElement;root.style.setProperty('--accent',hex);root.style.setProperty('--ar',r);root.style.setProperty('--ag',g);root.style.setProperty('--ab',b);document.getElementById('ambient').style.background=`radial-gradient(ellipse 70% 32% at 50% 0%,rgba(${r},${g},${b},.1) 0%,transparent 70%)`;document.body.style.background=pct>.4?`linear-gradient(180deg,#0f1117 0%,#131620 50%,#0f1117 100%)`:'linear-gradient(180deg,#0f1117 0%,#131620 50%,#0f1117 100%)';}
 
 // ════ SOUND ════
 let soundOn=false, audioCtx=null;
@@ -1174,12 +1168,12 @@ const DIM_MAP=[
 ];
 
 const LEVELS=[
-  {max:15,grade:'S',label:'养生大师',color:'#00ff88',desc:'你的身体状况令人羡慕，也令人费解。这年头谁还睡满8小时？你是人群里的异类，以最好的方式存在着。',advice:['每年体检了解身体基线','把你的习惯分享给身边快要崩溃的朋友','保持现有节奏，不需要大改变']},
-  {max:30,grade:'A',label:'生命力顽强',color:'#88ee00',desc:'整体状况相当不错，偶尔放飞自我没问题，但要警惕悄悄滑向亚健康地带。',advice:['保持规律作息，11点是你的底线','每周3次有氧运动','今年安排一次全面体检']},
-  {max:50,grade:'B',label:'亚健康边缘',color:'#ffcc00',desc:'你正走在边界线上。身体在发出信号，你可能在忽略它们。这些信号不会无限期等待。',advice:['今晚11点前入睡','每天走8000步','减少咖啡因，每天至少6杯水','安排体检']},
-  {max:70,grade:'C',label:'危险信号',color:'#ff8800',desc:'你的身体正在超负荷运转。多项指标同时黄灯，继续这样只有两种结局：主动改变，或被迫休息。',advice:['本月内预约体检，查心电图','每天7小时睡眠，从今晚开始','下班不看工作消息，先试一周','找人倾诉']},
-  {max:85,grade:'D',label:'高危人群',color:'#ff4444',desc:'你已把身体当消耗品在用。各项指标触目惊心。你面对的风险是真实且迫切的。',advice:['🚨 本周内就医，做心血管检查','立即减少烟酒','7小时睡眠是不可谈判的底线','申请年假','告知家人你的身体状况']},
-  {max:100,grade:'F',label:'当代猝死候选人',color:'#ff0044',desc:'系统已将您标记为高风险案例。您的生活方式在各维度均超出安全范围。请认真对待这份报告。',advice:['⚠️ 立即就医，不是今天，是现在','请身边的人了解你的状况','向公司请假','寻求专业心理支持']},
+  {max:15,grade:'S',label:'养生大师',color:'#34d399',desc:'你的身体状况令人羡慕，也令人费解。这年头谁还睡满8小时？你是人群里的异类，以最好的方式存在着。',advice:['每年体检了解身体基线','把你的习惯分享给身边快要崩溃的朋友','保持现有节奏，不需要大改变']},
+  {max:30,grade:'A',label:'生命力顽强',color:'#a3e635',desc:'整体状况相当不错，偶尔放飞自我没问题，但要警惕悄悄滑向亚健康地带。',advice:['保持规律作息，11点是你的底线','每周3次有氧运动','今年安排一次全面体检']},
+  {max:50,grade:'B',label:'亚健康边缘',color:'#fbbf24',desc:'你正走在边界线上。身体在发出信号，你可能在忽略它们。这些信号不会无限期等待。',advice:['今晚11点前入睡','每天走8000步','减少咖啡因，每天至少6杯水','安排体检']},
+  {max:70,grade:'C',label:'危险信号',color:'#f59e0b',desc:'你的身体正在超负荷运转。多项指标同时黄灯，继续这样只有两种结局：主动改变，或被迫休息。',advice:['本月内预约体检，查心电图','每天7小时睡眠，从今晚开始','下班不看工作消息，先试一周','找人倾诉']},
+  {max:85,grade:'D',label:'高危人群',color:'#ef4444',desc:'你已把身体当消耗品在用。各项指标触目惊心。你面对的风险是真实且迫切的。',advice:['🚨 本周内就医，做心血管检查','立即减少烟酒','7小时睡眠是不可谈判的底线','申请年假','告知家人你的身体状况']},
+  {max:100,grade:'F',label:'当代猝死候选人',color:'#ef4444',desc:'系统已将您标记为高风险案例。您的生活方式在各维度均超出安全范围。请认真对待这份报告。',advice:['⚠️ 立即就医，不是今天，是现在','请身边的人了解你的状况','向公司请假','寻求专业心理支持']},
 ];
 // Keys sorted alphabetically: diet < emotion < exercise < habit < sleep < stress < work
 const PROPHECY={
@@ -1268,18 +1262,18 @@ const DIM_DESC={
     low:'你的情绪状态健康稳定。良好的情绪调节能力是长寿最被低估的因素之一。'
   }
 };
-const ARCHETYPES=[{key:'burner',icon:'🔥',name:'职场殉道者',badge:'CAREER MARTYR',match:d=>d.work>=65&&d.stress>=55,bg:'rgba(255,80,0,.04)',border:'rgba(255,80,0,.2)',color:'#ff8800',desc:'你把自己活成了一个永远在线的人肉服务器。工作和压力已经融为一体，你已经分不清哪些焦虑是正常的，哪些不是。'},{key:'ghost',icon:'👻',name:'数字游魂',badge:'DIGITAL GHOST',match:d=>d.sleep>=60&&d.habit>=55,bg:'rgba(0,200,255,.04)',border:'rgba(0,200,255,.2)',color:'#00ccff',desc:'你的生活发生在屏幕里。你的生物钟已经被蓝光重新校准，你的社交需求正在被算法填满——这两件事都不是好事。'},{key:'zombie',icon:'🧟',name:'外卖进化体',badge:'DELIVERY HUMAN',match:d=>d.diet>=60&&d.exercise>=55,bg:'rgba(200,100,0,.04)',border:'rgba(200,100,0,.2)',color:'#cc6600',desc:'你的消化系统已经适应了外卖容器的形状，你的腿已经忘记了长距离行走是什么感觉。'},{key:'anxious',icon:'😰',name:'焦虑人形容器',badge:'ANXIETY ENGINE',match:d=>d.stress>=65&&d.emotion>=60,bg:'rgba(180,0,255,.04)',border:'rgba(180,0,255,.2)',color:'#cc44ff',desc:'你的大脑已经进化出一种特殊能力：在任何情况下都能找到值得担心的事情。你的杏仁核从未真正休息过。'},{key:'fossil',icon:'🪨',name:'久坐化石',badge:'SEDIMENTARY HUMAN',match:d=>d.work>=60&&d.exercise>=65,bg:'rgba(100,100,100,.05)',border:'rgba(150,150,150,.2)',color:'#aaaaaa',desc:'你的骨骼肌肉系统正在以地质速度慢慢石化。久坐的危害在医学上被认为等同于吸烟。'},{key:'night',icon:'🌙',name:'深夜哲学家',badge:'NOCTURNAL THINKER',match:d=>d.sleep>=60&&d.emotion>=55,bg:'rgba(50,0,100,.06)',border:'rgba(100,50,200,.2)',color:'#8855ff',desc:'你把夜晚变成了思考宇宙终极问题的安全空间。每一个深夜，你都在预支明天的清醒和后年的寿命。'},{key:'puncher',icon:'🥊',name:'硬撑型选手',badge:'TOUGH IT OUT',match:d=>d.stress>=55&&d.exercise>=50&&d.emotion>=50,bg:'rgba(255,100,50,.04)',border:'rgba(255,100,50,.2)',color:'#ff6633',desc:'你什么都扛，什么都忍，什么都不说。"我没事"是你最大的谎言。你的身体在等待你终于不再硬撑的那天。'},{key:'phantom',icon:'🫥',name:'透明社畜',badge:'INVISIBLE WORKER',match:d=>d.work>=55&&d.emotion>=55&&d.diet>=45,bg:'rgba(150,150,200,.04)',border:'rgba(150,150,200,.2)',color:'#9999cc',desc:'你在工位上消失了，但没有人注意到。你用沉默换取稳定，用忍耐换取绩效。你像空气一样重要，也像空气一样被忽略。'},{key:'hedonist',icon:'🎰',name:'即时满足患者',badge:'INSTANT GRATIFICATION',match:d=>d.habit>=60&&d.diet>=55&&d.emotion>=45,bg:'rgba(255,50,200,.04)',border:'rgba(255,50,200,.2)',color:'#ff44aa',desc:'你的大脑奖赏回路被调成了"只接受即时快感"模式。外卖、短视频、咖啡、零食——每一个都是你用来麻痹当下的工具。'},{key:'timebomb',icon:'💣',name:'定时炸弹型',badge:'TIME BOMB',match:d=>d.sleep>=55&&d.work>=55&&d.stress>=50&&d.exercise>=45,bg:'rgba(255,0,0,.04)',border:'rgba(255,0,0,.2)',color:'#ff3333',desc:'你在四个以上维度同时累积风险。你现在感觉还行，但这恰恰是最危险的——多维度同步恶化意味着触发点可能在任何普通的一天。'},{key:'declining',icon:'📉',name:'亚健康优等生',badge:'DECLINING AVERAGE',match:d=>Object.values(d).filter(v=>v>=35&&v<65).length>=4,bg:'rgba(255,200,0,.04)',border:'rgba(255,200,0,.2)',color:'#ffcc00',desc:'你哪个维度都不算特别差，但哪个维度也不算好。亚健康最狡猾的地方就在于，它从不触发警报，只是让你越来越累。'},{key:'model',icon:'⚰️',name:'猝死候选模范生',badge:'PRIME CANDIDATE',match:()=>true,bg:'rgba(255,0,68,.05)',border:'rgba(255,0,68,.22)',color:'#ff0044',desc:'你在几乎每一个维度都达到了令人印象深刻的危险水平。这需要一种全面的改变——不是调整某一件事，而是重新思考整个生活方式。'}];
+const ARCHETYPES=[{key:'burner',icon:'🔥',name:'职场殉道者',badge:'CAREER MARTYR',match:d=>d.work>=65&&d.stress>=55,bg:'rgba(255,80,0,.04)',border:'rgba(255,80,0,.2)',color:'#f59e0b',desc:'你把自己活成了一个永远在线的人肉服务器。工作和压力已经融为一体，你已经分不清哪些焦虑是正常的，哪些不是。'},{key:'ghost',icon:'👻',name:'数字游魂',badge:'DIGITAL GHOST',match:d=>d.sleep>=60&&d.habit>=55,bg:'rgba(0,200,255,.04)',border:'rgba(0,200,255,.2)',color:'#60a5fa',desc:'你的生活发生在屏幕里。你的生物钟已经被蓝光重新校准，你的社交需求正在被算法填满——这两件事都不是好事。'},{key:'zombie',icon:'🧟',name:'外卖进化体',badge:'DELIVERY HUMAN',match:d=>d.diet>=60&&d.exercise>=55,bg:'rgba(200,100,0,.04)',border:'rgba(200,100,0,.2)',color:'#cc6600',desc:'你的消化系统已经适应了外卖容器的形状，你的腿已经忘记了长距离行走是什么感觉。'},{key:'anxious',icon:'😰',name:'焦虑人形容器',badge:'ANXIETY ENGINE',match:d=>d.stress>=65&&d.emotion>=60,bg:'rgba(180,0,255,.04)',border:'rgba(180,0,255,.2)',color:'#cc44ff',desc:'你的大脑已经进化出一种特殊能力：在任何情况下都能找到值得担心的事情。你的杏仁核从未真正休息过。'},{key:'fossil',icon:'🪨',name:'久坐化石',badge:'SEDIMENTARY HUMAN',match:d=>d.work>=60&&d.exercise>=65,bg:'rgba(100,100,100,.05)',border:'rgba(150,150,150,.2)',color:'#aaaaaa',desc:'你的骨骼肌肉系统正在以地质速度慢慢石化。久坐的危害在医学上被认为等同于吸烟。'},{key:'night',icon:'🌙',name:'深夜哲学家',badge:'NOCTURNAL THINKER',match:d=>d.sleep>=60&&d.emotion>=55,bg:'rgba(50,0,100,.06)',border:'rgba(100,50,200,.2)',color:'#8855ff',desc:'你把夜晚变成了思考宇宙终极问题的安全空间。每一个深夜，你都在预支明天的清醒和后年的寿命。'},{key:'puncher',icon:'🥊',name:'硬撑型选手',badge:'TOUGH IT OUT',match:d=>d.stress>=55&&d.exercise>=50&&d.emotion>=50,bg:'rgba(255,100,50,.04)',border:'rgba(255,100,50,.2)',color:'#ff6633',desc:'你什么都扛，什么都忍，什么都不说。"我没事"是你最大的谎言。你的身体在等待你终于不再硬撑的那天。'},{key:'phantom',icon:'🫥',name:'透明社畜',badge:'INVISIBLE WORKER',match:d=>d.work>=55&&d.emotion>=55&&d.diet>=45,bg:'rgba(150,150,200,.04)',border:'rgba(150,150,200,.2)',color:'#9999cc',desc:'你在工位上消失了，但没有人注意到。你用沉默换取稳定，用忍耐换取绩效。你像空气一样重要，也像空气一样被忽略。'},{key:'hedonist',icon:'🎰',name:'即时满足患者',badge:'INSTANT GRATIFICATION',match:d=>d.habit>=60&&d.diet>=55&&d.emotion>=45,bg:'rgba(255,50,200,.04)',border:'rgba(255,50,200,.2)',color:'#ff44aa',desc:'你的大脑奖赏回路被调成了"只接受即时快感"模式。外卖、短视频、咖啡、零食——每一个都是你用来麻痹当下的工具。'},{key:'timebomb',icon:'💣',name:'定时炸弹型',badge:'TIME BOMB',match:d=>d.sleep>=55&&d.work>=55&&d.stress>=50&&d.exercise>=45,bg:'rgba(255,0,0,.04)',border:'rgba(255,0,0,.2)',color:'#ff3333',desc:'你在四个以上维度同时累积风险。你现在感觉还行，但这恰恰是最危险的——多维度同步恶化意味着触发点可能在任何普通的一天。'},{key:'declining',icon:'📉',name:'亚健康优等生',badge:'DECLINING AVERAGE',match:d=>Object.values(d).filter(v=>v>=35&&v<65).length>=4,bg:'rgba(255,200,0,.04)',border:'rgba(255,200,0,.2)',color:'#fbbf24',desc:'你哪个维度都不算特别差，但哪个维度也不算好。亚健康最狡猾的地方就在于，它从不触发警报，只是让你越来越累。'},{key:'model',icon:'⚰️',name:'猝死候选模范生',badge:'PRIME CANDIDATE',match:()=>true,bg:'rgba(239,68,68,.05)',border:'rgba(239,68,68,.22)',color:'#ef4444',desc:'你在几乎每一个维度都达到了令人印象深刻的危险水平。这需要一种全面的改变——不是调整某一件事，而是重新思考整个生活方式。'}];
 
 const FUN_TAGS=[
   {e:'🦉',t:'资深熬夜选手',col:'#8855ff',bg:'rgba(136,85,255,.1)',match:()=>ans[0]>=3,why:'你的入睡时间已经超越了大部分人类的生物钟极限'},
   {e:'☕',t:'咖啡因依赖综合征',col:'#cc8844',bg:'rgba(204,136,68,.1)',match:()=>ans[14]>=3,why:'你的血管里流的不是血，是美式'},
-  {e:'🛵',t:'外卖平台SVIP',col:'#ff8800',bg:'rgba(255,136,0,.1)',match:()=>ans[13]>=2&&ans[12]>=2,why:'骑手比你妈更了解你的饮食习惯'},
+  {e:'🛵',t:'外卖平台SVIP',col:'#f59e0b',bg:'rgba(245,158,11,.1)',match:()=>ans[13]>=2&&ans[12]>=2,why:'骑手比你妈更了解你的饮食习惯'},
   {e:'🪑',t:'久坐世界纪录挑战者',col:'#aaaaaa',bg:'rgba(170,170,170,.1)',match:()=>ans[6]>=3&&ans[9]>=3,why:'你的椅子已经适应了你的体型'},
-  {e:'📱',t:'手机共生体',col:'#00ccff',bg:'rgba(0,204,255,.1)',match:()=>ans[22]>=3,why:'你的屏幕使用时间让手机自己都觉得累'},
-  {e:'😫',t:'周一恐惧症确诊',col:'#ff4466',bg:'rgba(255,68,102,.1)',match:()=>ans[25]>=3,why:'你的焦虑从周日晚上就开始了'},
+  {e:'📱',t:'手机共生体',col:'#60a5fa',bg:'rgba(96,165,250,.1)',match:()=>ans[22]>=3,why:'你的屏幕使用时间让手机自己都觉得累'},
+  {e:'😫',t:'周一恐惧症确诊',col:'#f87171',bg:'rgba(255,68,102,.1)',match:()=>ans[25]>=3,why:'你的焦虑从周日晚上就开始了'},
   {e:'⚙️',t:'社畜进化终极形态',col:'#ff6600',bg:'rgba(255,102,0,.1)',match:()=>ans[4]>=3&&ans[8]>=3,why:'007不是电影，是你的排班表'},
   {e:'🌑',t:'维生素D绝缘体',col:'#6688aa',bg:'rgba(102,136,170,.1)',match:()=>ans[9]>=3&&ans[10]>=3,why:'太阳忘记你长什么样了'},
-  {e:'⏰',t:'闹钟免疫体质',col:'#ffcc00',bg:'rgba(255,204,0,.1)',match:()=>ans[3]>=3,why:'你和闹钟之间存在一道无法跨越的次元壁'},
+  {e:'⏰',t:'闹钟免疫体质',col:'#fbbf24',bg:'rgba(251,191,36,.1)',match:()=>ans[3]>=3,why:'你和闹钟之间存在一道无法跨越的次元壁'},
   {e:'🔍',t:'百度确诊晚期患者',col:'#44bb66',bg:'rgba(68,187,102,.1)',match:()=>ans[28]===2,why:'搜索"头疼"→"脑瘤"，经典诊疗路径'},
   {e:'😰',t:'焦虑永动机',col:'#cc44ff',bg:'rgba(204,68,255,.1)',match:()=>ans[24]>=3&&ans[23]>=3,why:'你的大脑发明了"为焦虑而焦虑"这个概念'},
   {e:'📉',t:'发际线观察日记作者',col:'#dd9944',bg:'rgba(221,153,68,.1)',match:()=>ans[17]>=3,why:'每天洗头都像一次告别仪式'},
@@ -1301,14 +1295,14 @@ const FUN_TAGS=[
 ];
 
 const ACHIEVEMENTS=[
-  {id:'speedrun',icon:'⚡',name:'猝死speedrun',col:'#ff0044',bg:'rgba(255,0,68,.08)',border:'rgba(255,0,68,.25)',rare:'SSR',match:()=>{const vals=Object.values(ans);return vals.filter(v=>v>=4).length>=8;},desc:'8道题以上选了最危险选项'},
-  {id:'zen',icon:'🧘',name:'养生界扫地僧',col:'#00ff88',bg:'rgba(0,255,136,.08)',border:'rgba(0,255,136,.25)',rare:'SSR',match:()=>{const vals=Object.values(ans);return vals.length>=20&&vals.every(v=>v<=1);},desc:'所有题目都选了安全选项'},
+  {id:'speedrun',icon:'⚡',name:'猝死speedrun',col:'#ef4444',bg:'rgba(239,68,68,.08)',border:'rgba(239,68,68,.25)',rare:'SSR',match:()=>{const vals=Object.values(ans);return vals.filter(v=>v>=4).length>=8;},desc:'8道题以上选了最危险选项'},
+  {id:'zen',icon:'🧘',name:'养生界扫地僧',col:'#34d399',bg:'rgba(52,211,153,.08)',border:'rgba(52,211,153,.25)',rare:'SSR',match:()=>{const vals=Object.values(ans);return vals.length>=20&&vals.every(v=>v<=1);},desc:'所有题目都选了安全选项'},
   {id:'allnighter',icon:'🌙',name:'永夜传说',col:'#8855ff',bg:'rgba(136,85,255,.08)',border:'rgba(136,85,255,.25)',rare:'SR',match:()=>ans[0]>=4&&ans[1]>=4&&ans[2]>=3&&ans[3]>=3,desc:'睡眠维度全线崩溃'},
-  {id:'ironman',icon:'🦾',name:'钢铁打工人',col:'#ff8800',bg:'rgba(255,136,0,.08)',border:'rgba(255,136,0,.25)',rare:'SR',match:()=>ans[4]>=3&&ans[6]>=3&&ans[7]>=3&&ans[8]>=3,desc:'工作维度四连危险'},
+  {id:'ironman',icon:'🦾',name:'钢铁打工人',col:'#f59e0b',bg:'rgba(245,158,11,.08)',border:'rgba(245,158,11,.25)',rare:'SR',match:()=>ans[4]>=3&&ans[6]>=3&&ans[7]>=3&&ans[8]>=3,desc:'工作维度四连危险'},
   {id:'ghost_vessel',icon:'👻',name:'空壳行走者',col:'#aaaadd',bg:'rgba(170,170,221,.08)',border:'rgba(170,170,221,.25)',rare:'SR',match:()=>ans[23]>=3&&ans[30]>=3&&ans[19]>=3,desc:'没有笑容、没有爱好、没有放松'},
   {id:'caffeine_god',icon:'☕',name:'咖啡因之神',col:'#cc8844',bg:'rgba(204,136,68,.08)',border:'rgba(204,136,68,.25)',rare:'R',match:()=>ans[14]>=4&&ans[15]>=3,desc:'重度咖啡依赖+严重缺水'},
   {id:'numb',icon:'🧊',name:'疼痛免疫者',col:'#6688aa',bg:'rgba(102,136,170,.08)',border:'rgba(102,136,170,.25)',rare:'R',match:()=>ans[28]>=3&&ans[27]>=3,desc:'身体信号全部忽略+不做体检'},
-  {id:'balance',icon:'⚖️',name:'完美平衡',col:'#ffcc00',bg:'rgba(255,204,0,.08)',border:'rgba(255,204,0,.25)',rare:'SR',match:()=>{const d=calcDims();const ps=d.map(x=>x.pct);return Math.max(...ps)-Math.min(...ps)<15;},desc:'所有维度风险差距不超过15%'},
+  {id:'balance',icon:'⚖️',name:'完美平衡',col:'#fbbf24',bg:'rgba(251,191,36,.08)',border:'rgba(251,191,36,.25)',rare:'SR',match:()=>{const d=calcDims();const ps=d.map(x=>x.pct);return Math.max(...ps)-Math.min(...ps)<15;},desc:'所有维度风险差距不超过15%'},
 ];
 
 // ════ OBITUARY / LAST WORDS / SURVIVAL ════
@@ -1357,12 +1351,12 @@ function getLastWords(score){
 
 const SURVIVAL_DATA={
   sleep:{icon:'🛏️',action:'每晚提前1小时入睡',gain:'+2.5 年预期寿命',col:'#8855ff'},
-  work:{icon:'💼',action:'每周减少10小时工作时间',gain:'+1.8 年预期寿命',col:'#ff8800'},
-  exercise:{icon:'🏃',action:'每周增加3次30分钟运动',gain:'+3.2 年预期寿命',col:'#00ff88'},
-  diet:{icon:'🥗',action:'规律三餐 + 每天8杯水',gain:'+2.1 年预期寿命',col:'#ffcc00'},
+  work:{icon:'💼',action:'每周减少10小时工作时间',gain:'+1.8 年预期寿命',col:'#f59e0b'},
+  exercise:{icon:'🏃',action:'每周增加3次30分钟运动',gain:'+3.2 年预期寿命',col:'#34d399'},
+  diet:{icon:'🥗',action:'规律三餐 + 每天8杯水',gain:'+2.1 年预期寿命',col:'#fbbf24'},
   stress:{icon:'🧘',action:'每天15分钟冥想或放松',gain:'+1.5 年预期寿命',col:'#cc44ff'},
-  habit:{icon:'🚭',action:'戒除或减半不良嗜好',gain:'+2.8 年预期寿命',col:'#ff4444'},
-  emotion:{icon:'💬',action:'每周与朋友深度交谈一次',gain:'+1.2 年预期寿命',col:'#00ccff'},
+  habit:{icon:'🚭',action:'戒除或减半不良嗜好',gain:'+2.8 年预期寿命',col:'#ef4444'},
+  emotion:{icon:'💬',action:'每周与朋友深度交谈一次',gain:'+1.2 年预期寿命',col:'#60a5fa'},
 };
 
 const PROFESSIONS=[
@@ -1419,14 +1413,14 @@ function updateTheme(){
     document.getElementById('danger-skulls').textContent='💀'.repeat(cnt);
     const labs=['','轻度风险','中度风险','高度风险','极高风险'];
     const lEl=document.getElementById('danger-label');
-    lEl.textContent=labs[cnt];lEl.style.color=pct<.4?'#ffcc00':pct<.6?'#ff8800':pct<.8?'#ff4444':'#ff0044';
+    lEl.textContent=labs[cnt];lEl.style.color=pct<.4?'#fbbf24':pct<.6?'#f59e0b':pct<.8?'#ef4444':'#ef4444';
   }else danEl.classList.remove('show');
   // Live risk badge
   const lrb=document.getElementById('lrb');const lrbVal=Math.round(pct*100);
   if(pct>.1){
     lrb.classList.add('show');
     document.getElementById('lrb-val').textContent=lrbVal+'%';
-    const col=pct<.3?'#00ff88':pct<.6?'#ffcc00':pct<.8?'#ff8800':'#ff0044';
+    const col=pct<.3?'#34d399':pct<.6?'#fbbf24':pct<.8?'#f59e0b':'#ef4444';
     document.getElementById('lrb-dot').style.background=col;
     document.getElementById('lrb-val').style.color=col;
   }
@@ -1436,7 +1430,7 @@ function updateTheme(){
     if(pct>.5){
       const int=Math.min((pct-.5)*2,1);
       qCard.style.borderColor=`rgba(255,${Math.round(68-68*int)},${Math.round(68-68*int)},${.06+int*.12})`;
-      qCard.style.boxShadow=`inset 0 1px 0 rgba(255,255,255,.04),0 28px 80px rgba(0,0,0,.55),0 0 ${60+int*40}px rgba(255,0,68,${.02+int*.08})`;
+      qCard.style.boxShadow=`inset 0 1px 0 rgba(255,255,255,.04),0 28px 80px rgba(0,0,0,.55),0 0 ${60+int*40}px rgba(239,68,68,${.02+int*.08})`;
     }else{
       qCard.style.borderColor='';qCard.style.boxShadow='';
     }
@@ -1477,7 +1471,7 @@ function startQuiz(){
   document.getElementById('lrb').classList.remove('show');
   document.getElementById('streak-bar').classList.remove('show');
   document.getElementById('res-card').classList.remove('res-card-chromatic','danger-mode');
-  document.body.classList.remove('crt-mode');
+  document.body.classList.remove('danger-result');
   document.querySelector('.score-ring-wrap')?.classList.remove('extreme');
   const qcReset=document.getElementById('q-card');if(qcReset){qcReset.style.borderColor='';qcReset.style.boxShadow='';}
   const firstQ=Q[flow[0]];
@@ -1678,7 +1672,7 @@ function calcScore(){
   return Math.round((t-c)/(c*4)*100);
 }
 function calcDims(){return DIM_MAP.map(d=>{const vals=d.idx.map(i=>ans[i]!==undefined?ans[i]+1:1);const cnt=d.idx.length,raw=vals.reduce((s,v)=>s+v,0);const pct=Math.round((raw-cnt)/(cnt*4)*100);return{...d,pct};});}
-function dimCol(p){return p<30?'#00ff88':p<55?'#88ee00':p<75?'#ff8800':'#ff4444';}
+function dimCol(p){return p<30?'#34d399':p<55?'#a3e635':p<75?'#f59e0b':'#ef4444';}
 function dimStatus(p){return p<30?'良好':p<55?'一般':p<75?'偏高':'危险';}
 function drawRadar(dims,accentCol){
   const cx=150,cy=150,R=110,n=dims.length,ns='http://www.w3.org/2000/svg';
@@ -1703,7 +1697,7 @@ function drawRadar(dims,accentCol){
   })(t0);
 }
 function calcSystems(dims){const get=k=>dims.find(d=>d.key===k)?.pct||0;return[{icon:'❤️',name:'心血管系统',risk:Math.round((get('work')*.4+get('stress')*.35+get('exercise')*.25)),note:'长期压力和缺乏运动是心血管疾病的主要非遗传风险因素'},{icon:'🦴',name:'肌肉骨骼系统',risk:Math.round((get('exercise')*.5+get('work')*.3+get('stress')*.2)),note:'久坐和缺乏运动加速肌肉萎缩和骨密度下降'},{icon:'🫁',name:'代谢与内分泌',risk:Math.round((get('diet')*.4+get('sleep')*.3+get('habit')*.3)),note:'睡眠、饮食和嗜好共同决定代谢健康'},{icon:'🧠',name:'神经与情绪',risk:Math.round((get('stress')*.4+get('emotion')*.4+get('sleep')*.2)),note:'长期高皮质醇直接影响大脑结构和情绪调节'}];}
-function calcTimeline(s){if(s<20)return[{t:'现在',txt:'身体状况良好，各主要器官运作正常',col:'#00ff88'},{t:'5-10年后',txt:'如保持现有习惯，预计维持良好状态',col:'#00ff88'},{t:'10年后',txt:'以当前轨迹，身体年龄与实际年龄接近',col:'#88ee00'}];if(s<40)return[{t:'现在',txt:'整体状况良好，部分维度有改善空间',col:'#88ee00'},{t:'2-3年后',txt:'如不改变，可能开始出现慢性疲劳或轻度代谢异常',col:'#ffcc00'},{t:'5年后',txt:'亚健康症状可能固化，改变难度增加',col:'#ff8800'}];if(s<60)return[{t:'现在',txt:'身体正在发出明显信号，多项指标偏高',col:'#ffcc00'},{t:'1-2年后',txt:'如不改变，慢性病风险显著上升',col:'#ff8800'},{t:'3-5年后',txt:'心血管或代谢方面可能需要医疗干预',col:'#ff4444'}];if(s<80)return[{t:'现在',txt:'多项指标已超出安全范围',col:'#ff8800'},{t:'6-18个月',txt:'如不改变，可能面临重大健康事件触发点',col:'#ff4444'},{t:'2-3年后',txt:'不改变的话，预计有严重医疗问题需要处理',col:'#ff0044'}];return[{t:'现在',txt:'当前状态已接近临界点，时间窗口非常紧迫',col:'#ff4444'},{t:'数月内',txt:'如不立即改变，身体可能发出最终警告',col:'#ff0044'},{t:'现在就开始',txt:'哪怕改变一件事，也会影响这个轨迹',col:'#ff8800'}];}
+function calcTimeline(s){if(s<20)return[{t:'现在',txt:'身体状况良好，各主要器官运作正常',col:'#34d399'},{t:'5-10年后',txt:'如保持现有习惯，预计维持良好状态',col:'#34d399'},{t:'10年后',txt:'以当前轨迹，身体年龄与实际年龄接近',col:'#a3e635'}];if(s<40)return[{t:'现在',txt:'整体状况良好，部分维度有改善空间',col:'#a3e635'},{t:'2-3年后',txt:'如不改变，可能开始出现慢性疲劳或轻度代谢异常',col:'#fbbf24'},{t:'5年后',txt:'亚健康症状可能固化，改变难度增加',col:'#f59e0b'}];if(s<60)return[{t:'现在',txt:'身体正在发出明显信号，多项指标偏高',col:'#fbbf24'},{t:'1-2年后',txt:'如不改变，慢性病风险显著上升',col:'#f59e0b'},{t:'3-5年后',txt:'心血管或代谢方面可能需要医疗干预',col:'#ef4444'}];if(s<80)return[{t:'现在',txt:'多项指标已超出安全范围',col:'#f59e0b'},{t:'6-18个月',txt:'如不改变，可能面临重大健康事件触发点',col:'#ef4444'},{t:'2-3年后',txt:'不改变的话，预计有严重医疗问题需要处理',col:'#ef4444'}];return[{t:'现在',txt:'当前状态已接近临界点，时间窗口非常紧迫',col:'#ef4444'},{t:'数月内',txt:'如不立即改变，身体可能发出最终警告',col:'#ef4444'},{t:'现在就开始',txt:'哪怕改变一件事，也会影响这个轨迹',col:'#f59e0b'}];}
 function getDoctorNote(s,dims,arch){
   const sorted=[...dims].sort((a,b)=>b.pct-a.pct);
   const worst=sorted[0],second=sorted[1];
@@ -1742,8 +1736,8 @@ function showResult(){
   startPts();
   document.getElementById('res-card').classList.toggle('danger-mode',score>=80);
   document.getElementById('res-card').classList.toggle('res-card-chromatic',score>=75);
-  // CRT mode for high-danger results
-  document.body.classList.toggle('crt-mode',score>=75);
+  // High-danger result glow
+  document.body.classList.toggle('danger-result',score>=75);
   // Screen shake for very high scores
   if(score>=80){const rc=document.getElementById('res-card');rc.classList.add('screen-shake');setTimeout(()=>rc.classList.remove('screen-shake'),700);}
   // Extreme ring glow for 90+
@@ -1785,7 +1779,7 @@ function showResult(){
   document.getElementById('arch-desc').textContent=arch.desc;document.getElementById('arch-badge').textContent=arch.badge;
   document.getElementById('arch-badge').style.color=arch.color;document.getElementById('arch-badge').style.borderColor=arch.border;
   const pp=Math.min(98,Math.round(score*.82+Math.random()*5));
-  const pCol=score<30?'#00ff88':score<55?'#ffcc00':score<75?'#ff8800':'#ff4444';
+  const pCol=score<30?'#34d399':score<55?'#fbbf24':score<75?'#f59e0b':'#ef4444';
   const pBar=document.getElementById('pct-bar');pBar.style.background=pCol;pBar.style.width='0%';setTimeout(()=>pBar.style.width=pp+'%',600);
   document.getElementById('pct-num').textContent=pp+'%';document.getElementById('pct-num').style.color=pCol;
   document.getElementById('pct-text').textContent=`你比 ${pp}% 的同龄城市白领更接近猝死`;
@@ -1800,11 +1794,11 @@ function showResult(){
   const bA=Math.min(85,Math.round(userAge+score*.28));
   const wP=dimObj.work||0,sP=dimObj.stress||0;
   const hL=Math.round(wP*.4+sP*.35+((100-(dimObj.exercise||0))*.25));
-  const hLab=hL<30?'正常':hL<50?'偏高':hL<70?'过载':'危险';const hCol=hL<30?'#00ff88':hL<50?'#ffcc00':hL<70?'#ff8800':'#ff4444';
-  const rLab=score<20?'极强':score<40?'良好':score<60?'一般':score<80?'较弱':'极弱';const rCol=score<40?'#00ff88':score<65?'#ffcc00':'#ff4444';
-  const nLab=sP<30?'平稳':sP<50?'偏紧':sP<70?'紧张':'高度紧张';const nCol=sP<30?'#00ff88':sP<50?'#ffcc00':sP<70?'#ff8800':'#ff4444';
+  const hLab=hL<30?'正常':hL<50?'偏高':hL<70?'过载':'危险';const hCol=hL<30?'#34d399':hL<50?'#fbbf24':hL<70?'#f59e0b':'#ef4444';
+  const rLab=score<20?'极强':score<40?'良好':score<60?'一般':score<80?'较弱':'极弱';const rCol=score<40?'#34d399':score<65?'#fbbf24':'#ef4444';
+  const nLab=sP<30?'平稳':sP<50?'偏紧':sP<70?'紧张':'高度紧张';const nCol=sP<30?'#34d399':sP<50?'#fbbf24':sP<70?'#f59e0b':'#ef4444';
   // Animated vital counters with pop-in
-  const baCol=bA<=userAge?'#00ff88':bA<=userAge+8?'#ffcc00':'#ff4444';
+  const baCol=bA<=userAge?'#34d399':bA<=userAge+8?'#fbbf24':'#ef4444';
   animVital('v-bodyage',bA+'岁',baCol,0);
   animVital('v-heart',hLab,hCol,150);
   animVital('v-recovery',rLab,rCol,300);
@@ -1812,7 +1806,7 @@ function showResult(){
   const tags=document.getElementById('risk-tags');tags.innerHTML='';
   dims.forEach((d,i)=>{const tier=d.pct>=65?'high':d.pct>=40?'med':'low';if(tier==='low'&&score<25)return;const lbl=RISK_TAGS[d.key]?.[tier];if(lbl){const el=document.createElement('div');el.className=`rtag ${tier}`;el.textContent=lbl;el.style.animationDelay=(i*.08)+'s';tags.appendChild(el);}});
   const sys=calcSystems(dims);const sg=document.getElementById('systems-grid');sg.innerHTML='';
-  sys.forEach(s=>{const col=s.risk<30?'#00ff88':s.risk<55?'#ffcc00':s.risk<75?'#ff8800':'#ff4444';const st=s.risk<30?'正常':s.risk<55?'偏高':s.risk<75?'风险':'危险';const el=document.createElement('div');el.className='sys-item';el.innerHTML=`<div class="sys-icon">${s.icon}</div><div class="sys-body"><div class="sys-name">${s.name}</div><div class="sys-status" style="color:${col}">${st} · ${s.risk}%</div><div class="sys-note">${s.note}</div></div>`;sg.appendChild(el);});
+  sys.forEach(s=>{const col=s.risk<30?'#34d399':s.risk<55?'#fbbf24':s.risk<75?'#f59e0b':'#ef4444';const st=s.risk<30?'正常':s.risk<55?'偏高':s.risk<75?'风险':'危险';const el=document.createElement('div');el.className='sys-item';el.innerHTML=`<div class="sys-icon">${s.icon}</div><div class="sys-body"><div class="sys-name">${s.name}</div><div class="sys-status" style="color:${col}">${st} · ${s.risk}%</div><div class="sys-note">${s.note}</div></div>`;sg.appendChild(el);});
   const cc=document.getElementById('contrib-chart');cc.innerHTML='';
   dims.forEach(d=>{const col=dimCol(d.pct);const el=document.createElement('div');el.className='contrib-row';el.innerHTML=`<span class="contrib-label">${d.name.replace(/^../,'')}</span><div class="contrib-bar-bg"><div class="contrib-bar" style="width:0%;background:${col};color:${col}" data-pct="${d.pct}"></div></div><span class="contrib-val" style="color:${col}">${d.pct}%</span>`;cc.appendChild(el);});
   setTimeout(()=>drawRadar(dims,level.col),200);
@@ -1864,7 +1858,7 @@ function shareResult(){
   const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
   const tags=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,3).map(t=>t.e+t.t);
   const tagLine=tags.length?'\n标签：'+tags.join(' · '):'';
-  const text=`【猝死指数测试 v6.3 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}\n\n${level.desc}\n\n你敢测吗？👉`;
+  const text=`【猝死指数测试 v7.0 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}\n\n${level.desc}\n\n你敢测吗？👉`;
   navigator.clipboard.writeText(text).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);});
 }
 
@@ -1877,7 +1871,7 @@ function downloadCard(){
   const W=1080,H=1920,c=document.createElement('canvas');c.width=W;c.height=H;
   const x=c.getContext('2d');
   // Background
-  x.fillStyle='#0a0a0f';x.fillRect(0,0,W,H);
+  x.fillStyle='#0f1117';x.fillRect(0,0,W,H);
   // Grid
   x.strokeStyle='rgba(255,255,255,.025)';x.lineWidth=1;
   for(let i=0;i<W;i+=40){x.beginPath();x.moveTo(i,0);x.lineTo(i,H);x.stroke();}
@@ -1887,12 +1881,12 @@ function downloadCard(){
   grd.addColorStop(0,level.color+'28');grd.addColorStop(1,'transparent');
   x.fillStyle=grd;x.fillRect(0,0,W,500);
   // Bottom danger glow for high scores
-  if(score>=60){const bg=x.createRadialGradient(W/2,H,0,W/2,H,500);bg.addColorStop(0,'rgba(255,0,68,.12)');bg.addColorStop(1,'transparent');x.fillStyle=bg;x.fillRect(0,H-500,W,500);}
+  if(score>=60){const bg=x.createRadialGradient(W/2,H,0,W/2,H,500);bg.addColorStop(0,'rgba(239,68,68,.12)');bg.addColorStop(1,'transparent');x.fillStyle=bg;x.fillRect(0,H-500,W,500);}
   const cx=W/2;
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v6.3 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v7.0 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -1950,7 +1944,7 @@ function downloadCard(){
   });
   // Last words quote
   dy+=20;
-  x.strokeStyle='rgba(255,0,68,.15)';x.lineWidth=1;x.beginPath();x.moveTo(120,dy);x.lineTo(W-120,dy);x.stroke();
+  x.strokeStyle='rgba(239,68,68,.15)';x.lineWidth=1;x.beginPath();x.moveTo(120,dy);x.lineTo(W-120,dy);x.stroke();
   dy+=35;
   x.textAlign='center';x.fillStyle='rgba(255,255,255,.12)';x.font='italic 120px Georgia,serif';
   x.fillText('"',cx-220,dy+20);
@@ -1964,7 +1958,7 @@ function downloadCard(){
   x.fillText(lw.a,cx,dy);
   // Footer
   x.fillStyle='rgba(255,255,255,.12)';x.font='400 15px "Space Mono",monospace';
-  x.fillText('猝死指数测试 💀 Sudden Death Index v6.3',cx,H-70);
+  x.fillText('猝死指数测试 💀 Sudden Death Index v7.0',cx,H-70);
   x.fillStyle='rgba(255,255,255,.08)';x.font='400 13px "Space Mono",monospace';
   x.fillText('测试纯属娱乐 · 不构成医学建议 · 你敢测吗？',cx,H-42);
   // Download
