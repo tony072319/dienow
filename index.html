@@ -2,10 +2,19 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="30道题，科学评估你离猝死还有多远。测测你的猝死指数，看看你的生活习惯有多作死。">
+<meta name="theme-color" content="#080808">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<meta property="og:title" content="猝死指数测试 💀">
+<meta property="og:description" content="30道题，科学评估你离猝死还有多远。快来测测你有多作死！">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 <title>猝死指数测试 💀</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+/* Space Mono loaded async to avoid blocking in China */
 
 :root {
   --bg: #080808;
@@ -799,7 +808,40 @@ input[type=range]::-moz-range-thumb {
   .dims { grid-template-columns: 1fr; }
   .slider-display { font-size: 32px; }
 }
+
+/* High score shake effect */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  10%     { transform: translateX(-6px); }
+  20%     { transform: translateX(6px); }
+  30%     { transform: translateX(-4px); }
+  40%     { transform: translateX(4px); }
+  50%     { transform: translateX(-2px); }
+  60%     { transform: translateX(2px); }
+}
+
+.shake { animation: shake 0.6s ease; }
+
+/* Disclaimer */
+.disclaimer {
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255,255,255,0.25);
+  padding: 24px 16px 12px;
+  line-height: 1.6;
+  max-width: 400px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" media="print" onload="this.media='all'">
 </head>
 <body>
 <div class="wrap">
@@ -912,7 +954,13 @@ input[type=range]::-moz-range-thumb {
 
       <div class="result-btns">
         <button class="btn-share" onclick="shareResult()">📋 复制结果</button>
+        <button class="btn-share" onclick="nativeShare()">📤 分享给朋友</button>
         <button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button>
+      </div>
+
+      <div class="disclaimer">
+        ⚠️ 本测试纯属娱乐，不构成任何医学建议。<br>
+        如有健康问题请咨询专业医生。
       </div>
     </div>
   </section>
@@ -1466,6 +1514,13 @@ function showResult() {
 
   show('sec-result');
 
+  // High score shake effect
+  if (score >= 75) {
+    setTimeout(() => {
+      document.getElementById('sec-result').querySelector('.card').classList.add('shake');
+    }, 800);
+  }
+
   setTimeout(() => {
     document.querySelectorAll('.dim-bar-fill').forEach(bar => {
       bar.style.width = bar.dataset.pct + '%';
@@ -1477,11 +1532,31 @@ function shareResult() {
   const score = calcScore();
   const level = LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
   const text = `【猝死指数测试结果】\n我的猝死指数：${score}分\n等级：${level.grade} - ${level.label}\n\n${level.desc}\n\n快来测测你的 👉`;
-  navigator.clipboard.writeText(text).then(() => {
-    const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), 2200);
-  });
+  try {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('已复制到剪贴板 ✓');
+    });
+  } catch(e) {
+    showToast('复制失败，请手动复制');
+  }
+}
+
+function nativeShare() {
+  const score = calcScore();
+  const level = LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
+  const text = `我的猝死指数：${score}分 (${level.grade}级 - ${level.label})！快来测测你的 👉`;
+  if (navigator.share) {
+    navigator.share({ title: '猝死指数测试 💀', text: text }).catch(() => {});
+  } else {
+    shareResult(); // fallback to clipboard
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
 }
 
 function generateTags(dimResults) {
