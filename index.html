@@ -3247,6 +3247,56 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ GRAVITY EASTER EGG: SHAKE PHONE TO SCATTER ELEMENTS ════
+(function(){
+  if(!window.DeviceMotionEvent)return;
+  let lastShake=0;
+  window.addEventListener('devicemotion',e=>{
+    const acc=e.accelerationIncludingGravity;
+    if(!acc)return;
+    const force=Math.sqrt(acc.x**2+acc.y**2+acc.z**2);
+    if(force>25){
+      const now=Date.now();
+      if(now-lastShake<3000)return;
+      lastShake=now;
+      // Scatter floating symbols
+      document.querySelectorAll('.float-sym').forEach(sym=>{
+        sym.style.transition='all 1s cubic-bezier(.34,1.56,.64,1)';
+        sym.style.transform=`translate(${(Math.random()-.5)*200}px,${(Math.random()-.5)*200}px) rotate(${Math.random()*360}deg) scale(${.5+Math.random()})`;
+        sym.style.opacity='.08';
+        setTimeout(()=>{sym.style.transform='';sym.style.opacity='';},2000);
+      });
+      // Toast
+      const t=document.getElementById('toast');t.textContent='📳 检测到物理震动！';t.classList.add('show');
+      setTimeout(()=>{t.classList.remove('show');t.textContent='已复制到剪贴板 ✓';},1800);
+    }
+  });
+})();
+
+// ════ ANIMATED CARD GLOW FOLLOW CURSOR ════
+(function(){
+  if('ontouchstart' in window)return;
+  document.addEventListener('mousemove',e=>{
+    const card=e.target.closest('.card');
+    if(!card||!card.id)return;
+    const rect=card.getBoundingClientRect();
+    const x=((e.clientX-rect.left)/rect.width*100).toFixed(0);
+    const y=((e.clientY-rect.top)/rect.height*100).toFixed(0);
+    card.style.setProperty('--glow-x',x+'%');
+    card.style.setProperty('--glow-y',y+'%');
+  });
+  const style=document.createElement('style');
+  style.textContent='.card{--glow-x:50%;--glow-y:50%;}.card::before{background:radial-gradient(circle at var(--glow-x) var(--glow-y),rgba(var(--ar),var(--ag),var(--ab),.12),transparent 50%)!important;transition:none!important;}';
+  document.head.appendChild(style);
+})();
+
+// ════ QUESTION: AUTO-SAVE ON VISIBILITY CHANGE ════
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden&&document.getElementById('sec-question')?.classList.contains('active')){
+    try{saveProgress();}catch(e){}
+  }
+});
+
 // ════ HEALTH QUOTES ROTATION ON RESULT PAGE ════
 (function(){
   const quotes=[
