@@ -691,6 +691,17 @@ html.light body{background:linear-gradient(180deg,#f4f5f7 0%,#ebedf2 50%,#f4f5f7
 html.light #vignette{background:radial-gradient(ellipse 90% 90% at 50% 50%,transparent 55%,rgba(200,200,220,.25) 100%);}
 html.light #noise-overlay{opacity:.008;}
 html.light .glitch-title{color:#1a1a2e;text-shadow:0 0 60px rgba(var(--ar),var(--ag),var(--ab),.1);}
+/* Light mode: loading screen */
+html.light .load-title{background:linear-gradient(135deg,#1a1a2e 40%,var(--accent))!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important;}
+html.light .load-sub{color:#555!important;}
+html.light .load-pct{color:var(--accent)!important;}
+html.light .load-status{color:var(--accent)!important;}
+html.light .ecg-path{stroke:var(--accent)!important;filter:none!important;}
+html.light .load-organ{color:#555!important;border-color:rgba(0,0,0,.1)!important;background:rgba(0,0,0,.03)!important;}
+html.light .load-organ.scanned{border-color:var(--accent)!important;color:var(--accent)!important;background:rgba(var(--ar),var(--ag),var(--ab),.06)!important;}
+html.light .load-organ.danger{border-color:#ef4444!important;color:#ef4444!important;background:rgba(239,68,68,.04)!important;}
+html.light .load-stage{color:#666!important;}
+html.light .load-organs{color:#555!important;}
 html.light .card{background:var(--card-bg);border-color:var(--card-border);box-shadow:0 2px 20px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.03);}
 html.light .eg-item{background:rgba(0,0,0,.025);border-color:rgba(0,0,0,.08);}
 html.light .eg-item:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.4);box-shadow:0 8px 24px rgba(var(--ar),var(--ag),var(--ab),.1);}
@@ -2523,7 +2534,6 @@ function showResult(){
   document.querySelector('.score-ring-wrap')?.classList.toggle('extreme',score>=90);
   // Dynamic favicon, low-score celebration, and ambient sound
   updateFavicon(score);
-  celebrateLowScore(score);
   startAmbient(score);
   // Reset streak bar
   document.getElementById('streak-bar').classList.remove('show');
@@ -4368,7 +4378,7 @@ function updateFavicon(score){
     '正在读取你的外卖订单历史…',
     '正在估算你的颈椎弯曲度…',
   ];
-  const loadingEl=document.getElementById('loading-text');
+  const loadingEl=document.getElementById('load-sub');
   if(!loadingEl)return;
   let msgIdx=0,interval;
   const origShowLoading=window.showLoading;
