@@ -3266,6 +3266,86 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ PULL-DOWN REFRESH ON LANDING (mobile) ════
+(function(){
+  if(!('ontouchstart' in window))return;
+  let startY=0,pulling=false;
+  document.addEventListener('touchstart',e=>{
+    if(!document.getElementById('sec-intro')?.classList.contains('active'))return;
+    if(window.scrollY>0)return;
+    startY=e.touches[0].clientY;pulling=true;
+  },{passive:true});
+  document.addEventListener('touchmove',e=>{
+    if(!pulling)return;
+    const dy=e.touches[0].clientY-startY;
+    if(dy>80){
+      pulling=false;
+      // Refresh live count
+      liveN=Math.floor(Math.random()*5000)+8000;
+      document.getElementById('live-count').textContent=liveN.toLocaleString();
+      // Toast
+      const t=document.getElementById('toast');t.textContent='📊 数据已刷新';t.classList.add('show');
+      setTimeout(()=>{t.classList.remove('show');t.textContent='已复制到剪贴板 ✓';},1500);
+    }
+  },{passive:true});
+  document.addEventListener('touchend',()=>{pulling=false;},{passive:true});
+})();
+
+// ════ SMART TOOLTIP ON RISK TAGS ════
+(function(){
+  const tagTips={
+    '高心血管风险':'长期高压和缺乏运动是心血管疾病的主要诱因',
+    '过劳高危':'连续高强度工作会导致肾上腺素过度分泌',
+    '睡眠严重不足':'长期睡眠不足会增加炎症因子水平',
+    '压力过载':'慢性压力会损害免疫系统和消化系统',
+    '运动量不足':'WHO建议每周至少150分钟中等强度运动',
+    '饮食失衡':'不均衡的饮食会导致营养缺乏和代谢紊乱',
+    '不良嗜好累积':'多种不良习惯的叠加效应远大于单一因素',
+    '情绪波动大':'情绪波动会影响心率变异性和睡眠质量',
+  };
+  document.addEventListener('click',e=>{
+    const tag=e.target.closest('.rtag');
+    if(!tag)return;
+    const text=tag.textContent.trim();
+    const tip=tagTips[text];
+    if(!tip)return;
+    // Show tooltip
+    const el=document.createElement('div');
+    el.style.cssText='position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.92);border:1px solid var(--card-border);border-radius:10px;padding:10px 14px;font-size:11px;color:#ccc;white-space:nowrap;z-index:100;animation:feedSlideIn .3s;max-width:260px;white-space:normal;line-height:1.6;';
+    el.textContent=tip;
+    tag.style.position='relative';tag.appendChild(el);
+    setTimeout(()=>el.remove(),3000);
+  });
+})();
+
+// ════ SECTION REVEAL SOUND EFFECTS ════
+(function(){
+  const played=new Set();
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting||!soundOn)return;
+      const id=entry.target.id;
+      if(played.has(id))return;
+      played.add(id);
+      // Subtle reveal sound
+      ensureAudio();
+      const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+      osc.connect(gain);gain.connect(audioCtx.destination);
+      osc.frequency.value=600+Math.random()*200;osc.type='sine';
+      gain.gain.setValueAtTime(0.03,audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+.15);
+      osc.start(audioCtx.currentTime);osc.stop(audioCtx.currentTime+.15);
+    });
+  },{threshold:.3});
+  // Observe when result sections get rendered
+  const mutObs=new MutationObserver(()=>{
+    document.querySelectorAll('#sec-result .rs').forEach(rs=>{
+      if(!rs.dataset.sndObs){rs.dataset.sndObs='1';observer.observe(rs);}
+    });
+  });
+  mutObs.observe(document.body,{subtree:true,childList:true,attributes:true});
+})();
+
 // ════ DOUBLE-CLICK SCORE NUMBER FOR SECRET DETAIL ════
 (function(){
   document.addEventListener('dblclick',e=>{
