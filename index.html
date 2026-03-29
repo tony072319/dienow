@@ -4779,6 +4779,86 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ "WOULD YOU RATHER" HEALTH EDITION ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('wyr-card'))return;
+      const score=calcScore();
+      const scenarios=[
+        {q:'每天多睡1小时 还是 每天多运动30分钟？',a:'答案：两者都能降低猝死风险~15%，但对你来说，睡眠可能更紧急。'},
+        {q:'戒掉奶茶 还是 戒掉外卖？',a:'答案：外卖的钠和油脂含量通常更高，但奶茶的糖分也是隐形杀手。'},
+        {q:'每天冥想10分钟 还是 每天散步20分钟？',a:'答案：散步同时锻炼身体和减压，如果只能选一个，选散步。'},
+        {q:'工作日6小时睡眠+周末补觉 还是 每天7小时？',a:'答案：补觉的效果远不如规律作息，睡眠债不是靠周末能还清的。'},
+        {q:'完全戒酒 还是 每天只喝一杯？',a:'答案：2023年柳叶刀研究表明，没有"安全"的饮酒量。完全不喝最健康。'},
+        {q:'站立办公 还是 坐着但每小时走动5分钟？',a:'答案：定时走动更有效。长时间站立也会带来静脉曲张等问题。'},
+      ];
+      const s=scenarios[Math.floor(Date.now()/(1000*60*60*12))%scenarios.length]; // Change every 12h
+      const el=document.createElement('div');
+      el.id='wyr-card';
+      el.className='rs on';
+      el.innerHTML=`<div style="background:rgba(168,85,247,.03);border:1px solid rgba(168,85,247,.1);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(168,85,247,.5);margin-bottom:10px;">🤔 WOULD YOU RATHER · 健康版</div>
+        <div style="font-size:14px;font-weight:600;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:12px;">${s.q}</div>
+        <div id="wyr-answer" style="font-size:11px;color:var(--dim);line-height:1.7;padding:10px;background:rgba(255,255,255,.02);border-radius:10px;cursor:pointer;border:1px dashed rgba(168,85,247,.15);" onclick="this.innerHTML='${s.a.replace(/'/g,"\\'")}';this.style.borderStyle='solid';this.style.cursor='default';">👆 点击查看答案</div>
+      </div>`;
+      const rs12b=document.getElementById('rs12b');
+      if(rs12b){rs12b.parentNode.insertBefore(el,rs12b);}
+    },2600);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ SAVE RESULT AS TEXT FILE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('save-txt-btn'))return;
+      const btns=document.querySelector('.res-btns');
+      if(!btns)return;
+      const btn=document.createElement('button');
+      btn.id='save-txt-btn';
+      btn.className='btn-share';
+      btn.textContent='💾 保存TXT';
+      btn.onclick=function(){
+        const score=calcScore();
+        const dims=calcDims();
+        const grade=score>=80?'F':score>=65?'D':score>=45?'C':score>=25?'B':'A';
+        const age=parseInt(document.getElementById('age-input')?.value)||28;
+        let txt=`╔══════════════════════════════════╗\n`;
+        txt+=`║     猝死指数测试 · 结果报告      ║\n`;
+        txt+=`╚══════════════════════════════════╝\n\n`;
+        txt+=`日期: ${new Date().toLocaleString()}\n`;
+        txt+=`年龄: ${age}岁\n`;
+        txt+=`总分: ${score}/100 (${grade}级)\n\n`;
+        txt+=`── 七维分析 ──\n\n`;
+        dims.forEach(d=>{
+          const bar='█'.repeat(Math.round(d.pct/5))+'░'.repeat(20-Math.round(d.pct/5));
+          txt+=`${d.name.padEnd(8)} ${bar} ${String(d.pct).padStart(3)}%\n`;
+        });
+        txt+=`\n── 建议 ──\n\n`;
+        const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
+        txt+=`最需要改善: ${worst.name} (${worst.pct}%)\n`;
+        worst.tips.forEach(t=>{txt+=`  · ${t}\n`;});
+        txt+=`\n⚕️ 本测试纯属娱乐，不构成医学诊断。\n`;
+        const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');
+        a.href=url;a.download=`猝死指数_${score}分_${new Date().toISOString().slice(0,10)}.txt`;
+        a.click();URL.revokeObjectURL(url);
+      };
+      btns.insertBefore(btn,btns.querySelector('.btn-retry'));
+    },3100);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ "HEALTH AGE" TIMELINE VISUALIZATION ════
 (function(){
   const obs=new MutationObserver(()=>{
