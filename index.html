@@ -159,8 +159,13 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
 .progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 .p-counter{font-family:'Space Mono',monospace;font-size:12px;color:var(--dim);font-weight:700;}
 .p-cat{font-size:13px;font-weight:600;color:var(--accent);transition:color .8s;}
-.pbar-outer{width:100%;height:6px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;}
+.pbar-outer{width:100%;height:6px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;position:relative;}
 .pbar-inner{height:100%;background:linear-gradient(90deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.7));border-radius:10px;transition:width .55s cubic-bezier(.25,.8,.25,1);box-shadow:0 0 16px rgba(var(--ar),var(--ag),var(--ab),.5);}
+.pbar-milestones{position:absolute;inset:0;display:flex;pointer-events:none;}
+.pbar-milestone{position:absolute;top:-2px;width:2px;height:10px;background:rgba(255,255,255,.15);border-radius:1px;transform:translateX(-50%);transition:background .3s;}
+.pbar-milestone.passed{background:rgba(255,255,255,.35);}
+.pbar-milestone::after{content:attr(data-cat);position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:8px;white-space:nowrap;color:rgba(255,255,255,.2);opacity:0;transition:opacity .3s;}
+.pbar-outer:hover .pbar-milestone::after{opacity:1;}
 .mini-danger{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;color:var(--dim);opacity:0;transition:opacity .4s;}
 .mini-danger.show{opacity:1;}
 .danger-skulls{letter-spacing:2px;font-size:12px;}
@@ -246,6 +251,8 @@ section.anim-out-right{animation:slideOutRight .24s cubic-bezier(.32,.86,.27,1) 
 .eg-danger-dot span{width:4px;height:4px;border-radius:50%;background:rgba(239,68,68,.4);}
 .eg-item.sel .eg-label{color:rgba(255,255,255,.85);}
 .eg-item.dim{opacity:.4;transform:scale(.94);filter:grayscale(.3);pointer-events:auto;}
+.eg-item.bounce-in{animation:optionBounce .5s cubic-bezier(.34,1.56,.64,1) both!important;}
+@keyframes optionBounce{0%{transform:scale(.85)}40%{transform:scale(1.08)}70%{transform:scale(.97)}100%{transform:scale(1) translateY(-4px)}}
 
 /* Stagger delays */
 .eg-item:nth-child(1){animation-delay:.04s}
@@ -1935,6 +1942,25 @@ function renderQ(){
   document.getElementById('q-num').textContent=String(fi+1).padStart(2,'0');
   const pbarPct=Math.round(fi/total*100);
   document.getElementById('pbar').style.width=pbarPct+'%';
+  // Progress bar milestones (one per category boundary)
+  const pbarOuter=document.querySelector('.pbar-outer');
+  if(pbarOuter&&!pbarOuter.querySelector('.pbar-milestone')){
+    let lastCat='';
+    for(let i=0;i<total;i++){
+      const q2=Q[flow[i]];
+      if(q2.cat!==lastCat&&lastCat&&i>0){
+        const m=document.createElement('div');m.className='pbar-milestone';
+        m.style.left=(i/total*100)+'%';
+        m.dataset.cat=q2.cat.slice(2).trim();
+        pbarOuter.appendChild(m);
+      }
+      lastCat=q2.cat;
+    }
+  }
+  // Update milestone passed state
+  pbarOuter?.querySelectorAll('.pbar-milestone').forEach(m=>{
+    const pos=parseFloat(m.style.left);m.classList.toggle('passed',pbarPct>=pos);
+  });
   // Step dots
   const dotsEl=document.getElementById('step-dots');
   if(dotsEl){
@@ -2018,6 +2044,7 @@ function pickGrid(i){
     el.classList.toggle('sel',idx===i);
     el.classList.toggle('dim',idx!==i);
     el.classList.toggle('danger-sel',idx===i&&ans[qi]>=3);
+    if(idx===i){el.classList.remove('bounce-in');void el.offsetWidth;el.classList.add('bounce-in');}
   });
   // Haptic feedback on mobile
   if(navigator.vibrate)navigator.vibrate(ans[qi]>=3?[30,20,30]:15);
@@ -2265,19 +2292,26 @@ function showResult(){
   const numEl=document.getElementById('score-num');numEl.style.color=level.color;
   // Glitch effect for high scores
   if(score>=70){numEl.classList.add('glitch-score');numEl.setAttribute('data-val',score);}else{numEl.classList.remove('glitch-score');}
-  // Animated score reveal with easing and color interpolation
-  const scoreDur=1800,scoreStart=performance.now();
+  // Animated score reveal with spring overshoot
+  const scoreDur=2200,scoreStart=performance.now();
   (function tickScore(now){
     const p=Math.min((now-scoreStart)/scoreDur,1);
-    const ease=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;// ease-in-out cubic
-    const n=Math.round(score*ease);
+    // Spring-like ease: overshoots then settles
+    const ease=p<.7?
+      (1-Math.pow(1-p/.7,3))*1.08:// overshoot to 108% by 70% time
+      1.08-(0.08*((p-.7)/.3));// settle back from 108% to 100%
+    const n=Math.min(100,Math.round(score*Math.max(0,ease)));
     numEl.textContent=n;
     if(score>=70)numEl.setAttribute('data-val',n);
-    ring.style.strokeDashoffset=circ-(n/100)*circ;
+    const displayPct=Math.min(100,n);
+    ring.style.strokeDashoffset=circ-(displayPct/100)*circ;
     // Interpolate ring color during count
-    const curCol=toHex(lerp3(n/100,CSTOPS));
+    const curCol=toHex(lerp3(Math.min(displayPct,score)/100,CSTOPS));
     ring.style.stroke=curCol;numEl.style.color=curCol;
     ring.style.filter=`drop-shadow(0 0 12px ${curCol}66)`;
+    // Shake at the peak
+    if(p>.68&&p<.72&&score>=50){numEl.style.transform=`translateX(${(Math.random()-.5)*3}px)`;}
+    else{numEl.style.transform='';}
     if(p<1)requestAnimationFrame(tickScore);
   })(scoreStart);
   document.getElementById('res-grade').textContent=`GRADE ${level.grade}`;document.getElementById('res-grade').style.color=level.color;
