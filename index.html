@@ -4779,6 +4779,105 @@ document.addEventListener('dblclick',e=>{
   dim.style.borderColor=dim.style.borderColor?'':'rgba(var(--ar),var(--ag),var(--ab),.35)';
 });
 
+// ════ RESULT SECTIONS READING INDICATOR ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    const readSections=new Set();
+    const sectionObserver=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting&&entry.intersectionRatio>.5){
+          const id=entry.target.id;
+          if(id)readSections.add(id);
+          // Update progress
+          const total=sec.querySelectorAll('.rs').length;
+          const read=readSections.size;
+          const pct=Math.round((read/total)*100);
+          let badge=document.getElementById('read-progress-badge');
+          if(!badge){
+            badge=document.createElement('div');
+            badge.id='read-progress-badge';
+            badge.style.cssText='position:fixed;bottom:72px;right:24px;font-size:9px;font-family:"Space Mono",monospace;color:var(--dim);background:var(--card-bg);border:1px solid var(--card-border);border-radius:100px;padding:4px 10px;z-index:100;backdrop-filter:blur(8px);transition:opacity .3s;';
+            document.body.appendChild(badge);
+          }
+          badge.textContent=`${pct}% 已读`;
+          if(pct>=100){
+            badge.style.color='#34d399';
+            badge.textContent='✓ 全部已读';
+            if(typeof unlockAchievement==='function')unlockAchievement('completionist','📖','完美主义','阅读了报告的每一个部分');
+            setTimeout(()=>{badge.style.opacity='0';},3000);
+          }
+        }
+      });
+    },{threshold:.5});
+    setTimeout(()=>{
+      sec.querySelectorAll('.rs[id]').forEach(rs=>sectionObserver.observe(rs));
+    },2000);
+    // Cleanup on page change
+    const cleanup=new MutationObserver(()=>{
+      if(!sec.classList.contains('active')){
+        sectionObserver.disconnect();
+        const badge=document.getElementById('read-progress-badge');
+        if(badge)badge.remove();
+        cleanup.disconnect();
+      }
+    });
+    cleanup.observe(sec,{attributes:true,attributeFilter:['class']});
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ AMBIENT SOUND VOLUME BASED ON SCORE ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    // If ambient sound exists, adjust volume based on score
+    setTimeout(()=>{
+      if(typeof ambientGain!=='undefined'&&ambientGain){
+        const score=calcScore();
+        const vol=0.01+score*0.0003; // Louder for higher scores
+        try{ambientGain.gain.setTargetAtTime(vol,audioCtx.currentTime,.5);}catch(e){}
+      }
+    },2000);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ LANDING PAGE QUIZ PREVIEW TOOLTIP ════
+(function(){
+  const cpills=document.querySelectorAll('.cpill');
+  const previewTexts={
+    '😴':'示例题：你通常几点入睡？',
+    '💼':'示例题：你每天的工作时长是？',
+    '🏃':'示例题：你每周运动几次？',
+    '🍔':'示例题：你多久吃一次外卖？',
+    '🧠':'示例题：你感觉压力大吗？',
+    '🚬':'示例题：你有吸烟/饮酒习惯吗？',
+    '😰':'示例题：你最近情绪状态如何？'
+  };
+  cpills.forEach(pill=>{
+    const emoji=pill.textContent.trim().charAt(0);
+    const preview=previewTexts[emoji];
+    if(!preview)return;
+    pill.style.cursor='pointer';
+    pill.title=preview;
+    pill.addEventListener('click',()=>{
+      const existing=document.querySelector('.cpill-preview');
+      if(existing)existing.remove();
+      const tip=document.createElement('div');
+      tip.className='cpill-preview';
+      tip.style.cssText='font-size:10px;color:var(--accent);margin-top:8px;text-align:center;animation:tipFadeIn .3s ease;';
+      tip.textContent=preview;
+      pill.parentNode.after(tip);
+      setTimeout(()=>tip.remove(),3000);
+    });
+  });
+})();
+
 // ════ ANIMATED CATEGORY TRANSITION PARTICLES ════
 (function(){
   const origShowCat=window.showCatSplash;
