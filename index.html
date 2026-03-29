@@ -875,7 +875,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 <!-- ══ RESULT ══ -->
 <section id="sec-result">
   <div class="card" id="res-card">
-    <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>TIME_ELAPSED: <span id="rpt-time">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
+    <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>TIME_ELAPSED: <span id="rpt-time">—</span><br>RISK_DNA: <span id="rpt-dna" style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.25)">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
     <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div><div class="dim-chips" id="dim-chips"></div><div class="fun-tags-section"><div class="fun-tags-label">// 你的标签</div><div class="fun-tags" id="fun-tags"></div></div><div class="achievements" id="achievements"></div><div class="score-rank"><span>你的位置在全部测试者中</span><div class="score-rank-bar"><div class="score-rank-marker" id="score-rank-marker" style="left:0%"></div></div><div class="score-rank-labels"><span>健康达人</span><span>亚健康</span><span>高危</span><span>极危</span></div></div></div></div>
     <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">你的健康人格</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div></div>
     <div class="rs" id="rs3"><div class="percentile-banner"><div class="pct-bar-wrap"><div class="pct-bar-bg"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div><div class="pct-text" id="pct-text">—</div></div><div class="pct-num" id="pct-num">—</div></div><div class="pct-subs" id="pct-subs"></div></div>
@@ -2142,7 +2142,8 @@ function showResult(){
   applyTheme(score/100);
   // Score-based particle effects
   if(score>=70){ptSpd=1+((score-70)/30)*.8;ptRate=.25+((score-70)/30)*.2;dangerPtMode=true;}
-  else if(score<15){ptSpd=.5;ptRate=.4;dangerPtMode=false;curRGB=[52,211,153];burstConfetti();}
+  else if(score<15){ptSpd=.5;ptRate=.4;dangerPtMode=false;curRGB=[52,211,153];burstConfetti();setTimeout(burstConfetti,400);setTimeout(burstConfetti,800);}
+  else if(score<20){ptSpd=.5;ptRate=.35;dangerPtMode=false;curRGB=[52,211,153];burstConfetti();}
   else if(score<25){ptSpd=.6;ptRate=.3;dangerPtMode=false;curRGB=[52,211,153];}
   else{ptSpd=1;ptRate=.18;dangerPtMode=false;}
   startPts();
@@ -2157,6 +2158,9 @@ function showResult(){
   // Reset streak bar
   document.getElementById('streak-bar').classList.remove('show');
   document.getElementById('rpt-id').textContent='#'+Math.random().toString(36).substr(2,6).toUpperCase();
+  // Risk DNA - unique fingerprint based on answers
+  const dnaChars='ACGT';const dna=Object.values(ans).map(v=>dnaChars[Math.min(3,v||0)]).join('');
+  document.getElementById('rpt-dna').textContent=dna.match(/.{1,4}/g)?.join('-')||dna;
   document.getElementById('rpt-date').textContent=new Date().toISOString().split('T')[0].replace(/-/g,'.');
   // Time spent
   const elapsed=quizStartTime?Math.round((Date.now()-quizStartTime)/1000):0;
@@ -2434,6 +2438,22 @@ function showResult(){
   document.getElementById('challenge-desc').textContent=chl.desc;
   const cdEl=document.getElementById('challenge-diff');
   cdEl.textContent=`难度：${chl.diff}`;cdEl.style.color=chl.dcol;
+  // Danger leaderboard - top 5 most dangerous answers
+  const dangerBoard=[...Object.entries(ans)].filter(([qi,v])=>v>=2&&Q[parseInt(qi)]).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  if(dangerBoard.length>0&&score>=30){
+    const dbEl=document.createElement('div');
+    dbEl.style.cssText='background:rgba(239,68,68,.02);border:1px solid rgba(239,68,68,.06);border-radius:16px;padding:16px;margin-bottom:14px;';
+    let dbH='<div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.35);margin-bottom:10px;text-transform:uppercase">// 你最危险的答案</div>';
+    dangerBoard.forEach(([qi,v],i)=>{
+      const q=Q[parseInt(qi)];if(!q)return;
+      const col=v>=4?'#ef4444':v>=3?'#f59e0b':'#fbbf24';
+      const medal=['🥇','🥈','🥉','4️⃣','5️⃣'][i]||'';
+      dbH+=`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;"><span>${medal}</span><span style="flex:1;color:#bbb">${q.text.slice(0,20)}${q.text.length>20?'…':''}</span><span style="font-family:'Space Mono',monospace;font-weight:700;color:${col}">${'💀'.repeat(Math.min(v,5))}</span></div>`;
+    });
+    dbEl.innerHTML=dbH;
+    const statsParent=document.getElementById('session-stats')?.parentElement;
+    if(statsParent)statsParent.parentElement.insertBefore(dbEl,statsParent);
+  }
   // Checkup reminder
   const checkupMsgs={
     low:'根据你的结果，建议每年进行一次常规体检。保持现有的好习惯，定期监测基线指标。',
