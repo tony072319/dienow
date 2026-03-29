@@ -1090,7 +1090,7 @@ html.light .achievement-name{color:#1a1a2e;}
   <div class="time-greeting" id="time-greeting"></div>
   <div class="live-row"><div class="live-dot"></div><span class="live-text">LIVE</span><span class="live-count">— 今日已有 <span id="live-count">8,247</span> 人完成测试</span></div>
   <div class="glitch-title" data-text="💀 猝死指数测试"><span class="skull-anim">💀</span> 猝死指数测试</div>
-  <div class="title-sub">SUDDEN DEATH INDEX · v16.0</div>
+  <div class="title-sub">SUDDEN DEATH INDEX · v17.0</div>
   <div class="landing-ecg"><svg class="lecg-svg" viewBox="0 0 1200 44" preserveAspectRatio="none"><path class="lecg-path" d="M0,22 L40,22 L52,22 L60,4 L68,40 L76,8 L84,22 L124,22 L136,22 L144,4 L152,40 L160,8 L168,22 L208,22 L220,22 L228,4 L236,40 L244,8 L252,22 L292,22 L304,22 L312,4 L320,40 L328,8 L336,22 L376,22 L388,22 L396,4 L404,40 L412,8 L420,22 L460,22 L472,22 L480,4 L488,40 L496,8 L504,22 L544,22 L556,22 L564,4 L572,40 L580,8 L588,22 L600,22 M600,22 L640,22 L652,22 L660,4 L668,40 L676,8 L684,22 L724,22 L736,22 L744,4 L752,40 L760,8 L768,22 L808,22 L820,22 L828,4 L836,40 L844,8 L852,22 L892,22 L904,22 L912,4 L920,40 L928,8 L936,22 L976,22 L988,22 L996,4 L1004,40 L1012,8 L1020,22 L1060,22 L1072,22 L1080,4 L1088,40 L1096,8 L1104,22 L1144,22 L1156,22 L1164,4 L1172,40 L1180,8 L1188,22 L1200,22"/></svg></div>
   <div class="death-clock" id="death-clock"><span style="margin-right:4px">⏳ 你已经活了</span><div class="dc-group"><span class="dc-digit" id="dc-years">--</span><span class="dc-label">YEARS</span></div><div class="dc-group"><span class="dc-digit" id="dc-days">---</span><span class="dc-label">DAYS</span></div><div class="dc-group"><span class="dc-digit" id="dc-hours">--</span><span class="dc-label">HOURS</span></div><div class="dc-group"><span class="dc-digit" id="dc-mins">--</span><span class="dc-label">MINS</span></div><div class="dc-group"><span class="dc-digit" id="dc-secs">--</span><span class="dc-label">SECS</span></div></div>
   <div class="live-feed" id="live-feed"></div>
@@ -3054,7 +3054,7 @@ function downloadCard(){
   // Header
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.2)';x.font='500 20px "Space Mono",monospace';
-  x.fillText('SUDDEN DEATH INDEX · v16.0 · CLASSIFIED REPORT',cx,50);
+  x.fillText('SUDDEN DEATH INDEX · v17.0 · CLASSIFIED REPORT',cx,50);
   // Divider
   x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=1;x.beginPath();x.moveTo(80,70);x.lineTo(W-80,70);x.stroke();
   // Score ring
@@ -7521,7 +7521,7 @@ document.addEventListener('dblclick',e=>{
 // ════ TYPING SUBTITLE EFFECT ════
 (function(){
   const subtitles=[
-    'SUDDEN DEATH INDEX · v16.0',
+    'SUDDEN DEATH INDEX · v17.0',
     '你离猝死还有多远？',
     '30题 · 7维度 · 1份残酷报告',
     '熬夜测试本身就是加分项',
@@ -9594,6 +9594,191 @@ ${dims.map(d=>`║ ${d.name.padEnd(9,' ')} ${'█'.repeat(Math.round(d.pct/10))}
     },6000);
   });
   obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH TAROT CARD" ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('tarot-card'))return;
+      const score=calcScore();
+      const tarots=[
+        {range:[0,20],card:'星星 ⭐',num:'XVII',meaning:'希望与疗愈',advice:'你正走在正确的健康之路上，继续保持内心的平静与身体的和谐。',color:'#4ade80'},
+        {range:[20,35],card:'力量 🦁',num:'VIII',meaning:'意志与耐力',advice:'你有维持健康的力量，但需要更多的自律来发挥它。内在的平衡是关键。',color:'#60a5fa'},
+        {range:[35,50],card:'命运之轮 🎡',num:'X',meaning:'变化与循环',advice:'你的健康正处于转折点。接下来的选择将决定轮盘转向哪个方向。',color:'#f59e0b'},
+        {range:[50,65],card:'月亮 🌙',num:'XVIII',meaning:'迷惘与不安',advice:'你的身体在黑暗中摸索，很多问题被忽视了。是时候正视内心的恐惧。',color:'#f97316'},
+        {range:[65,80],card:'高塔 🏰',num:'XVI',meaning:'崩塌与警示',advice:'旧有的不良习惯正在瓦解你的健康根基。这张牌警告你：改变迫在眉睫。',color:'#ef4444'},
+        {range:[80,101],card:'死神 💀',num:'XIII',meaning:'终结与重生',advice:'别慌——死神牌意味着旧模式必须死去。你的生活方式需要彻底重生。',color:'#dc2626'},
+      ];
+      const tarot=tarots.find(t=>score>=t.range[0]&&score<t.range[1])||tarots[3];
+      const el=document.createElement('div');
+      el.id='tarot-card';
+      el.className='rs on';
+      el.style.cursor='pointer';
+      el.innerHTML=`<div style="perspective:600px;">
+        <div id="tarot-inner" style="position:relative;width:180px;height:280px;margin:0 auto;transition:transform .8s cubic-bezier(.34,1.56,.64,1);transform-style:preserve-3d;">
+          <div style="position:absolute;inset:0;backface-visibility:hidden;background:linear-gradient(135deg,#1a1040,#2d1b69);border:2px solid ${tarot.color}44;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.4);">
+            <div style="font-size:9px;letter-spacing:4px;color:${tarot.color};opacity:.6;">HEALTH TAROT</div>
+            <div style="font-size:48px;margin:16px 0;">🔮</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.3);">点击翻牌</div>
+          </div>
+          <div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);background:linear-gradient(135deg,#0d0d1a,#1a1040);border:2px solid ${tarot.color};border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;box-shadow:0 8px 32px ${tarot.color}33;">
+            <div style="font-size:9px;color:${tarot.color};letter-spacing:3px;">${tarot.num}</div>
+            <div style="font-size:14px;font-weight:700;color:#fff;margin:8px 0 4px;">${tarot.card}</div>
+            <div style="font-size:10px;color:${tarot.color};margin-bottom:8px;">${tarot.meaning}</div>
+            <div style="width:30px;height:1px;background:${tarot.color}44;margin-bottom:8px;"></div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);line-height:1.7;text-align:center;">${tarot.advice}</div>
+          </div>
+        </div>
+      </div>`;
+      let flipped=false;
+      el.addEventListener('click',()=>{
+        flipped=!flipped;
+        const inner=document.getElementById('tarot-inner');
+        if(inner)inner.style.transform=flipped?'rotateY(180deg)':'rotateY(0)';
+      });
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(10,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },4800);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ "HEALTH SOUNDTRACK" RECOMMENDATION ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('soundtrack-rec'))return;
+      const score=calcScore();
+      const tracks=[
+        {range:[0,25],title:'Weightless',artist:'Marconi Union',genre:'环境音乐',desc:'被科学证明能降低65%焦虑的音乐',icon:'🎵'},
+        {range:[25,45],title:'Clair de Lune',artist:'Debussy',genre:'古典',desc:'月光下的宁静，适合放松身心',icon:'🌙'},
+        {range:[45,60],title:'Breathe',artist:'Pink Floyd',genre:'摇滚',desc:'深呼吸，放慢节奏，感受当下',icon:'🎸'},
+        {range:[60,75],title:'Stayin\' Alive',artist:'Bee Gees',genre:'迪斯科',desc:'标题就是给你的建议……活下去',icon:'🕺'},
+        {range:[75,90],title:'Highway to Hell',artist:'AC/DC',genre:'硬摇滚',desc:'你目前的生活方式主题曲',icon:'🔥'},
+        {range:[90,101],title:'Another One Bites the Dust',artist:'Queen',genre:'摇滚',desc:'不改变的话这就是你的结局BGM',icon:'💀'},
+      ];
+      const track=tracks.find(t=>score>=t.range[0]&&score<t.range[1])||tracks[3];
+      const el=document.createElement('div');
+      el.id='soundtrack-rec';
+      el.className='rs on';
+      el.innerHTML=`<div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),rgba(var(--ar),var(--ag),var(--ab),.5));display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 4px 16px rgba(var(--ar),var(--ag),var(--ab),.2);">${track.icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:9px;color:var(--dim);letter-spacing:2px;margin-bottom:2px;">🎧 你的健康主题曲</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text);">${track.title}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.4);">${track.artist} · ${track.genre}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px;font-style:italic;">${track.desc}</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;height:4px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:var(--accent);border-radius:2px;animation:playProgress 30s linear forwards;"></div>
+      </div>`;
+      // Add progress animation
+      const style=document.createElement('style');
+      style.textContent='@keyframes playProgress{to{width:100%}}';
+      document.head.appendChild(style);
+      const target=document.getElementById('rs0')?.parentNode;
+      if(target){
+        const sections=target.querySelectorAll('.rs');
+        const insertBefore=sections[Math.min(11,sections.length-1)];
+        if(insertBefore)target.insertBefore(el,insertBefore);
+        else target.appendChild(el);
+      }
+    },3600);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ LANDING: TYPING "test" SKIPS TO QUIZ ════
+(function(){
+  let buffer='';
+  document.addEventListener('keydown',e=>{
+    if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+    buffer+=e.key.toLowerCase();
+    if(buffer.length>10)buffer=buffer.slice(-10);
+    if(buffer.includes('test')){
+      buffer='';
+      const sec=document.getElementById('sec-intro');
+      if(!sec?.classList.contains('active'))return;
+      if(window.startQuiz)window.startQuiz();
+    }
+  });
+})();
+
+// ════ ENHANCED FOOTER WITH CREDITS AND STATS ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec?.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      if(document.getElementById('enhanced-footer'))return;
+      const footer=document.createElement('div');
+      footer.id='enhanced-footer';
+      footer.style.cssText='text-align:center;padding:20px 0;margin-top:16px;border-top:1px solid rgba(255,255,255,.04);';
+      let totalTests=0;
+      try{totalTests=JSON.parse(localStorage.getItem('sdi-history')||'[]').length;}catch(e){}
+      footer.innerHTML=`
+        <div style="font-size:9px;color:rgba(255,255,255,.15);line-height:2;">
+          <div>猝死指数测试 v17.0 · 单文件零依赖</div>
+          <div>你已完成 ${totalTests} 次测试</div>
+          <div style="margin-top:4px;">⚠️ 本测试纯属娱乐，不构成任何医学建议</div>
+          <div>如有健康问题，请咨询专业医生</div>
+          <div style="margin-top:8px;font-size:8px;color:rgba(255,255,255,.08);">Made with 💀 and a questionable sense of humor</div>
+        </div>`;
+      sec.appendChild(footer);
+    },500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
+// ════ QUIZ: CATEGORY PROGRESS CHIPS ════
+(function(){
+  const catOrder=['sleep','work','exercise','diet','stress','habit','emotion'];
+  const catNames={'sleep':'😴睡眠','work':'💼工作','exercise':'🏃运动','diet':'🍜饮食','stress':'😰压力','habit':'🚬习惯','emotion':'💔情绪'};
+  let chipsEl=null;
+  const origRenderQ=window.renderQ;
+  if(!origRenderQ)return;
+  window.renderQ=function(){
+    origRenderQ.apply(this,arguments);
+    if(!window.QS||window.CI===undefined)return;
+    const q=window.QS[window.CI];
+    if(!q)return;
+    if(!chipsEl){
+      chipsEl=document.createElement('div');
+      chipsEl.id='cat-chips';
+      chipsEl.style.cssText='display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:8px;margin-bottom:-4px;';
+      const pbar=document.querySelector('.pbar-outer');
+      if(pbar)pbar.parentNode.insertBefore(chipsEl,pbar.nextSibling);
+    }
+    if(!chipsEl)return;
+    // Determine which categories have been completed
+    const completedCats=new Set();
+    const currentCat=q.cat;
+    for(let i=0;i<window.CI;i++){
+      if(window.QS[i])completedCats.add(window.QS[i].cat);
+    }
+    chipsEl.innerHTML=catOrder.map(cat=>{
+      const isDone=completedCats.has(cat)&&cat!==currentCat;
+      const isCurrent=cat===currentCat;
+      return `<span style="font-size:8px;padding:2px 6px;border-radius:6px;
+        background:${isCurrent?'rgba(var(--ar),var(--ag),var(--ab),.12)':isDone?'rgba(74,222,128,.08)':'rgba(255,255,255,.02)'};
+        border:1px solid ${isCurrent?'rgba(var(--ar),var(--ag),var(--ab),.3)':isDone?'rgba(74,222,128,.15)':'rgba(255,255,255,.04)'};
+        color:${isCurrent?'var(--accent)':isDone?'#4ade80':'rgba(255,255,255,.2)'};">${catNames[cat]||cat}${isDone?' ✓':''}</span>`;
+    }).join('');
+  };
 })();
 
 // Check URL hash on load for shared results
