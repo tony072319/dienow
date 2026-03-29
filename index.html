@@ -3196,6 +3196,78 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ MOUSE TRAIL PARTICLES (result page) ════
+(function(){
+  let trailing=false;
+  const observer=new MutationObserver(()=>{
+    const isResult=document.getElementById('sec-result')?.classList.contains('active');
+    trailing=!!isResult;
+  });
+  observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  let lastX=0,lastY=0;
+  document.addEventListener('mousemove',e=>{
+    if(!trailing||'ontouchstart' in window)return;
+    const dx=e.clientX-lastX,dy=e.clientY-lastY;
+    if(Math.abs(dx)+Math.abs(dy)<8)return;
+    lastX=e.clientX;lastY=e.clientY;
+    const[r,g,b]=curRGB;
+    pts.push({x:e.clientX,y:e.clientY+window.scrollY-canv.getBoundingClientRect().top,vx:(Math.random()-.5)*.5,vy:-Math.random()*.5-.2,sz:Math.random()*1.5+.5,al:.4,r,g,b,life:0,max:40+Math.random()*30,cross:false,rot:0});
+  });
+})();
+
+// ════ SCROLL-RESPONSIVE BACKGROUND GRADIENT ════
+(function(){
+  let ticking=false;
+  window.addEventListener('scroll',()=>{
+    if(ticking)return;ticking=true;
+    requestAnimationFrame(()=>{
+      const isResult=document.getElementById('sec-result')?.classList.contains('active');
+      if(!isResult){ticking=false;return;}
+      const scrollPct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight);
+      const hue=scrollPct*30;// subtle shift 0-30deg
+      const ambEl=document.getElementById('ambient');
+      if(ambEl){
+        const[r,g,b]=curRGB;
+        const intensity=.06+scrollPct*.06;
+        ambEl.style.background=`radial-gradient(ellipse 70% 32% at 50% 0%,rgba(${r},${g},${b},${intensity}) 0%,transparent 70%)`;
+      }
+      ticking=false;
+    });
+  },{passive:true});
+})();
+
+// ════ RESULT COMPARISON WITH HISTORY ════
+(function(){
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(showHistoryComparison,2500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  function showHistoryComparison(){
+    try{
+      const hist=JSON.parse(localStorage.getItem('sdi-history')||'[]');
+      if(hist.length<2)return;
+      const prev=hist[hist.length-2];
+      const curr=hist[hist.length-1];
+      if(!prev||!curr||prev.s===curr.s)return;
+      const diff=curr.s-prev.s;
+      const icon=diff>0?'📈':'📉';
+      const col=diff>0?'#ef4444':'#34d399';
+      const txt=diff>0?`比上次高了 ${diff} 分，情况在恶化`:`比上次低了 ${Math.abs(diff)} 分，有所改善`;
+      // Insert comparison card after score
+      const rs1=document.getElementById('rs1');
+      if(!rs1||document.getElementById('history-cmp'))return;
+      const card=document.createElement('div');card.id='history-cmp';
+      card.style.cssText=`display:flex;align-items:center;gap:12px;padding:14px 18px;margin-top:14px;background:rgba(255,255,255,.025);border:1px solid ${col}30;border-radius:14px;font-size:12px;color:#bbb;opacity:0;transform:translateY(8px);transition:all .5s;`;
+      card.innerHTML=`<span style="font-size:20px;">${icon}</span><span>${txt}</span><span style="font-family:'Space Mono',monospace;font-weight:700;color:${col};margin-left:auto;">${diff>0?'+':''}${diff}</span>`;
+      rs1.appendChild(card);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{card.style.opacity='1';card.style.transform='none';}));
+    }catch(e){}
+  }
+})();
+
 // ════ INTERACTIVE BODY HEATMAP ════
 (function(){
   document.addEventListener('click',e=>{
