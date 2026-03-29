@@ -3247,6 +3247,73 @@ function stopAmbient(){
   document.addEventListener('click',e=>{if(!ringWrap.contains(e.target)){tip.classList.remove('show');shown=false;}});
 })();
 
+// ════ START BUTTON: DRAMATIC ENTRANCE ════
+(function(){
+  const btn=document.querySelector('.start-btn');
+  if(!btn)return;
+  btn.addEventListener('click',()=>{
+    // Zoom effect on start
+    btn.style.transition='transform .3s, opacity .3s';
+    btn.style.transform='scale(1.15)';
+    setTimeout(()=>{btn.style.transform='scale(.95)';btn.style.opacity='.7';},150);
+    // Sound
+    if(soundOn){
+      ensureAudio();
+      const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+      osc.connect(gain);gain.connect(audioCtx.destination);
+      osc.frequency.value=440;osc.type='sine';
+      gain.gain.setValueAtTime(0.15,audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+.3);
+      osc.start(audioCtx.currentTime);osc.stop(audioCtx.currentTime+.3);
+    }
+  });
+})();
+
+// ════ QUIZ PROGRESS: DANGER LEVEL INDICATOR ENHANCEMENT ════
+(function(){
+  const style=document.createElement('style');
+  style.textContent='.pbar-inner.danger{background:linear-gradient(90deg,var(--accent),#f59e0b,#ef4444)!important;}.pbar-inner.safe{background:linear-gradient(90deg,#34d399,var(--accent))!important;}';
+  document.head.appendChild(style);
+  const obs=new MutationObserver(()=>{
+    const pbar=document.getElementById('pbar');
+    if(!pbar)return;
+    // Calculate average danger
+    const total=Object.values(ans);
+    if(total.length===0)return;
+    const avg=total.reduce((s,v)=>s+v,0)/total.length;
+    pbar.classList.toggle('danger',avg>=2.5);
+    pbar.classList.toggle('safe',avg<1.5&&total.length>3);
+  });
+  obs.observe(document.body,{subtree:true,childList:true,attributes:true});
+})();
+
+// ════ RESULT: ANIMATED SECTION REVEAL NUMBERS ════
+(function(){
+  // Counter animation for percentile number
+  const obs=new MutationObserver(()=>{
+    const sec=document.getElementById('sec-result');
+    if(!sec||!sec.classList.contains('active'))return;
+    obs.disconnect();
+    setTimeout(()=>{
+      const pctNum=document.getElementById('pct-num');
+      if(!pctNum||pctNum.dataset.animated)return;
+      pctNum.dataset.animated='true';
+      const target=parseInt(pctNum.textContent);
+      if(isNaN(target))return;
+      pctNum.textContent='0%';
+      let start=performance.now();
+      function tick(now){
+        const p=Math.min((now-start)/1200,1);
+        const ease=1-Math.pow(1-p,3);
+        pctNum.textContent=Math.round(target*ease)+'%';
+        if(p<1)requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    },1500);
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();
+
 // ════ CURSOR SKULL TRAIL (result page, desktop) ════
 (function(){
   if('ontouchstart' in window)return;
