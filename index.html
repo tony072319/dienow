@@ -373,7 +373,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .score-num{font-family:'Space Mono',monospace;font-size:48px;font-weight:700;line-height:1;display:block;}
 .score-lbl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);display:block;margin-top:4px;}
 .res-level{font-size:28px;font-weight:900;margin-bottom:12px;}
-.res-desc{font-size:15px;color:var(--text);line-height:1.85;max-width:600px;text-align:center;}
+.res-desc{font-size:15px;color:var(--text);line-height:1.85;max-width:600px;text-align:center;margin:0 auto 16px;}
 .fun-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
 .fun-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:100px;font-size:11px;font-weight:600;border:1px solid;opacity:0;transform:scale(.8) translateY(8px);transition:opacity .4s,transform .4s;cursor:default;}
 .fun-tag.on{opacity:1;transform:none;}
@@ -832,8 +832,7 @@ html.light .trend-title{color:var(--dim)!important;}
 html.light .disclaimer{color:#666!important;}
 html.light .survival-note{color:#666!important;}
 html.light .obituary-footer{color:#888!important;}
-/* body heatmap: only style the structural outline parts that JS doesn't color */
-html.light .body-svg-wrap svg #bh-larm,html.light .body-svg-wrap svg #bh-rarm,html.light .body-svg-wrap svg #bh-lleg,html.light .body-svg-wrap svg #bh-rleg{fill:rgba(0,0,0,.05)!important;stroke:rgba(0,0,0,.35)!important;stroke-width:2!important;}
+/* body heatmap: .bh-part class handles base colors; JS overrides with risk colors */
 html.light .trend-svg text{fill:rgba(0,0,0,.45)!important;}
 html.light #trend-svg line{stroke:rgba(0,0,0,.1)!important;}
 html.light #r-grid-g polygon{stroke:rgba(0,0,0,.18)!important;}
@@ -2834,7 +2833,7 @@ function showResult(){
     {id:'bh-head',parts:['bh-brain'],label:'🧠 大脑/神经',risk:Math.round((dimObj.stress||0)*.4+(dimObj.emotion||0)*.4+(dimObj.sleep||0)*.2)},
     {id:'bh-torso',parts:['bh-heart','bh-stomach'],label:'❤️ 心血管',risk:Math.round((dimObj.work||0)*.4+(dimObj.stress||0)*.35+(dimObj.exercise||0)*.25)},
     {id:null,parts:[],label:'🫁 代谢系统',risk:Math.round((dimObj.diet||0)*.4+(dimObj.sleep||0)*.3+(dimObj.habit||0)*.3)},
-    {id:null,parts:[],label:'💪 肌肉骨骼',risk:Math.round((dimObj.exercise||0)*.5+(dimObj.work||0)*.3+(dimObj.stress||0)*.2)},
+    {id:null,parts:['bh-larm','bh-rarm','bh-lleg','bh-rleg'],label:'💪 肌肉骨骼',risk:Math.round((dimObj.exercise||0)*.5+(dimObj.work||0)*.3+(dimObj.stress||0)*.2)},
   ];
   const blEl=document.getElementById('body-legend');blEl.innerHTML='';
   const bhIsLight=document.documentElement.classList.contains('light');
@@ -4594,58 +4593,6 @@ function updateFavicon(score){
   obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
 
-// ════ "HEALTH HAIKU" GENERATOR ════
-(function(){
-  const obs=new MutationObserver(()=>{
-    const sec=document.getElementById('sec-result');
-    if(!sec?.classList.contains('active'))return;
-    obs.disconnect();
-    setTimeout(()=>{
-      if(document.getElementById('health-haiku'))return;
-      const score=calcScore();
-      const haikus=[
-        // Low score (healthy)
-        {range:[0,30],poems:[
-          ['晨光洒窗台','身轻如燕心自在','健康是真爱'],
-          ['春风拂面来','规律作息无忧碍','青春永不败'],
-          ['一杯清水甜','身体无恙心自安','快乐每一天'],
-        ]},
-        // Medium score
-        {range:[30,60],poems:[
-          ['夜半手机亮','身体悄悄在记账','该把债还上'],
-          ['外卖又一单','腰围渐宽心渐烦','改变趁今晚'],
-          ['咖啡续命长','久坐不动骨头凉','起身走两趟'],
-        ]},
-        // High score (dangerous)
-        {range:[60,101],poems:[
-          ['凌晨三点半','肝脏默默把泪弹','求你早点关'],
-          ['作死成习惯','身体警报响不断','ICU相见'],
-          ['熬夜如打仗','器官纷纷交辞状','再见在天堂'],
-        ]},
-      ];
-      const group=haikus.find(h=>score>=h.range[0]&&score<h.range[1])||haikus[1];
-      const poem=group.poems[Math.floor(Math.random()*group.poems.length)];
-      const el=document.createElement('div');
-      el.id='health-haiku';
-      el.className='rs on';
-      el.innerHTML=`<div style="text-align:center;padding:12px 0;">
-        <div style="font-size:9px;letter-spacing:4px;color:var(--dim);margin-bottom:12px;">— 健 康 俳 句 —</div>
-        <div style="font-size:15px;color:var(--text);line-height:2.5;font-style:italic;">
-          ${poem.map((line,i)=>`<div style="opacity:0;animation:fadeUp .5s ease ${0.3+i*0.4}s forwards;">${line}</div>`).join('')}
-        </div>
-        <div style="width:40px;height:1px;background:var(--card-border);margin:12px auto 0;"></div>
-      </div>`;
-      const target=document.getElementById('rs0')?.parentNode;
-      if(target){
-        const sections=target.querySelectorAll('.rs');
-        const insertBefore=sections[Math.min(10,sections.length-1)];
-        if(insertBefore)target.insertBefore(el,insertBefore);
-        else target.appendChild(el);
-      }
-    },4500);
-  });
-  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
-})();
 
 // ════ "HEALTH MOVIE RATING" ════
 (function(){
