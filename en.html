@@ -1886,12 +1886,12 @@ const LEVELS=[
   {max:30,grade:'A',label:'Vitality Strong',color:'#a3e635',desc:'Overall you\u2019re in pretty good shape. The occasional indulgence is fine, but watch out for the slow slide into sub-health territory.',advice:['Maintain regular sleep schedule — 11pm is your hard line','3x weekly cardio exercise','Schedule a comprehensive physical this year']},
   {max:50,grade:'B',label:'Sub-health Edge',color:'#fbbf24',desc:'You\'re walking the line. Your body is sending signals you may be ignoring. These signals won\'t wait forever.',advice:['Be asleep by 11pm tonight','Walk 8,000 steps daily','Reduce caffeine, drink at least 6 glasses of water daily','Schedule a checkup']},
   {max:70,grade:'C',label:'Danger Signals',color:'#f59e0b',desc:'Your body is running on overdrive. Multiple indicators are flashing yellow simultaneously. Keep this up and there are only two outcomes: you change voluntarily, or you\u2019re forced to stop.',advice:['Schedule a checkup this month — get an EKG','7 hours of sleep, starting tonight','No work messages after hours — try it for one week','Talk to someone about how you feel']},
-  {max:85,grade:'D',label:'High Risk人群',color:'#ef4444',desc:'You\'re treating your body like a disposable resource. Your indicators are alarming. The risks you face are real and urgent.',advice:['🚨 See a doctor this week — get cardiovascular screening','Immediately reduce alcohol and tobacco','7 hours of sleep is a non-negotiable minimum','Request time off work','Tell your family about your health situation']},
-  {max:100,grade:'F',label:'Prime Sudden Death Candidate',color:'#ef4444',desc:'系统已将您标记为高At Risk案例。您的生活方式在各Dimensions均超出Safe范围。请认真对待这份Report。',advice:['⚠️ See a doctor immediately — not today, NOW','Let people around you know your situation','Take medical leave from work','Seek professional mental health support']},
+  {max:85,grade:'D',label:'High Risk Group',color:'#ef4444',desc:'You\'re treating your body like a disposable resource. Your indicators are alarming. The risks you face are real and urgent.',advice:['🚨 See a doctor this week — get cardiovascular screening','Immediately reduce alcohol and tobacco','7 hours of sleep is a non-negotiable minimum','Request time off work','Tell your family about your health situation']},
+  {max:100,grade:'F',label:'Prime Sudden Death Candidate',color:'#ef4444',desc:'The system has flagged you as a critical risk case. Your lifestyle exceeds safe thresholds across every dimension. Please take this report seriously.',advice:['⚠️ See a doctor immediately — not today, NOW','Let people around you know your situation','Take medical leave from work','Seek professional mental health support']},
 ];
 // Keys sorted alphabetically: diet < emotion < exercise < habit < sleep < stress < work
 const PROPHECY={
-  'sleep+work'    :'某个周三凌晨，你一个人改#九版PPT，手指突然停了。不是完成了，是你的大脑短暂地拒绝工作了。你坐在屏幕前愣了三pts钟，想不起来自己要做什么。这种停顿会越来越频繁，直到有一天，它变成更长的时间。',
+  'sleep+work'    :'One Wednesday at 2 AM, you\u2019re alone revising the ninth draft of a slide deck. Your fingers stop. Not because you finished \u2014 your brain briefly refused to cooperate. You sit staring at the screen for three minutes, unable to remember what you were doing. These blackouts will get more frequent, until one day, the pause becomes permanent.',
   'sleep+stress'  :'Your brain has developed a new skill: replaying your most embarrassing moments from three years ago AND tomorrow\'s 10 AM presentation simultaneously during the 30 minutes before sleep. Your cortisol has never truly come down. One morning you\'ll find you literally cannot get up — not lazy, just broken.',
   'diet+sleep'    :'You survive on coffee, fill your stomach with delivery food, and borrow tomorrow\'s energy by staying up late. Running a daily deficit. Clinical term: chronic depletion syndrome. Plain English: trading tomorrow\'s lifespan for today\'s KPIs.',
   'exercise+sleep':'Your body has zero chance to repair. Sleep deprivation means cell repair stops; lack of exercise means metabolic waste is piling up. You\'re systematically destroying your body\'s ability to fix itself.',
@@ -2029,11 +2029,11 @@ const ACHIEVEMENTS=[
   {id:'numb',icon:'🧊',name:'Pain Immune',col:'#6688aa',bg:'rgba(102,136,170,.08)',border:'rgba(102,136,170,.25)',rare:'R',match:()=>ans[28]>=3&&ans[27]>=3,desc:'All body signals ignored + no checkups'},
   {id:'balance',icon:'⚖️',name:'Perfect Balance',col:'#fbbf24',bg:'rgba(251,191,36,.08)',border:'rgba(251,191,36,.25)',rare:'SR',match:()=>{const d=calcDims();const ps=d.map(x=>x.pct);return Math.max(...ps)-Math.min(...ps)<15;},desc:'Risk gap across all dimensions within 15%'},
   {id:'fullhouse',icon:'🃏',name:'Full House Collector',col:'#f472b6',bg:'rgba(244,114,182,.08)',border:'rgba(244,114,182,.25)',rare:'SSR',match:()=>{const d=calcDims();return d.every(x=>x.pct>=50);},desc:'All 7 dimensions above 50% risk'},
-  {id:'paradox',icon:'🔮',name:'薛定谔的健康',col:'#a78bfa',bg:'rgba(167,139,250,.08)',border:'rgba(167,139,250,.25)',rare:'R',match:()=>ans[27]>=3&&ans[28]>=3,desc:'No checkups + ignoring body signals'},
+  {id:'paradox',icon:'🔮',name:'Schr\u00F6dinger\u2019s Health',col:'#a78bfa',bg:'rgba(167,139,250,.08)',border:'rgba(167,139,250,.25)',rare:'R',match:()=>ans[27]>=3&&ans[28]>=3,desc:'No checkups + ignoring body signals'},
   {id:'nocturnal',icon:'🦇',name:'Nocturnal Animal',col:'#818cf8',bg:'rgba(129,140,248,.08)',border:'rgba(129,140,248,.25)',rare:'R',match:()=>ans[0]>=3&&ans[2]>=3,desc:'Late sleeper + poor sleep quality'},
   {id:'survivor',icon:'🛡️',name:'Iron Survivor',col:'#34d399',bg:'rgba(52,211,153,.08)',border:'rgba(52,211,153,.25)',rare:'SSR',match:()=>{const s=calcScore();return s>=70&&Object.values(ans).some(v=>v===0);},desc:'Extremely high total yet with a perfectly healthy dimension'},
-  {id:'extremist',icon:'🎲',name:'The Extremist',col:'#f43f5e',bg:'rgba(244,63,94,.08)',border:'rgba(244,63,94,.25)',rare:'SR',match:()=>{const vals=Object.values(ans);return vals.filter(v=>v>=4).length>=3&&vals.filter(v=>v<=1).length>=3;},desc:'同时有3个极High Risk和3个极Safe的选项'},
-  {id:'speedster',icon:'🏎️',name:'Speed Demon',col:'#06b6d4',bg:'rgba(6,182,212,.08)',border:'rgba(6,182,212,.25)',rare:'R',match:()=>quizStartTime&&(Date.now()-quizStartTime)<90000,desc:'90秒内完成全部测试'},
+  {id:'extremist',icon:'🎲',name:'The Extremist',col:'#f43f5e',bg:'rgba(244,63,94,.08)',border:'rgba(244,63,94,.25)',rare:'SR',match:()=>{const vals=Object.values(ans);return vals.filter(v=>v>=4).length>=3&&vals.filter(v=>v<=1).length>=3;},desc:'3 extremely high-risk and 3 extremely safe picks at the same time'},
+  {id:'speedster',icon:'🏎️',name:'Speed Demon',col:'#06b6d4',bg:'rgba(6,182,212,.08)',border:'rgba(6,182,212,.25)',rare:'R',match:()=>quizStartTime&&(Date.now()-quizStartTime)<90000,desc:'Completed the entire test in under 90 seconds'},
 ];
 
 // ════ OBITUARY / LAST WORDS / SURVIVAL ════
@@ -2051,38 +2051,38 @@ function genObituary(score,dims,arch,age){
 
 const LAST_WORDS=[
   {min:0,max:15,quotes:[
-    {q:'我的葬礼上能不能放蹦迪音乐？',a:'—— 活到105岁的养生博主'},
-    {q:'如果我能重来，我还是会每天11点睡觉。',a:'—— 无聊但长寿的人'},
-    {q:'我活得太久了，已经Start同情那些加班猝死的新闻主角了。',a:'—— 退休后依然在晨跑的人'},
-    {q:'长寿的秘诀？不知道。我只是什么都没做过头。',a:'—— 佛系养生终身会员'},
+    {q:'Can my funeral playlist be all EDM?',a:'\u2014 Wellness influencer who lived to 105'},
+    {q:'If I could do it all over, I\u2019d still be in bed by 11 PM every night.',a:'\u2014 Boring but immortal person'},
+    {q:'I\u2019ve lived so long I actually feel bad for the hustle-culture guys dropping dead on the news.',a:'\u2014 Retiree still jogging every morning'},
+    {q:'The secret to longevity? No idea. I just never overdid anything.',a:'\u2014 Lifetime member of the Do-Nothing-Too-Hard Club'},
   ]},
   {min:15,max:40,quotes:[
-    {q:'我以为我会活很久。事实上，我确实活很久了。只是不够精彩。',a:'—— 某个规律但平淡的人'},
-    {q:'Doctor说我很健康，但我总觉得哪里不对。',a:'—— 轻度焦虑的养生者'},
-    {q:'最大的遗憾是，我健康到连"遗憾"都想不出来。',a:'—— 养生界优等生'},
-    {q:'我用自律换来了健康，但偶尔会羡慕那些凌晨还在吃火锅的人。',a:'—— 11点准时熄灯的纪律委员'},
+    {q:'I thought I\u2019d live forever. Turns out I did. It just wasn\u2019t very exciting.',a:'\u2014 Someone with a routine but no stories'},
+    {q:'My doctor says I\u2019m healthy, but I always feel like something\u2019s off.',a:'\u2014 Mildly anxious wellness enthusiast'},
+    {q:'My biggest regret is that I\u2019m so healthy I can\u2019t even think of a regret.',a:'\u2014 Valedictorian of the wellness class'},
+    {q:'I traded fun for health, but sometimes I envy the people eating pizza at 2 AM.',a:'\u2014 Lights-out-by-10-PM hall monitor'},
   ]},
   {min:40,max:60,quotes:[
-    {q:'我不是不想改，我只是想再等一个合适的时间。然后就没有然后了。',a:'—— 拖延症晚期确诊者'},
-    {q:'我的身体在#37次发出警告后，终于放弃了沟通。',a:'—— 忽视体检信号的人'},
-    {q:'我把青春都给了工作，工作把发票给了我。',a:'—— Tech Middle Manager遗言'},
-    {q:'我一直以为Sub-health只是个形容词，直到它变成了诊断书。',a:'—— 从不请假的模范员工'},
-    {q:'我的养生方法是可乐加枸杞。Now看来，枸杞没起到什么作用。',a:'—— 朋克养生先驱'},
+    {q:'It\u2019s not that I don\u2019t want to change. I\u2019m just waiting for the right time. And then there was no more time.',a:'\u2014 Clinically diagnosed procrastinator'},
+    {q:'After 37 warnings, my body finally gave up trying to communicate.',a:'\u2014 Person who ignored every checkup alert'},
+    {q:'I gave my youth to my career. My career gave me medical bills.',a:'\u2014 Last words of a tech middle manager'},
+    {q:'I always thought "sub-health" was just a buzzword, until it showed up on my chart.',a:'\u2014 Model employee who never took a sick day'},
+    {q:'My wellness routine was Diet Coke with a multivitamin. Turns out the vitamin didn\u2019t help.',a:'\u2014 Pioneer of punk wellness'},
   ]},
   {min:60,max:80,quotes:[
-    {q:'我知道熬夜不好。但你不知道凌晨三点的安静有多珍贵。',a:'—— 把夜晚当避难所的人'},
-    {q:'如果996有墓碑，上面应该刻着："他很努力，但身体不同意。"',a:'—— 职场殉道者代表'},
-    {q:'我的遗愿是删除我的搜索记录和外卖订单历史。',a:'—— 数字时代的隐私遗嘱'},
-    {q:'手机比我活得久。它至少每天都充电。',a:'—— 从不给自己充电的人'},
-    {q:'我以为年轻就是本钱。结果这笔钱，花得比想象中快。',a:'—— 体检Report刺客的受害者'},
+    {q:'I know staying up late is bad. But you don\u2019t know how precious 3 AM silence is.',a:'\u2014 Person who used nighttime as a sanctuary'},
+    {q:'If hustle culture had a tombstone, it would read: "He worked so hard. His body disagreed."',a:'\u2014 Representative of corporate martyrs'},
+    {q:'My dying wish is to delete my browser history and my DoorDash order log.',a:'\u2014 Digital-age privacy testament'},
+    {q:'My phone outlived me. At least it got charged every day.',a:'\u2014 Person who never recharged themselves'},
+    {q:'I thought youth was currency. Turns out I spent it faster than I thought.',a:'\u2014 Victim of the annual physical ambush'},
   ]},
   {min:80,max:101,quotes:[
-    {q:'我以为我是铁人。结果铁人也会生锈。',a:'—— 某人最后的朋友圈'},
-    {q:'别在我的墓碑上写"愿TA安息"——这是TA这辈子唯一没做过的事。',a:'—— 长期失眠者的自嘲'},
-    {q:'我的一生可以总结为：已读不回——包括身体发来的每一条警告。',a:'—— 系统日志最后一行'},
-    {q:'遗言？我连遗嘱都没时间写。',a:'—— 忙到死的打工人'},
-    {q:'我的器官在群聊里集体发了辞职信，而我一条都没看到。',a:'—— 免疫系统工会主席'},
-    {q:'我想请假，但死亡不批调休，只批离职。',a:'—— HR都不敢拒绝的申请'},
+    {q:'I thought I was invincible. Turns out even iron rusts.',a:'\u2014 Someone\u2019s final social media post'},
+    {q:'Don\u2019t write "Rest in Peace" on my tombstone \u2014 resting is the one thing I never did.',a:'\u2014 Chronic insomniac\u2019s self-roast'},
+    {q:'My life can be summarized as: "Seen" \u2014 including every warning my body ever sent.',a:'\u2014 Last line of the system log'},
+    {q:'Last words? I didn\u2019t even have time to write a will.',a:'\u2014 Person who literally worked to death'},
+    {q:'My organs sent a group resignation letter and I didn\u2019t see a single one.',a:'\u2014 Chairman of the Immune System Workers\u2019 Union'},
+    {q:'I wanted to take a day off, but death doesn\u2019t approve PTO \u2014 only termination.',a:'\u2014 The request even HR couldn\u2019t deny'},
   ]},
 ];
 function getLastWords(score){
@@ -2150,7 +2150,7 @@ function curQi(){return flow[fi];}function curQ(){return Q[flow[fi]];}
 
 function adjAge(d){const el=document.getElementById('age-input');el.value=Math.min(70,Math.max(16,(parseInt(el.value)||28)+d));checkAgeEgg();}
 function checkAgeEgg(){const v=parseInt(document.getElementById('age-input').value)||0;const egg=document.getElementById('age-egg');
-  const msgs={1:'👼 一岁？你是天才宝宝吗？',10:'🎒 少年，你的健康值是满的',16:'👶 你确定你到年龄了吗？',18:'🍼 年轻就是资本，但别浪费',20:'🎓 20岁，人生刚Start。身体也刚Start记仇',22:'📝 大学刚毕业，但你的身体已经Start考试了',25:'🧬 恭喜，你的身体从今天Start走下坡路',27:'💼 工作#三年，你的膝盖认识你的椅子了',28:'🎂 离30还有两年，焦虑值Start上升',30:'🎂 三十而立，三十而秃，三十而突然Start体检',33:'🍺 耶稣都没扛过去的年纪',35:'🎯 互联网行业"退休"年龄',38:'📊 38岁，你的体检Report页数Start超过简历了',40:'📉 四十不惑，但体检Report让你很惑',42:'🌌 生命、宇宙以及一切的答案',45:'🏥 你的同龄人已经Start讨论养生了',48:'🧪 快到半百了，你的身体Start给你发期限通知',50:'🧓 半百之年，一半的器官Start罢工',55:'🕰️ 你的身体已经在写回忆录了',58:'🏖️ 离退休还有两年，坚持住'};
+  const msgs={1:'\uD83D\uDC7C One year old? Baby genius taking a health quiz?',10:'\uD83C\uDF92 Kid, your health bar is full',16:'\uD83D\uDC76 Are you sure you\u2019re old enough for this?',18:'\uD83C\uDF7C Youth is capital \u2014 don\u2019t waste it',20:'\uD83C\uDF93 20 \u2014 life just started. Your body just started keeping score',22:'\uD83D\uDCDD Just graduated, but your body already started the final exam',25:'\uD83E\uDDEC Congrats, your body officially starts declining today',27:'\uD83D\uDCBC Three years in \u2014 your knees know your office chair by name',28:'\uD83C\uDF82 Two years from 30, anxiety levels rising',30:'\uD83C\uDF82 Thirty: the age you start losing hair and booking physicals',33:'\uD83C\uDF7A The age even Jesus didn\u2019t survive',35:'\uD83C\uDFAF Silicon Valley\u2019s unofficial retirement age',38:'\uD83D\uDCCA 38 \u2014 your lab report is now longer than your resume',40:'\uD83D\uDCC9 40 and wise, except your bloodwork is confusing',42:'\uD83C\uDF0C The answer to life, the universe, and everything',45:'\uD83C\uDFE5 Your peers are already talking about supplements',48:'\uD83E\uDDEA Almost 50 \u2014 your body is sending expiration notices',50:'\uD83E\uDDD3 Half a century \u2014 half your organs are filing complaints',55:'\uD83D\uDD70\uFE0F Your body is already writing its memoir',58:'\uD83C\uDFD6\uFE0F Two years to retirement \u2014 hang in there'};
   if(v>=65){egg.textContent='⚡ Legendary warrior, we salute you';egg.classList.add('show');}
   else if(v>=60){egg.textContent='⚡ Admirable courage, elder';egg.classList.add('show');}
   else if(msgs[v]){egg.textContent=msgs[v];egg.classList.add('show');}
@@ -2514,9 +2514,9 @@ function showLoading(){
   organsEl.innerHTML='';
   // Organ scan sequence
   const organs=[
-    {e:'❤️',n:'Heart',key:'work'},{e:'🧠',n:'大脑',key:'stress'},{e:'💨',n:'肺',key:'habit'},
-    {e:'🦴',n:'骨骼',key:'exercise'},{e:'🍽️',n:'消化系统',key:'diet'},{e:'👁️',n:'视觉系统',key:'habit'},
-    {e:'🛡️',n:'免疫系统',key:'sleep'}
+    {e:'❤️',n:'Heart',key:'work'},{e:'🧠',n:'Brain',key:'stress'},{e:'💨',n:'Lungs',key:'habit'},
+    {e:'🦴',n:'Skeleton',key:'exercise'},{e:'🍽️',n:'Digestive System',key:'diet'},{e:'👁️',n:'Visual System',key:'habit'},
+    {e:'🛡️',n:'Immune System',key:'sleep'}
   ];
   organs.forEach(o=>{
     const el=document.createElement('span');el.className='load-organ';el.id='lo-'+o.n;
@@ -2550,7 +2550,7 @@ function showLoading(){
   setTimeout(()=>{
     clearInterval(iv);pEl.textContent='100%';
     sEl.textContent=preScore>=70?'⚠ CRITICAL RESULT DETECTED':'REPORT READY';
-    stageEl.textContent=preScore>=70?'Critical anomaly... encrypting report':'全部Scan complete · 生成Report中…';
+    stageEl.textContent=preScore>=70?'Critical anomaly... encrypting report':'All scans complete \u00B7 Generating report...';
     if(preScore>=70){pEl.style.color='#ef4444';fireDangerFlash(4);}
     const ecgPath=document.getElementById('ecg-path-el');
     if(ecgPath)ecgPath.setAttribute('d','M0,30 L1200,30');// flatline
@@ -2593,7 +2593,7 @@ function drawRadar(dims,accentCol){
   })(t0);
 }
 function calcSystems(dims){const get=k=>dims.find(d=>d.key===k)?.pct||0;return[{icon:'❤️',name:'Cardiovascular',risk:Math.round((get('work')*.4+get('stress')*.35+get('exercise')*.25)),note:'Chronic stress and lack of exercise are the primary non-genetic risk factors for cardiovascular disease'},{icon:'🦴',name:'Musculoskeletal',risk:Math.round((get('exercise')*.5+get('work')*.3+get('stress')*.2)),note:'Sitting and inactivity accelerate muscle atrophy and bone density loss'},{icon:'⚗️',name:'Metabolic & Endocrine',risk:Math.round((get('diet')*.4+get('sleep')*.3+get('habit')*.3)),note:'Sleep, diet, and habits jointly determine metabolic health'},{icon:'🧠',name:'Neuro & Emotional',risk:Math.round((get('stress')*.4+get('emotion')*.4+get('sleep')*.2)),note:'Chronic high cortisol directly impacts brain structure and emotional regulation'}];}
-function calcTimeline(s){if(s<20)return[{t:'Now',txt:'身体状况良好，各主要器官运作Normal',col:'#34d399'},{t:'In 5-10 years',txt:'If current habits are maintained, good health expected to continue',col:'#34d399'},{t:'10年后',txt:'At current trajectory, body age close to actual age',col:'#a3e635'}];if(s<40)return[{t:'Now',txt:'Overall good, some dimensions have room for improvement',col:'#a3e635'},{t:'In 2-3 years',txt:'Without change, chronic fatigue or mild metabolic issues may emerge',col:'#fbbf24'},{t:'In 5 years',txt:'Sub-health symptoms may solidify, making change harder',col:'#f59e0b'}];if(s<60)return[{t:'Now',txt:'身体正在发出明显信号，多项指标Elevated',col:'#fbbf24'},{t:'In 1-2 years',txt:'如不改变，慢性病At Risk显著上升',col:'#f59e0b'},{t:'3-In 5 years',txt:'Cardiovascular or metabolic medical intervention may be needed',col:'#ef4444'}];if(s<80)return[{t:'Now',txt:'Multiple indicators exceed safe range',col:'#f59e0b'},{t:'In 6-18 months',txt:'Without change, a major health event trigger is possible',col:'#ef4444'},{t:'In 2-3 years',txt:'Without change, serious medical issues expected',col:'#ef4444'}];return[{t:'Now',txt:'Current state near critical point, time window very tight',col:'#ef4444'},{t:'Within months',txt:'Without immediate change, body may issue final warning',col:'#ef4444'},{t:'Now就Start',txt:'Even changing one thing will alter this trajectory',col:'#f59e0b'}];}
+function calcTimeline(s){if(s<20)return[{t:'Now',txt:'Overall health is good, all major organs functioning normally',col:'#34d399'},{t:'In 5-10 years',txt:'If current habits are maintained, good health expected to continue',col:'#34d399'},{t:'In 10 years',txt:'At current trajectory, body age close to actual age',col:'#a3e635'}];if(s<40)return[{t:'Now',txt:'Overall good, some dimensions have room for improvement',col:'#a3e635'},{t:'In 2-3 years',txt:'Without change, chronic fatigue or mild metabolic issues may emerge',col:'#fbbf24'},{t:'In 5 years',txt:'Sub-health symptoms may solidify, making change harder',col:'#f59e0b'}];if(s<60)return[{t:'Now',txt:'Your body is sending clear warning signals, multiple indicators elevated',col:'#fbbf24'},{t:'In 1-2 years',txt:'Without changes, chronic disease risk increases significantly',col:'#f59e0b'},{t:'In 3-5 years',txt:'Cardiovascular or metabolic medical intervention may be needed',col:'#ef4444'}];if(s<80)return[{t:'Now',txt:'Multiple indicators exceed safe range',col:'#f59e0b'},{t:'In 6-18 months',txt:'Without change, a major health event trigger is possible',col:'#ef4444'},{t:'In 2-3 years',txt:'Without change, serious medical issues expected',col:'#ef4444'}];return[{t:'Now',txt:'Current state near critical point, time window very tight',col:'#ef4444'},{t:'Within months',txt:'Without immediate change, body may issue final warning',col:'#ef4444'},{t:'Start now',txt:'Even changing one thing will alter this trajectory',col:'#f59e0b'}];}
 function getDoctorNote(s,dims,arch){
   const sorted=[...dims].sort((a,b)=>b.pct-a.pct);
   const worst=sorted[0],second=sorted[1];
@@ -2656,7 +2656,7 @@ function showResult(){
   const elapsed=quizStartTime?Math.round((Date.now()-quizStartTime)/1000):0;
   const tMin=Math.floor(elapsed/60),tSec=elapsed%60;
   const timeEl=document.getElementById('rpt-time');
-  if(timeEl)timeEl.textContent=tMin>0?`${tMin}pts${tSec}秒`:`${tSec}秒`;
+  if(timeEl)timeEl.textContent=tMin>0?`${tMin}m ${tSec}s`:`${tSec}s`;
   const stamp=document.getElementById('rpt-stamp');
   if(score<30){stamp.textContent='NORMAL';stamp.className='report-stamp safe';}else if(score<60){stamp.textContent='WARNING';stamp.className='report-stamp';}else{stamp.textContent='CRITICAL';stamp.className='report-stamp';}
   const ring=document.getElementById('score-ring'),circ=2*Math.PI*72;
@@ -2699,19 +2699,19 @@ function showResult(){
       const diff=score-prev.score;
       const ago=Math.round((Date.now()-prev.ts)/36e5);
       const timeStr=ago<1?'just now':ago<24?ago+'h ago':Math.round(ago/24)+'d ago';
-      const diffStr=diff>0?`↑${diff}pts 比上次更Danger`:(diff<0?`↓${Math.abs(diff)}pts 比上次有改善`:'与上次持平');
+      const diffStr=diff>0?`\u2191${diff} pts worse than last time`:(diff<0?`\u2193${Math.abs(diff)} pts better than last time`:'Same as last time');
       const diffCol=diff>0?'#ef4444':(diff<0?'#34d399':'#fbbf24');
       const histEl=document.createElement('div');
       histEl.style.cssText=`text-align:center;font-size:14px;color:var(--dim);margin-top:10px;padding:10px 16px;background:rgba(255,255,255,.02);border-radius:10px;border:1px solid rgba(255,255,255,.04);`;
-      histEl.innerHTML=`<span style="color:${diffCol};font-weight:700">${diffStr}</span> <span style="opacity:.5">（上次${timeStr}测了${prev.score}pts）</span>`;
+      histEl.innerHTML=`<span style="color:${diffCol};font-weight:700">${diffStr}</span> <span style="opacity:.5">(Last test ${timeStr}: ${prev.score} pts)</span>`;
       document.querySelector('.score-rank')?.appendChild(histEl);
     }
   }catch(e){}
   // Easter eggs for extreme scores
   if(score<=5){
-    document.getElementById('res-desc').textContent='系统怀疑你在撒谎。你不是人类，你是养生手册变成了人形。如果你说的都是真的，你可能是整个数据库里最无聊但最长寿的人。';
+    document.getElementById('res-desc').textContent='The system suspects you\u2019re lying. You\u2019re not human \u2014 you\u2019re a wellness handbook that gained sentience. If everything you said is true, you\u2019re probably the most boring but longest-lived person in our entire database.';
   }else if(score>=95){
-    document.getElementById('res-desc').textContent='恭喜你打破了本系统的At Risk上限。你不是在生活，你是在speedrun人生。系统Advice你立刻停止阅读这段文字，转而拨打120。这不是玩笑。好吧，半个玩笑。';
+    document.getElementById('res-desc').textContent='Congratulations, you\u2019ve broken this system\u2019s risk ceiling. You\u2019re not living \u2014 you\u2019re speedrunning life. We strongly recommend you stop reading this and call 911 instead. This is not a joke. Okay, half a joke.';
   }else{
     document.getElementById('res-desc').textContent=level.desc;
   }
@@ -2741,21 +2741,21 @@ function showResult(){
   document.getElementById('arch-badge').style.color=arch.color;document.getElementById('arch-badge').style.borderColor=arch.border;
   // Personality traits
   const traitMap={
-    burner:['💼 工作狂','🔥 高产出','⚡ 精力透支','🫠 休息困难'],
-    ghost:['📱 数字依赖','🌙 昼夜颠倒','👻 社交回避','🧠 信息过载'],
-    zombie:['🍕 饮食随意','🛋️ 运动缺乏','🚚 外卖依赖','😴 体能下降'],
-    anxious:['😰 持续焦虑','🧠 过度思虑','💭 负面预期','😣 情绪波动'],
-    fossil:['🪑 久坐成性','💻 屏幕依赖','🦴 关节僵硬','🐌 代谢缓慢'],
-    night:['🌙 深夜活跃','💭 思维活跃','😴 日间疲倦','🎭 情绪内耗'],
-    puncher:['💪 硬撑习惯','🤐 情绪压抑','🏋️ 高耐受力','⚠️ 忽视信号'],
-    phantom:['👤 存在感低','🤫 沉默寡言','📊 默默付出','😶 情绪隐藏'],
-    hedonist:['🎰 即时满足','🍔 感官驱动','📱 多巴胺依赖','⏰ 拖延倾向'],
-    timebomb:['💣 多维At Risk','⏱️ 倒计时中','🎭 表面Normal','⚡ 随时触发'],
-    declining:['📉 缓慢下滑','😐 自我麻痹','🔄 习惯固化','❓ 方向模糊'],
-    model:['☠️ 全面Danger','🚨 紧急状态','📋 急需改变','⏰ 时间紧迫'],
+    burner:['💼 Workaholic','🔥 High Output','⚡ Energy Depleted','🫠 Can\u2019t Rest'],
+    ghost:['📱 Screen Addict','🌙 Day-Night Reversed','👻 Social Avoidant','🧠 Info Overloaded'],
+    zombie:['🍕 Random Diet','🛋\uFE0F No Exercise','🚚 Delivery Dependent','😴 Declining Stamina'],
+    anxious:['😰 Chronic Anxiety','🧠 Overthinking','💭 Negative Outlook','😣 Mood Swings'],
+    fossil:['🪑 Chronic Sitter','💻 Screen Dependent','🦴 Stiff Joints','🐌 Slow Metabolism'],
+    night:['🌙 Late-Night Active','💭 Mind Racing','😴 Daytime Fatigue','🎭 Emotional Drain'],
+    puncher:['💪 Powers Through','🤐 Suppresses Emotions','🏋\uFE0F High Tolerance','⚠\uFE0F Ignores Warnings'],
+    phantom:['👤 Low Presence','🤫 Quietly Endures','📊 Silent Contributor','😶 Hides Feelings'],
+    hedonist:['🎰 Instant Gratification','🍔 Sensation-Driven','📱 Dopamine Dependent','⏰ Procrastinator'],
+    timebomb:['💣 Multi-Risk','⏱\uFE0F Countdown Active','🎭 Looks Normal','⚡ Could Blow Anytime'],
+    declining:['📉 Slow Decline','😐 Self-Numbing','🔄 Stuck in Habits','❓ No Direction'],
+    model:['☠\uFE0F Full Danger','🚨 Emergency Mode','📋 Needs Change Now','⏰ Running Out of Time'],
   };
   const traitsEl=document.getElementById('arch-traits');traitsEl.innerHTML='';
-  (traitMap[arch.key]||['❓ 独特类型']).forEach(t=>{
+  (traitMap[arch.key]||['❓ Unique Type']).forEach(t=>{
     traitsEl.innerHTML+=`<span style="font-size:14px;padding:6px 14px;background:${arch.bg||'rgba(255,255,255,.04)'};border:1px solid ${arch.border||'rgba(255,255,255,.08)'};border-radius:100px;color:${arch.color||'#aaa'}">${t}</span>`;
   });
   // Compatible archetype
@@ -2763,7 +2763,7 @@ function showResult(){
   const compatKey=compatMap[arch.key]||'declining';
   const compatArch=ARCHETYPES.find(a=>a.key===compatKey);
   if(compatArch){
-    document.getElementById('arch-compat').innerHTML=`<span style="font-size:12px;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:6px;">Most Common Match</span>${compatArch.icon} <b style="color:${compatArch.color}">${compatArch.name}</b> — 你们经常出Now同一个办公室里`;
+    document.getElementById('arch-compat').innerHTML=`<span style="font-size:12px;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:6px;">Most Common Match</span>${compatArch.icon} <b style="color:${compatArch.color}">${compatArch.name}</b> — You two are often found in the same office`;
   }
   const pp=Math.min(98,Math.round(score*.82+Math.random()*5));
   const pCol=score<30?'#34d399':score<55?'#fbbf24':score<75?'#f59e0b':'#ef4444';
@@ -2780,22 +2780,22 @@ function showResult(){
   const worstDim=dims.reduce((a,b)=>b.pct>a.pct?b:a);
   const worstRank=Math.min(95,Math.round(worstDim.pct*.9+Math.random()*5));
   const psEl=document.getElementById('pct-subs');
-  psEl.innerHTML=`<div class="pct-sub"><span class="pct-sub-val" style="color:${pCol}">${ageGroup} yrs</span><span class="pct-sub-lbl">Your age group average index ${ageAvg}</span></div><div class="pct-sub"><span class="pct-sub-val" style="color:${pCol}">${cityAvg}</span><span class="pct-sub-lbl">Major city worker average</span></div><div class="pct-sub"><span class="pct-sub-val" style="color:${dimCol(worstDim.pct)}">TOP ${worstRank}%</span><span class="pct-sub-lbl">${worstDim.name.replace(/^../,'')}DimensionsAt Risk排名</span></div>`;
+  psEl.innerHTML=`<div class="pct-sub"><span class="pct-sub-val" style="color:${pCol}">${ageGroup} yrs</span><span class="pct-sub-lbl">Your age group average index ${ageAvg}</span></div><div class="pct-sub"><span class="pct-sub-val" style="color:${pCol}">${cityAvg}</span><span class="pct-sub-lbl">Major city worker average</span></div><div class="pct-sub"><span class="pct-sub-val" style="color:${dimCol(worstDim.pct)}">TOP ${worstRank}%</span><span class="pct-sub-lbl">${worstDim.name.replace(/^../,'')} dimension risk ranking</span></div>`;
   const bA=Math.min(85,Math.round(userAge+score*.28));
   const wP=dimObj.work||0,sP=dimObj.stress||0;
   const hL=Math.round(wP*.4+sP*.35+((100-(dimObj.exercise||0))*.25));
-  const hLab=hL<30?'Normal':hL<50?'Elevated':hL<70?'过载':'Danger';const hCol=hL<30?'#34d399':hL<50?'#fbbf24':hL<70?'#f59e0b':'#ef4444';
-  const rLab=score<20?'极强':score<40?'良好':score<60?'一般':score<80?'较弱':'极弱';const rCol=score<40?'#34d399':score<65?'#fbbf24':'#ef4444';
-  const nLab=sP<30?'平稳':sP<50?'偏紧':sP<70?'紧张':'高度紧张';const nCol=sP<30?'#34d399':sP<50?'#fbbf24':sP<70?'#f59e0b':'#ef4444';
+  const hLab=hL<30?'Normal':hL<50?'Elevated':hL<70?'Overloaded':'Danger';const hCol=hL<30?'#34d399':hL<50?'#fbbf24':hL<70?'#f59e0b':'#ef4444';
+  const rLab=score<20?'Excellent':score<40?'Good':score<60?'Average':score<80?'Weak':'Critical';const rCol=score<40?'#34d399':score<65?'#fbbf24':'#ef4444';
+  const nLab=sP<30?'Stable':sP<50?'Slightly Tight':sP<70?'Tense':'Highly Tense';const nCol=sP<30?'#34d399':sP<50?'#fbbf24':sP<70?'#f59e0b':'#ef4444';
   // Animated vital counters with pop-in
   const baCol=bA<=userAge?'#34d399':bA<=userAge+8?'#fbbf24':'#ef4444';
-  animVital('v-bodyage',bA+'岁',baCol,0);
+  animVital('v-bodyage',bA+' yrs',baCol,0);
   animVital('v-heart',hLab,hCol,150);
   animVital('v-recovery',rLab,rCol,300);
   animVital('v-stress',nLab,nCol,450);
   // Age vs body age comparison
-  document.getElementById('age-real').textContent=userAge+'岁';
-  document.getElementById('age-body').textContent=bA+'岁';
+  document.getElementById('age-real').textContent=userAge+' yrs';
+  document.getElementById('age-body').textContent=bA+' yrs';
   const ageBarCol=bA>userAge+10?'#ef4444':bA>userAge+3?'#f59e0b':'#34d399';
   document.getElementById('age-body').style.color=ageBarCol;
   document.getElementById('age-body-m').style.borderColor=ageBarCol;
@@ -2806,7 +2806,7 @@ function showResult(){
   },500);
   // Week heat map
   const weekEl=document.getElementById('week-heat');weekEl.innerHTML='';
-  const weekDays=['一','二','三','四','五','六','日'];
+  const weekDays=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   const weekRisks=[
     Math.round((dimObj.work||0)*.5+(dimObj.stress||0)*.3+(dimObj.sleep||0)*.2),// Monday
     Math.round((dimObj.work||0)*.45+(dimObj.stress||0)*.35+(dimObj.sleep||0)*.2),
@@ -2822,7 +2822,7 @@ function showResult(){
     const isLightW=document.documentElement.classList.contains('light');
     const alpha=isLightW?(.3+r/100*.5).toFixed(2):(.1+r/100*.5).toFixed(2);
     const emoji=r>=70?'💀':r>=50?'⚠':r>=30?'😐':'✅';
-    weekEl.innerHTML+=`<div class="week-day"><div class="week-day-box" style="background:${col}${Math.round(parseFloat(alpha)*255).toString(16).padStart(2,'0')};border-color:${col}${isLightW?'80':'40'}">${emoji}</div><span class="week-day-label">周${d}</span></div>`;
+    weekEl.innerHTML+=`<div class="week-day"><div class="week-day-box" style="background:${col}${Math.round(parseFloat(alpha)*255).toString(16).padStart(2,'0')};border-color:${col}${isLightW?'80':'40'}">${emoji}</div><span class="week-day-label">${d}</span></div>`;
   });
   const tags=document.getElementById('risk-tags');tags.innerHTML='';
   dims.forEach((d,i)=>{const tier=d.pct>=65?'high':d.pct>=40?'med':'low';if(tier==='low'&&score<25)return;const lbl=RISK_TAGS[d.key]?.[tier];if(lbl){const el=document.createElement('div');el.className=`rtag ${tier}`;el.textContent=lbl;el.style.animationDelay=(i*.08)+'s';tags.appendChild(el);}});
@@ -2868,15 +2868,15 @@ function showResult(){
   const profEl=document.getElementById('profession-items');profEl.innerHTML='';
   getProfComparison(score).forEach(p=>{
     const diff=score-p.avg;const cls=Math.abs(diff)<=8?'close':diff>0?'over':'under';
-    const lbl=Math.abs(diff)<=8?'≈ 相近':diff>0?`+${diff} 更高`:`${diff} 更低`;
-    profEl.innerHTML+=`<div class="prof-item"><span class="prof-icon">${p.icon}</span><div class="prof-body"><div class="prof-name">${p.name}</div><div class="prof-risk">典型At Risk：${p.desc}（平均指数 ${p.avg}）</div></div><span class="prof-match ${cls}">${lbl}</span></div>`;
+    const lbl=Math.abs(diff)<=8?'\u2248 Similar':diff>0?`+${diff} Higher`:`${diff} Lower`;
+    profEl.innerHTML+=`<div class="prof-item"><span class="prof-icon">${p.icon}</span><div class="prof-body"><div class="prof-name">${p.name}</div><div class="prof-risk">Typical risk: ${p.desc} (avg index ${p.avg})</div></div><span class="prof-match ${cls}">${lbl}</span></div>`;
   });
   // Demographic comparison bars
   const demoEl=document.getElementById('demo-compare');demoEl.innerHTML='';
   const demos=[
-    {label:'🇨🇳 全国平均',avg:52},{label:'🏙️ 一线城市白领',avg:58},
-    {label:`👤 ${ageGroup}岁同龄人`,avg:ageAvg},{label:'👨‍💻 互联网从业者',avg:65},
-    {label:'🧘 Healthy群体',avg:18},{label:'💀 你的pts数',avg:score,isUser:true},
+    {label:'🇺🇸 National Average',avg:52},{label:'🏙\uFE0F White Collar Workers',avg:58},
+    {label:`👤 ${ageGroup} yr age peers`,avg:ageAvg},{label:'👨\u200D💻 Tech Industry',avg:65},
+    {label:'🧘 Healthy Population',avg:18},{label:'💀 Your Score',avg:score,isUser:true},
   ];
   const isLightMode=document.documentElement.classList.contains('light');
   demos.forEach(d=>{
@@ -2954,12 +2954,12 @@ function showResult(){
   document.getElementById('advice-list').innerHTML=level.advice.map(a=>`<li>${a}</li>`).join('');
   // What-if scenarios
   const whatIfs=[
-    {cond:score>=60,icon:'🏃',title:'每天运动30pts钟',effect:`你的指数可能降低 ${Math.round(score*.15)} pts，Body Age年轻 ${Math.round(score*.06)} 岁`},
-    {cond:score>=40,icon:'😴',title:'每晚11点前入睡',effect:`睡眠DimensionsAt Risk降低约 ${Math.round((dimObj.sleep||0)*.3)}%，Recovery显著提升`},
-    {cond:score>=30,icon:'🥗',title:'规律三餐+减少外卖',effect:`饮食Dimensions改善 ${Math.round((dimObj.diet||0)*.25)}%，代谢系统负担减轻`},
-    {cond:score>=50,icon:'🧘',title:'每天10pts钟冥想/深呼吸',effect:`压力Dimensions可降低 ${Math.round((dimObj.stress||0)*.2)}%，神经系统紧张度下降`},
-    {cond:dimObj.work>=50,icon:'⏰',title:'严格执行下班时间',effect:`工作DimensionsAt Risk减少约 ${Math.round((dimObj.work||0)*.3)}%，心血管负荷改善`},
-    {cond:score<25,icon:'🏆',title:'保持现有生活方式',effect:'你已经做得很好了！保持下去，你是别人羡慕的对象'},
+    {cond:score>=60,icon:'🏃',title:'Exercise 30 min daily',effect:`Your index could drop by ${Math.round(score*.15)} pts, body age younger by ${Math.round(score*.06)} yrs`},
+    {cond:score>=40,icon:'😴',title:'Asleep by 11 PM every night',effect:`Sleep dimension risk drops ~${Math.round((dimObj.sleep||0)*.3)}%, recovery significantly improves`},
+    {cond:score>=30,icon:'🥗',title:'Regular meals + less takeout',effect:`Diet dimension improves ${Math.round((dimObj.diet||0)*.25)}%, metabolic burden reduced`},
+    {cond:score>=50,icon:'🧘',title:'10 min daily meditation/deep breathing',effect:`Stress dimension could drop ${Math.round((dimObj.stress||0)*.2)}%, nervous system tension decreases`},
+    {cond:dimObj.work>=50,icon:'⏰',title:'Strictly clock out on time',effect:`Work dimension risk drops ~${Math.round((dimObj.work||0)*.3)}%, cardiovascular load improves`},
+    {cond:score<25,icon:'🏆',title:'Keep your current lifestyle',effect:'You\u2019re already doing great! Keep it up \u2014 you\u2019re the envy of everyone else'},
   ].filter(w=>w.cond).slice(0,4);
   const wifEl=document.getElementById('what-if-items');wifEl.innerHTML='';
   whatIfs.forEach(w=>{
@@ -2967,69 +2967,69 @@ function showResult(){
   });
   // Health fortune based on score
   const fortunes={
-    low:['今日健康运势：★★★★★ 你的器官在开派对','签曰：生命力旺盛，阎王看了都皱眉','运势提示：今天适合跑步、吃沙拉、和朋友出去玩','健康签：你是养生界的天选之人，继续保持'],
-    mid:['今日健康运势：★★★☆☆ 还行，但别得意','签曰：身体在观望，你的下一步决定它的态度','运势提示：今天适合早点睡，但你大概率不会','健康签：你在及格线上蹦迪，注意别掉下去'],
-    high:['今日健康运势：★☆☆☆☆ 你的器官在写辞职信','签曰：下下签。Advice今天就预约体检','运势提示：今天不适合熬夜、喝酒、生气、加班','健康签：你的身体已经在倒计时了，但还来得及']
+    low:['Today\u2019s health horoscope: \u2605\u2605\u2605\u2605\u2605 Your organs are throwing a party','Fortune says: Vital energy strong \u2014 the Grim Reaper frowned and moved on','Horoscope tip: Today is perfect for running, salads, and hanging with friends','Health fortune: You\u2019re the chosen one of wellness. Keep it up'],
+    mid:['Today\u2019s health horoscope: \u2605\u2605\u2605\u2606\u2606 Not bad, but don\u2019t get cocky','Fortune says: Your body is watching. Your next move decides its attitude','Horoscope tip: Today would be great for sleeping early, but you probably won\u2019t','Health fortune: You\u2019re dancing on the passing line \u2014 careful not to fall off'],
+    high:['Today\u2019s health horoscope: \u2605\u2606\u2606\u2606\u2606 Your organs are drafting resignation letters','Fortune says: Bad omen. Book a checkup today','Horoscope tip: Today is not the day for late nights, drinking, anger, or overtime','Health fortune: Your body has started a countdown, but there\u2019s still time']
   };
   const fPool=score<30?fortunes.low:score<65?fortunes.mid:fortunes.high;
   const fortuneEl=document.getElementById('health-fortune');
   if(fortuneEl)fortuneEl.textContent=fPool[Math.floor(Math.random()*fPool.length)];
   // Daily tip based on date seed
-  const dailyTips=['你的身体是唯一一个从出生陪你到死亡的东西，善待它。','每多喝一杯水，你的细胞就多一pts感激。','今天走路20pts钟，等于给未来的自己存了一笔健康基金。','压力不会自己消失，但你可以学会让它变小。','早睡一小时带来的改变，比你想象的大得多。','你不需要完美的健康习惯，只需要比昨天好一点。','人生不是百米冲刺，是马拉松。配速很重要。','你的身体一直在给你发消息，试着不要已读不回。','健康不是目标，是每天都在做的选择。','如果你Now很累，那不是因为你不够努力，而是因为你太努力了。','情绪不是敌人，忽视情绪才是。','30秒的深呼吸，比10pts钟的刷手机更能让你放松。','找一个人说说你最近的感受，这不是软弱，是智慧。','你的价值不等于你的产出。休息是你应得的。','与其完美地计划改变，不如Now就做一件小事。','每天少坐30pts钟，一年下来相当于跑了一个半程马拉松的运动量。','慢性脱水会让你的认知能力下降25%——你以为是变笨了，其实只是缺水。','笑一次相当于在跑步机上跑10pts钟的有氧效果。多笑几次。','睡前两小时不看屏幕，你的睡眠质量会提升40%以上。','一个拥抱超过20秒，身体会释放催产素，显著降低压力荷尔蒙。'];
+  const dailyTips=['Your body is the only thing that\u2019s with you from birth to death. Treat it well.','Every extra glass of water earns a tiny thank-you from your cells.','A 20-minute walk today is like depositing into your future health fund.','Stress won\u2019t disappear on its own, but you can learn to shrink it.','Going to bed one hour earlier changes more than you think.','You don\u2019t need perfect health habits \u2014 just be slightly better than yesterday.','Life isn\u2019t a sprint, it\u2019s a marathon. Pacing matters.','Your body has been texting you. Try not to leave it on read.','Health isn\u2019t a goal \u2014 it\u2019s a choice you make every day.','If you\u2019re exhausted right now, it\u2019s not because you\u2019re not trying hard enough \u2014 it\u2019s because you\u2019re trying too hard.','Emotions aren\u2019t the enemy. Ignoring them is.','30 seconds of deep breathing relaxes you more than 10 minutes of scrolling.','Tell someone how you\u2019ve been feeling lately. That\u2019s not weakness \u2014 it\u2019s wisdom.','Your worth is not equal to your output. Rest is something you deserve.','Instead of perfectly planning to change, just do one small thing right now.','Sitting 30 fewer minutes a day adds up to a half-marathon\u2019s worth of exercise per year.','Chronic dehydration drops your cognitive ability by 25% \u2014 you think you\u2019re getting dumber, but you\u2019re just thirsty.','One good laugh equals 10 minutes on a treadmill. Laugh more.','No screens for two hours before bed improves sleep quality by 40%+.','A hug longer than 20 seconds releases oxytocin and significantly lowers stress hormones.'];
   const dayIdx=Math.floor(Date.now()/864e5)%dailyTips.length;
   document.getElementById('daily-tip-text').textContent='"'+dailyTips[dayIdx]+'"';
   // Fun fact based on worst dimension
   const funFacts={
-    sleep:['每少睡1小时，交通事故At Risk增加13%','连续17小时不睡觉的认知水平≈血液酒精浓度0.05%','睡眠不足6小时的人，感冒概率是Normal睡眠者的4.2倍','长期睡眠不足会让大脑产生类似老年痴呆的蛋白质沉积'],
-    work:['每周工作超过55小时，中风At Risk增加33%','日本有个词叫"过劳死"（karoshi），因为这件事发生得太频繁了','每多工作1小时，你的决策质量大约下降5%','连续工作8小时后的认知能力≈微醉状态'],
-    exercise:['久坐每天超过6小时的死亡At Risk比每天4小时高40%','每天步行30pts钟，预期寿命增加3-7年','肌肉是人体最大的内pts泌器官，不用它等于关闭了一个重要系统','缺乏运动导致的死亡人数 > 肥胖导致的死亡人数'],
-    diet:['不吃早餐的人心脏病At Risk增加87%','人体60%是水，脱水2%就会影响认知和体能','肠道有"#二大脑"之称，饮食直接影响你的情绪和记忆','每天多吃一份蔬菜，全因死亡率降低5%'],
-    stress:['长期压力会让端粒缩短，相当于加速衰老10年','皮质醇持续Elevated会降低免疫力40%','压力会让伤口愈合速度减慢40%','慢性压力对心脏的伤害≈每天抽5支烟'],
-    habit:['戒烟后20pts钟心率就Start恢复Normal','每天超过2杯咖啡就Start影响钙吸收','酒精是I类致癌物——和石棉、甲醛同grade别','电子烟的尼古丁吸收速度比传统香烟更快'],
-    emotion:['孤独对健康的危害≈每天抽15支烟','大笑20秒的减压效果≈划船3pts钟','拥有亲密社交关系的人，预期寿命多7年','长期压抑情绪会使免疫球蛋白A水平下降']
+    sleep:['Every hour of lost sleep increases car accident risk by 13%','Being awake 17 hours straight impairs you like a 0.05% blood alcohol level','People sleeping <6 hours are 4.2x more likely to catch a cold','Chronic sleep deprivation causes Alzheimer\u2019s-like protein buildup in your brain'],
+    work:['Working 55+ hours/week increases stroke risk by 33%','Japan has a word for death by overwork: "karoshi" \u2014 because it happens that often','Every extra hour of work drops your decision quality by ~5%','After 8 straight hours of work, your cognition is like being slightly drunk'],
+    exercise:['Sitting 6+ hours/day raises mortality risk 40% vs. 4 hours','Walking 30 min/day adds 3-7 years to life expectancy','Muscle is your body\u2019s largest endocrine organ \u2014 not using it shuts down a critical system','Deaths from lack of exercise outnumber deaths from obesity'],
+    diet:['Skipping breakfast raises heart disease risk by 87%','Your body is 60% water \u2014 just 2% dehydration impairs cognition and performance','Your gut is called the "second brain" \u2014 diet directly affects mood and memory','One extra serving of vegetables daily lowers all-cause mortality by 5%'],
+    stress:['Chronic stress shortens telomeres, aging you by ~10 years','Sustained elevated cortisol reduces immune function by 40%','Stress slows wound healing by 40%','Chronic stress damages the heart as much as smoking 5 cigarettes a day'],
+    habit:['20 minutes after quitting smoking, heart rate starts returning to normal','More than 2 cups of coffee a day starts affecting calcium absorption','Alcohol is a Group 1 carcinogen \u2014 same category as asbestos and formaldehyde','E-cigarettes deliver nicotine faster than traditional cigarettes'],
+    emotion:['Loneliness is as harmful as smoking 15 cigarettes a day','Laughing for 20 seconds relieves as much stress as 3 minutes of rowing','People with close social relationships live ~7 years longer','Long-term emotional suppression lowers immunoglobulin A levels']
   };
   const worstKey=dims[0]?.key;
   const factPool=funFacts[worstKey]||funFacts.sleep;
   const factEl=document.createElement('div');
   factEl.style.cssText='background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:14px 18px;margin-bottom:14px;font-size:12px;color:var(--dim);line-height:1.7;text-align:center;';
-  factEl.innerHTML=`<span style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:6px;">💡 你知道吗</span>${factPool[Math.floor(Math.random()*factPool.length)]}`;
+  factEl.innerHTML=`<span style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:6px;">\uD83D\uDCA1 Did You Know</span>${factPool[Math.floor(Math.random()*factPool.length)]}`;
   document.getElementById('roadmap')?.parentElement.parentElement.insertBefore(factEl,document.getElementById('roadmap')?.parentElement);
   // Improvement roadmap
   const roadmap=document.getElementById('roadmap');roadmap.innerHTML='';
   const topDim=dims.sort((a,b)=>b.pct-a.pct)[0];
   const roadmapData=[
-    {t:'📅 #1周',title:'建立意识',desc:`Start记录你的${topDim.name.replace(/^../,'')}相关习惯。不需要改变，只需要观察。`,col:'#34d399'},
-    {t:'📅 #2-4周',title:'微小改变',desc:`每天在${topDim.name.replace(/^../,'')}Dimensions做一个5pts钟的改善行为。小到不可能失败。`,col:'#a3e635'},
-    {t:'📅 #2-3月',title:'习惯固化',desc:'把#一个月的微小改变变成自动行为。然后Start#二个Dimensions的改善。',col:'#fbbf24'},
-    {t:'📅 #6月',title:'中期检查',desc:`预约体检，对比改善前后的指标变化。预计${topDim.name.replace(/^../,'')}Dimensions可改善 ${Math.round(topDim.pct*.2)}%。`,col:'#f59e0b'},
-    {t:'📅 #12月',title:'全面提升',desc:`如果坚持到这里，你的猝死指数预计可降低 ${Math.round(score*.25)}-${Math.round(score*.4)} pts。这不是预测，是很多人的实际经历。`,col:'#60a5fa'},
+    {t:'\uD83D\uDCC5 Week 1',title:'Build Awareness',desc:`Start tracking your ${topDim.name.replace(/^../,'')} habits. No changes needed yet \u2014 just observe.`,col:'#34d399'},
+    {t:'\uD83D\uDCC5 Weeks 2-4',title:'Tiny Changes',desc:`Each day, do one 5-minute improvement in your ${topDim.name.replace(/^../,'')} dimension. So small you can\u2019t fail.`,col:'#a3e635'},
+    {t:'\uD83D\uDCC5 Months 2-3',title:'Lock In Habits',desc:'Turn your first month\u2019s tiny changes into automatic behaviors. Then start improving a second dimension.',col:'#fbbf24'},
+    {t:'\uD83D\uDCC5 Month 6',title:'Mid-Term Check',desc:`Book a checkup and compare before/after indicators. Expected ${topDim.name.replace(/^../,'')} dimension improvement: ${Math.round(topDim.pct*.2)}%.`,col:'#f59e0b'},
+    {t:'\uD83D\uDCC5 Month 12',title:'Full Transformation',desc:`If you\u2019ve made it here, your sudden death index is projected to drop ${Math.round(score*.25)}-${Math.round(score*.4)} pts. This isn\u2019t a guess \u2014 it\u2019s what many people actually experience.`,col:'#60a5fa'},
   ];
   roadmapData.forEach((r,i)=>{
     roadmap.innerHTML+=`<div style="display:flex;gap:14px;align-items:flex-start;"><div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:${r.col};margin-top:7px;box-shadow:0 0 8px ${r.col}40;"></div><div><div style="font-size:12px;font-weight:700;color:${r.col};margin-bottom:2px;">${r.t} · ${r.title}</div><div style="font-size:12px;color:var(--dim);line-height:1.7;">${r.desc}</div></div></div>`;
   });
   // Weekly health challenge
   const challenges=[
-    {ch:'连续7天晚上11点前放下手机',desc:'不需要11点睡着，只要放下手机。你的褪黑素需要30pts钟的暗环境来启动。',diff:'EASY',dcol:'#34d399'},
-    {ch:'这周每天喝8杯水',desc:'在桌上放一个大水杯，每次看到就喝一口。脱水是最容易被忽视的健康杀手。',diff:'EASY',dcol:'#34d399'},
-    {ch:'每天走路20pts钟',desc:'不需要跑步，不需要健身房。只是出门走20pts钟。这件事的ROI高得离谱。',diff:'MEDIUM',dcol:'#fbbf24'},
-    {ch:'连续5天自己做一顿饭',desc:'哪怕是煮个面+水煮蛋。自己做饭的过程本身就是一种减压方式。',diff:'MEDIUM',dcol:'#fbbf24'},
-    {ch:'每天10pts钟完全安静，什么都不做',desc:'不看手机，不听音乐，不想事情。让大脑进入"默认模式网络"——这是创造力和修复的源泉。',diff:'HARD',dcol:'#f59e0b'},
-    {ch:'这周和一个朋友进行一次30pts钟的深度对话',desc:'不聊工作，不聊八卦。聊聊彼此最近真实的感受。被理解是最好的减压药。',diff:'HARD',dcol:'#f59e0b'},
-    {ch:'记录7天的睡眠时间和起床感受',desc:'不需要改变什么，只需要记录。自我觉察是改变的#一步。',diff:'EASY',dcol:'#34d399'},
-    {ch:'这周把最主要的不良嗜好减半',desc:'不是戒掉，只是减半。咖啡从4杯变2杯，抽烟从一包变半包。可持续的改变才是真改变。',diff:'MEDIUM',dcol:'#fbbf24'},
+    {ch:'Put your phone down by 11 PM for 7 straight days',desc:'You don\u2019t have to fall asleep at 11. Just put the phone down. Your melatonin needs 30 minutes of darkness to kick in.',diff:'EASY',dcol:'#34d399'},
+    {ch:'Drink 8 glasses of water every day this week',desc:'Put a big water bottle on your desk. Sip every time you see it. Dehydration is the most overlooked health killer.',diff:'EASY',dcol:'#34d399'},
+    {ch:'Walk 20 minutes every day',desc:'No running. No gym. Just go outside and walk for 20 minutes. The ROI on this is insane.',diff:'MEDIUM',dcol:'#fbbf24'},
+    {ch:'Cook one meal yourself for 5 straight days',desc:'Even if it\u2019s just pasta and a boiled egg. The act of cooking is itself a form of stress relief.',diff:'MEDIUM',dcol:'#fbbf24'},
+    {ch:'10 minutes of complete silence daily \u2014 do nothing',desc:'No phone, no music, no thinking. Let your brain enter its "default mode network" \u2014 the source of creativity and repair.',diff:'HARD',dcol:'#f59e0b'},
+    {ch:'Have one 30-minute deep conversation with a friend this week',desc:'Don\u2019t talk about work or gossip. Talk about how you\u2019re both really feeling. Being understood is the best stress reliever.',diff:'HARD',dcol:'#f59e0b'},
+    {ch:'Track your sleep times and how you feel waking up for 7 days',desc:'Don\u2019t change anything \u2014 just record it. Self-awareness is the first step to change.',diff:'EASY',dcol:'#34d399'},
+    {ch:'Cut your worst habit in half this week',desc:'Don\u2019t quit \u2014 just halve it. 4 coffees become 2. A pack a day becomes half a pack. Sustainable change is real change.',diff:'MEDIUM',dcol:'#fbbf24'},
   ];
   const weekIdx=Math.floor(Date.now()/(7*864e5))%challenges.length;
   const chl=challenges[weekIdx];
   document.getElementById('weekly-challenge').textContent=chl.ch;
   document.getElementById('challenge-desc').textContent=chl.desc;
   const cdEl=document.getElementById('challenge-diff');
-  cdEl.textContent=`难度：${chl.diff}`;cdEl.style.color=chl.dcol;
+  cdEl.textContent=`Difficulty: ${chl.diff}`;cdEl.style.color=chl.dcol;
   // Danger leaderboard - top 5 most dangerous answers
   const dangerBoard=[...Object.entries(ans)].filter(([qi,v])=>v>=2&&Q[parseInt(qi)]).sort((a,b)=>b[1]-a[1]).slice(0,5);
   if(dangerBoard.length>0&&score>=30){
     const dbEl=document.createElement('div');
     dbEl.style.cssText='background:rgba(239,68,68,.02);border:1px solid rgba(239,68,68,.06);border-radius:16px;padding:16px;margin-bottom:14px;';
-    let dbH='<div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.35);margin-bottom:10px;text-transform:uppercase">// 你最Danger的答案</div>';
+    let dbH='<div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.35);margin-bottom:10px;text-transform:uppercase">// YOUR MOST DANGEROUS ANSWERS</div>';
     dangerBoard.forEach(([qi,v],i)=>{
       const q=Q[parseInt(qi)];if(!q)return;
       const col=v>=4?'#ef4444':v>=3?'#f59e0b':'#fbbf24';
@@ -3042,24 +3042,24 @@ function showResult(){
   }
   // Checkup reminder
   const checkupMsgs={
-    low:'根据你的结果，Advice每年进行一次常规体检。保持现有的好习惯，定期监测基线指标。',
-    mid:'你的一些Dimensions已经进入需要关注的范围。Advice6个月内安排一次全面体检，重点关注以下项目：',
-    high:'你的多项指标显示较高At Risk。Advice本月内预约体检，不宜延迟。以下是你应该重点检查的项目：',
-    critical:'紧急Advice：请在一周内预约全面体检。你的At Risk水平已经不适合"再等等"。必查项目：'
+    low:'Based on your results, we recommend an annual routine physical. Maintain your good habits and monitor baseline indicators regularly.',
+    mid:'Some of your dimensions have entered a range that needs attention. We recommend scheduling a comprehensive physical within 6 months, focusing on:',
+    high:'Multiple indicators show elevated risk. We recommend booking a physical this month \u2014 don\u2019t delay. Priority items to check:',
+    critical:'Urgent: Please schedule a comprehensive physical within one week. Your risk level is past the point of "I\u2019ll get to it later." Must-check items:'
   };
   const checkupItems={
-    sleep:['睡眠多导图检查','甲状腺功能'],
-    work:['心电图','颈椎X光','眼底检查'],
-    exercise:['骨密度检测','心肺功能测试'],
-    diet:['血脂四项','肝功能','血糖'],
-    stress:['皮质醇水平','血压监测'],
-    habit:['肺功能检测','肝脏B超'],
-    emotion:['心理健康评估','睡眠质量评估']
+    sleep:['Sleep study (polysomnography)','Thyroid function panel'],
+    work:['EKG','Cervical spine X-ray','Eye exam'],
+    exercise:['Bone density scan','Cardiopulmonary fitness test'],
+    diet:['Lipid panel','Liver function test','Blood glucose'],
+    stress:['Cortisol levels','Blood pressure monitoring'],
+    habit:['Pulmonary function test','Liver ultrasound'],
+    emotion:['Mental health assessment','Sleep quality evaluation']
   };
   const ckLevel=score<25?'low':score<50?'mid':score<75?'high':'critical';
   document.getElementById('checkup-msg').textContent=checkupMsgs[ckLevel];
   const ckItems=dims.sort((a,b)=>b.pct-a.pct).slice(0,3).flatMap(d=>checkupItems[d.key]||[]).slice(0,5);
-  document.getElementById('checkup-items').textContent=ckItems.length?'Advice检查：'+ckItems.join(' · '):'';
+  document.getElementById('checkup-items').textContent=ckItems.length?'Recommended tests: '+ckItems.join(' \u00B7 '):'';
   // XP calculation - health awareness points
   let xp=50;// base XP for completing test
   xp+=Object.values(ans).filter(v=>v<=1).length*5;// safe answers reward
@@ -3068,7 +3068,7 @@ function showResult(){
   if(score<30)xp+=30;// low risk bonus
   if(quizStartTime&&(Date.now()-quizStartTime)>120000)xp+=10;// took time thinking
   const xpLevel=xp<80?1:xp<130?2:xp<180?3:xp<250?4:5;
-  const xpTitle=['','Novice Observer','Health Apprentice','At Risk管理师','Wellness Expert','Life Guardian'][xpLevel];
+  const xpTitle=['','Novice Observer','Health Apprentice','Risk Manager','Wellness Expert','Life Guardian'][xpLevel];
   try{
     const totalXP=parseInt(localStorage.getItem('sdi-en-xp')||'0')+xp;
     localStorage.setItem('sdi-en-xp',String(totalXP));
@@ -3084,16 +3084,16 @@ function showResult(){
   const achCount=achMatched.length;
   const histLen2=(()=>{try{return JSON.parse(localStorage.getItem('sdi-en-history')||'[]').length;}catch(e){return 1;}})();
   ssEl.innerHTML=[
-    {icon:'❓',label:'答questions数',val:`${totalQ}questions`},
-    {icon:'⚡',label:'Avg time',val:`${avgPerQ}秒/questions`},
-    {icon:'💀',label:'High Risk picks',val:`${dangerCount}个`},
-    {icon:'✅',label:'Safe选项',val:`${safeCount}个`},
-    {icon:'🏷️',label:'Tags earned',val:`${tagCount}个`},
-    {icon:'🏆',label:'Achievements',val:`${achCount}个`},
-    {icon:'📊',label:'Test history',val:`#${histLen2}次`},
-    {icon:'🎯',label:'Danger比率',val:`${totalQ>0?Math.round(dangerCount/totalQ*100):0}%`},
+    {icon:'❓',label:'Questions answered',val:`${totalQ}`},
+    {icon:'⚡',label:'Avg time',val:`${avgPerQ}s/q`},
+    {icon:'💀',label:'High risk picks',val:`${dangerCount}`},
+    {icon:'✅',label:'Safe picks',val:`${safeCount}`},
+    {icon:'🏷\uFE0F',label:'Tags earned',val:`${tagCount}`},
+    {icon:'🏆',label:'Achievements',val:`${achCount}`},
+    {icon:'📊',label:'Test history',val:`#${histLen2}`},
+    {icon:'🎯',label:'Danger ratio',val:`${totalQ>0?Math.round(dangerCount/totalQ*100):0}%`},
     {icon:'⭐',label:'Awareness XP',val:`${xp} · Lv${xpLevel}`},
-    {icon:'🎓',label:'觉醒等grade',val:xpTitle},
+    {icon:'🎓',label:'Awareness rank',val:xpTitle},
   ].map(s=>`<div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;padding:10px;"><span style="font-size:16px">${s.icon}</span><div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--accent);margin:4px 0">${s.val}</div><div style="font-size:10px;color:var(--dim)">${s.label}</div></div>`).join('');
   go('sec-result','anim-fade');clearProgress();playReveal(score);
   const rsIds=['rs0','rs1','rs2','rs3','rs4','rs4b','rs4c','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs7f','rs8','rs9','rs9b','rs10','rs10b','rs11','rs12','rs12b','rs12c','rs12c2','rs12d','rs12e','rs12f','rs13'];
@@ -3143,8 +3143,8 @@ function shareResult(){
   const tags=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,3).map(t=>t.e+t.t);
   const tagLine=tags.length?'\nTags:'+tags.join(' · '):'';
   const histLen=(()=>{try{return JSON.parse(localStorage.getItem('sdi-en-history')||'[]').length;}catch(e){return 0;}})();
-  const histText=histLen>1?`\n（#${histLen}test）`:'';
-  const text=`【Sudden Death Index v8.5 💀】\n\n猝死指数：${score}pts\n等grade：${level.grade} — ${level.label}\nHealth Personality:${arch.icon} ${arch.name}\n最DangerDimensions：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}${histText}\n\n${level.desc}\n\nDare you take it?👉`;
+  const histText=histLen>1?`\n(Test #${histLen})`:'';
+  const text=`【Sudden Death Index v8.5 💀】\n\nSudden Death Index: ${score} pts\nGrade: ${level.grade} \u2014 ${level.label}\nHealth Personality: ${arch.icon} ${arch.name}\nMost Dangerous Dimension: ${worst.name.replace(/^../,'')} (${worst.pct}%)${tagLine}${histText}\n\n${level.desc}\n\nDare you take it? 👉`;
   // Try native share first (mobile), fall back to clipboard
   if(navigator.share){
     navigator.share({title:'Sudden Death Index 💀',text}).catch(()=>{});
@@ -3300,7 +3300,7 @@ function shareTextArt(){
   const bar=v=>{const filled=Math.round(v/100*10);return '█'.repeat(filled)+'░'.repeat(10-filled);};
   const dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
   const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
-  let art=`\n┌─────────────────────────┐\n│   💀 Sudden Death Index v8.5   │\n├─────────────────────────┤\n│                         │\n│     SCORE: ${String(score).padStart(3,' ')} / 100      │\n│     GRADE: ${level.grade.padEnd(12,' ')}  │\n│     ${level.label.padEnd(19,' ')} │\n│                         │\n├── 七维At Risk ──────────────┤\n`;
+  let art=`\n┌─────────────────────────┐\n│   💀 Sudden Death Index v8.5   │\n├─────────────────────────┤\n│                         │\n│     SCORE: ${String(score).padStart(3,' ')} / 100      │\n│     GRADE: ${level.grade.padEnd(12,' ')}  │\n│     ${level.label.padEnd(19,' ')} │\n│                         │\n├── 7-DIM RISK ───────────────┤\n`;
   dims.forEach(d=>{
     const name=(d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key).padEnd(4,'　');
     art+=`│ ${name} ${bar(d.pct)} ${String(d.pct).padStart(3,' ')}% │\n`;
@@ -3318,14 +3318,14 @@ function encodeResultToURL(){
   const data={s:score,d:dims.map(d=>d.pct),a:userAge};
   const hash=btoa(JSON.stringify(data));
   const url=location.origin+location.pathname+'#r='+hash;
-  if(navigator.share){navigator.share({title:'Sudden Death Index 💀',text:`My Sudden Death Index is${score}pts，Dare you take it?`,url}).catch(()=>{});}
+  if(navigator.share){navigator.share({title:'Sudden Death Index 💀',text:`My Sudden Death Index is ${score} pts. Dare you take it?`,url}).catch(()=>{});}
   else{navigator.clipboard.writeText(url).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}).catch(()=>{});}
 }
 // ════ LIVE ACTIVITY FEED (landing page) ════
 (function(){
   const feed=document.getElementById('live-feed');if(!feed)return;
-  const cities=['北京','上海','广州','深圳','杭州','成都','武汉','南京','长沙','西安','重庆','苏州','天津','郑州','厦门'];
-  const actions=['just now完成了测试','scored {s} pts','rated {g} grade','被贴上了"久坐世界纪录挑战者"标签','看完结果沉默了3pts钟','screenshotted and posted results','booked a checkup immediately after the prophecy','demanded a retest','forwarded the link to coworkers','scored"Night Owl"成就','decided to sleep early tonight','frantically screenshotting'];
+  const cities=['New York','Los Angeles','Chicago','Houston','Phoenix','San Francisco','Seattle','Austin','Denver','Boston','Miami','Portland','Nashville','Atlanta','San Diego'];
+  const actions=['just finished the test','scored {s} pts','rated {g} grade','got tagged as "World Record Sitter"','went silent for 3 minutes after seeing results','screenshotted and posted results','booked a checkup immediately after the prophecy','demanded a retest','forwarded the link to coworkers','unlocked the "Night Owl" achievement','decided to sleep early tonight','frantically screenshotting'];
   const grades=['S','A','B','C','D','F'];
   function genMsg(){
     const city=cities[Math.floor(Math.random()*cities.length)];
@@ -3408,7 +3408,7 @@ function toggleTheme(){
     // Show secret message
     const msg=document.createElement('div');
     msg.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:10000;background:rgba(0,0,0,.95);border:2px solid var(--accent);border-radius:24px;padding:40px 48px;text-align:center;transition:transform .4s cubic-bezier(.34,1.56,.64,1);pointer-events:auto;box-shadow:0 0 80px rgba(var(--ar),var(--ag),var(--ab),.4);';
-    msg.innerHTML=`<div style="font-size:64px;margin-bottom:12px;">👾</div><div style="font-size:20px;font-weight:900;color:var(--accent);margin-bottom:8px;">KONAMI CODE ACTIVATED</div><div style="font-size:13px;color:#aaa;line-height:1.8;max-width:300px;">Congrats — you found a hidden easter egg!<br>作为奖励，你scored <b style="color:#ffd700;">✦ Easter Egg Hunter</b> achievement.<br><br><span style="font-size:11px;color:#666;">你是# <span style="color:var(--accent);font-family:Space Mono,monospace;">${Math.floor(Math.random()*200)+42}</span> person to discover this</span></div><button onclick="this.parentElement.style.transform='translate(-50%,-50%) scale(0)';setTimeout(()=>this.parentElement.remove(),400)" style="margin-top:18px;padding:10px 28px;border-radius:100px;border:1px solid var(--accent);background:rgba(var(--ar),var(--ag),var(--ab),.1);color:var(--accent);cursor:pointer;font-size:13px;font-family:inherit;">Claim Achievement</button>`;
+    msg.innerHTML=`<div style="font-size:64px;margin-bottom:12px;">👾</div><div style="font-size:20px;font-weight:900;color:var(--accent);margin-bottom:8px;">KONAMI CODE ACTIVATED</div><div style="font-size:13px;color:#aaa;line-height:1.8;max-width:300px;">Congrats — you found a hidden easter egg!<br>As a reward, you earned the <b style="color:#ffd700;">\u2726 Easter Egg Hunter</b> achievement.<br><br><span style="font-size:11px;color:#666;">You are the <span style="color:var(--accent);font-family:Space Mono,monospace;">${Math.floor(Math.random()*200)+42}</span>th person to discover this</span></div><button onclick="this.parentElement.style.transform='translate(-50%,-50%) scale(0)';setTimeout(()=>this.parentElement.remove(),400)" style="margin-top:18px;padding:10px 28px;border-radius:100px;border:1px solid var(--accent);background:rgba(var(--ar),var(--ag),var(--ab),.1);color:var(--accent);cursor:pointer;font-size:13px;font-family:inherit;">Claim Achievement</button>`;
     document.body.appendChild(msg);
     requestAnimationFrame(()=>requestAnimationFrame(()=>{msg.style.transform='translate(-50%,-50%) scale(1)';}));
     // Add achievement to localStorage
@@ -3498,7 +3498,7 @@ function stopAmbient(){
 // ════ RESULT SECTION NAVIGATION ════
 (function(){
   const navEl=document.getElementById('res-nav');if(!navEl)return;
-  const labels={'rs0':'Report','rs1':'评pts','rs2':'Personality','rs3':'百pts位','rs4':'Vitals','rs6':'Radar','rs7':'Prophecy','rs8':'Doctor','rs9':'Timeline','rs11':'Dimensions','rs12':'Advice','rs13':'Actions'};
+  const labels={'rs0':'Report','rs1':'Score','rs2':'Personality','rs3':'Percentile','rs4':'Vitals','rs6':'Radar','rs7':'Prophecy','rs8':'Doctor','rs9':'Timeline','rs11':'Dimensions','rs12':'Advice','rs13':'Actions'};
   Object.entries(labels).forEach(([id,label])=>{
     const dot=document.createElement('div');dot.className='res-nav-dot';dot.dataset.label=label;dot.dataset.target=id;
     dot.onclick=()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});};
@@ -3553,10 +3553,10 @@ function stopAmbient(){
 (function(){
   // Show encouraging message after every few questions
   const msgs=[
-    {at:5,text:'Completed 1/6 的检测，继续前进！',icon:'⚡'},
+    {at:5,text:'1/6 of the assessment done \u2014 keep going!',icon:'⚡'},
     {at:10,text:'Nearly halfway \u2014 you\u2019re doing great.',icon:'💪'},
-    {at:15,text:'一半完成！最困难的部pts已经过去了。',icon:'🎯'},
-    {at:20,text:'还有不到10questions，坚持住！',icon:'🔥'},
+    {at:15,text:'Halfway done! The hardest part is behind you.',icon:'🎯'},
+    {at:20,text:'Less than 10 questions left \u2014 hang in there!',icon:'🔥'},
     {at:25,text:'Almost time to see your results...',icon:'👀'},
   ];
   let shown=new Set();
@@ -3626,7 +3626,7 @@ function stopAmbient(){
       const card=document.createElement('div');card.id='grade-card';
       card.style.cssText='background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:20px;margin-top:14px;opacity:0;transform:translateY(8px);transition:all .5s;';
       const gradeFor=pct=>pct>=80?{g:'F',c:'#ef4444'}:pct>=65?{g:'D',c:'#f59e0b'}:pct>=45?{g:'C',c:'#fbbf24'}:pct>=25?{g:'B',c:'#60a5fa'}:{g:'A',c:'#34d399'};
-      let html='<div style="font-size:13px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:16px;text-transform:uppercase">// Dimensions成绩单</div>';
+      let html='<div style="font-size:13px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:16px;text-transform:uppercase">// DIMENSION REPORT CARD</div>';
       html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;">';
       dims.forEach(d=>{
         const {g,c}=gradeFor(d.pct);
@@ -3749,11 +3749,11 @@ function stopAmbient(){
 // ════ SMART TOOLTIP ON RISK TAGS ════
 (function(){
   const tagTips={
-    '高心血管At Risk':'Chronic stress and lack of exercise are primary cardiovascular triggers',
-    'Overwork Risk':'连续高强度工作会导致肾上腺素过度pts泌',
+    'High Cardiovascular Risk':'Chronic stress and lack of exercise are primary cardiovascular triggers',
+    'Overwork Risk':'Sustained high-intensity work causes excessive adrenaline secretion',
     'Severe Sleep Deficit':'Chronic sleep deprivation increases inflammatory markers',
     'Stress Overload':'Chronic stress damages immune and digestive systems',
-    'Insufficient Exercise':'WHOAdvice每周至少150pts钟中等强度运动',
+    'Insufficient Exercise':'WHO recommends at least 150 minutes of moderate exercise per week',
     'Dietary Imbalance':'Unbalanced diet causes nutritional deficiency and metabolic disorder',
     'Bad Habits Accumulation':'Combined bad habits have far greater impact than any single factor',
     'High Mood Volatility':'Mood swings affect heart rate variability and sleep quality',
@@ -3806,11 +3806,11 @@ function stopAmbient(){
   const origCheckAge=window.checkAgeEgg;
   if(!origCheckAge)return;
   const extraEggs={
-    '42':'生命、宇宙以及一切的答案。顺便测个猝死指数。',
-    '100':'一百岁？要么你说谎了，要么你不需要这个测试。',
-    '16':'花样年华。趁年轻养好习惯比什么都重要。',
-    '69':'( ͡° ͜ʖ ͡°) …好了好了，认真测试。',
-    '13':'未成年请在家长指导下测试。开玩笑的。',
+    '42':'The answer to life, the universe, and everything. Might as well check your death index too.',
+    '100':'A hundred? Either you\u2019re lying or you don\u2019t need this test.',
+    '16':'The prime of your life. Building good habits now is the best investment you\u2019ll ever make.',
+    '69':'( \u0361\u00B0 \u035C\u0296 \u0361\u00B0) ...Okay okay, let\u2019s be serious.',
+    '13':'Minors should take this test under parental supervision. Just kidding.',
   };
   window.checkAgeEgg=function(){
     origCheckAge();
@@ -3963,7 +3963,7 @@ function updateFavicon(score){
           medal.className='dim-medal';
           medal.style.cssText='font-size:14px;margin-left:6px;';
           medal.textContent=medals[idx];
-          medal.title=['最健康Dimensions','#二健康','#三健康'][idx];
+          medal.title=['Healthiest Dimension','2nd Healthiest','3rd Healthiest'][idx];
           nameEl.appendChild(medal);
         }
       });
@@ -3975,7 +3975,7 @@ function updateFavicon(score){
 // ════ RANDOM MOTIVATIONAL POPUP DURING QUIZ ════
 (function(){
   const messages=[
-    {text:'加油，每道questions都在帮你更了解自己。',icon:'💪'},
+    {text:'Keep going \u2014 every question helps you understand yourself better.',icon:'💪'},
     {text:'Answer honestly — the results only matter if you do.',icon:'🎯'},
     {text:'You\u2019re already a step ahead \u2014 at least you\u2019re paying attention to health.',icon:'👣'},
     {text:'No matter the result, change can start anytime.',icon:'🌱'},
@@ -4061,7 +4061,7 @@ function updateFavicon(score){
       el.innerHTML=`<div style="background:linear-gradient(135deg,rgba(96,165,250,.04),rgba(168,85,247,.03));border:1px solid rgba(96,165,250,.12);border-radius:16px;padding:24px;text-align:center;">
         <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(96,165,250,.5);margin-bottom:14px;">💨 TRY THIS · 4-7-8 BREATHING</div>
         <div id="breath-circle" style="width:80px;height:80px;border-radius:50%;border:2px solid rgba(96,165,250,.3);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#60a5fa;font-weight:700;transition:all 1s ease;cursor:pointer;" onclick="startBreathing()">Start</div>
-        <div style="font-size:11px;color:var(--dim);line-height:1.7;">点击圆圈Start<br>Inhale 4s → Hold 7s → Exhale 8s</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.7;">Tap the circle to start<br>Inhale 4s \u2192 Hold 7s \u2192 Exhale 8s</div>
       </div>`;
       const rs12=document.getElementById('rs12');
       if(rs12){rs12.parentNode.insertBefore(el,rs12.nextSibling);}
@@ -4235,7 +4235,7 @@ function updateFavicon(score){
           badge.id='streak-badge-el';
           badge.style.cssText='text-align:center;margin-top:8px;';
           const isFire=streakData.count>=3;
-          badge.innerHTML=`<span class="streak-badge ${isFire?'fire':'ice'}">${isFire?'🔥':'❄️'} 连续测试# ${streakData.count} 天</span>`;
+          badge.innerHTML=`<span class="streak-badge ${isFire?'fire':'ice'}">${isFire?'🔥':'❄\uFE0F'} ${streakData.count}-day testing streak</span>`;
           rs0.appendChild(badge);
           if(streakData.count>=7&&typeof unlockAchievement==='function'){
             unlockAchievement('weekly-streak','📅','Seven-Day Streak','Tested 7 consecutive days');
@@ -4267,7 +4267,7 @@ function updateFavicon(score){
     const elapsed=Math.round((Date.now()-quizStartTime)/1000);
     const mins=Math.floor(elapsed/60);
     const secs=elapsed%60;
-    const timeStr=mins>0?`${mins}pts${secs}秒`:`${secs}秒`;
+    const timeStr=mins>0?`${mins}m ${secs}s`:`${secs}s`;
     setTimeout(()=>{
       const rs0=document.getElementById('rs0');
       if(!rs0||document.getElementById('comp-time'))return;
@@ -4279,10 +4279,10 @@ function updateFavicon(score){
       rs0.appendChild(el);
       // Speed achievement
       if(elapsed<120&&typeof unlockAchievement==='function'){
-        unlockAchievement('speedster','⚡','Lightning Fast','2pts钟内完成所有questions目');
+        unlockAchievement('speedster','⚡','Lightning Fast','Finished all questions in under 2 minutes');
       }
       if(elapsed>600&&typeof unlockAchievement==='function'){
-        unlockAchievement('thinker','🤔','Deep Thinker','花了超过10pts钟仔细答questions');
+        unlockAchievement('thinker','🤔','Deep Thinker','Spent over 10 minutes carefully answering');
       }
     },1500);
   });
@@ -4326,12 +4326,12 @@ function updateFavicon(score){
   if(origShowResult){
     window.showResult=function(){
       origShowResult.apply(this,arguments);
-      unlockAchievement('first-test','🎯','First Scan','完成了你的#一次Sudden Death Index');
+      unlockAchievement('first-test','🎯','First Scan','Completed your first Sudden Death Index');
       const score=calcScore();
-      if(score>=90)unlockAchievement('danger-zone','☠️','极度Danger','猝死指数超过90pts');
-      if(score<=10)unlockAchievement('immortal','🛡️','Immortal','猝死指数低于10pts');
-      if(score===69)unlockAchievement('nice','😏','Nice','猝死指数恰好69pts');
-      if(score===42)unlockAchievement('answer','🌌','Ultimate Answer','猝死指数恰好42pts');
+      if(score>=90)unlockAchievement('danger-zone','☠\uFE0F','Extreme Danger','Sudden death index exceeded 90 pts');
+      if(score<=10)unlockAchievement('immortal','🛡\uFE0F','Immortal','Sudden death index below 10 pts');
+      if(score===69)unlockAchievement('nice','😏','Nice','Sudden death index exactly 69 pts');
+      if(score===42)unlockAchievement('answer','🌌','Ultimate Answer','Sudden death index exactly 42 pts');
       // Speed runner
       const hist=JSON.parse(localStorage.getItem('sdi-en-history')||'[]');
       if(hist.length>=3)unlockAchievement('regular','📋','Regular','Completed 3+ tests');
@@ -4341,14 +4341,14 @@ function updateFavicon(score){
   // 2. Night owl - testing between midnight and 5am
   const hour=new Date().getHours();
   if(hour>=0&&hour<5){
-    setTimeout(()=>{unlockAchievement('night-owl','🦉','Night Owl','在凌晨时pts进行测试');},2000);
+    setTimeout(()=>{unlockAchievement('night-owl','🦉','Night Owl','Took the test in the wee hours');},2000);
   }
   // 3. Theme toggle
   const origToggle=window.toggleTheme;
   if(origToggle){
     window.toggleTheme=function(){
       origToggle.apply(this,arguments);
-      unlockAchievement('theme-switch','🎨','主questions达人','切换了明暗主questions');
+      unlockAchievement('theme-switch','🎨','Theme Master','Switched between light and dark mode');
     };
   }
 })();
@@ -4358,12 +4358,12 @@ function updateFavicon(score){
   const subtitles=[
     'SUDDEN DEATH INDEX · v18.0',
     'How close are you to sudden death?',
-    '30questions · 7Dimensions · 1份残酷Report',
-    '熬夜测试本身就是加pts项',
-    '高pts不是勋章，是警告',
+    '30 Questions \u00B7 7 Dimensions \u00B7 1 Brutal Report',
+    'Taking this test late at night is already a risk factor',
+    'A high score isn\u2019t a badge \u2014 it\u2019s a warning',
     'Your body is writing its resignation letter',
     'Every option is calculating probability',
-    '测试有At Risk，高pts需体检',
+    'Tests carry risk \u2014 high scores need checkups',
   ];
   const subEl=document.querySelector('.title-sub');
   if(!subEl)return;
@@ -4399,9 +4399,9 @@ function updateFavicon(score){
 (function(){
   // Add ARIA attributes to key sections
   const secIntro=document.getElementById('sec-intro');
-  if(secIntro)secIntro.setAttribute('aria-label','Sudden Death Index首页');
+  if(secIntro)secIntro.setAttribute('aria-label','Sudden Death Index Home');
   const secQ=document.getElementById('sec-question');
-  if(secQ){secQ.setAttribute('role','form');secQ.setAttribute('aria-label','测试questions目');}
+  if(secQ){secQ.setAttribute('role','form');secQ.setAttribute('aria-label','Quiz questions');}
   const secResult=document.getElementById('sec-result');
   if(secResult){secResult.setAttribute('role','region');secResult.setAttribute('aria-label','Test results');}
   // Add aria-live region for dynamic updates
@@ -4439,7 +4439,7 @@ function updateFavicon(score){
   const obs=new MutationObserver(()=>{
     if(document.getElementById('sec-question')?.classList.contains('active')){
       if(!localStorage.getItem('sdi-en-kb-hint')){
-        setTimeout(()=>showHint('键盘 1-6 快速选择 · Enter 下一questions · Backspace 上一questions',4000),600);
+        setTimeout(()=>showHint('Keys 1-6 to select \u00B7 Enter for next \u00B7 Backspace for previous',4000),600);
         try{localStorage.setItem('sdi-en-kb-hint','1');}catch(e){}
       }
       obs.disconnect();
@@ -4481,18 +4481,18 @@ function updateFavicon(score){
 // ════ FUN LOADING MESSAGES ROTATION ════
 (function(){
   const messages=[
-    '正在pts析你的生活方式…',
-    '正在计算熬夜积累的伤害…',
-    '正在评估你的外卖频率…',
-    '正在统计你的久坐时长…',
-    '正在测量你的咖啡因浓度…',
-    '正在扫描你的黑眼圈深度…',
-    '正在检查你的最后一次运动记录…',
-    '正在pts析你和床的pts离焦虑程度…',
-    '正在计算你的维生素D缺乏量…',
-    '正在评估你的手机依赖症等grade…',
-    '正在读取你的外卖订单历史…',
-    '正在估算你的颈椎弯曲度…',
+    'Analyzing your lifestyle choices\u2026',
+    'Calculating accumulated sleep debt damage\u2026',
+    'Evaluating your takeout frequency\u2026',
+    'Tallying your daily sitting hours\u2026',
+    'Measuring your caffeine concentration\u2026',
+    'Scanning the depth of your dark circles\u2026',
+    'Checking when you last exercised\u2026',
+    'Analyzing your separation anxiety from bed\u2026',
+    'Calculating your vitamin D deficit\u2026',
+    'Assessing your phone addiction level\u2026',
+    'Reading your DoorDash order history\u2026',
+    'Estimating the curvature of your spine\u2026',
   ];
   const loadingEl=document.getElementById('load-sub');
   if(!loadingEl)return;
@@ -4534,7 +4534,7 @@ function updateFavicon(score){
       const ind=document.createElement('div');
       ind.id='streak-indicator';
       ind.style.cssText='position:fixed;top:60px;left:50%;transform:translateX(-50%);background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:20px;padding:4px 14px;font-size:10px;color:#ef4444;z-index:200;animation:fadeUp .3s ease;backdrop-filter:blur(8px);';
-      ind.textContent=`🔥 Danger连击 ×${streak}`;
+      ind.textContent=`🔥 Danger Streak \u00D7${streak}`;
       document.body.appendChild(ind);
       setTimeout(()=>ind.remove(),2000);
     }
@@ -4551,11 +4551,11 @@ function updateFavicon(score){
       if(document.getElementById('fortune-cookie'))return;
       const score=calcScore();
       const fortunes=[
-        {range:[0,25],msgs:['你的身体是台好机器，继续保养！','健康是最好的投资，你做到了。','按这个节奏，长命百岁不是梦。']},
-        {range:[25,45],msgs:['小问questions不改，大病来得快。','你站在健康的及格线上，别往下掉。','Now改还来得及，再拖就不好说了。']},
-        {range:[45,65],msgs:['你的身体正在发出黄色预警。','如果身体能说话，它Now在大声抱怨。','你正在用健康透支快乐，利息很高。']},
-        {range:[65,80],msgs:['你的身体已经在写投诉信了。','再不改变，你的器官们要罢工了。','你不是在玩火，你已经着火了。']},
-        {range:[80,101],msgs:['你的身体已经Start倒计时了。','ICU的床位正在向你招手。','你活着就是个奇迹，请珍惜。']},
+        {range:[0,25],msgs:['Your body is a well-oiled machine \u2014 keep it maintained!','Health is the best investment, and you\u2019re crushing it.','At this pace, making it to 100 isn\u2019t a dream.']},
+        {range:[25,45],msgs:['Small problems ignored become big problems fast.','You\u2019re standing on the health passing line \u2014 don\u2019t slip.','There\u2019s still time to change. Wait much longer and all bets are off.']},
+        {range:[45,65],msgs:['Your body is issuing a yellow alert.','If your body could talk, it would be screaming right now.','You\u2019re borrowing happiness against your health. The interest is brutal.']},
+        {range:[65,80],msgs:['Your body is already drafting a complaint letter.','If you don\u2019t change soon, your organs are going on strike.','You\u2019re not playing with fire \u2014 you\u2019re already on fire.']},
+        {range:[80,101],msgs:['Your body has started its countdown.','The ICU bed is waving at you.','The fact that you\u2019re alive is a miracle. Cherish it.']},
       ];
       const group=fortunes.find(f=>score>=f.range[0]&&score<f.range[1])||fortunes[2];
       const fortune=group.msgs[Math.floor(Math.random()*group.msgs.length)];
@@ -4565,9 +4565,9 @@ function updateFavicon(score){
       el.style.cursor='pointer';
       el.innerHTML=`<div style="text-align:center;padding:16px 0;">
         <div style="font-size:52px;transition:transform .5s cubic-bezier(.34,1.56,.64,1);" id="cookie-emoji">🥠</div>
-        <div style="font-size:15px;font-weight:700;letter-spacing:3px;color:var(--dim);margin:12px 0 6px;">健康签语饼</div>
+        <div style="font-size:15px;font-weight:700;letter-spacing:3px;color:var(--dim);margin:12px 0 6px;">HEALTH FORTUNE COOKIE</div>
         <div id="fortune-text" style="font-size:16px;color:var(--text);line-height:1.8;max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .5s;opacity:0;max-width:400px;margin:0 auto;">「${fortune}」</div>
-        <div id="fortune-hint" style="font-size:13px;color:var(--dim);margin-top:6px;">点击打开</div>
+        <div id="fortune-hint" style="font-size:13px;color:var(--dim);margin-top:6px;">Tap to open</div>
       </div>`;
       el.addEventListener('click',function(){
         const emoji=document.getElementById('cookie-emoji');
@@ -4604,12 +4604,12 @@ function updateFavicon(score){
       if(document.getElementById('movie-rating'))return;
       const score=calcScore();
       const ratings=[
-        {range:[0,15],stars:5,genre:'治愈系',title:'《养生达人的日常》',review:'一部温馨的健康纪录片，主角的生活方式令人羡慕。'},
-        {range:[15,30],stars:4,genre:'喜剧',title:'《差不多先生的健康生活》',review:'轻松愉快，虽有小瑕疵但整体氛围积极向上。'},
-        {range:[30,50],stars:3,genre:'悬疑',title:'《体检Report迷踪》',review:'剧情渐入佳境，主角Start发现一些令人不安的线索。'},
-        {range:[50,70],stars:2,genre:'惊悚',title:'《身体发出的求救信号》',review:'紧张刺激，每一个器官都在呐喊，Advice胆小勿看。'},
-        {range:[70,85],stars:1,genre:'灾难片',title:'《器官大逃亡》',review:'高度紧张，主角的身体已经Start上演末日景象。'},
-        {range:[85,101],stars:0.5,genre:'恐怖片',title:'《猝死来了》',review:'年度最恐怖作品，Advice观影前签好免责声明。'},
+        {range:[0,15],stars:5,genre:'Feel-Good',title:'A Wellness Guru\u2019s Daily Life',review:'A heartwarming health documentary. The protagonist\u2019s lifestyle is the envy of all.'},
+        {range:[15,30],stars:4,genre:'Comedy',title:'Mr. Good-Enough\u2019s Health Journey',review:'Light and fun. A few minor flaws but overall vibes are positive.'},
+        {range:[30,50],stars:3,genre:'Mystery',title:'The Vanishing Lab Report',review:'The plot thickens as our hero starts finding some unsettling clues.'},
+        {range:[50,70],stars:2,genre:'Thriller',title:'Distress Signals From Within',review:'Tense and gripping. Every organ is screaming. Not for the faint of heart.'},
+        {range:[70,85],stars:1,genre:'Disaster',title:'The Great Organ Escape',review:'Extremely tense. The protagonist\u2019s body has begun its apocalypse arc.'},
+        {range:[85,101],stars:0.5,genre:'Horror',title:'Sudden Death Is Here',review:'The scariest film of the year. Sign a waiver before watching.'},
       ];
       const r=ratings.find(r=>score>=r.range[0]&&score<r.range[1])||ratings[3];
       const starsHTML='★'.repeat(Math.floor(r.stars))+(r.stars%1?'½':'')+'☆'.repeat(5-Math.ceil(r.stars));
@@ -4692,12 +4692,12 @@ function updateFavicon(score){
       if(document.getElementById('tarot-card'))return;
       const score=calcScore();
       const tarots=[
-        {range:[0,20],card:'星星 ⭐',num:'XVII',meaning:'希望与疗愈',advice:'你正走在正确的健康之路上，继续保持内心的平静与身体的和谐。',color:'#4ade80'},
-        {range:[20,35],card:'力量 🦁',num:'VIII',meaning:'意志与耐力',advice:'你有维持健康的力量，但需要更多的自律来发挥它。内在的平衡是关键。',color:'#60a5fa'},
-        {range:[35,50],card:'命运之轮 🎡',num:'X',meaning:'变化与循环',advice:'你的健康正处于转折点。接下来的选择将决定轮盘转向哪个方向。',color:'#f59e0b'},
-        {range:[50,65],card:'月亮 🌙',num:'XVIII',meaning:'迷惘与不安',advice:'你的身体在黑暗中摸索，很多问questions被忽视了。是时候正视内心的恐惧。',color:'#f97316'},
-        {range:[65,80],card:'高塔 🏰',num:'XVI',meaning:'崩塌与警示',advice:'旧有的不良习惯正在瓦解你的健康根基。这张牌警告你：改变迫在眉睫。',color:'#ef4444'},
-        {range:[80,101],card:'死神 💀',num:'XIII',meaning:'终结与重生',advice:'别慌——死神牌意味着旧模式必须死去。你的生活方式需要彻底重生。',color:'#dc2626'},
+        {range:[0,20],card:'The Star \u2B50',num:'XVII',meaning:'Hope & Healing',advice:'You\u2019re walking the right path. Keep nurturing the peace within and the harmony of your body.',color:'#4ade80'},
+        {range:[20,35],card:'Strength \uD83E\uDD81',num:'VIII',meaning:'Willpower & Endurance',advice:'You have the strength to stay healthy, but need more discipline to unlock it. Inner balance is key.',color:'#60a5fa'},
+        {range:[35,50],card:'Wheel of Fortune \uD83C\uDFA1',num:'X',meaning:'Change & Cycles',advice:'Your health is at a turning point. Your next choices decide which way the wheel spins.',color:'#f59e0b'},
+        {range:[50,65],card:'The Moon \uD83C\uDF19',num:'XVIII',meaning:'Confusion & Unease',advice:'Your body is groping in the dark. Many issues have been ignored. It\u2019s time to face what scares you.',color:'#f97316'},
+        {range:[65,80],card:'The Tower \uD83C\uDFF0',num:'XVI',meaning:'Collapse & Warning',advice:'Old bad habits are crumbling the foundation of your health. This card warns: change is urgent.',color:'#ef4444'},
+        {range:[80,101],card:'Death \uD83D\uDC80',num:'XIII',meaning:'Ending & Rebirth',advice:'Don\u2019t panic \u2014 the Death card means old patterns must die. Your lifestyle needs a total rebirth.',color:'#dc2626'},
       ];
       const tarot=tarots.find(t=>score>=t.range[0]&&score<t.range[1])||tarots[3];
       const el=document.createElement('div');
@@ -4713,7 +4713,7 @@ function updateFavicon(score){
       el.innerHTML=`<div style="width:280px;max-width:100%;margin:0 auto;background:${frontBg};border:2px solid ${tarot.color}44;border-radius:18px;padding:28px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.15);cursor:pointer;transition:all .4s ease;position:relative;overflow:hidden;" id="tarot-front">
         <div style="font-size:12px;letter-spacing:5px;color:${tarot.color};font-weight:600;${isLight?'':'opacity:.6;'}">HEALTH TAROT</div>
         <div style="font-size:64px;margin:20px 0;">🔮</div>
-        <div style="font-size:13px;color:${hintCol};">点击翻牌</div>
+        <div style="font-size:13px;color:${hintCol};">Tap to flip</div>
       </div>
       <div id="tarot-back" style="display:none;width:280px;max-width:100%;margin:0 auto;background:${backBg};border:2px solid ${tarot.color};border-radius:18px;padding:28px;text-align:center;box-shadow:0 8px 32px ${tarot.color}33;animation:fadeUp .5s ease;">
         <div style="font-size:13px;color:${tarot.color};letter-spacing:4px;font-family:serif;">${tarot.num}</div>
@@ -4757,10 +4757,10 @@ function updateFavicon(score){
       const age=parseInt(document.getElementById('age-input')?.value)||28;
       // Rarity based on score uniqueness
       const rarities=[
-        {range:[0,10],name:'传说',color:'#f59e0b',bg:'linear-gradient(135deg,#4a3800,#1a1400)',lightBg:'linear-gradient(135deg,#fef3c7,#fde68a)',border:'#f59e0b'},
-        {range:[10,25],name:'史诗',color:'#a855f7',bg:'linear-gradient(135deg,#2d1a4a,#1a0f2e)',lightBg:'linear-gradient(135deg,#f3e8ff,#e9d5ff)',border:'#a855f7'},
-        {range:[25,50],name:'稀有',color:'#3b82f6',bg:'linear-gradient(135deg,#1a2a4a,#0f1a2e)',lightBg:'linear-gradient(135deg,#dbeafe,#bfdbfe)',border:'#3b82f6'},
-        {range:[50,75],name:'普通',color:'#6b7280',bg:'linear-gradient(135deg,#1a1a24,#0f0f17)',lightBg:'linear-gradient(135deg,#f3f4f6,#e5e7eb)',border:'#6b7280'},
+        {range:[0,10],name:'LEGENDARY',color:'#f59e0b',bg:'linear-gradient(135deg,#4a3800,#1a1400)',lightBg:'linear-gradient(135deg,#fef3c7,#fde68a)',border:'#f59e0b'},
+        {range:[10,25],name:'EPIC',color:'#a855f7',bg:'linear-gradient(135deg,#2d1a4a,#1a0f2e)',lightBg:'linear-gradient(135deg,#f3e8ff,#e9d5ff)',border:'#a855f7'},
+        {range:[25,50],name:'RARE',color:'#3b82f6',bg:'linear-gradient(135deg,#1a2a4a,#0f1a2e)',lightBg:'linear-gradient(135deg,#dbeafe,#bfdbfe)',border:'#3b82f6'},
+        {range:[50,75],name:'COMMON',color:'#6b7280',bg:'linear-gradient(135deg,#1a1a24,#0f0f17)',lightBg:'linear-gradient(135deg,#f3f4f6,#e5e7eb)',border:'#6b7280'},
         {range:[75,101],name:'Danger',color:'#ef4444',bg:'linear-gradient(135deg,#2a1010,#1a0808)',lightBg:'linear-gradient(135deg,#fee2e2,#fecaca)',border:'#ef4444'},
       ];
       const rarity=rarities.find(r=>score>=r.range[0]&&score<r.range[1])||rarities[3];
@@ -4786,7 +4786,7 @@ function updateFavicon(score){
         </div>
         <div style="text-align:center;padding:24px 0;background:${avatarBg};border-radius:14px;margin-bottom:16px;">
           <div style="font-size:56px;">💀</div>
-          <div style="font-size:16px;font-weight:700;color:${cardTextCol};margin-top:10px;">${age}岁测试者</div>
+          <div style="font-size:16px;font-weight:700;color:${cardTextCol};margin-top:10px;">Test Subject, Age ${age}</div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
           <div style="text-align:center;background:${statBg};padding:12px 8px;border-radius:10px;border:1px solid ${statBg};">
@@ -4807,8 +4807,8 @@ function updateFavicon(score){
           </div>
         </div>
         <div style="font-size:14px;color:${subTextCol};line-height:1.8;">
-          <b style="color:${rarity.color};">特技:</b> ${worst.name.split(' ')[1]}弱化 · ${best.name.split(' ')[1]}防御<br>
-          <b style="color:${rarity.color};">属性:</b> 猝死指数 ${score} · 综合战力 ${hp+def+spd}
+          <b style="color:${rarity.color};">Skill:</b> ${worst.name.split(' ')[1]} Weakness \u00B7 ${best.name.split(' ')[1]} Defense<br>
+          <b style="color:${rarity.color};">Stats:</b> Death Index ${score} \u00B7 Total Power ${hp+def+spd}
         </div>
       </div>`;
       const target=document.getElementById('rs0')?.parentNode;
@@ -4884,10 +4884,10 @@ function updateFavicon(score){
       el.className='rs on';
       el.innerHTML=`<details>
         <summary style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);text-align:center;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:6px;">
-          📝 逐questions得pts明细 <span style="font-size:9px;color:rgba(255,255,255,.2);">点击展开</span>
+          \uD83D\uDCDD Question-by-Question Breakdown <span style="font-size:9px;color:rgba(255,255,255,.2);">tap to expand</span>
         </summary>
         <div style="margin-top:8px;max-height:300px;overflow-y:auto;">${rows}</div>
-        <div style="text-align:center;font-size:9px;color:var(--dim);margin-top:6px;">总Danger值: ${totalVal}/${totalMax} (${Math.round(totalVal/Math.max(1,totalMax)*100)}%)</div>
+        <div style="text-align:center;font-size:9px;color:var(--dim);margin-top:6px;">Total Danger: ${totalVal}/${totalMax} (${Math.round(totalVal/Math.max(1,totalMax)*100)}%)</div>
       </details>`;
       const target=document.getElementById('rs0')?.parentNode;
       if(target)target.appendChild(el);
@@ -4936,19 +4936,19 @@ function updateFavicon(score){
       if(document.getElementById('final-verdict'))return;
       const score=calcScore();
       const verdicts=[
-        {range:[0,15],text:'无罪释放',sub:'法庭认为你的生活方式无可指摘。',icon:'⚖️',color:'#4ade80'},
-        {range:[15,30],text:'缓期执行',sub:'有一些小问questions，但你还有很长的路要走。',icon:'⚖️',color:'#60a5fa'},
-        {range:[30,50],text:'有期徒刑',sub:'你的身体判你"健康有期徒刑"，刑期取决于你的改变。',icon:'⚖️',color:'#f59e0b'},
-        {range:[50,70],text:'重刑犯',sub:'你的生活方式已经构成了对身体的"严重伤害罪"。',icon:'⚖️',color:'#f97316'},
-        {range:[70,85],text:'无期徒刑',sub:'除非立即上诉（改变习惯），否则你的健康将被终身监禁。',icon:'⚖️',color:'#ef4444'},
-        {range:[85,101],text:'死刑判决',sub:'法庭最终裁定……不过别怕，这个判决可以上诉——从NowStart改变。',icon:'⚖️',color:'#dc2626'},
+        {range:[0,15],text:'ACQUITTED',sub:'The court finds your lifestyle beyond reproach.',icon:'\u2696\uFE0F',color:'#4ade80'},
+        {range:[15,30],text:'SUSPENDED SENTENCE',sub:'A few minor issues, but you\u2019ve got a long road ahead.',icon:'\u2696\uFE0F',color:'#60a5fa'},
+        {range:[30,50],text:'SENTENCED',sub:'Your body has sentenced you to "health probation." Length depends on your changes.',icon:'\u2696\uFE0F',color:'#f59e0b'},
+        {range:[50,70],text:'FELONY',sub:'Your lifestyle has been charged with "aggravated bodily harm."',icon:'\u2696\uFE0F',color:'#f97316'},
+        {range:[70,85],text:'LIFE SENTENCE',sub:'Unless you appeal immediately (change your habits), your health will be imprisoned for life.',icon:'\u2696\uFE0F',color:'#ef4444'},
+        {range:[85,101],text:'DEATH SENTENCE',sub:'The court has made its final ruling\u2026 but don\u2019t worry, you can still appeal \u2014 start changing now.',icon:'\u2696\uFE0F',color:'#dc2626'},
       ];
       const v=verdicts.find(v=>score>=v.range[0]&&score<v.range[1])||verdicts[3];
       const el=document.createElement('div');
       el.id='final-verdict';
       el.className='rs on';
       el.innerHTML=`<div style="text-align:center;padding:16px 0;">
-        <div style="font-size:9px;letter-spacing:4px;color:var(--dim);margin-bottom:8px;">─── 最 终 裁 决 ───</div>
+        <div style="font-size:9px;letter-spacing:4px;color:var(--dim);margin-bottom:8px;">\u2500\u2500\u2500 FINAL VERDICT \u2500\u2500\u2500</div>
         <div style="font-size:28px;margin-bottom:4px;">${v.icon}</div>
         <div style="font-size:20px;font-weight:900;color:${v.color};letter-spacing:3px;margin-bottom:8px;">${v.text}</div>
         <div style="font-size:11px;color:rgba(255,255,255,.45);line-height:1.8;max-width:280px;margin:0 auto;">${v.sub}</div>
