@@ -504,7 +504,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .body-svg-wrap{flex-shrink:0;width:120px;height:200px;position:relative;}
 .body-svg-wrap svg{width:100%;height:100%;}
 .bh-part{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.12);stroke-width:1;transition:fill .3s,stroke .3s;}
-html.light .bh-part{fill:rgba(0,0,0,.06);stroke:rgba(0,0,0,.2);stroke-width:1.8;}
+html.light .bh-part{fill:rgba(0,0,0,.05);stroke:rgba(0,0,0,.3);stroke-width:2;}
 .body-legend{flex:1;display:flex;flex-direction:column;gap:8px;}
 .body-legend-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text);}
 .body-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px currentColor;}
@@ -832,11 +832,10 @@ html.light .trend-title{color:var(--dim)!important;}
 html.light .disclaimer{color:#666!important;}
 html.light .survival-note{color:#666!important;}
 html.light .obituary-footer{color:#888!important;}
-html.light .body-svg-wrap svg rect,html.light .body-svg-wrap svg ellipse{fill:rgba(0,0,0,.06)!important;stroke:rgba(0,0,0,.45)!important;stroke-width:2!important;}
-html.light .body-svg-wrap svg #bh-heart{fill:rgba(239,68,68,.2)!important;stroke:rgba(239,68,68,.6)!important;stroke-width:1.5!important;}
-html.light .body-svg-wrap svg #bh-stomach{fill:rgba(245,158,11,.15)!important;stroke:rgba(245,158,11,.5)!important;stroke-width:1.5!important;}
-html.light .body-svg-wrap svg #bh-brain{fill:rgba(168,85,247,.15)!important;stroke:rgba(168,85,247,.5)!important;stroke-width:1.5!important;}
-html.light .trend-svg text{fill:var(--dim)!important;}
+/* body heatmap: only style the structural outline parts that JS doesn't color */
+html.light .body-svg-wrap svg #bh-larm,html.light .body-svg-wrap svg #bh-rarm,html.light .body-svg-wrap svg #bh-lleg,html.light .body-svg-wrap svg #bh-rleg{fill:rgba(0,0,0,.05)!important;stroke:rgba(0,0,0,.35)!important;stroke-width:2!important;}
+html.light .trend-svg text{fill:rgba(0,0,0,.45)!important;}
+html.light #trend-svg line{stroke:rgba(0,0,0,.1)!important;}
 html.light #r-grid-g polygon{stroke:rgba(0,0,0,.18)!important;}
 html.light #r-axes-g line{stroke:rgba(0,0,0,.2)!important;}
 html.light #r-labels-g text{fill:rgba(0,0,0,.65)!important;}
@@ -853,6 +852,26 @@ html.light .score-lbl{color:rgba(0,0,0,.55)!important;}
 html.light .ring-bg{stroke:rgba(0,0,0,.12)!important;}
 html.light .dw-title{color:rgba(200,40,40,.7)!important;}
 html.light .prof-risk{color:#666!important;}
+/* Light mode: remaining structural elements with hardcoded dark values */
+html.light .step-sep{background:rgba(0,0,0,.1)!important;}
+html.light .q-timer-bar{background:rgba(0,0,0,.07)!important;}
+html.light .dim-bar-bg{background:rgba(0,0,0,.08)!important;}
+html.light .age-bar{background:rgba(0,0,0,.07)!important;}
+html.light .tl-item::before{background:rgba(0,0,0,.1)!important;}
+html.light .doctor-sig{border-top-color:rgba(0,0,0,.1)!important;}
+html.light .rx-section{border-top-color:rgba(0,0,0,.1)!important;}
+html.light .survival-item,html.light .prof-item{border-bottom-color:rgba(0,0,0,.08)!important;}
+html.light .pbar-milestone{background:rgba(0,0,0,.15)!important;}
+html.light .doctor-card:hover{border-color:rgba(0,0,0,.12)!important;box-shadow:0 0 24px rgba(0,0,0,.04)!important;}
+html.light .btn-share{background:rgba(0,0,0,.03)!important;border-color:rgba(0,0,0,.12)!important;color:#1a1a2e!important;}
+html.light .btn-share:hover{background:rgba(0,0,0,.07)!important;}
+html.light .res-nav-dot{background:rgba(0,0,0,.12)!important;border-color:rgba(0,0,0,.06)!important;}
+html.light .sparkline-wrap,html.light .completion-time{background:rgba(0,0,0,.03)!important;border-color:rgba(0,0,0,.08)!important;}
+html.light .bell-curve-wrap{background:rgba(0,0,0,.02)!important;}
+html.light .recap-item{background:rgba(0,0,0,.02)!important;}
+html.light .age-marker{border-width:2px!important;}
+html.light .sound-btn{background:rgba(0,0,0,.04)!important;border-color:rgba(0,0,0,.1)!important;color:#555!important;}
+html.light .sound-btn:hover{background:rgba(0,0,0,.08)!important;}
 
 /* ══ SMOOTH CARD HOVER GLOW ══ */
 .rs{position:relative;}
@@ -1103,7 +1122,7 @@ html.light .achievement-name{color:#1a1a2e;}
 /* ══ RISK WEEKDAY HEAT ══ */
 .week-heat{display:flex;gap:6px;justify-content:center;margin-bottom:14px;}
 .week-day{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:var(--dim);}
-.week-day-box{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,.04);transition:all .4s;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.week-day-box{width:28px;height:28px;border-radius:6px;border:1px solid var(--card-border);transition:all .4s;display:flex;align-items:center;justify-content:center;font-size:12px;}
 .week-day-label{font-size:9px;letter-spacing:.5px;}
 
 /* ══ AGE COMPARISON BAR ══ */
@@ -2801,9 +2820,10 @@ function showResult(){
   weekDays.forEach((d,i)=>{
     const r=weekRisks[i];
     const col=r<30?'#34d399':r<50?'#fbbf24':r<70?'#f59e0b':'#ef4444';
-    const alpha=(.1+r/100*.5).toFixed(2);
+    const isLightW=document.documentElement.classList.contains('light');
+    const alpha=isLightW?(.3+r/100*.5).toFixed(2):(.1+r/100*.5).toFixed(2);
     const emoji=r>=70?'💀':r>=50?'⚠':r>=30?'😐':'✅';
-    weekEl.innerHTML+=`<div class="week-day"><div class="week-day-box" style="background:${col}${Math.round(alpha*255).toString(16).padStart(2,'0')};border-color:${col}40">${emoji}</div><span class="week-day-label">周${d}</span></div>`;
+    weekEl.innerHTML+=`<div class="week-day"><div class="week-day-box" style="background:${col}${Math.round(parseFloat(alpha)*255).toString(16).padStart(2,'0')};border-color:${col}${isLightW?'80':'40'}">${emoji}</div><span class="week-day-label">周${d}</span></div>`;
   });
   const tags=document.getElementById('risk-tags');tags.innerHTML='';
   dims.forEach((d,i)=>{const tier=d.pct>=65?'high':d.pct>=40?'med':'low';if(tier==='low'&&score<25)return;const lbl=RISK_TAGS[d.key]?.[tier];if(lbl){const el=document.createElement('div');el.className=`rtag ${tier}`;el.textContent=lbl;el.style.animationDelay=(i*.08)+'s';tags.appendChild(el);}});
@@ -2817,12 +2837,13 @@ function showResult(){
     {id:null,parts:[],label:'💪 肌肉骨骼',risk:Math.round((dimObj.exercise||0)*.5+(dimObj.work||0)*.3+(dimObj.stress||0)*.2)},
   ];
   const blEl=document.getElementById('body-legend');blEl.innerHTML='';
+  const bhIsLight=document.documentElement.classList.contains('light');
   bhMap.forEach(b=>{
     const col=b.risk<30?'#34d399':b.risk<55?'#fbbf24':b.risk<75?'#f59e0b':'#ef4444';
-    const alpha=(.15+b.risk/100*.5).toFixed(2);
-    const bhIsLight=document.documentElement.classList.contains('light');
-    if(b.id){const el=document.getElementById(b.id);if(el){el.style.fill=col+Math.round(alpha*255).toString(16).padStart(2,'0');el.style.stroke=col;el.style.strokeWidth=bhIsLight?'2':'1';}}
-    b.parts.forEach(pid=>{const pe=document.getElementById(pid);if(pe){pe.style.fill=col+'40';pe.style.stroke=col;pe.style.strokeWidth=bhIsLight?'2':'1';}});
+    const alpha=bhIsLight?(.35+b.risk/100*.5).toFixed(2):(.15+b.risk/100*.5).toFixed(2);
+    const partAlpha=bhIsLight?'99':'40';
+    if(b.id){const el=document.getElementById(b.id);if(el){el.style.fill=col+Math.round(parseFloat(alpha)*255).toString(16).padStart(2,'0');el.style.stroke=col;el.style.strokeWidth=bhIsLight?'2.5':'1';}}
+    b.parts.forEach(pid=>{const pe=document.getElementById(pid);if(pe){pe.style.fill=col+partAlpha;pe.style.stroke=col;pe.style.strokeWidth=bhIsLight?'2':'0.8';}});
     blEl.innerHTML+=`<div class="body-legend-item"><span class="body-legend-dot" style="background:${col};color:${col}"></span><span class="body-legend-name">${b.label}</span><span class="body-legend-risk" style="color:${col}">${b.risk}%</span></div>`;
   });
   const cc=document.getElementById('contrib-chart');cc.innerHTML='';
