@@ -2607,7 +2607,7 @@ function getDoctorNote(s,dims,arch){
 }
 function getRx(dims){
   const RX_MAP={
-    sleep:'Lights off by 11 PM, phone at arm's length away. Execute for 7 consecutive days then assess sleep improvement.',
+    sleep:'Lights off by 11 PM, phone at arm\u2019s length away. Execute for 7 consecutive days then assess sleep improvement.',
     work:'Set a hard stop time for work and stick to it. Reserve ≥2 hours daily completely disconnected from work.',
     exercise:'Walk ≥20 minutes daily or equivalent cardio, ≥3 times per week. Start tomorrow.',
     diet:'Eat ≥3 regular meals daily, drink ≥6 glasses of water. Reduce delivery to ≤3 times per week.',
@@ -3554,7 +3554,7 @@ function stopAmbient(){
   // Show encouraging message after every few questions
   const msgs=[
     {at:5,text:'Completed 1/6 的检测，继续前进！',icon:'⚡'},
-    {at:10,text:'Nearly halfway — you're doing great.',icon:'💪'},
+    {at:10,text:'Nearly halfway \u2014 you\u2019re doing great.',icon:'💪'},
     {at:15,text:'一半完成！最困难的部pts已经过去了。',icon:'🎯'},
     {at:20,text:'还有不到10questions，坚持住！',icon:'🔥'},
     {at:25,text:'Almost time to see your results...',icon:'👀'},
@@ -3977,9 +3977,9 @@ function updateFavicon(score){
   const messages=[
     {text:'加油，每道questions都在帮你更了解自己。',icon:'💪'},
     {text:'Answer honestly — the results only matter if you do.',icon:'🎯'},
-    {text:'You're already a step ahead — at least you're paying attention to health.',icon:'👣'},
+    {text:'You\u2019re already a step ahead \u2014 at least you\u2019re paying attention to health.',icon:'👣'},
     {text:'No matter the result, change can start anytime.',icon:'🌱'},
-    {text:'This test isn't a trial — it's a mirror.',icon:'🪞'},
+    {text:'This test isn\u2019t a trial \u2014 it\u2019s a mirror.',icon:'🪞'},
   ];
   let lastShown=0;
   const origNextQ=window.nextQ;
