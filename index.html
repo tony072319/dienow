@@ -724,11 +724,11 @@ html.light .start-disclaimer{color:#888;}
 html.light .score-num{color:var(--accent);}
 html.light .prophecy-card{background:rgba(239,68,68,.03);border-color:rgba(239,68,68,.1);}
 html.light .doctor-card{background:rgba(0,0,0,.015);border-color:rgba(0,0,0,.06);}
-html.light .doctor-text,.light .arch-desc,.light .prophecy-text,.light .obituary-text{color:#555;}
+html.light .doctor-text,html.light .arch-desc,html.light .prophecy-text,html.light .obituary-text{color:#555;}
 html.light .survival-card{background:rgba(52,211,153,.04);border-color:rgba(52,211,153,.15);}
 html.light .timeline-card{background:rgba(245,158,11,.04);border-color:rgba(245,158,11,.12);}
 html.light .obituary-card{background:rgba(0,0,0,.015);border-color:rgba(0,0,0,.06);}
-html.light .sys-item,.light .dim-item,.light .vital,.light .dim-gauge{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.06);}
+html.light .sys-item,html.light .dim-item,html.light .vital,html.light .dim-gauge{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.1);}
 html.light .toast{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.2);}
 html.light .resume-bar{background:rgba(var(--ar),var(--ag),var(--ab),.06);border-color:rgba(var(--ar),var(--ag),var(--ab),.15);}
 html.light .landing-ecg::before{background:linear-gradient(90deg,var(--bg),transparent);}
@@ -745,13 +745,10 @@ html.light .report-meta{color:#555;}
 html.light .report-meta span{color:#555;}
 html.light .death-clock .dc-digit{background:rgba(239,68,68,.05);border-color:rgba(239,68,68,.1);}
 html.light .combo-toast{background:rgba(255,255,255,.95);box-shadow:0 0 40px rgba(239,68,68,.2);}
-html.light .pbar-outer{background:rgba(0,0,0,.04);}
 html.light .mini-danger{color:#888;}
 html.light .step-dot{background:rgba(0,0,0,.06);}
 html.light .step-dot.done{background:var(--accent);}
 html.light .step-dot.current{background:var(--accent);}
-html.light .danger-meter{background:rgba(0,0,0,.03);}
-html.light .contrib-bar-bg{background:rgba(0,0,0,.04);}
 html.light .priority-card{background:rgba(var(--ar),var(--ag),var(--ab),.04);border-color:rgba(var(--ar),var(--ag),var(--ab),.12);}
 html.light .trend-card{background:rgba(0,0,0,.015);border-color:rgba(0,0,0,.06);}
 html.light .score-ring-wrap::before{border-color:rgba(var(--ar),var(--ag),var(--ab),.06);}
@@ -764,29 +761,9 @@ html.light .sd-skull{color:rgba(0,0,0,.08);}
 html.light .fun-tag{border-color:currentColor!important;}
 /* Light mode for fun sections */
 html.light #tarot-front,html.light #tarot-back{background:linear-gradient(135deg,#e8e0f0,#d5c8e8)!important;}
-html.light #trading-card>div{box-shadow:0 4px 16px rgba(0,0,0,.1)!important;}
 /* Light mode: result page text readability */
-html.light .score-lbl{color:rgba(0,0,0,.4)!important;}
-html.light .ring-bg{stroke:rgba(0,0,0,.08)!important;}
-html.light .arch-desc{color:#444!important;}
-html.light .doctor-text{color:#444!important;}
-html.light .doctor-card::before{color:rgba(0,0,0,.06)!important;}
-html.light .doctor-sig{color:#666!important;border-top-color:rgba(0,0,0,.08)!important;}
-html.light .rx-title{color:rgba(0,0,0,.4)!important;}
-html.light .rx-item{color:#555!important;}
-html.light .prophecy-text{color:#444!important;}
 html.light .prophecy-moment{color:rgba(200,40,40,.7)!important;}
-html.light .obituary-text{color:#444!important;}
-html.light .obituary-card::after{color:rgba(0,0,0,.04)!important;}
-html.light .tl-text{color:#444!important;}
-html.light .dim-desc{color:#555!important;border-bottom-color:rgba(0,0,0,.06)!important;}
-html.light .dim-tips li{color:#555!important;}
-html.light .dim-item:hover{border-color:rgba(0,0,0,.15)!important;}
 html.light .dim-item.expanded{border-color:rgba(var(--ar),var(--ag),var(--ab),.3)!important;}
-html.light .advice-list li{color:#444!important;}
-html.light .lw-quote{color:#1a1a2e!important;}
-html.light .lw-quote::before,html.light .lw-quote::after{color:rgba(200,40,40,.2)!important;}
-html.light .surv-action{color:#333!important;}
 html.light .survival-item{border-bottom-color:rgba(0,0,0,.06)!important;}
 html.light .prof-name{color:#333!important;}
 html.light .prof-item{border-bottom-color:rgba(0,0,0,.06)!important;}
@@ -822,12 +799,11 @@ html.light .resume-bar button{border-color:rgba(0,0,0,.1)!important;background:r
 html.light .resume-bar button:first-of-type{background:var(--accent)!important;color:#fff!important;}
 html.light .ach{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.08)!important;}
 html.light .ach::after{background:linear-gradient(135deg,rgba(0,0,0,.03),transparent)!important;}
-html.light .dw-title{color:rgba(200,40,40,.55)!important;}
 html.light .streak-bar{background:rgba(239,68,68,.05)!important;color:rgba(180,40,40,.65)!important;}
 html.light .dc-sep{color:rgba(200,40,40,.35)!important;}
 html.light .age-btn{background:rgba(0,0,0,.05)!important;border-color:rgba(0,0,0,.1)!important;color:#333!important;}
 html.light .age-row{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.08)!important;}
-/* Light mode: all text classes with hardcoded light colors */
+/* Light mode: text readability */
 html.light .tcard-quote{color:#555!important;}
 html.light .arch-desc{color:#444!important;}
 html.light .prophecy-text{color:#444!important;}
@@ -848,8 +824,6 @@ html.light .surv-action{color:#333!important;}
 html.light .prof-name{color:#333!important;}
 html.light .survival-item{border-bottom-color:rgba(0,0,0,.06)!important;}
 html.light .prof-item{border-bottom-color:rgba(0,0,0,.06)!important;}
-html.light .score-lbl{color:rgba(0,0,0,.4)!important;}
-html.light .ring-bg{stroke:rgba(0,0,0,.08)!important;}
 html.light .tl-text{color:#444!important;}
 html.light .tl-item::before{background:rgba(0,0,0,.08)!important;}
 html.light .dim-item:hover{border-color:rgba(0,0,0,.15)!important;}
@@ -858,16 +832,27 @@ html.light .trend-title{color:var(--dim)!important;}
 html.light .disclaimer{color:#666!important;}
 html.light .survival-note{color:#666!important;}
 html.light .obituary-footer{color:#888!important;}
-html.light .body-svg-wrap svg rect,html.light .body-svg-wrap svg ellipse{fill:rgba(0,0,0,.08)!important;stroke:rgba(0,0,0,.2)!important;stroke-width:1.5!important;}
-html.light .body-svg-wrap svg #bh-heart{fill:rgba(239,68,68,.1)!important;stroke:rgba(239,68,68,.25)!important;}
-html.light .body-svg-wrap svg #bh-stomach{fill:rgba(245,158,11,.08)!important;stroke:rgba(245,158,11,.18)!important;}
-html.light .body-svg-wrap svg #bh-brain{fill:rgba(168,85,247,.08)!important;stroke:rgba(168,85,247,.18)!important;}
+html.light .body-svg-wrap svg rect,html.light .body-svg-wrap svg ellipse{fill:rgba(0,0,0,.06)!important;stroke:rgba(0,0,0,.45)!important;stroke-width:2!important;}
+html.light .body-svg-wrap svg #bh-heart{fill:rgba(239,68,68,.2)!important;stroke:rgba(239,68,68,.6)!important;stroke-width:1.5!important;}
+html.light .body-svg-wrap svg #bh-stomach{fill:rgba(245,158,11,.15)!important;stroke:rgba(245,158,11,.5)!important;stroke-width:1.5!important;}
+html.light .body-svg-wrap svg #bh-brain{fill:rgba(168,85,247,.15)!important;stroke:rgba(168,85,247,.5)!important;stroke-width:1.5!important;}
 html.light .trend-svg text{fill:var(--dim)!important;}
-html.light #r-grid-g line,html.light #r-grid-g polygon{stroke:rgba(0,0,0,.06)!important;}
-html.light #r-axes-g line{stroke:rgba(0,0,0,.08)!important;}
-html.light .dim-gauge .gauge-bg{stroke:rgba(0,0,0,.08)!important;}
+html.light #r-grid-g polygon{stroke:rgba(0,0,0,.18)!important;}
+html.light #r-axes-g line{stroke:rgba(0,0,0,.2)!important;}
+html.light #r-labels-g text{fill:rgba(0,0,0,.65)!important;}
+html.light #r-poly{fill:rgba(var(--ar),var(--ag),var(--ab),.2)!important;stroke-width:2.5!important;}
+html.light #r-dots-g circle{stroke:#fff!important;stroke-width:2!important;}
+html.light .dim-gauge .gauge-bg{stroke:rgba(0,0,0,.1)!important;}
+html.light .contrib-bar-bg{background:rgba(0,0,0,.1)!important;}
+html.light .pbar-outer{background:rgba(0,0,0,.08)!important;}
+html.light .danger-meter{background:rgba(0,0,0,.06)!important;}
+html.light #trading-card>div{background:linear-gradient(135deg,#f8f9fc,#f0f1f6)!important;border-color:rgba(0,0,0,.15)!important;box-shadow:0 4px 24px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.05)!important;}
+html.light #trading-card{color:#1a1a2e;}
+html.light .card{box-shadow:0 1px 3px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.04)!important;}
+html.light .score-lbl{color:rgba(0,0,0,.55)!important;}
+html.light .ring-bg{stroke:rgba(0,0,0,.12)!important;}
+html.light .dw-title{color:rgba(200,40,40,.7)!important;}
 html.light .prof-risk{color:#666!important;}
-html.light .tl-item::before{background:rgba(0,0,0,.08)!important;}
 
 /* ══ SMOOTH CARD HOVER GLOW ══ */
 .rs{position:relative;}
