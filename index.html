@@ -421,13 +421,13 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .sys-status{font-family:'Space Mono',monospace;font-size:14px;margin-bottom:4px;}
 .sys-note{font-size:15px;color:var(--dim);line-height:1.6;}
 .contrib-chart{margin-bottom:14px;}
-.contrib-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.contrib-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
 .contrib-label{font-size:14px;color:var(--text);width:64px;flex-shrink:0;text-align:right;font-weight:600;}
-.contrib-bar-bg{flex:1;height:10px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;overflow:hidden;}
+.contrib-bar-bg{flex:1;height:14px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;overflow:hidden;}
 .contrib-bar{height:100%;border-radius:10px;transition:width 1s ease;}
 .contrib-val{font-family:'Space Mono',monospace;font-size:13px;width:32px;flex-shrink:0;text-align:right;font-weight:600;}
 .radar-wrap{display:flex;justify-content:center;margin-bottom:16px;}
-.radar-wrap svg{width:100%;max-width:300px;height:auto;filter:drop-shadow(0 0 20px rgba(var(--ar),var(--ag),var(--ab),.15));}
+.radar-wrap svg{width:100%;max-width:380px;height:auto;filter:drop-shadow(0 0 20px rgba(var(--ar),var(--ag),var(--ab),.15));}
 .prophecy-card{background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.1);border-radius:20px;padding:24px;margin-bottom:14px;position:relative;overflow:hidden;}
 .prophecy-card::after{content:'☠';position:absolute;right:14px;bottom:8px;font-size:64px;opacity:.04;pointer-events:none;line-height:1;}
 .sec-label{font-size:14px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;}
@@ -500,14 +500,14 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 #scroll-progress.active{opacity:1;}
 
 /* ══ BODY SILHOUETTE HEATMAP ══ */
-.body-heatmap{display:flex;align-items:center;gap:28px;margin-bottom:14px;padding:24px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;}
-.body-svg-wrap{flex-shrink:0;width:120px;height:200px;position:relative;}
+.body-heatmap{display:flex;align-items:center;gap:32px;margin-bottom:14px;padding:28px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;}
+.body-svg-wrap{flex-shrink:0;width:160px;height:260px;position:relative;}
 .body-svg-wrap svg{width:100%;height:100%;}
 .bh-part{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.12);stroke-width:1;transition:fill .3s,stroke .3s;}
 html.light .bh-part{fill:rgba(0,0,0,.05);stroke:rgba(0,0,0,.3);stroke-width:2;}
-.body-legend{flex:1;display:flex;flex-direction:column;gap:8px;}
+.body-legend{flex:1;display:flex;flex-direction:column;gap:12px;}
 .body-legend-item{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--text);}
-.body-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px currentColor;}
+.body-legend-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px currentColor;}
 .body-legend-name{flex:1;}
 .body-legend-risk{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
 
@@ -1106,17 +1106,17 @@ html.light .achievement-name{color:#1a1a2e;}
 .trend-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-top:8px;}
 
 /* ══ DIMENSION COMPARISON MINI GAUGES ══ */
-.dim-gauge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px;}
-.dim-gauge{background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:14px 10px;text-align:center;transition:border-color .2s,transform .2s;}
+.dim-gauge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px;}
+.dim-gauge{background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:18px 12px;text-align:center;transition:border-color .2s,transform .2s;}
 .dim-gauge:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.2);transform:translateY(-2px);}
-.dim-gauge-ring{width:56px;height:56px;margin:0 auto 8px;position:relative;}
+.dim-gauge-ring{width:76px;height:76px;margin:0 auto 10px;position:relative;}
 .dim-gauge-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
 .dim-gauge-ring circle{fill:none;stroke-width:4;}
 .dim-gauge-ring .gauge-bg{stroke:var(--card-border);}
 .dim-gauge-ring .gauge-fill{stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.25,.8,.25,1);}
 .dim-gauge-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:15px;font-weight:700;}
 .dim-gauge-name{font-size:12px;color:var(--dim);letter-spacing:.5px;}
-.dim-gauge-emoji{font-size:16px;display:block;margin-bottom:4px;}
+.dim-gauge-emoji{font-size:22px;display:block;margin-bottom:4px;}
 
 /* ══ RISK WEEKDAY HEAT ══ */
 .week-heat{display:flex;gap:6px;justify-content:center;margin-bottom:14px;}
@@ -1163,7 +1163,7 @@ html.light .achievement-name{color:#1a1a2e;}
   .glitch-title{font-size:clamp(32px,8vw,52px);}
   .start-btn{padding:16px 40px;font-size:16px;}
   .body-heatmap{flex-direction:column;align-items:center;gap:16px;}
-  .body-svg-wrap{width:80px;height:140px;}
+  .body-svg-wrap{width:120px;height:200px;}
   .dim-gauge-grid{grid-template-columns:repeat(auto-fit,minmax(85px,1fr));gap:6px;}
   .dim-gauge{padding:10px 6px;}
   .dim-gauge-ring{width:44px;height:44px;}
@@ -2702,7 +2702,7 @@ function showResult(){
       const diffStr=diff>0?`↑${diff}分 比上次更危险`:(diff<0?`↓${Math.abs(diff)}分 比上次有改善`:'与上次持平');
       const diffCol=diff>0?'#ef4444':(diff<0?'#34d399':'#fbbf24');
       const histEl=document.createElement('div');
-      histEl.style.cssText=`text-align:center;font-size:12px;color:var(--dim);margin-top:10px;padding:8px 14px;background:rgba(255,255,255,.02);border-radius:10px;border:1px solid rgba(255,255,255,.04);`;
+      histEl.style.cssText=`text-align:center;font-size:14px;color:var(--dim);margin-top:10px;padding:10px 16px;background:rgba(255,255,255,.02);border-radius:10px;border:1px solid rgba(255,255,255,.04);`;
       histEl.innerHTML=`<span style="color:${diffCol};font-weight:700">${diffStr}</span> <span style="opacity:.5">（上次${timeStr}测了${prev.score}分）</span>`;
       document.querySelector('.score-rank')?.appendChild(histEl);
     }
@@ -2756,14 +2756,14 @@ function showResult(){
   };
   const traitsEl=document.getElementById('arch-traits');traitsEl.innerHTML='';
   (traitMap[arch.key]||['❓ 独特类型']).forEach(t=>{
-    traitsEl.innerHTML+=`<span style="font-size:11px;padding:4px 10px;background:${arch.bg||'rgba(255,255,255,.04)'};border:1px solid ${arch.border||'rgba(255,255,255,.08)'};border-radius:100px;color:${arch.color||'#aaa'}">${t}</span>`;
+    traitsEl.innerHTML+=`<span style="font-size:14px;padding:6px 14px;background:${arch.bg||'rgba(255,255,255,.04)'};border:1px solid ${arch.border||'rgba(255,255,255,.08)'};border-radius:100px;color:${arch.color||'#aaa'}">${t}</span>`;
   });
   // Compatible archetype
   const compatMap={burner:'night',ghost:'fossil',zombie:'anxious',anxious:'hedonist',fossil:'ghost',night:'burner',puncher:'phantom',phantom:'puncher',hedonist:'anxious',timebomb:'model',declining:'declining',model:'timebomb'};
   const compatKey=compatMap[arch.key]||'declining';
   const compatArch=ARCHETYPES.find(a=>a.key===compatKey);
   if(compatArch){
-    document.getElementById('arch-compat').innerHTML=`<span style="font-size:10px;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:4px;">最常见搭配</span>${compatArch.icon} <b style="color:${compatArch.color}">${compatArch.name}</b> — 你们经常出现在同一个办公室里`;
+    document.getElementById('arch-compat').innerHTML=`<span style="font-size:12px;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:6px;">最常见搭配</span>${compatArch.icon} <b style="color:${compatArch.color}">${compatArch.name}</b> — 你们经常出现在同一个办公室里`;
   }
   const pp=Math.min(98,Math.round(score*.82+Math.random()*5));
   const pCol=score<30?'#34d399':score<55?'#fbbf24':score<75?'#f59e0b':'#ef4444';
@@ -2912,10 +2912,10 @@ function showResult(){
   // Dimension gauge rings
   const ggEl=document.getElementById('dim-gauge-grid');ggEl.innerHTML='';
   dims.forEach((d,i)=>{
-    const col=dimCol(d.pct);const circ=2*Math.PI*22;const emoji=d.name.slice(0,2);
+    const col=dimCol(d.pct);const circ=2*Math.PI*30;const emoji=d.name.slice(0,2);
     const name=d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key;
     const el=document.createElement('div');el.className='dim-gauge';
-    el.innerHTML=`<div class="dim-gauge-ring"><svg viewBox="0 0 56 56"><circle class="gauge-bg" cx="28" cy="28" r="22"/><circle class="gauge-fill" cx="28" cy="28" r="22" stroke="${col}" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" data-target="${circ-(d.pct/100)*circ}"/></svg><div class="dim-gauge-val" style="color:${col}">${d.pct}%</div></div><span class="dim-gauge-emoji">${emoji}</span><span class="dim-gauge-name">${name}</span>`;
+    el.innerHTML=`<div class="dim-gauge-ring"><svg viewBox="0 0 76 76"><circle class="gauge-bg" cx="38" cy="38" r="30"/><circle class="gauge-fill" cx="38" cy="38" r="30" stroke="${col}" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" data-target="${circ-(d.pct/100)*circ}"/></svg><div class="dim-gauge-val" style="color:${col}">${d.pct}%</div></div><span class="dim-gauge-emoji">${emoji}</span><span class="dim-gauge-name">${name}</span>`;
     ggEl.appendChild(el);
   });
   setTimeout(()=>{document.querySelectorAll('.gauge-fill').forEach(g=>{g.style.strokeDashoffset=g.dataset.target;});},500);
@@ -3626,12 +3626,12 @@ function stopAmbient(){
       const card=document.createElement('div');card.id='grade-card';
       card.style.cssText='background:rgba(255,255,255,.02);border:1px solid var(--card-border);border-radius:16px;padding:20px;margin-top:14px;opacity:0;transform:translateY(8px);transition:all .5s;';
       const gradeFor=pct=>pct>=80?{g:'F',c:'#ef4444'}:pct>=65?{g:'D',c:'#f59e0b'}:pct>=45?{g:'C',c:'#fbbf24'}:pct>=25?{g:'B',c:'#60a5fa'}:{g:'A',c:'#34d399'};
-      let html='<div style="font-size:10px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:14px;text-transform:uppercase">// 维度成绩单</div>';
-      html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;">';
+      let html='<div style="font-size:13px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:16px;text-transform:uppercase">// 维度成绩单</div>';
+      html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;">';
       dims.forEach(d=>{
         const {g,c}=gradeFor(d.pct);
         const name=d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key;
-        html+=`<div style="text-align:center;padding:12px 8px;border-radius:12px;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);"><div style="font-size:9px;color:var(--dim);margin-bottom:6px;">${name}</div><div style="font-size:28px;font-weight:900;font-family:'Space Mono',monospace;color:${c};line-height:1;">${g}</div><div style="font-size:10px;color:${c};margin-top:4px;font-family:'Space Mono',monospace;">${d.pct}%</div></div>`;
+        html+=`<div style="text-align:center;padding:18px 10px;border-radius:14px;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.04);"><div style="font-size:13px;color:var(--dim);margin-bottom:8px;font-weight:500;">${name}</div><div style="font-size:40px;font-weight:900;font-family:'Space Mono',monospace;color:${c};line-height:1;">${g}</div><div style="font-size:14px;color:${c};margin-top:6px;font-family:'Space Mono',monospace;font-weight:700;">${d.pct}%</div></div>`;
       });
       html+='</div>';
       card.innerHTML=html;
@@ -4563,11 +4563,11 @@ function updateFavicon(score){
       el.id='fortune-cookie';
       el.className='rs on';
       el.style.cursor='pointer';
-      el.innerHTML=`<div style="text-align:center;padding:10px 0;">
-        <div style="font-size:40px;transition:transform .5s cubic-bezier(.34,1.56,.64,1);" id="cookie-emoji">🥠</div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim);margin:8px 0 4px;">健康签语饼</div>
-        <div id="fortune-text" style="font-size:12px;color:var(--dim);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .5s;opacity:0;">「${fortune}」</div>
-        <div id="fortune-hint" style="font-size:10px;color:var(--dim);margin-top:4px;">点击打开</div>
+      el.innerHTML=`<div style="text-align:center;padding:16px 0;">
+        <div style="font-size:52px;transition:transform .5s cubic-bezier(.34,1.56,.64,1);" id="cookie-emoji">🥠</div>
+        <div style="font-size:15px;font-weight:700;letter-spacing:3px;color:var(--dim);margin:12px 0 6px;">健康签语饼</div>
+        <div id="fortune-text" style="font-size:16px;color:var(--text);line-height:1.8;max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .5s;opacity:0;max-width:400px;margin:0 auto;">「${fortune}」</div>
+        <div id="fortune-hint" style="font-size:13px;color:var(--dim);margin-top:6px;">点击打开</div>
       </div>`;
       el.addEventListener('click',function(){
         const emoji=document.getElementById('cookie-emoji');
@@ -4616,16 +4616,16 @@ function updateFavicon(score){
       const el=document.createElement('div');
       el.id='movie-rating';
       el.className='rs on';
-      el.innerHTML=`<div style="display:flex;gap:14px;align-items:flex-start;">
-        <div style="width:60px;height:85px;background:var(--card-bg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:1px solid var(--card-border);">🎬</div>
+      el.innerHTML=`<div style="display:flex;gap:18px;align-items:flex-start;">
+        <div style="width:80px;height:110px;background:var(--card-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:38px;flex-shrink:0;border:1px solid var(--card-border);">🎬</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;">${r.title}</div>
-          <div style="font-size:10px;color:#f59e0b;letter-spacing:2px;margin-bottom:4px;">${starsHTML}</div>
-          <div style="display:flex;gap:6px;margin-bottom:6px;">
-            <span style="font-size:9px;background:rgba(var(--ar),var(--ag),var(--ab),.06);padding:1px 6px;border-radius:4px;color:var(--dim);">${r.genre}</span>
-            <span style="font-size:9px;background:rgba(239,68,68,.08);padding:1px 6px;border-radius:4px;color:#ef4444;">${score>=50?'R级':'PG-13'}</span>
+          <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;">${r.title}</div>
+          <div style="font-size:14px;color:#f59e0b;letter-spacing:2px;margin-bottom:6px;">${starsHTML}</div>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <span style="font-size:12px;background:rgba(var(--ar),var(--ag),var(--ab),.06);padding:3px 10px;border-radius:6px;color:var(--dim);font-weight:500;">${r.genre}</span>
+            <span style="font-size:12px;background:rgba(239,68,68,.08);padding:3px 10px;border-radius:6px;color:#ef4444;font-weight:500;">${score>=50?'R级':'PG-13'}</span>
           </div>
-          <div style="font-size:10px;color:var(--dim);line-height:1.6;">${r.review}</div>
+          <div style="font-size:14px;color:var(--dim);line-height:1.7;">${r.review}</div>
         </div>
       </div>`;
       const target=document.getElementById('rs0')?.parentNode;
@@ -4710,17 +4710,17 @@ function updateFavicon(score){
       const hintCol=isLight?'rgba(0,0,0,.35)':'rgba(255,255,255,.3)';
       const cardTextCol=isLight?'#1a1a2e':'#fff';
       const adviceCol=isLight?'rgba(0,0,0,.6)':'rgba(255,255,255,.55)';
-      el.innerHTML=`<div style="width:200px;margin:0 auto;background:${frontBg};border:2px solid ${tarot.color}44;border-radius:14px;padding:20px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.15);cursor:pointer;transition:all .4s ease;position:relative;overflow:hidden;" id="tarot-front">
-        <div style="font-size:9px;letter-spacing:4px;color:${tarot.color};${isLight?'':'opacity:.6;'}">HEALTH TAROT</div>
-        <div style="font-size:48px;margin:16px 0;">🔮</div>
-        <div style="font-size:10px;color:${hintCol};">点击翻牌</div>
+      el.innerHTML=`<div style="width:280px;max-width:100%;margin:0 auto;background:${frontBg};border:2px solid ${tarot.color}44;border-radius:18px;padding:28px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.15);cursor:pointer;transition:all .4s ease;position:relative;overflow:hidden;" id="tarot-front">
+        <div style="font-size:12px;letter-spacing:5px;color:${tarot.color};font-weight:600;${isLight?'':'opacity:.6;'}">HEALTH TAROT</div>
+        <div style="font-size:64px;margin:20px 0;">🔮</div>
+        <div style="font-size:13px;color:${hintCol};">点击翻牌</div>
       </div>
-      <div id="tarot-back" style="display:none;width:200px;margin:0 auto;background:${backBg};border:2px solid ${tarot.color};border-radius:14px;padding:20px;text-align:center;box-shadow:0 8px 32px ${tarot.color}33;animation:fadeUp .5s ease;">
-        <div style="font-size:10px;color:${tarot.color};letter-spacing:3px;font-family:serif;">${tarot.num}</div>
-        <div style="font-size:16px;font-weight:700;color:${cardTextCol};margin:10px 0 6px;">${tarot.card}</div>
-        <div style="font-size:11px;color:${tarot.color};margin-bottom:10px;">${tarot.meaning}</div>
-        <div style="width:40px;height:1px;background:${tarot.color}44;margin:0 auto 10px;"></div>
-        <div style="font-size:11px;color:${adviceCol};line-height:1.8;">${tarot.advice}</div>
+      <div id="tarot-back" style="display:none;width:280px;max-width:100%;margin:0 auto;background:${backBg};border:2px solid ${tarot.color};border-radius:18px;padding:28px;text-align:center;box-shadow:0 8px 32px ${tarot.color}33;animation:fadeUp .5s ease;">
+        <div style="font-size:13px;color:${tarot.color};letter-spacing:4px;font-family:serif;">${tarot.num}</div>
+        <div style="font-size:22px;font-weight:700;color:${cardTextCol};margin:12px 0 8px;">${tarot.card}</div>
+        <div style="font-size:14px;color:${tarot.color};margin-bottom:12px;">${tarot.meaning}</div>
+        <div style="width:50px;height:1px;background:${tarot.color}44;margin:0 auto 12px;"></div>
+        <div style="font-size:14px;color:${adviceCol};line-height:1.9;">${tarot.advice}</div>
       </div>`;
       el.addEventListener('click',()=>{
         const front=document.getElementById('tarot-front');
@@ -4779,34 +4779,34 @@ function updateFavicon(score){
       const el=document.createElement('div');
       el.id='trading-card';
       el.className='rs on';
-      el.innerHTML=`<div style="width:240px;margin:0 auto;background:${cardBg};border:2px solid ${rarity.border};border-radius:14px;padding:16px;box-shadow:0 4px 20px ${rarity.border}22;position:relative;overflow:hidden;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-          <div style="font-size:10px;color:${rarity.color};font-weight:700;letter-spacing:2px;">${rarity.name}</div>
-          <div style="font-size:9px;color:${subTextCol};">${serialNum}</div>
+      el.innerHTML=`<div style="width:360px;max-width:100%;margin:0 auto;background:${cardBg};border:2px solid ${rarity.border};border-radius:18px;padding:24px;box-shadow:0 8px 32px ${rarity.border}22;position:relative;overflow:hidden;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div style="font-size:14px;color:${rarity.color};font-weight:800;letter-spacing:3px;">${rarity.name}</div>
+          <div style="font-size:12px;color:${subTextCol};font-family:'Space Mono',monospace;">${serialNum}</div>
         </div>
-        <div style="text-align:center;padding:14px 0;background:${avatarBg};border-radius:10px;margin-bottom:10px;">
-          <div style="font-size:40px;">💀</div>
-          <div style="font-size:12px;font-weight:700;color:${cardTextCol};margin-top:6px;">${age}岁测试者</div>
+        <div style="text-align:center;padding:24px 0;background:${avatarBg};border-radius:14px;margin-bottom:16px;">
+          <div style="font-size:56px;">💀</div>
+          <div style="font-size:16px;font-weight:700;color:${cardTextCol};margin-top:10px;">${age}岁测试者</div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;">
-          <div style="text-align:center;background:${statBg};padding:6px;border-radius:6px;">
-            <div style="font-size:14px;font-weight:900;color:#ef4444;">${hp}</div>
-            <div style="font-size:8px;color:${subTextCol};font-weight:600;">HP</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
+          <div style="text-align:center;background:${statBg};padding:12px 8px;border-radius:10px;border:1px solid ${statBg};">
+            <div style="font-size:22px;font-weight:900;color:#ef4444;">${hp}</div>
+            <div style="font-size:11px;color:${subTextCol};font-weight:700;margin-top:4px;">HP</div>
           </div>
-          <div style="text-align:center;background:${statBg};padding:6px;border-radius:6px;">
-            <div style="font-size:14px;font-weight:900;color:#f59e0b;">${atk}</div>
-            <div style="font-size:8px;color:${subTextCol};font-weight:600;">ATK</div>
+          <div style="text-align:center;background:${statBg};padding:12px 8px;border-radius:10px;border:1px solid ${statBg};">
+            <div style="font-size:22px;font-weight:900;color:#f59e0b;">${atk}</div>
+            <div style="font-size:11px;color:${subTextCol};font-weight:700;margin-top:4px;">ATK</div>
           </div>
-          <div style="text-align:center;background:${statBg};padding:6px;border-radius:6px;">
-            <div style="font-size:14px;font-weight:900;color:#3b82f6;">${def}</div>
-            <div style="font-size:8px;color:${subTextCol};font-weight:600;">DEF</div>
+          <div style="text-align:center;background:${statBg};padding:12px 8px;border-radius:10px;border:1px solid ${statBg};">
+            <div style="font-size:22px;font-weight:900;color:#3b82f6;">${def}</div>
+            <div style="font-size:11px;color:${subTextCol};font-weight:700;margin-top:4px;">DEF</div>
           </div>
-          <div style="text-align:center;background:${statBg};padding:6px;border-radius:6px;">
-            <div style="font-size:14px;font-weight:900;color:#4ade80;">${spd}</div>
-            <div style="font-size:8px;color:${subTextCol};font-weight:600;">SPD</div>
+          <div style="text-align:center;background:${statBg};padding:12px 8px;border-radius:10px;border:1px solid ${statBg};">
+            <div style="font-size:22px;font-weight:900;color:#4ade80;">${spd}</div>
+            <div style="font-size:11px;color:${subTextCol};font-weight:700;margin-top:4px;">SPD</div>
           </div>
         </div>
-        <div style="font-size:10px;color:${subTextCol};line-height:1.6;">
+        <div style="font-size:14px;color:${subTextCol};line-height:1.8;">
           <b style="color:${rarity.color};">特技:</b> ${worst.name.split(' ')[1]}弱化 · ${best.name.split(' ')[1]}防御<br>
           <b style="color:${rarity.color};">属性:</b> 猝死指数 ${score} · 综合战力 ${hp+def+spd}
         </div>
