@@ -347,13 +347,13 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 #sec-loading .card{text-align:center;padding:64px 40px;position:relative;overflow:hidden;}
 #sec-loading .card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanLine 2s linear infinite;opacity:.6;}
 @keyframes scanLine{0%{top:0}100%{top:100%}}
-.load-title{font-size:17px;font-weight:700;margin-bottom:6px;}
-.load-sub{font-size:13px;color:var(--dim);margin-bottom:28px;}
+.load-title{font-size:clamp(24px,3.5vw,36px);font-weight:900;margin-bottom:10px;letter-spacing:-0.5px;line-height:1.2;}
+.load-sub{font-size:15px;color:var(--dim);margin-bottom:28px;letter-spacing:.3px;}
 .ecg-outer{width:100%;height:56px;overflow:hidden;margin-bottom:28px;}
 .ecg-svg{width:200%;height:100%;animation:ecgScroll 1.8s linear infinite;}
 .ecg-path{fill:none;stroke:var(--accent);stroke-width:2.2;filter:drop-shadow(0 0 6px rgba(var(--ar),var(--ag),var(--ab),.9));transition:stroke .8s;}
-.load-pct{font-family:'Space Mono',monospace;font-size:40px;font-weight:700;color:var(--accent);margin-bottom:8px;transition:color .8s;}
-.load-status{font-size:11px;font-weight:600;color:rgba(var(--ar),var(--ag),var(--ab),.6);letter-spacing:2px;text-transform:uppercase;}
+.load-pct{font-family:'Space Mono',monospace;font-size:clamp(48px,6vw,72px);font-weight:700;color:var(--accent);margin-bottom:8px;transition:color .8s;background:none;-webkit-text-fill-color:unset;}
+.load-status{font-size:12px;font-weight:700;color:rgba(var(--ar),var(--ag),var(--ab),.65);letter-spacing:3px;text-transform:uppercase;}
 
 /* ══ RESULT ══ */
 .rs{opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(.25,.8,.25,1),transform .6s cubic-bezier(.25,.8,.25,1);}
@@ -417,12 +417,12 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .sys-item{background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:18px;display:flex;align-items:flex-start;gap:14px;}
 .sys-icon{font-size:24px;flex-shrink:0;}
 .sys-body{flex:1;}
-.sys-name{font-size:13px;font-weight:700;margin-bottom:4px;}
-.sys-status{font-family:'Space Mono',monospace;font-size:11px;margin-bottom:4px;}
-.sys-note{font-size:12px;color:var(--dim);line-height:1.6;}
+.sys-name{font-size:15px;font-weight:700;margin-bottom:4px;}
+.sys-status{font-family:'Space Mono',monospace;font-size:12px;margin-bottom:4px;}
+.sys-note{font-size:13px;color:var(--dim);line-height:1.6;}
 .contrib-chart{margin-bottom:14px;}
 .contrib-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.contrib-label{font-size:12px;color:var(--text);width:60px;flex-shrink:0;text-align:right;}
+.contrib-label{font-size:13px;color:var(--text);width:64px;flex-shrink:0;text-align:right;font-weight:600;}
 .contrib-bar-bg{flex:1;height:10px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;overflow:hidden;}
 .contrib-bar{height:100%;border-radius:10px;transition:width 1s ease;}
 .contrib-val{font-family:'Space Mono',monospace;font-size:11px;width:32px;flex-shrink:0;text-align:right;font-weight:600;}
@@ -430,7 +430,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .radar-wrap svg{width:100%;max-width:300px;height:auto;filter:drop-shadow(0 0 20px rgba(var(--ar),var(--ag),var(--ab),.15));}
 .prophecy-card{background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.1);border-radius:20px;padding:24px;margin-bottom:14px;position:relative;overflow:hidden;}
 .prophecy-card::after{content:'☠';position:absolute;right:14px;bottom:8px;font-size:64px;opacity:.04;pointer-events:none;line-height:1;}
-.sec-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;}
 .prophecy-text{font-size:15px;line-height:1.9;color:var(--text);min-height:40px;}
 .type-cursor::after{content:'▋';animation:blink .8s step-end infinite;font-size:13px;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -449,8 +449,8 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .tl-item:last-child::before{display:none;}
 .tl-dot{width:24px;height:24px;border-radius:50%;border:2px solid;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:2px;}
 .tl-body{padding-bottom:20px;}
-.tl-time{font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:4px;}
-.tl-text{font-size:14px;color:var(--text);opacity:.8;line-height:1.65;}
+.tl-time{font-size:13px;font-weight:700;letter-spacing:.5px;margin-bottom:4px;}
+.tl-text{font-size:15px;color:var(--text);opacity:.85;line-height:1.65;}
 .priority-card{background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.07),rgba(var(--ar),var(--ag),var(--ab),.02));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.18);border-radius:16px;padding:22px;margin-bottom:14px;transition:border-color 1s,background 1s;}
 .priority-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent);opacity:.7;margin-bottom:8px;transition:color .8s;}
 .priority-main{font-size:16px;font-weight:700;margin-bottom:6px;}
@@ -459,12 +459,12 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bor
 .dim-item{background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:16px;cursor:pointer;transition:border-color .2s;}
 .dim-item:hover{border-color:rgba(var(--ar),var(--ag),var(--ab),.2);}
 .dim-item.expanded{border-color:rgba(var(--ar),var(--ag),var(--ab),.25);}
-.dim-name{font-size:11px;color:var(--dim);margin-bottom:9px;}
+.dim-name{font-size:13px;color:var(--dim);margin-bottom:9px;}
 .dim-bar-bg{height:3px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;}
 .dim-bar{height:100%;border-radius:10px;transition:width 1.1s .2s cubic-bezier(.25,.8,.25,1);}
 .dim-footer{display:flex;justify-content:space-between;align-items:center;margin-top:7px;}
 .dim-pct{font-family:'Space Mono',monospace;font-size:11px;}
-.dim-status{font-size:10px;color:var(--dim);}
+.dim-status{font-size:12px;color:var(--dim);}
 .dim-expand{max-height:0;overflow:hidden;transition:max-height .35s;margin-top:0;}
 .dim-item.expanded .dim-expand{max-height:280px;border-top:1px solid var(--card-border);margin-top:10px;padding-top:10px;}
 .dim-desc{font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--card-border);}
@@ -560,8 +560,8 @@ html.light .bh-part{fill:rgba(0,0,0,.05);stroke:rgba(0,0,0,.3);stroke-width:2;}
 .prof-match.under{color:#34d399;border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.06);}
 
 /* ══ LOADING STAGE TEXT ══ */
-.load-stage{font-size:11px;font-weight:500;color:rgba(255,255,255,.4);margin-top:14px;min-height:18px;letter-spacing:.3px;transition:opacity .3s;}
-.load-organ{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(var(--ar),var(--ag),var(--ab),.06);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:100px;font-size:11px;font-weight:500;color:var(--accent);margin:4px 3px;opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s;}
+.load-stage{font-size:13px;font-weight:600;color:rgba(255,255,255,.5);margin-top:14px;min-height:20px;letter-spacing:.5px;transition:opacity .3s;}
+.load-organ{display:inline-flex;align-items:center;gap:6px;padding:7px 18px;background:rgba(var(--ar),var(--ag),var(--ab),.07);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.15);border-radius:100px;font-size:13px;font-weight:600;color:var(--accent);margin:4px 3px;opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s;}
 .load-organ.scanned{opacity:1;transform:scale(1);}
 .load-organ.danger{color:#ef4444;border-color:rgba(255,68,68,.2);background:rgba(255,68,68,.06);animation:organDanger 1s ease infinite;}
 @keyframes organDanger{0%,100%{box-shadow:none}50%{box-shadow:0 0 12px rgba(239,68,68,.25);}}
@@ -697,8 +697,8 @@ html.light .glitch-title{color:#1a1a2e;text-shadow:0 0 60px rgba(var(--ar),var(-
 /* Light mode: loading screen */
 html.light .load-title{background:linear-gradient(135deg,#1a1a2e 40%,var(--accent))!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important;}
 html.light .load-sub{color:#555!important;}
-html.light .load-pct{color:var(--accent)!important;}
-html.light .load-status{color:var(--accent)!important;}
+html.light .load-pct{color:var(--accent)!important;background:none!important;-webkit-text-fill-color:var(--accent)!important;}
+html.light .load-status{color:rgba(var(--ar),var(--ag),var(--ab),.8)!important;}
 html.light .ecg-path{stroke:var(--accent)!important;filter:none!important;}
 html.light .load-organ{color:#555!important;border-color:rgba(0,0,0,.1)!important;background:rgba(0,0,0,.03)!important;}
 html.light .load-organ.scanned{border-color:var(--accent)!important;color:var(--accent)!important;background:rgba(var(--ar),var(--ag),var(--ab),.06)!important;}
@@ -2012,7 +2012,7 @@ const FUN_TAGS=[
   {e:'🍕',t:'深夜觅食者',col:'#fb923c',bg:'rgba(251,146,60,.1)',match:()=>ans[0]>=3&&ans[12]>=2,why:'凌晨一点下单外卖是你最后的仪式感'},
   {e:'🐌',t:'新陈代谢摆烂者',col:'#94a3b8',bg:'rgba(148,163,184,.1)',match:()=>ans[9]>=3&&ans[12]>=3&&ans[15]>=2,why:'你的基础代谢率已经在考虑退休了'},
   {e:'💊',t:'养生朋克',col:'#c084fc',bg:'rgba(192,132,252,.1)',match:()=>ans[20]>=2&&ans[14]>=2&&ans[10]>=1,why:'熬最晚的夜，吃最贵的保健品'},
-  {e:'🫁',t:'电子肺',col:'#64748b',bg:'rgba(100,116,139,.1)',match:()=>ans[20]>=3&&ans[21]>=2,why:'你的肺比城市空气净化器工作得更辛苦'},
+  {e:'💨',t:'电子肺',col:'#64748b',bg:'rgba(100,116,139,.1)',match:()=>ans[20]>=3&&ans[21]>=2,why:'你的肺比城市空气净化器工作得更辛苦'},
   {e:'🌅',t:'日出见证者',col:'#f97316',bg:'rgba(249,115,22,.1)',match:()=>ans[0]>=4&&ans[1]>=3,why:'你见过的日出比大多数人都多，但不是因为早起'},
   {e:'🎮',t:'虚拟世界居民',col:'#22d3ee',bg:'rgba(34,211,238,.1)',match:()=>ans[22]>=4,why:'你在现实世界只是个NPC，主号在手机里'},
   {e:'🧸',t:'情绪收纳师',col:'#fb7185',bg:'rgba(251,113,133,.1)',match:()=>ans[26]>=3&&ans[25]>=2,why:'你把情绪整理得很好——整理到了身体深处'},
@@ -2514,7 +2514,7 @@ function showLoading(){
   organsEl.innerHTML='';
   // Organ scan sequence
   const organs=[
-    {e:'❤️',n:'心脏',key:'work'},{e:'🧠',n:'大脑',key:'stress'},{e:'🫁',n:'肺',key:'habit'},
+    {e:'❤️',n:'心脏',key:'work'},{e:'🧠',n:'大脑',key:'stress'},{e:'💨',n:'肺',key:'habit'},
     {e:'🦴',n:'骨骼',key:'exercise'},{e:'🍽️',n:'消化系统',key:'diet'},{e:'👁️',n:'视觉系统',key:'habit'},
     {e:'🛡️',n:'免疫系统',key:'sleep'}
   ];
@@ -2592,7 +2592,7 @@ function drawRadar(dims,accentCol){
     poly.setAttribute('points',pts);if(p<1)requestAnimationFrame(frame);
   })(t0);
 }
-function calcSystems(dims){const get=k=>dims.find(d=>d.key===k)?.pct||0;return[{icon:'❤️',name:'心血管系统',risk:Math.round((get('work')*.4+get('stress')*.35+get('exercise')*.25)),note:'长期压力和缺乏运动是心血管疾病的主要非遗传风险因素'},{icon:'🦴',name:'肌肉骨骼系统',risk:Math.round((get('exercise')*.5+get('work')*.3+get('stress')*.2)),note:'久坐和缺乏运动加速肌肉萎缩和骨密度下降'},{icon:'🫁',name:'代谢与内分泌',risk:Math.round((get('diet')*.4+get('sleep')*.3+get('habit')*.3)),note:'睡眠、饮食和嗜好共同决定代谢健康'},{icon:'🧠',name:'神经与情绪',risk:Math.round((get('stress')*.4+get('emotion')*.4+get('sleep')*.2)),note:'长期高皮质醇直接影响大脑结构和情绪调节'}];}
+function calcSystems(dims){const get=k=>dims.find(d=>d.key===k)?.pct||0;return[{icon:'❤️',name:'心血管系统',risk:Math.round((get('work')*.4+get('stress')*.35+get('exercise')*.25)),note:'长期压力和缺乏运动是心血管疾病的主要非遗传风险因素'},{icon:'🦴',name:'肌肉骨骼系统',risk:Math.round((get('exercise')*.5+get('work')*.3+get('stress')*.2)),note:'久坐和缺乏运动加速肌肉萎缩和骨密度下降'},{icon:'⚗️',name:'代谢与内分泌',risk:Math.round((get('diet')*.4+get('sleep')*.3+get('habit')*.3)),note:'睡眠、饮食和嗜好共同决定代谢健康'},{icon:'🧠',name:'神经与情绪',risk:Math.round((get('stress')*.4+get('emotion')*.4+get('sleep')*.2)),note:'长期高皮质醇直接影响大脑结构和情绪调节'}];}
 function calcTimeline(s){if(s<20)return[{t:'现在',txt:'身体状况良好，各主要器官运作正常',col:'#34d399'},{t:'5-10年后',txt:'如保持现有习惯，预计维持良好状态',col:'#34d399'},{t:'10年后',txt:'以当前轨迹，身体年龄与实际年龄接近',col:'#a3e635'}];if(s<40)return[{t:'现在',txt:'整体状况良好，部分维度有改善空间',col:'#a3e635'},{t:'2-3年后',txt:'如不改变，可能开始出现慢性疲劳或轻度代谢异常',col:'#fbbf24'},{t:'5年后',txt:'亚健康症状可能固化，改变难度增加',col:'#f59e0b'}];if(s<60)return[{t:'现在',txt:'身体正在发出明显信号，多项指标偏高',col:'#fbbf24'},{t:'1-2年后',txt:'如不改变，慢性病风险显著上升',col:'#f59e0b'},{t:'3-5年后',txt:'心血管或代谢方面可能需要医疗干预',col:'#ef4444'}];if(s<80)return[{t:'现在',txt:'多项指标已超出安全范围',col:'#f59e0b'},{t:'6-18个月',txt:'如不改变，可能面临重大健康事件触发点',col:'#ef4444'},{t:'2-3年后',txt:'不改变的话，预计有严重医疗问题需要处理',col:'#ef4444'}];return[{t:'现在',txt:'当前状态已接近临界点，时间窗口非常紧迫',col:'#ef4444'},{t:'数月内',txt:'如不立即改变，身体可能发出最终警告',col:'#ef4444'},{t:'现在就开始',txt:'哪怕改变一件事，也会影响这个轨迹',col:'#f59e0b'}];}
 function getDoctorNote(s,dims,arch){
   const sorted=[...dims].sort((a,b)=>b.pct-a.pct);
@@ -2832,7 +2832,7 @@ function showResult(){
   const bhMap=[
     {id:'bh-head',parts:['bh-brain'],label:'🧠 大脑/神经',risk:Math.round((dimObj.stress||0)*.4+(dimObj.emotion||0)*.4+(dimObj.sleep||0)*.2)},
     {id:'bh-torso',parts:['bh-heart','bh-stomach'],label:'❤️ 心血管',risk:Math.round((dimObj.work||0)*.4+(dimObj.stress||0)*.35+(dimObj.exercise||0)*.25)},
-    {id:null,parts:[],label:'🫁 代谢系统',risk:Math.round((dimObj.diet||0)*.4+(dimObj.sleep||0)*.3+(dimObj.habit||0)*.3)},
+    {id:null,parts:[],label:'⚗️ 代谢系统',risk:Math.round((dimObj.diet||0)*.4+(dimObj.sleep||0)*.3+(dimObj.habit||0)*.3)},
     {id:null,parts:['bh-larm','bh-rarm','bh-lleg','bh-rleg'],label:'💪 肌肉骨骼',risk:Math.round((dimObj.exercise||0)*.5+(dimObj.work||0)*.3+(dimObj.stress||0)*.2)},
   ];
   const blEl=document.getElementById('body-legend');blEl.innerHTML='';
@@ -4059,7 +4059,7 @@ function updateFavicon(score){
       el.id='breathing-widget';
       el.className='rs on';
       el.innerHTML=`<div style="background:linear-gradient(135deg,rgba(96,165,250,.04),rgba(168,85,247,.03));border:1px solid rgba(96,165,250,.12);border-radius:16px;padding:24px;text-align:center;">
-        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(96,165,250,.5);margin-bottom:14px;">🫁 TRY THIS · 4-7-8 呼吸法</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(96,165,250,.5);margin-bottom:14px;">💨 TRY THIS · 4-7-8 呼吸法</div>
         <div id="breath-circle" style="width:80px;height:80px;border-radius:50%;border:2px solid rgba(96,165,250,.3);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#60a5fa;font-weight:700;transition:all 1s ease;cursor:pointer;" onclick="startBreathing()">开始</div>
         <div style="font-size:11px;color:var(--dim);line-height:1.7;">点击圆圈开始<br>吸气4秒 → 屏住7秒 → 呼气8秒</div>
       </div>`;
