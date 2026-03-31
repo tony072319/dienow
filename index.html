@@ -1181,6 +1181,37 @@ html.light .achievement-name{color:#1a1a2e;}
   .res-btns{gap:8px;}
   .btn-share,.btn-retry{padding:10px 22px;font-size:14px;}
 }
+
+/* ══ STREAMLINED RESULTS - hide detail sections, keep score/archetype/radar/prophecy/share ══ */
+#rs0, #rs3, #rs4, #rs4b, #rs4c, #rs5, #rs5b, #rs7b, #rs7c, #rs7d, #rs7e, #rs7f,
+#rs8, #rs9, #rs9b, #rs10, #rs10b, #rs11, #rs12, #rs12b, #rs12c, #rs12c2, #rs12d, #rs12e, #rs12f,
+.section-divider,
+#fortune-cookie, #tarot-card, #trading-card, #movie-rating, #final-verdict,
+#grade-card, #q-grades, #breathing-widget, #streak-badge-el, #comp-time,
+#streak-indicator, #retry-hint, #survival-countdown,
+#danger-badge, #fact-card { display: none !important; }
+
+/* ══ PROMINENT SCORE SECTION (rs1) ══ */
+#rs1 { padding-top: 32px; padding-bottom: 32px; }
+#rs1 .score-ring-wrap { width: 220px; height: 220px; margin-bottom: 28px; }
+#rs1 .score-ring-wrap svg { width: 220px; height: 220px; }
+#rs1 .score-num { font-size: 56px; }
+#rs1 .score-label { font-size: 15px; letter-spacing: 4px; margin-top: 4px; }
+#rs1 .grade-text { font-size: 28px; margin-top: 6px; }
+#rs1 .level-text { font-size: 17px; margin-top: 4px; }
+#rs1 .fun-tags { margin-top: 24px; gap: 10px; }
+#rs1 .fun-tag { font-size: 14px; padding: 8px 20px; }
+#rs1 .achievements { margin-top: 20px; }
+#rs1 .score-rank { margin-top: 24px; }
+#rs1 .dim-chips { margin-top: 20px; gap: 10px; }
+
+/* ══ PROMINENT SHARE/RETRY SECTION (rs13) ══ */
+#rs13 { padding-top: 28px; padding-bottom: 20px; }
+#rs13 .res-btns { gap: 14px; }
+#rs13 .btn-share { padding: 14px 32px; font-size: 16px; border-radius: 100px; }
+#rs13 .btn-retry { padding: 16px 40px; font-size: 18px; border-radius: 100px; box-shadow: 0 0 36px rgba(239,68,68,.35); }
+#rs13 .btn-retry:hover { box-shadow: 0 0 52px rgba(239,68,68,.55); }
+#rs13 .disclaimer { margin-top: 20px; }
 </style>
 </head>
 <body>
