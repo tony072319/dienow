@@ -10,6 +10,15 @@
       ]
     },
     {
+      "source": "/en.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
@@ -21,7 +30,15 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/en",
+      "destination": "/en.html"
+    },
+    {
+      "source": "/en/(.*)",
+      "destination": "/en.html"
+    },
+    {
+      "source": "/((?!en).*)",
       "destination": "/index.html"
     }
   ]

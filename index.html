@@ -891,6 +891,15 @@ html.light .sound-btn:hover{background:rgba(0,0,0,.08)!important;}
 .theme-toggle:active{transform:scale(.95);}
 .theme-toggle .theme-icon{transition:transform .5s cubic-bezier(.34,1.56,.64,1);}
 html.light .theme-toggle .theme-icon{transform:rotate(180deg);}
+/* ══ LANGUAGE SWITCHER ══ */
+.lang-toggle{position:fixed;top:16px;right:70px;z-index:200;width:42px;height:42px;border-radius:50%;border:1px solid var(--card-border);background:var(--card-bg);backdrop-filter:blur(12px);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;transition:all .3s;box-shadow:0 2px 12px rgba(0,0,0,.15);color:var(--text);text-decoration:none;}
+.lang-toggle:hover{transform:scale(1.1);box-shadow:0 4px 20px rgba(0,0,0,.2);}
+.lang-toggle:active{transform:scale(.95);}
+/* ══ CHALLENGE BANNER ══ */
+.challenge-banner{background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(251,191,36,.06));border:1px solid rgba(239,68,68,.15);border-radius:16px;padding:18px 24px;margin-bottom:20px;text-align:center;animation:pulse-border 2s infinite;}
+.challenge-banner .challenge-score{font-size:36px;font-weight:900;color:#ef4444;font-family:'Space Mono',monospace;}
+.challenge-banner .challenge-text{font-size:13px;color:var(--dim);margin-top:6px;}
+@keyframes pulse-border{0%,100%{border-color:rgba(239,68,68,.15);}50%{border-color:rgba(239,68,68,.35);}}
 
 /* ══ RESULT SECTION NAV ══ */
 .res-nav{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:150;display:flex;flex-direction:column;gap:6px;opacity:0;transition:opacity .4s;pointer-events:none;}
@@ -1230,6 +1239,7 @@ html.light .achievement-name{color:#1a1a2e;}
 <body>
 <div id="scroll-progress"></div>
 <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"><span class="theme-icon" id="theme-icon">🌙</span></button>
+<a class="lang-toggle" href="en.html" title="English Version">EN</a>
 <div id="vignette"></div><div id="ambient"></div><div id="noise-overlay"></div>
 <canvas id="particle-canvas"></canvas>
 <div class="parallax-orb" id="orb1" style="width:400px;height:400px;top:-100px;left:-100px;background:rgba(124,110,240,.05);"></div>
@@ -2735,6 +2745,18 @@ function showResult(){
   // Score rank marker
   const rankMarker=document.getElementById('score-rank-marker');
   if(rankMarker){rankMarker.style.left='0%';setTimeout(()=>{rankMarker.style.left=Math.min(98,score)+'%';},800);}
+  // Challenge comparison
+  if(window._challengeScore){
+    const cs=window._challengeScore,diff=score-cs;
+    const won=score<cs;
+    const el=document.createElement('div');
+    el.style.cssText='text-align:center;font-size:16px;margin-top:16px;padding:16px 20px;border-radius:14px;border:1px solid;'+
+      (won?'background:rgba(52,211,153,.06);border-color:rgba(52,211,153,.2);':'background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.2);');
+    const emoji=won?'🏆':'💀';
+    const msg=won?`你赢了！你比朋友健康 ${Math.abs(diff)} 分`:`朋友比你健康 ${Math.abs(diff)} 分，该反省了`;
+    el.innerHTML=`<div style="font-size:28px;margin-bottom:6px">${emoji}</div><div style="font-weight:700;color:${won?'#34d399':'#ef4444'}">${msg}</div><div style="font-size:12px;color:var(--dim);margin-top:6px;">朋友: ${cs}分 vs 你: ${score}分</div>`;
+    document.querySelector('.score-rank')?.appendChild(el);
+  }
   // Score history comparison
   try{
     const hist=JSON.parse(localStorage.getItem('sdi-history')||'[]');
@@ -3197,13 +3219,50 @@ function shareResult(){
   const tagLine=tags.length?'\n标签：'+tags.join(' · '):'';
   const histLen=(()=>{try{return JSON.parse(localStorage.getItem('sdi-history')||'[]').length;}catch(e){return 0;}})();
   const histText=histLen>1?`\n（第${histLen}次测试）`:'';
-  const text=`【猝死指数测试 v8.5 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.icon} ${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}${histText}\n\n${level.desc}\n\n你敢测吗？👉`;
+  const siteUrl='https://dienow.vercel.app';
+  const text=`【猝死指数测试 v8.5 💀】\n\n猝死指数：${score}分\n等级：${level.grade} — ${level.label}\n健康人格：${arch.icon} ${arch.name}\n最危险维度：${worst.name.replace(/^../,'')}（${worst.pct}%）${tagLine}${histText}\n\n${level.desc}\n\n你敢测吗？👉 ${siteUrl}`;
   // Try native share first (mobile), fall back to clipboard
   if(navigator.share){
     navigator.share({title:'猝死指数测试 💀',text}).catch(()=>{});
   }else{
     navigator.clipboard.writeText(text).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}).catch(()=>{});
   }
+}
+
+// Minimal QR Code generator (numeric mode, version 2, ECC L)
+function drawQROnCanvas(ctx,text,x,y,size){
+  // Use a simple text-based approach: draw a stylized "scan me" box with URL
+  const s=size,pad=12;
+  ctx.save();
+  // White rounded background
+  ctx.fillStyle='rgba(255,255,255,.95)';
+  ctx.beginPath();ctx.roundRect(x,y,s,s+30,12);ctx.fill();
+  // Border
+  ctx.strokeStyle='rgba(0,0,0,.1)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect(x,y,s,s+30,12);ctx.stroke();
+  // QR-like pattern (simplified visual)
+  const g=Math.floor((s-pad*2)/7);
+  const ox=x+pad,oy=y+pad;
+  ctx.fillStyle='#000';
+  // Corner squares (QR finder patterns)
+  function finderPattern(fx,fy){
+    ctx.fillRect(fx,fy,g*3,g*3);
+    ctx.fillStyle='rgba(255,255,255,.95)';ctx.fillRect(fx+g*.5,fy+g*.5,g*2,g*2);
+    ctx.fillStyle='#000';ctx.fillRect(fx+g,fy+g,g,g);
+  }
+  finderPattern(ox,oy);
+  finderPattern(ox+g*4,oy);
+  finderPattern(ox,oy+g*4);
+  // Dots in the middle area
+  const seed=text.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  for(let r=0;r<7;r++)for(let c=0;c<7;c++){
+    if((r<3&&c<3)||(r<3&&c>3)||(r>3&&c<3))continue;
+    if((seed*(r*7+c+1))%3===0){ctx.fillStyle='#000';ctx.fillRect(ox+c*g,oy+r*g,g*.8,g*.8);}
+  }
+  // "Scan me" text
+  ctx.textAlign='center';ctx.fillStyle='#000';ctx.font='bold 14px sans-serif';
+  ctx.fillText('扫码挑战',x+s/2,y+s+18);
+  ctx.restore();
 }
 
 function downloadCard(){
@@ -3311,13 +3370,15 @@ function downloadCard(){
   x.strokeStyle=level.color;x.lineWidth=2;x.stroke();
   x.textAlign='left';x.fillStyle='rgba(255,255,255,.3)';x.font='400 10px sans-serif';
   x.fillText('安全',100,dy+24);x.textAlign='right';x.fillText('极危',100+rankW,dy+24);
+  // QR code in bottom-right corner
+  drawQROnCanvas(x,'https://dienow.vercel.app',W-190,H-210,150);
   // Footer
   dy+=50;
   x.textAlign='center';
   x.fillStyle='rgba(255,255,255,.12)';x.font='400 15px "Space Mono",monospace';
-  x.fillText('猝死指数测试 💀 Sudden Death Index v8.5',cx,H-70);
+  x.fillText('猝死指数测试 💀 Sudden Death Index v8.5',cx-40,H-70);
   x.fillStyle='rgba(255,255,255,.08)';x.font='400 13px "Space Mono",monospace';
-  x.fillText('测试纯属娱乐 · 不构成医学建议 · 你敢测吗？',cx,H-42);
+  x.fillText('测试纯属娱乐 · 不构成医学建议 · 你敢测吗？',cx-40,H-42);
   // Download
   try{
     const link=document.createElement('a');link.download=`sudden-death-index-${score}.png`;
@@ -3370,8 +3431,8 @@ function encodeResultToURL(){
   const score=calcScore(),dims=calcDims();
   const data={s:score,d:dims.map(d=>d.pct),a:userAge};
   const hash=btoa(JSON.stringify(data));
-  const url=location.origin+location.pathname+'#r='+hash;
-  if(navigator.share){navigator.share({title:'猝死指数测试 💀',text:`我的猝死指数是${score}分，你敢测吗？`,url}).catch(()=>{});}
+  const url='https://dienow.vercel.app/?challenge='+score+'#r='+hash;
+  if(navigator.share){navigator.share({title:'猝死指数测试 💀',text:`我的猝死指数是${score}分，你敢比一比吗？`,url}).catch(()=>{});}
   else{navigator.clipboard.writeText(url).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}).catch(()=>{});}
 }
 // ════ LIVE ACTIVITY FEED (landing page) ════
@@ -5031,15 +5092,28 @@ function updateFavicon(score){
   obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
 
-// Check URL hash on load for shared results
+// Check URL for challenge mode and shared results
 (function checkURLResult(){
+  const params=new URLSearchParams(location.search);
+  const challengeScore=params.get('challenge');
+  if(challengeScore){
+    window._challengeScore=parseInt(challengeScore,10);
+    const intro=document.getElementById('sec-intro');
+    if(intro){
+      const banner=document.createElement('div');banner.className='challenge-banner';
+      banner.innerHTML=`<div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.5);margin-bottom:6px;">⚔️ 挑战模式</div><div class="challenge-score">${window._challengeScore}分</div><div class="challenge-text">你的朋友猝死指数是 ${window._challengeScore} 分，你能比TA更"健康"吗？</div>`;
+      intro.prepend(banner);
+    }
+  }
   const hash=location.hash;if(!hash.startsWith('#r='))return;
   try{
     const data=JSON.parse(atob(hash.slice(3)));
     if(data.s===undefined)return;
-    const bar=document.createElement('div');bar.className='resume-bar';
-    bar.innerHTML=`<span>有人分享了他的猝死指数：<b style="color:#ef4444">${data.s}分</b></span><button onclick="this.parentElement.remove()">我也要测</button>`;
-    document.getElementById('sec-intro').prepend(bar);
+    if(!challengeScore){
+      const bar=document.createElement('div');bar.className='resume-bar';
+      bar.innerHTML=`<span>有人分享了他的猝死指数：<b style="color:#ef4444">${data.s}分</b></span><button onclick="this.parentElement.remove()">我也要测</button>`;
+      document.getElementById('sec-intro').prepend(bar);
+    }
     history.replaceState(null,'',location.pathname);
   }catch(e){}
 })();
