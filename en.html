@@ -1195,37 +1195,37 @@ html.light .achievement-name{color:#1a1a2e;}
 #danger-badge, #fact-card { display: none !important; }
 
 /* ══ ENHANCED SCORE SECTION ══ */
-#rs1 { padding-top: 40px !important; padding-bottom: 40px !important; }
-#rs1 .res-grade { font-size: 36px !important; letter-spacing: 8px !important; margin-bottom: 20px !important; }
-#rs1 .score-ring-wrap { width: 280px !important; height: 280px !important; margin-bottom: 28px !important; }
-#rs1 .score-ring-wrap svg { width: 280px !important; height: 280px !important; }
-#rs1 .score-num { font-size: 80px !important; }
-#rs1 .score-lbl { font-size: 13px !important; letter-spacing: 5px !important; margin-top: 4px !important; }
-#rs1 .res-level { font-size: 24px !important; font-weight: 800 !important; margin-bottom: 12px !important; }
-#rs1 .res-desc { font-size: 17px !important; line-height: 1.8 !important; max-width: 600px !important; margin: 0 auto 16px !important; }
-#rs1 .dim-chips { margin-top: 24px !important; gap: 10px !important; }
-#rs1 .dim-chip { font-size: 14px !important; padding: 8px 16px !important; }
-#rs1 .fun-tags-label { font-size: 13px !important; letter-spacing: 4px !important; }
-#rs1 .fun-tags { margin-top: 12px !important; gap: 12px !important; }
-#rs1 .fun-tag { font-size: 16px !important; padding: 10px 22px !important; }
-#rs1 .achievements { margin-top: 24px !important; }
-#rs1 .score-rank { margin-top: 28px !important; font-size: 14px !important; }
-#rs1 .score-rank-labels { font-size: 13px !important; }
+#rs1 { padding-top: 40px; padding-bottom: 40px; }
+#rs1 .res-grade { font-size: 36px; letter-spacing: 8px; margin-bottom: 20px; }
+#rs1 .score-ring-wrap { width: 280px; height: 280px; margin-bottom: 28px; }
+#rs1 .score-ring-wrap svg { width: 280px; height: 280px; }
+#rs1 .score-num { font-size: 80px; }
+#rs1 .score-lbl { font-size: 13px; letter-spacing: 5px; margin-top: 4px; }
+#rs1 .res-level { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+#rs1 .res-desc { font-size: 17px; line-height: 1.8; max-width: 600px; margin: 0 auto 16px; }
+#rs1 .dim-chips { margin-top: 24px; gap: 10px; }
+#rs1 .dim-chip { font-size: 14px; padding: 8px 16px; }
+#rs1 .fun-tags-label { font-size: 13px; letter-spacing: 4px; }
+#rs1 .fun-tags { margin-top: 12px; gap: 12px; }
+#rs1 .fun-tag { font-size: 16px; padding: 10px 22px; }
+#rs1 .achievements { margin-top: 24px; }
+#rs1 .score-rank { margin-top: 28px; font-size: 14px; }
+#rs1 .score-rank-labels { font-size: 13px; }
 
 /* ══ ENHANCED SHARE SECTION ══ */
-#rs13 .btn-share { font-size: 16px !important; padding: 14px 24px !important; }
-#rs13 .btn-retry { font-size: 18px !important; padding: 16px 32px !important; box-shadow: 0 0 30px rgba(var(--ar),var(--ag),var(--ab),.3) !important; }
-#rs13 .res-btns { gap: 12px !important; margin-bottom: 20px !important; }
+#rs13 .btn-share { font-size: 16px; padding: 14px 24px; }
+#rs13 .btn-retry { font-size: 18px; padding: 16px 32px; box-shadow: 0 0 30px rgba(var(--ar),var(--ag),var(--ab),.3); }
+#rs13 .res-btns { gap: 12px; margin-bottom: 20px; }
 
 /* ══ BIGGER ARCHETYPE SECTION ══ */
-.arch-pretitle { font-size: 14px !important; letter-spacing: 4px !important; }
-.arch-name { font-size: 28px !important; }
-.arch-desc { font-size: 16px !important; line-height: 1.8 !important; }
-.arch-icon { font-size: 52px !important; }
-.arch-badge { font-size: 12px !important; padding: 6px 14px !important; }
-#arch-traits span { font-size: 15px !important; padding: 8px 18px !important; }
-#arch-compat { font-size: 15px !important; }
-.archetype-card { padding: 28px !important; }
+.arch-pretitle { font-size: 14px; letter-spacing: 4px; }
+.arch-name { font-size: 28px; }
+.arch-desc { font-size: 16px; line-height: 1.8; }
+.arch-icon { font-size: 52px; }
+.arch-badge { font-size: 12px; padding: 6px 14px; }
+#arch-traits span { font-size: 15px; padding: 8px 18px; }
+#arch-compat { font-size: 15px; }
+.archetype-card { padding: 28px; }
 </style>
 </head>
 <body>
@@ -2021,7 +2021,7 @@ const DIM_DESC={
     low:'Your emotional state is healthy and stable. Good emotional regulation is one of the most underrated factors in longevity.'
   }
 };
-const ARCHETYPES=[{key:'burner',icon:'🔥',name:'The Hustle Zombie',badge:'CAREER MARTYR',match:d=>d.work>=65&&d.stress>=55,bg:'rgba(255,80,0,.04)',border:'rgba(255,80,0,.2)',color:'#f59e0b',desc:'You\'ve turned yourself into an always-on human server. Work and stress have merged into one — you can no longer tell which anxieties are normal and which aren\'t.'},{key:'ghost',icon:'👻',name:'The Doomscroller',badge:'DIGITAL GHOST',match:d=>d.sleep>=60&&d.habit>=55,bg:'rgba(0,200,255,.04)',border:'rgba(0,200,255,.2)',color:'#60a5fa',desc:'Your life happens on a screen. Your circadian rhythm has been recalibrated by blue light, and your social needs are being filled by algorithms — neither of those is a good thing.'},{key:'zombie',icon:'🧟',name:'The DoorDash Dependent',badge:'DELIVERY HUMAN',match:d=>d.diet>=60&&d.exercise>=55,bg:'rgba(200,100,0,.04)',border:'rgba(200,100,0,.2)',color:'#cc6600',desc:'Your digestive system has adapted to the shape of takeout containers, and your legs have forgotten what long-distance walking feels like.'},{key:'anxious',icon:'😰',name:'The Anxiety Engine',badge:'ANXIETY ENGINE',match:d=>d.stress>=65&&d.emotion>=60,bg:'rgba(180,0,255,.04)',border:'rgba(180,0,255,.2)',color:'#cc44ff',desc:'Your brain has evolved a special ability: finding something to worry about in any situation. Your amygdala has never truly rested.'},{key:'fossil',icon:'🪨',name:'The Sedentary Fossil',badge:'SEDIMENTARY HUMAN',match:d=>d.work>=60&&d.exercise>=65,bg:'rgba(100,100,100,.05)',border:'rgba(150,150,150,.2)',color:'#aaaaaa',desc:'Your musculoskeletal system is slowly petrifying at geological speed. The medical community considers prolonged sitting equivalent to smoking.'},{key:'night',icon:'🌙',name:'The 3AM Philosopher',badge:'NOCTURNAL THINKER',match:d=>d.sleep>=60&&d.emotion>=55,bg:'rgba(50,0,100,.06)',border:'rgba(100,50,200,.2)',color:'#8855ff',desc:'You\'ve turned nighttime into a safe space for pondering life\'s ultimate questions. Every late night, you\'re borrowing from tomorrow\'s clarity and next year\'s lifespan.'},{key:'puncher',icon:'🥊',name:'The "I\'m Fine" Fighter',badge:'TOUGH IT OUT',match:d=>d.stress>=55&&d.exercise>=50&&d.emotion>=50,bg:'rgba(255,100,50,.04)',border:'rgba(255,100,50,.2)',color:'#ff6633',desc:'You carry everything, endure everything, say nothing. "I\'m fine" is your biggest lie. Your body is waiting for the day you finally stop toughing it out.'},{key:'phantom',icon:'🫥',name:'The Invisible Worker',badge:'INVISIBLE WORKER',match:d=>d.work>=55&&d.emotion>=55&&d.diet>=45,bg:'rgba(150,150,200,.04)',border:'rgba(150,150,200,.2)',color:'#9999cc',desc:'You disappeared at your desk, but nobody noticed. You trade silence for stability and endurance for performance reviews. You\'re as essential as air — and just as invisible.'},{key:'hedonist',icon:'🎰',name:'The Instant Gratification Addict',badge:'INSTANT GRATIFICATION',match:d=>d.habit>=60&&d.diet>=55&&d.emotion>=45,bg:'rgba(255,50,200,.04)',border:'rgba(255,50,200,.2)',color:'#ff44aa',desc:'Your brain\'s reward circuit is tuned to "instant pleasure only" mode. Delivery food, TikTok, coffee, snacks — each one is a tool you use to numb the present moment.'},{key:'timebomb',icon:'💣',name:'The Ticking Time Bomb',badge:'TIME BOMB',match:d=>d.sleep>=55&&d.work>=55&&d.stress>=50&&d.exercise>=45,bg:'rgba(255,0,0,.04)',border:'rgba(255,0,0,.2)',color:'#ff3333',desc:'You\'re accumulating risk across four or more dimensions simultaneously. You feel fine right now, but that\'s exactly what makes it dangerous — multi-dimensional deterioration means the trigger could come on any ordinary day.'},{key:'declining',icon:'📉',name:'The Slowly Declining Average',badge:'DECLINING AVERAGE',match:d=>Object.values(d).filter(v=>v>=35&&v<65).length>=4,bg:'rgba(255,200,0,.04)',border:'rgba(255,200,0,.2)',color:'#fbbf24',desc:'No single dimension is terrible, but none of them are good either. Sub-health is insidious because it never triggers an alarm — it just makes you increasingly tired.'},{key:'healthgod',icon:'✨',name:'The Health God',badge:'HEALTH GOD',match:d=>{const s=calcScore();return s<15;},bg:'rgba(52,211,153,.06)',border:'rgba(52,211,153,.25)',color:'#34d399',desc:'You\u2019re a living legend \u2014 in a world of DoorDash and doom scrolling, you\u2019re somehow a textbook example of healthy living. Are you a time traveler from a wellness utopia?'},{key:'nightowl',icon:'🦉',name:'The Night Owl',badge:'NIGHT OWL',match:d=>d.sleep>=50&&d.work<50&&d.stress<50,bg:'rgba(136,85,255,.04)',border:'rgba(136,85,255,.2)',color:'#8855ff',desc:'Your circadian rhythm runs opposite to the sun. Everything else is actually fine \u2014 if you could just go to bed one hour earlier, your scores would look way better.'},{key:'stresseater',icon:'🍔',name:'The Stress Eater',badge:'STRESS EATER',match:d=>d.stress>=45&&d.diet>=45&&d.emotion>=40,bg:'rgba(245,158,11,.04)',border:'rgba(245,158,11,.2)',color:'#f59e0b',desc:'You fill emotional voids with food. Stressed? Order DoorDash. Anxious? Grab snacks. Your stomach has become your emotional trash can.'},{key:'weekendwarrior',icon:'⚡',name:'The Weekend Warrior',badge:'WEEKEND WARRIOR',match:d=>d.exercise>=45&&d.work>=45&&d.sleep<55,bg:'rgba(34,211,238,.04)',border:'rgba(34,211,238,.2)',color:'#22d3ee',desc:'Sedentary all week, then you go beast mode on Saturday trying to make up for it. Your knees would like to file a formal complaint about this approach.'},{key:'socialzombie',icon:'📵',name:'The Social Hermit',badge:'SOCIAL HERMIT',match:d=>d.emotion>=50&&d.habit>=40&&d.exercise>=40,bg:'rgba(148,163,184,.04)',border:'rgba(148,163,184,.2)',color:'#94a3b8',desc:'Your social circle has shrunk to the size of your phone screen. You trade solitude for safety, but loneliness is quietly eroding your mental and physical health.'},{key:'caffeineking',icon:'☕',name:'The Caffeine Monarch',badge:'CAFFEINE ROYALTY',match:d=>d.habit>=45&&d.sleep>=40&&d.work>=40,bg:'rgba(204,136,68,.04)',border:'rgba(204,136,68,.2)',color:'#cc8844',desc:'Your blood caffeine concentration might be higher than your water content. You use coffee to fight fatigue, boost productivity, and pretend everything is fine.'},{key:'survivor',icon:'🛡️',name:'The Corporate Survivor',badge:'CORPORATE SURVIVOR',match:d=>{const s=calcScore();return s>=30&&s<50&&d.work>=40;},bg:'rgba(163,230,53,.04)',border:'rgba(163,230,53,.2)',color:'#a3e635',desc:'You\u2019ve barely held the health line in a high-pressure job. Not great, but considering your workload, it\u2019s honestly kind of a victory.'},{key:'overthinker',icon:'💭',name:'The Overthinker',badge:'OVERTHINKER',match:d=>d.emotion>=45&&d.stress>=40&&d.sleep>=35,bg:'rgba(167,139,250,.04)',border:'rgba(167,139,250,.2)',color:'#a78bfa',desc:'Your brain never stops running. Analyzing problems by day, reviewing life choices by night \u2014 you\u2019ve figured everything out except how to fall asleep.'},{key:'model',icon:'⚰️',name:'Prime Candidate for Sudden Death',badge:'PRIME CANDIDATE',match:d=>{const s=calcScore();return s>=70;},bg:'rgba(239,68,68,.05)',border:'rgba(239,68,68,.22)',color:'#ef4444',desc:'You\'ve reached impressively dangerous levels across nearly every dimension. This calls for comprehensive change — not tweaking one thing, but rethinking your entire lifestyle.'},{key:'balanced',icon:'⚖️',name:'The Balanced Average',badge:'THE AVERAGE',match:()=>true,bg:'rgba(100,160,255,.04)',border:'rgba(100,160,255,.2)',color:'#60a5fa',desc:'You don\'t fit any extreme type — you\'re fairly balanced across the board. No standout risks, but don\'t get complacent. Keep it up.'}];
+const ARCHETYPES=[{key:'burner',icon:'🔥',name:'The Hustle Zombie',badge:'CAREER MARTYR',match:d=>d.work>=65&&d.stress>=55,bg:'rgba(255,80,0,.04)',border:'rgba(255,80,0,.2)',color:'#f59e0b',desc:'You\'ve turned yourself into an always-on human server. Work and stress have merged into one — you can no longer tell which anxieties are normal and which aren\'t.'},{key:'ghost',icon:'👻',name:'The Doomscroller',badge:'DIGITAL GHOST',match:d=>d.sleep>=60&&d.habit>=55,bg:'rgba(0,200,255,.04)',border:'rgba(0,200,255,.2)',color:'#60a5fa',desc:'Your life happens on a screen. Your circadian rhythm has been recalibrated by blue light, and your social needs are being filled by algorithms — neither of those is a good thing.'},{key:'zombie',icon:'🧟',name:'The DoorDash Dependent',badge:'DELIVERY HUMAN',match:d=>d.diet>=60&&d.exercise>=55,bg:'rgba(200,100,0,.04)',border:'rgba(200,100,0,.2)',color:'#cc6600',desc:'Your digestive system has adapted to the shape of takeout containers, and your legs have forgotten what long-distance walking feels like.'},{key:'anxious',icon:'😰',name:'The Anxiety Engine',badge:'ANXIETY ENGINE',match:d=>d.stress>=65&&d.emotion>=60,bg:'rgba(180,0,255,.04)',border:'rgba(180,0,255,.2)',color:'#cc44ff',desc:'Your brain has evolved a special ability: finding something to worry about in any situation. Your amygdala has never truly rested.'},{key:'fossil',icon:'🪨',name:'The Sedentary Fossil',badge:'SEDIMENTARY HUMAN',match:d=>d.work>=60&&d.exercise>=65,bg:'rgba(100,100,100,.05)',border:'rgba(150,150,150,.2)',color:'#aaaaaa',desc:'Your musculoskeletal system is slowly petrifying at geological speed. The medical community considers prolonged sitting equivalent to smoking.'},{key:'night',icon:'🌙',name:'The 3AM Philosopher',badge:'NOCTURNAL THINKER',match:d=>d.sleep>=60&&d.emotion>=55,bg:'rgba(50,0,100,.06)',border:'rgba(100,50,200,.2)',color:'#8855ff',desc:'You\'ve turned nighttime into a safe space for pondering life\'s ultimate questions. Every late night, you\'re borrowing from tomorrow\'s clarity and next year\'s lifespan.'},{key:'puncher',icon:'🥊',name:'The "I\'m Fine" Fighter',badge:'TOUGH IT OUT',match:d=>d.stress>=55&&d.exercise>=50&&d.emotion>=50,bg:'rgba(255,100,50,.04)',border:'rgba(255,100,50,.2)',color:'#ff6633',desc:'You carry everything, endure everything, say nothing. "I\'m fine" is your biggest lie. Your body is waiting for the day you finally stop toughing it out.'},{key:'phantom',icon:'🫥',name:'The Invisible Worker',badge:'INVISIBLE WORKER',match:d=>d.work>=55&&d.emotion>=55&&d.diet>=45,bg:'rgba(150,150,200,.04)',border:'rgba(150,150,200,.2)',color:'#9999cc',desc:'You disappeared at your desk, but nobody noticed. You trade silence for stability and endurance for performance reviews. You\'re as essential as air — and just as invisible.'},{key:'hedonist',icon:'🎰',name:'The Instant Gratification Addict',badge:'INSTANT GRATIFICATION',match:d=>d.habit>=60&&d.diet>=55&&d.emotion>=45,bg:'rgba(255,50,200,.04)',border:'rgba(255,50,200,.2)',color:'#ff44aa',desc:'Your brain\'s reward circuit is tuned to "instant pleasure only" mode. Delivery food, TikTok, coffee, snacks — each one is a tool you use to numb the present moment.'},{key:'timebomb',icon:'💣',name:'The Ticking Time Bomb',badge:'TIME BOMB',match:d=>d.sleep>=55&&d.work>=55&&d.stress>=50&&d.exercise>=45,bg:'rgba(255,0,0,.04)',border:'rgba(255,0,0,.2)',color:'#ff3333',desc:'You\'re accumulating risk across four or more dimensions simultaneously. You feel fine right now, but that\'s exactly what makes it dangerous — multi-dimensional deterioration means the trigger could come on any ordinary day.'},{key:'declining',icon:'📉',name:'The Slowly Declining Average',badge:'DECLINING AVERAGE',match:d=>Object.values(d).filter(v=>v>=35&&v<65).length>=4,bg:'rgba(255,200,0,.04)',border:'rgba(255,200,0,.2)',color:'#fbbf24',desc:'No single dimension is terrible, but none of them are good either. Sub-health is insidious because it never triggers an alarm — it just makes you increasingly tired.'},{key:'healthgod',icon:'✨',name:'The Health God',badge:'HEALTH GOD',match:(d,s)=>s<15,bg:'rgba(52,211,153,.06)',border:'rgba(52,211,153,.25)',color:'#34d399',desc:'You\u2019re a living legend \u2014 in a world of DoorDash and doom scrolling, you\u2019re somehow a textbook example of healthy living. Are you a time traveler from a wellness utopia?'},{key:'nightowl',icon:'🦉',name:'The Night Owl',badge:'NIGHT OWL',match:d=>d.sleep>=50&&d.work<50&&d.stress<50,bg:'rgba(136,85,255,.04)',border:'rgba(136,85,255,.2)',color:'#8855ff',desc:'Your circadian rhythm runs opposite to the sun. Everything else is actually fine \u2014 if you could just go to bed one hour earlier, your scores would look way better.'},{key:'stresseater',icon:'🍔',name:'The Stress Eater',badge:'STRESS EATER',match:d=>d.stress>=45&&d.diet>=45&&d.emotion>=40,bg:'rgba(245,158,11,.04)',border:'rgba(245,158,11,.2)',color:'#f59e0b',desc:'You fill emotional voids with food. Stressed? Order DoorDash. Anxious? Grab snacks. Your stomach has become your emotional trash can.'},{key:'weekendwarrior',icon:'⚡',name:'The Weekend Warrior',badge:'WEEKEND WARRIOR',match:d=>d.exercise>=45&&d.work>=45&&d.sleep<55,bg:'rgba(34,211,238,.04)',border:'rgba(34,211,238,.2)',color:'#22d3ee',desc:'Sedentary all week, then you go beast mode on Saturday trying to make up for it. Your knees would like to file a formal complaint about this approach.'},{key:'socialzombie',icon:'📵',name:'The Social Hermit',badge:'SOCIAL HERMIT',match:d=>d.emotion>=50&&d.habit>=40&&d.exercise>=40,bg:'rgba(148,163,184,.04)',border:'rgba(148,163,184,.2)',color:'#94a3b8',desc:'Your social circle has shrunk to the size of your phone screen. You trade solitude for safety, but loneliness is quietly eroding your mental and physical health.'},{key:'caffeineking',icon:'☕',name:'The Caffeine Monarch',badge:'CAFFEINE ROYALTY',match:d=>d.habit>=45&&d.sleep>=40&&d.work>=40,bg:'rgba(204,136,68,.04)',border:'rgba(204,136,68,.2)',color:'#cc8844',desc:'Your blood caffeine concentration might be higher than your water content. You use coffee to fight fatigue, boost productivity, and pretend everything is fine.'},{key:'corpsurvivor',icon:'🛡️',name:'The Corporate Survivor',badge:'CORPORATE SURVIVOR',match:(d,s)=>s>=30&&s<50&&d.work>=40,bg:'rgba(163,230,53,.04)',border:'rgba(163,230,53,.2)',color:'#a3e635',desc:'You\u2019ve barely held the health line in a high-pressure job. Not great, but considering your workload, it\u2019s honestly kind of a victory.'},{key:'overthinker',icon:'💭',name:'The Overthinker',badge:'OVERTHINKER',match:d=>d.emotion>=45&&d.stress>=40&&d.sleep>=35,bg:'rgba(167,139,250,.04)',border:'rgba(167,139,250,.2)',color:'#a78bfa',desc:'Your brain never stops running. Analyzing problems by day, reviewing life choices by night \u2014 you\u2019ve figured everything out except how to fall asleep.'},{key:'model',icon:'⚰️',name:'Prime Candidate for Sudden Death',badge:'PRIME CANDIDATE',match:(d,s)=>s>=70,bg:'rgba(239,68,68,.05)',border:'rgba(239,68,68,.22)',color:'#ef4444',desc:'You\'ve reached impressively dangerous levels across nearly every dimension. This calls for comprehensive change — not tweaking one thing, but rethinking your entire lifestyle.'},{key:'balanced',icon:'⚖️',name:'The Balanced Average',badge:'THE AVERAGE',match:()=>true,bg:'rgba(100,160,255,.04)',border:'rgba(100,160,255,.2)',color:'#60a5fa',desc:'You don\'t fit any extreme type — you\'re fairly balanced across the board. No standout risks, but don\'t get complacent. Keep it up.'}];
 
 const FUN_TAGS=[
   {e:'🦉',t:'Veteran Night Owl',col:'#8855ff',bg:'rgba(136,85,255,.1)',match:()=>ans[0]>=3,why:'Your bedtime has surpassed the biological clock limits of most humans'},
@@ -2778,7 +2778,7 @@ function showResult(){
   const achEl=document.getElementById('achievements');achEl.innerHTML='';
   const achMatched=ACHIEVEMENTS.filter(a=>{try{return a.match();}catch(e){return false;}});
   achMatched.forEach((a,i)=>{const el=document.createElement('div');el.className='ach';el.innerHTML=`<span class="ach-icon">${a.icon}</span>${a.name}${a.rare?`<span class="ach-rare">${a.rare}</span>`:''}`;el.style.color=a.col;el.style.borderColor=a.border;el.style.background=a.bg;el.title=a.desc;setTimeout(()=>el.classList.add('on'),900+i*250);achEl.appendChild(el);});
-  const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
+  const arch=ARCHETYPES.find(a=>a.match(dimObj,score))||ARCHETYPES[ARCHETYPES.length-1];
   const ac=document.getElementById('archetype-card');ac.style.background=arch.bg;ac.style.border=`1px solid ${arch.border}`;
   document.getElementById('arch-icon').textContent=arch.icon;document.getElementById('arch-icon').style.textShadow=`0 0 20px ${arch.color}`;
   document.getElementById('arch-name').textContent=arch.name;document.getElementById('arch-name').style.color=arch.color;
@@ -2803,7 +2803,7 @@ function showResult(){
     weekendwarrior:['\u26A1 Weekend Beast','\uD83EA\uDE91 Weekday Couch','\uD83D\uDCAA Binge Exerciser','\uD83E\uDDB5 Knee Pain'],
     socialzombie:['\uD83D\uDCF5 Social Allergic','\uD83C\uDFE0 Homebody','\uD83D\uDE36 Silent Type','\uD83D\uDCF1 Online Only'],
     caffeineking:['\u2615 Coffee-Powered','\uD83D\uDE35 Sleep Deprived','\uD83D\uDD0B Runs on Caffeine','\u26A1 Artificial Energy'],
-    survivor:['\uD83D\uDEE1\uFE0F Barely Passing','\uD83D\uDCBC High-Pressure Job','\u2696\uFE0F Struggling Balance','\uD83D\uDCAA Still Standing'],
+    corpsurvivor:['\uD83D\uDEE1\uFE0F Barely Passing','\uD83D\uDCBC High-Pressure Job','\u2696\uFE0F Struggling Balance','\uD83D\uDCAA Still Standing'],
     overthinker:['\uD83D\uDCAD Overthinks Everything','\uD83E\uDDE0 Brain Won\u2019t Stop','\uD83D\uDE34 Can\u2019t Sleep','\uD83D\uDCCA Over-Analyzes'],
     model:['☠\uFE0F Full Danger','🚨 Emergency Mode','📋 Needs Change Now','⏰ Running Out of Time'],
     balanced:['⚖\uFE0F Well-Balanced','🙂 Doing OK','📊 No Extremes','🌿 Keep It Up'],
@@ -2813,7 +2813,7 @@ function showResult(){
     traitsEl.innerHTML+=`<span style="font-size:14px;padding:6px 14px;background:${arch.bg||'rgba(255,255,255,.04)'};border:1px solid ${arch.border||'rgba(255,255,255,.08)'};border-radius:100px;color:${arch.color||'#aaa'}">${t}</span>`;
   });
   // Compatible archetype
-  const compatMap={burner:'night',ghost:'fossil',zombie:'anxious',anxious:'hedonist',fossil:'ghost',night:'burner',puncher:'phantom',phantom:'puncher',hedonist:'anxious',timebomb:'model',declining:'declining',model:'timebomb',balanced:'declining',healthgod:'balanced',nightowl:'caffeineking',stresseater:'hedonist',weekendwarrior:'fossil',socialzombie:'phantom',caffeineking:'nightowl',survivor:'declining',overthinker:'anxious'};
+  const compatMap={burner:'night',ghost:'fossil',zombie:'anxious',anxious:'hedonist',fossil:'ghost',night:'burner',puncher:'phantom',phantom:'puncher',hedonist:'anxious',timebomb:'model',declining:'declining',model:'timebomb',balanced:'declining',healthgod:'balanced',nightowl:'caffeineking',stresseater:'hedonist',weekendwarrior:'fossil',socialzombie:'phantom',caffeineking:'nightowl',corpsurvivor:'declining',overthinker:'anxious'};
   const compatKey=compatMap[arch.key]||'declining';
   const compatArch=ARCHETYPES.find(a=>a.key===compatKey);
   if(compatArch){
@@ -3193,7 +3193,7 @@ function shareResult(){
   const score=calcScore(),level=LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
   const dims=calcDims(),worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
   const dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
-  const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
+  const arch=ARCHETYPES.find(a=>a.match(dimObj,score))||ARCHETYPES[ARCHETYPES.length-1];
   const tags=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,3).map(t=>t.e+t.t);
   const tagLine=tags.length?'\nTags:'+tags.join(' · '):'';
   const histLen=(()=>{try{return JSON.parse(localStorage.getItem('sdi-en-history')||'[]').length;}catch(e){return 0;}})();
@@ -3210,7 +3210,7 @@ function shareResult(){
 function downloadCard(){
   const score=calcScore(),level=LEVELS.find(l=>score<=l.max)||LEVELS[LEVELS.length-1];
   const dims=calcDims(),dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
-  const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
+  const arch=ARCHETYPES.find(a=>a.match(dimObj,score))||ARCHETYPES[ARCHETYPES.length-1];
   const matched=FUN_TAGS.filter(t=>{try{return t.match();}catch(e){return false;}}).slice(0,4);
   const lw=getLastWords(score);
   const W=1080,H=1920,c=document.createElement('canvas');c.width=W;c.height=H;
@@ -3353,7 +3353,7 @@ function shareTextArt(){
   const dims=calcDims();
   const bar=v=>{const filled=Math.round(v/100*10);return '█'.repeat(filled)+'░'.repeat(10-filled);};
   const dimObj=Object.fromEntries(dims.map(d=>[d.key,d.pct]));
-  const arch=ARCHETYPES.find(a=>a.match(dimObj))||ARCHETYPES[ARCHETYPES.length-1];
+  const arch=ARCHETYPES.find(a=>a.match(dimObj,score))||ARCHETYPES[ARCHETYPES.length-1];
   let art=`\n┌─────────────────────────┐\n│   💀 Sudden Death Index v8.5   │\n├─────────────────────────┤\n│                         │\n│     SCORE: ${String(score).padStart(3,' ')} / 100      │\n│     GRADE: ${level.grade.padEnd(12,' ')}  │\n│     ${level.label.padEnd(19,' ')} │\n│                         │\n├── 7-DIM RISK ───────────────┤\n`;
   dims.forEach(d=>{
     const name=(d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key).padEnd(4,'　');
