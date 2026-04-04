@@ -1429,6 +1429,26 @@ html.light .achievement-name{color:#1a1a2e;}
 <div class="ad-interstitial" id="ad-interstitial"><div class="ad-slot" id="ad-slot"><!-- Ad placeholder - replace with real ad code --><span>广告位</span></div><div class="ad-skip" id="ad-skip"></div></div>
 
 <script>
+// ════ ANALYTICS ════
+const WORKER_URL=''; // Set to your Cloudflare Worker URL, e.g. 'https://sdi-worker.yourname.workers.dev'
+function trackResult(score,grade,dims,locale){
+  if(!WORKER_URL)return;
+  const dimObj=Object.fromEntries((dims||[]).map(d=>[d.key,d.pct]));
+  const ageBucket=(()=>{try{const a=typeof userAge==='number'?userAge:parseInt(userAge)||0;if(a<18)return'<18';if(a<25)return'18-24';if(a<35)return'25-34';if(a<45)return'35-44';if(a<55)return'45-54';return'55+';}catch{return'';}})();
+  const elapsed=quizStartTime?Math.round((Date.now()-quizStartTime)/1000):null;
+  const arch=(()=>{try{const d=dimObj,s=score;const a=ARCHETYPES.find(x=>x.match(d,s))||ARCHETYPES[ARCHETYPES.length-1];return a.key;}catch{return '';}})();
+  const payload={score,grade,dims:dimObj,archetype:arch,locale,age_bucket:ageBucket,completion_sec:elapsed,challenge_score:window._challengeScore||null};
+  fetch(WORKER_URL+'/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true}).catch(()=>{});
+}
+function loadStats(){
+  if(!WORKER_URL)return;
+  fetch(WORKER_URL+'/api/stats').then(r=>r.json()).then(data=>{
+    const el=document.getElementById('live-count');
+    if(el&&data.total>0)el.textContent=data.total.toLocaleString()+'人已测';
+  }).catch(()=>{});
+}
+loadStats();
+
 // ════ CARD TILT (desktop only) ════
 if(!('ontouchstart' in window)){
   const qCard=document.getElementById('q-card');
@@ -3217,6 +3237,8 @@ function showResult(){
     }
   }catch(e){}
   clearProgress();// Clear in-progress save
+  // Analytics: fire and forget
+  trackResult(score,level.grade,dims,'zh');
 }
 
 function typewriter(id,text,speed=18){const el=document.getElementById(id);el.textContent='';el.classList.add('type-cursor');let i=0;const iv=setInterval(()=>{el.textContent+=text[i++];if(i>=text.length){clearInterval(iv);el.classList.remove('type-cursor');}},speed);}
