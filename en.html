@@ -1223,11 +1223,11 @@ html.light .achievement-name{color:#1a1a2e;}
 #rs1 .res-level { font-size: 28px; font-weight: 900; margin-bottom: 16px; }
 @keyframes bounceIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.3)}100%{transform:scale(1);opacity:1}}
 #rs1 .res-desc { font-size: 17px; line-height: 1.8; max-width: 600px; margin: 0 auto 16px; }
-#rs1 .dim-chips { margin-top: 24px; gap: 10px; }
-#rs1 .dim-chip { font-size: 14px; padding: 8px 16px; }
-#rs1 .fun-tags-label { font-size: 13px; letter-spacing: 4px; }
-#rs1 .fun-tags { margin-top: 12px; gap: 12px; }
-#rs1 .fun-tag { font-size: 16px; padding: 10px 22px; }
+#rs1 .dim-chips { margin-top: 28px; gap: 12px; }
+#rs1 .dim-chip { font-size: 16px; padding: 10px 20px; font-weight: 700; }
+#rs1 .fun-tags-label { font-size: 15px; letter-spacing: 5px; margin-bottom: 14px; }
+#rs1 .fun-tags { margin-top: 16px; gap: 14px; }
+#rs1 .fun-tag { font-size: 18px; padding: 12px 26px; }
 #rs1 .achievements { margin-top: 24px; }
 #rs1 .score-rank { margin-top: 28px; font-size: 14px; }
 #rs1 .score-rank-labels { font-size: 13px; }
@@ -1392,29 +1392,9 @@ html.light .achievement-name{color:#1a1a2e;}
     <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>TIME_ELAPSED: <span id="rpt-time">—</span><br>RISK_DNA: <span id="rpt-dna" style="font-size:11px;letter-spacing:1px;color:var(--dim)">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
     <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div><div class="dim-chips" id="dim-chips"></div><div class="fun-tags-section"><div class="fun-tags-label">// Your Tags</div><div class="fun-tags" id="fun-tags"></div></div><div class="achievements" id="achievements"></div><div class="score-rank"><span>Your position among all test takers</span><div class="score-rank-bar"><div class="score-rank-marker" id="score-rank-marker" style="left:0%"></div></div><div class="score-rank-labels"><span>Healthy</span><span>Sub-health</span><span>High Risk</span><span>Critical</span></div></div></div></div>
     <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">Your Health Persona</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div><div id="arch-traits" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center;"></div><div id="arch-compat" style="font-size:14px;color:var(--dim);text-align:center;margin-top:10px;line-height:1.7;padding:10px;background:var(--card-bg);border-radius:12px;border:1px solid var(--card-border);"></div></div>
-    <div class="rs" id="rs3"><div class="percentile-banner"><div class="pct-bar-wrap"><div class="pct-bar-bg"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div><div class="pct-text" id="pct-text">—</div></div><div class="pct-num" id="pct-num">—</div></div><div class="pct-subs" id="pct-subs"></div></div>
-    <div class="rs" id="rs5"><div class="sec-label" style="color:var(--dim);margin-bottom:10px">// BODY SYSTEM RISK</div><div class="systems-grid" id="systems-grid"></div></div>
-    <div class="rs" id="rs5b"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// BODY RISK HEATMAP</div><div class="body-heatmap"><div class="body-svg-wrap"><svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg"><ellipse id="bh-head" class="bh-part" cx="50" cy="18" rx="14" ry="16"/><rect id="bh-torso" class="bh-part" x="30" y="36" width="40" height="50" rx="8"/><rect id="bh-larm" class="bh-part" x="8" y="40" width="18" height="42" rx="8"/><rect id="bh-rarm" class="bh-part" x="74" y="40" width="18" height="42" rx="8"/><rect id="bh-lleg" class="bh-part" x="30" y="90" width="17" height="55" rx="7"/><rect id="bh-rleg" class="bh-part" x="53" y="90" width="17" height="55" rx="7"/><circle id="bh-heart" cx="42" cy="48" r="5" fill="rgba(239,68,68,.15)" stroke="rgba(239,68,68,.3)" stroke-width=".8"><animate attributeName="r" values="5;6;5" dur="1.2s" repeatCount="indefinite"/></circle><ellipse id="bh-stomach" cx="50" cy="66" rx="8" ry="6" fill="rgba(245,158,11,.1)" stroke="rgba(245,158,11,.2)" stroke-width=".8"/><ellipse id="bh-brain" cx="50" cy="14" rx="10" ry="10" fill="rgba(168,85,247,.1)" stroke="rgba(168,85,247,.2)" stroke-width=".8"/></svg></div><div class="body-legend" id="body-legend"></div></div></div>
     <div class="rs" id="rs6"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// RISK CONTRIBUTION BY DIMENSION</div><div class="radar-wrap"><svg id="radar-svg" viewBox="-10 -10 320 320" xmlns="http://www.w3.org/2000/svg"><defs><filter id="r-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="r-fill-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="100%" stop-color="var(--accent)" stop-opacity=".08"/></radialGradient></defs><g id="r-grid-g"></g><g id="r-axes-g"></g><polygon id="r-poly" points="150,150" fill="url(#r-fill-grad)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" filter="url(#r-glow)"/><g id="r-dots-g"></g><g id="r-labels-g"></g></svg></div><div class="contrib-chart" id="contrib-chart"></div></div>
     <div class="section-divider"><span class="sd-skull">💀</span><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg><span class="sd-skull">💀</span></div>
     <div class="rs" id="rs7"><div class="prophecy-card"><div class="sec-label" style="color:#f87171">☠ &nbsp;Death Prophecy</div><div class="prophecy-text" id="prophecy-text"></div><div class="prophecy-moment" id="prophecy-moment"></div></div></div>
-    <div class="rs" id="rs7b"><div class="obituary-card" id="obituary-card"><div class="sec-label" style="color:var(--dim)">📜 Obituary Preview · OBITUARY PREVIEW</div><div class="obituary-text" id="obituary-text"></div><div class="obituary-footer">—— From the archives of the future</div></div></div>
-    <div class="rs" id="rs7c"><div class="lastwords-card"><div class="lw-quote" id="lw-quote"></div><div class="lw-attr" id="lw-attr"></div></div></div>
-    <div class="rs" id="rs7d"><div class="survival-card"><div class="sec-label" style="color:#34d399;margin-bottom:12px">🌱 If You Start Changing Today</div><div class="survival-items" id="survival-items"></div><div class="survival-note">Data based on epidemiological models. Every dimension you change rewrites your future.</div></div></div>
-    <div class="rs" id="rs7e"><div class="profession-card"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">📊 Your Risk Compares To</div><div class="profession-items" id="profession-items"></div></div></div>
-    <div class="rs" id="rs7f"><div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// POPULATION COMPARISON</div><div id="demo-compare" style="display:flex;flex-direction:column;gap:12px;"></div></div></div>
-    <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
-    <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#f59e0b;margin-bottom:14px">⏳ Trajectory Prediction</div><div class="timeline-items" id="timeline-items"></div></div></div>
-    <div class="rs" id="rs9b"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// Risk Trend Simulation</div><div class="trend-card"><div class="trend-header"><span class="trend-title">If you maintain current lifestyle</span><span class="trend-badge" id="trend-badge">↗ Rising</span></div><svg class="trend-svg" id="trend-svg" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="trend-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><line x1="0" y1="30" x2="400" y2="30" stroke="rgba(239,68,68,.08)" stroke-dasharray="4,4"/><line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,.04)" stroke-dasharray="4,4"/><line x1="0" y1="90" x2="400" y2="90" stroke="rgba(52,211,153,.08)" stroke-dasharray="4,4"/><text x="395" y="28" text-anchor="end" fill="rgba(239,68,68,.2)" font-size="8">High Risk</text><text x="395" y="88" text-anchor="end" fill="rgba(52,211,153,.2)" font-size="8">Safe</text><path id="trend-area" fill="url(#trend-grad)" d=""/><path id="trend-line" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" d=""/><g id="trend-dots"></g></svg><div class="trend-labels"><span>Now</span><span>3 mo</span><span>6 mo</span><span>1 yr</span><span>2 yr</span></div></div></div>
-    <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// THE ONE THING TO DO THIS WEEK</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
-    <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
-    <div class="rs" id="rs12"><div class="advice-card"><div class="sec-label" style="color:var(--accent);margin-bottom:12px">// IMPROVEMENT RECOMMENDATIONS</div><ul class="advice-list" id="advice-list"></ul></div></div>
-    <div class="rs" id="rs12b"><div style="text-align:center;padding:16px 20px;margin-bottom:14px;background:rgba(var(--ar),var(--ag),var(--ab),.03);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.08);border-radius:16px;"><div style="font-size:22px;margin-bottom:6px;">🔮</div><div id="health-fortune" style="font-size:13px;color:var(--dim);line-height:1.7;"></div></div><div class="daily-tip" id="daily-tip" style="background:rgba(var(--ar),var(--ag),var(--ab),.04);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:8px;text-transform:uppercase">// DAILY WISDOM</div><div id="daily-tip-text" style="font-size:14px;line-height:1.8;color:var(--dim);font-style:italic;"></div></div></div>
-    <div class="rs" id="rs12c"><div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// WHAT IF YOU...</div><div id="what-if-items" style="display:flex;flex-direction:column;gap:10px;"></div></div></div>
-    <div class="rs" id="rs12c2"><div style="background:linear-gradient(135deg,rgba(52,211,153,.03),rgba(16,185,129,.01));border:1px solid rgba(52,211,153,.1);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:#34d399;margin-bottom:14px">🗺️ Improvement Roadmap</div><div id="roadmap" style="display:flex;flex-direction:column;gap:14px;"></div></div></div>
-    <div class="rs" id="rs12d"><div style="background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.04),rgba(var(--ar),var(--ag),var(--ab),.01));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:20px;padding:24px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--accent);margin-bottom:14px">🎯 WEEKLY HEALTH CHALLENGE</div><div id="weekly-challenge" style="font-size:18px;font-weight:700;color:var(--text);line-height:1.6;margin-bottom:10px;"></div><div id="challenge-desc" style="font-size:12px;color:var(--dim);line-height:1.7;"></div><div id="challenge-diff" style="margin-top:12px;font-size:11px;font-weight:600;letter-spacing:1px;"></div></div></div>
-    <div class="rs" id="rs12e"><div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// SESSION STATISTICS</div><div id="session-stats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"></div></div></div>
-    <div class="rs" id="rs12f"><div style="background:rgba(239,68,68,.02);border:1px solid rgba(239,68,68,.08);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.4);margin-bottom:8px;">⏰ CHECKUP REMINDER</div><div id="checkup-msg" style="font-size:13px;color:var(--dim);line-height:1.7;"></div><div style="margin-top:12px;font-size:11px;color:var(--dim);font-style:italic;" id="checkup-items"></div></div></div>
     <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 Copy Results</button><button class="btn-share" onclick="downloadCard()">📸 Download Card</button><button class="btn-share" onclick="encodeResultToURL()">🔗 Challenge a Friend</button><button class="btn-share" onclick="shareToTwitter()">🐦 Share on X</button><button class="btn-share" onclick="shareToReddit()">🟠 Share on Reddit</button><button class="btn-retry" onclick="retryQuiz()">🔄 Take It Again</button></div><div class="tip-jar" id="tip-jar"><div style="font-size:11px;font-weight:600;letter-spacing:2px;color:var(--dim);margin-bottom:8px;">Enjoyed this? Buy the creator a coffee ☕</div><a class="btn-tip" href="https://buymeacoffee.com" target="_blank" rel="noopener">☕ Buy Me a Coffee</a></div><div class="disclaimer">⚕️ This test is for entertainment only and does not constitute medical diagnosis or advice. If you have health concerns, please consult a healthcare professional. High scorers should seriously consider scheduling a checkup.</div></div>
   </div>
 </section>
@@ -2873,50 +2853,6 @@ function showResult(){
   if(compatArch){
     document.getElementById('arch-compat').innerHTML=`<span style="font-size:12px;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:6px;">Most Common Match</span>${compatArch.icon} <b style="color:${compatArch.color}">${compatArch.name}</b> — You two are often found in the same office`;
   }
-  const pp=Math.min(98,Math.round(score*.82+Math.random()*5));
-  const pCol=score<30?'#34d399':score<55?'#fbbf24':score<75?'#f59e0b':'#ef4444';
-  const pBar=document.getElementById('pct-bar');pBar.style.background=pCol;pBar.style.width='0%';setTimeout(()=>pBar.style.width=pp+'%',600);
-  const pctNumEl=document.getElementById('pct-num');pctNumEl.style.color=pCol;pctNumEl.textContent='0%';
-  // Animate percentile counter
-  const pctStart=performance.now();
-  (function tickPct(now){const p=Math.min((now-pctStart)/1200,1);const ease=1-Math.pow(1-p,3);pctNumEl.textContent=Math.round(pp*ease)+'%';if(p<1)requestAnimationFrame(tickPct);})(pctStart);
-  document.getElementById('pct-text').textContent=`You're closer to sudden death than ${pp}% of urban professionals your age`;
-  // Age group + city comparison
-  const ageGroup=userAge<25?'18-24':userAge<30?'25-29':userAge<35?'30-34':userAge<40?'35-39':userAge<50?'40-49':'50+';
-  const cityAvg=Math.round(52+Math.random()*8);
-  const ageAvg=Math.round(userAge<25?42:userAge<30?55:userAge<35?60:userAge<40?58:userAge<50?53:48);
-  const worstDim=dims.reduce((a,b)=>b.pct>a.pct?b:a);
-  const worstRank=Math.min(95,Math.round(worstDim.pct*.9+Math.random()*5));
-  const psEl=document.getElementById('pct-subs');
-  psEl.innerHTML=`<div class="pct-sub"><span class="pct-sub-val" style="color:${pCol}">${ageGroup} yrs</span><span class="pct-sub-lbl">Your age group average index ${ageAvg}</span></div><div class="pct-sub"><span class="pct-sub-val" style="color:${pCol}">${cityAvg}</span><span class="pct-sub-lbl">Major city worker average</span></div><div class="pct-sub"><span class="pct-sub-val" style="color:${dimCol(worstDim.pct)}">TOP ${worstRank}%</span><span class="pct-sub-lbl">${worstDim.name.replace(/^../,'')} dimension risk ranking</span></div>`;
-  const bA=Math.min(85,Math.round(userAge+score*.28));
-  const wP=dimObj.work||0,sP=dimObj.stress||0;
-  const hL=Math.round(wP*.4+sP*.35+((100-(dimObj.exercise||0))*.25));
-  const hLab=hL<30?'Normal':hL<50?'Elevated':hL<70?'Overloaded':'Danger';const hCol=hL<30?'#34d399':hL<50?'#fbbf24':hL<70?'#f59e0b':'#ef4444';
-  const rLab=score<20?'Excellent':score<40?'Good':score<60?'Average':score<80?'Weak':'Critical';const rCol=score<40?'#34d399':score<65?'#fbbf24':'#ef4444';
-  const nLab=sP<30?'Stable':sP<50?'Slightly Tight':sP<70?'Tense':'Highly Tense';const nCol=sP<30?'#34d399':sP<50?'#fbbf24':sP<70?'#f59e0b':'#ef4444';
-  // Animated vital counters with pop-in
-  const baCol=bA<=userAge?'#34d399':bA<=userAge+8?'#fbbf24':'#ef4444';
-  // Vitals, age comparison, week heat map, risk tags — skipped (sections removed)
-  try{const sys=calcSystems(dims);const sg=document.getElementById('systems-grid');if(sg){sg.innerHTML='';
-  sys.forEach(s=>{const col=s.risk<30?'#34d399':s.risk<55?'#fbbf24':s.risk<75?'#f59e0b':'#ef4444';const st=s.risk<30?'Normal':s.risk<55?'Elevated':s.risk<75?'At Risk':'Danger';const el=document.createElement('div');el.className='sys-item';el.innerHTML=`<div class="sys-icon">${s.icon}</div><div class="sys-body"><div class="sys-name">${s.name}</div><div class="sys-status" style="color:${col}">${st} · ${s.risk}%</div><div class="sys-note">${s.note}</div></div>`;sg.appendChild(el);});
-  // Body heatmap
-  const bhMap=[
-    {id:'bh-head',parts:['bh-brain'],label:'🧠 Brain/Nervous',risk:Math.round((dimObj.stress||0)*.4+(dimObj.emotion||0)*.4+(dimObj.sleep||0)*.2)},
-    {id:'bh-torso',parts:['bh-heart','bh-stomach'],label:'❤️ Cardiovascular',risk:Math.round((dimObj.work||0)*.4+(dimObj.stress||0)*.35+(dimObj.exercise||0)*.25)},
-    {id:null,parts:[],label:'⚗️ Metabolic System',risk:Math.round((dimObj.diet||0)*.4+(dimObj.sleep||0)*.3+(dimObj.habit||0)*.3)},
-    {id:null,parts:['bh-larm','bh-rarm','bh-lleg','bh-rleg'],label:'💪 Musculoskeletal',risk:Math.round((dimObj.exercise||0)*.5+(dimObj.work||0)*.3+(dimObj.stress||0)*.2)},
-  ];
-  const blEl=document.getElementById('body-legend');blEl.innerHTML='';
-  const bhIsLight=document.documentElement.classList.contains('light');
-  bhMap.forEach(b=>{
-    const col=b.risk<30?'#34d399':b.risk<55?'#fbbf24':b.risk<75?'#f59e0b':'#ef4444';
-    const alpha=bhIsLight?(.35+b.risk/100*.5).toFixed(2):(.15+b.risk/100*.5).toFixed(2);
-    const partAlpha=bhIsLight?'99':'40';
-    if(b.id){const el=document.getElementById(b.id);if(el){el.style.fill=col+Math.round(parseFloat(alpha)*255).toString(16).padStart(2,'0');el.style.stroke=col;el.style.strokeWidth=bhIsLight?'2.5':'1';}}
-    b.parts.forEach(pid=>{const pe=document.getElementById(pid);if(pe){pe.style.fill=col+partAlpha;pe.style.stroke=col;pe.style.strokeWidth=bhIsLight?'2':'0.8';}});
-    blEl.innerHTML+=`<div class="body-legend-item"><span class="body-legend-dot" style="background:${col};color:${col}"></span><span class="body-legend-name">${b.label}</span><span class="body-legend-risk" style="color:${col}">${b.risk}%</span></div>`;
-  });
   const cc=document.getElementById('contrib-chart');cc.innerHTML='';
   dims.forEach(d=>{const col=dimCol(d.pct);const el=document.createElement('div');el.className='contrib-row';el.innerHTML=`<span class="contrib-label">${d.name.replace(/^../,'')}</span><div class="contrib-bar-bg"><div class="contrib-bar" style="width:0%;background:${col};color:${col}" data-pct="${d.pct}"></div></div><span class="contrib-val" style="color:${col}">${d.pct}%</span>`;cc.appendChild(el);});
   setTimeout(()=>drawRadar(dims,level.col),200);
@@ -2924,224 +2860,8 @@ function showResult(){
   const pt=score<15?'Your lifestyle is both enviable and baffling. If we must make a prophecy: you\'ll probably feel sad watching everyone around you collapse before you do. Keep it up.':(PROPHECY[pKey]||PROPHECY['stress+work']);
   const mo=MOMENTS[pKey]||'';typewriter('prophecy-text',pt,18);
   const mEl=document.getElementById('prophecy-moment');mEl.textContent=mo;mEl.style.display=mo?'block':'none';
-  // Obituary
-  document.getElementById('obituary-text').textContent=genObituary(score,dims,arch,userAge);
-  // Last words
-  const lw=getLastWords(score);
-  document.getElementById('lw-quote').textContent=lw.q;
-  document.getElementById('lw-attr').textContent=lw.a;
-  // Survival bonus (show top 3 worst dims' potential gains)
-  const survEl=document.getElementById('survival-items');survEl.innerHTML='';
-  [...dims].sort((a,b)=>b.pct-a.pct).slice(0,3).forEach(d=>{
-    const sd=SURVIVAL_DATA[d.key];if(!sd)return;
-    survEl.innerHTML+=`<div class="survival-item"><span class="surv-icon">${sd.icon}</span><div class="surv-body"><div class="surv-action">${sd.action}</div><div class="surv-gain" style="color:${sd.col}">${sd.gain}</div></div></div>`;
-  });
-  // Profession comparison
-  const profEl=document.getElementById('profession-items');profEl.innerHTML='';
-  getProfComparison(score).forEach(p=>{
-    const diff=score-p.avg;const cls=Math.abs(diff)<=8?'close':diff>0?'over':'under';
-    const lbl=Math.abs(diff)<=8?'\u2248 Similar':diff>0?`+${diff} Higher`:`${diff} Lower`;
-    profEl.innerHTML+=`<div class="prof-item"><span class="prof-icon">${p.icon}</span><div class="prof-body"><div class="prof-name">${p.name}</div><div class="prof-risk">Typical risk: ${p.desc} (avg index ${p.avg})</div></div><span class="prof-match ${cls}">${lbl}</span></div>`;
-  });
-  // Demographic comparison bars
-  const demoEl=document.getElementById('demo-compare');demoEl.innerHTML='';
-  const demos=[
-    {label:'🇺🇸 National Average',avg:52},{label:'🏙\uFE0F White Collar Workers',avg:58},
-    {label:`👤 ${ageGroup} yr age peers`,avg:ageAvg},{label:'👨\u200D💻 Tech Industry',avg:65},
-    {label:'🧘 Healthy Population',avg:18},{label:'💀 Your Score',avg:score,isUser:true},
-  ];
-  const isLightMode=document.documentElement.classList.contains('light');
-  demos.forEach(d=>{
-    const col=d.isUser?(score<30?'#34d399':score<60?'#fbbf24':'#ef4444'):(isLightMode?'rgba(0,0,0,.3)':'rgba(255,255,255,.25)');
-    const w=Math.max(5,d.avg)+'%';
-    const bold=d.isUser?'font-weight:700;':'';
-    const labelCol=d.isUser?col:(isLightMode?'#555':'#bbb');
-    const barBg=isLightMode?'rgba(0,0,0,.06)':'rgba(255,255,255,.04)';
-    demoEl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;${bold}"><span style="font-size:12px;color:${labelCol};width:130px;flex-shrink:0;text-align:right;">${d.label}</span><div style="flex:1;height:8px;background:${barBg};border-radius:10px;overflow:hidden;"><div style="height:100%;width:${w};background:${col};border-radius:10px;transition:width 1s cubic-bezier(.25,.8,.25,1);box-shadow:${d.isUser?'0 0 10px '+col+'60':'none'};"></div></div><span style="font-family:'Space Mono',monospace;font-size:11px;color:${col};width:30px;">${d.avg}</span></div>`;
-  });
-  // Doctor note + Rx — skipped (sections removed)
-  }catch(e){console.warn('Skipped removed sections',e);}
-  const tl=document.getElementById('timeline-items');tl.innerHTML='';
-  calcTimeline(score).forEach((t,i)=>{const el=document.createElement('div');el.className='tl-item';el.innerHTML=`<div class="tl-dot" style="border-color:${t.col};color:${t.col}">${i+1}</div><div class="tl-body"><div class="tl-time" style="color:${t.col}">${t.t}</div><div class="tl-text">${t.txt}</div></div>`;tl.appendChild(el);});
-  const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);const p=PRIORITY[worst.key];
-  document.getElementById('priority-main').textContent=p.main;document.getElementById('priority-sub').textContent=p.sub;
-  // Dimension gauges + grid — skipped (sections removed)
-  // Risk trend chart
-  (function drawTrend(){
-    const pts=[],steps=5,W=400,H=120,padY=15;
-    let cur=score;
-    for(let i=0;i<steps;i++){
-      const grow=score>=60?Math.random()*5+2:score>=35?Math.random()*3:-(Math.random()*3+1);
-      cur=Math.max(5,Math.min(98,cur+grow));
-      pts.push(cur);
-    }
-    pts.unshift(score);
-    const xs=pts.map((_,i)=>i/(pts.length-1)*W);
-    const ys=pts.map(v=>padY+(1-v/100)*(H-padY*2));
-    const lineD=xs.map((x,i)=>`${i===0?'M':'L'}${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
-    const areaD=lineD+` L${W},${H} L0,${H} Z`;
-    document.getElementById('trend-line').setAttribute('d',lineD);
-    document.getElementById('trend-area').setAttribute('d',areaD);
-    const dotsG=document.getElementById('trend-dots');dotsG.innerHTML='';
-    const ns='http://www.w3.org/2000/svg';
-    pts.forEach((v,i)=>{
-      const col=v<30?'#34d399':v<55?'#fbbf24':v<75?'#f59e0b':'#ef4444';
-      const c=document.createElementNS(ns,'circle');
-      c.setAttribute('cx',xs[i].toFixed(1));c.setAttribute('cy',ys[i].toFixed(1));
-      c.setAttribute('r','4');c.setAttribute('fill',col);c.setAttribute('stroke',document.documentElement.classList.contains('light')?'#f0f1f4':'#fff');c.setAttribute('stroke-width','1.5');
-      dotsG.appendChild(c);
-      if(i>0){const t=document.createElementNS(ns,'text');t.setAttribute('x',xs[i].toFixed(1));t.setAttribute('y',(ys[i]-10).toFixed(1));t.setAttribute('text-anchor','middle');t.setAttribute('fill',col);t.setAttribute('font-size','9');t.setAttribute('font-weight','bold');t.textContent=Math.round(v);dotsG.appendChild(t);}
-    });
-    const last=pts[pts.length-1];const badge=document.getElementById('trend-badge');
-    if(last<=score){badge.textContent='↘ Declining';badge.classList.add('down');}
-    else{badge.textContent='↗ Rising';badge.classList.remove('down');}
-  })();
-  document.getElementById('advice-list').innerHTML=level.advice.map(a=>`<li>${a}</li>`).join('');
-  // What-if scenarios
-  const whatIfs=[
-    {cond:score>=60,icon:'🏃',title:'Exercise 30 min daily',effect:`Your index could drop by ${Math.round(score*.15)} pts, body age younger by ${Math.round(score*.06)} yrs`},
-    {cond:score>=40,icon:'😴',title:'Asleep by 11 PM every night',effect:`Sleep dimension risk drops ~${Math.round((dimObj.sleep||0)*.3)}%, recovery significantly improves`},
-    {cond:score>=30,icon:'🥗',title:'Regular meals + less takeout',effect:`Diet dimension improves ${Math.round((dimObj.diet||0)*.25)}%, metabolic burden reduced`},
-    {cond:score>=50,icon:'🧘',title:'10 min daily meditation/deep breathing',effect:`Stress dimension could drop ${Math.round((dimObj.stress||0)*.2)}%, nervous system tension decreases`},
-    {cond:dimObj.work>=50,icon:'⏰',title:'Strictly clock out on time',effect:`Work dimension risk drops ~${Math.round((dimObj.work||0)*.3)}%, cardiovascular load improves`},
-    {cond:score<25,icon:'🏆',title:'Keep your current lifestyle',effect:'You\u2019re already doing great! Keep it up \u2014 you\u2019re the envy of everyone else'},
-  ].filter(w=>w.cond).slice(0,4);
-  const wifEl=document.getElementById('what-if-items');wifEl.innerHTML='';
-  whatIfs.forEach(w=>{
-    wifEl.innerHTML+=`<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--card-border);"><span style="font-size:24px;flex-shrink:0;">${w.icon}</span><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">${w.title}</div><div style="font-size:12px;color:var(--dim);line-height:1.6;">${w.effect}</div></div></div>`;
-  });
-  // Health fortune based on score
-  const fortunes={
-    low:['Today\u2019s health horoscope: \u2605\u2605\u2605\u2605\u2605 Your organs are throwing a party','Fortune says: Vital energy strong \u2014 the Grim Reaper frowned and moved on','Horoscope tip: Today is perfect for running, salads, and hanging with friends','Health fortune: You\u2019re the chosen one of wellness. Keep it up'],
-    mid:['Today\u2019s health horoscope: \u2605\u2605\u2605\u2606\u2606 Not bad, but don\u2019t get cocky','Fortune says: Your body is watching. Your next move decides its attitude','Horoscope tip: Today would be great for sleeping early, but you probably won\u2019t','Health fortune: You\u2019re dancing on the passing line \u2014 careful not to fall off'],
-    high:['Today\u2019s health horoscope: \u2605\u2606\u2606\u2606\u2606 Your organs are drafting resignation letters','Fortune says: Bad omen. Book a checkup today','Horoscope tip: Today is not the day for late nights, drinking, anger, or overtime','Health fortune: Your body has started a countdown, but there\u2019s still time']
-  };
-  const fPool=score<30?fortunes.low:score<65?fortunes.mid:fortunes.high;
-  const fortuneEl=document.getElementById('health-fortune');
-  if(fortuneEl)fortuneEl.textContent=fPool[Math.floor(Math.random()*fPool.length)];
-  // Daily tip based on date seed
-  const dailyTips=['Your body is the only thing that\u2019s with you from birth to death. Treat it well.','Every extra glass of water earns a tiny thank-you from your cells.','A 20-minute walk today is like depositing into your future health fund.','Stress won\u2019t disappear on its own, but you can learn to shrink it.','Going to bed one hour earlier changes more than you think.','You don\u2019t need perfect health habits \u2014 just be slightly better than yesterday.','Life isn\u2019t a sprint, it\u2019s a marathon. Pacing matters.','Your body has been texting you. Try not to leave it on read.','Health isn\u2019t a goal \u2014 it\u2019s a choice you make every day.','If you\u2019re exhausted right now, it\u2019s not because you\u2019re not trying hard enough \u2014 it\u2019s because you\u2019re trying too hard.','Emotions aren\u2019t the enemy. Ignoring them is.','30 seconds of deep breathing relaxes you more than 10 minutes of scrolling.','Tell someone how you\u2019ve been feeling lately. That\u2019s not weakness \u2014 it\u2019s wisdom.','Your worth is not equal to your output. Rest is something you deserve.','Instead of perfectly planning to change, just do one small thing right now.','Sitting 30 fewer minutes a day adds up to a half-marathon\u2019s worth of exercise per year.','Chronic dehydration drops your cognitive ability by 25% \u2014 you think you\u2019re getting dumber, but you\u2019re just thirsty.','One good laugh equals 10 minutes on a treadmill. Laugh more.','No screens for two hours before bed improves sleep quality by 40%+.','A hug longer than 20 seconds releases oxytocin and significantly lowers stress hormones.'];
-  const dayIdx=Math.floor(Date.now()/864e5)%dailyTips.length;
-  document.getElementById('daily-tip-text').textContent='"'+dailyTips[dayIdx]+'"';
-  // Fun fact based on worst dimension
-  const funFacts={
-    sleep:['Every hour of lost sleep increases car accident risk by 13%','Being awake 17 hours straight impairs you like a 0.05% blood alcohol level','People sleeping <6 hours are 4.2x more likely to catch a cold','Chronic sleep deprivation causes Alzheimer\u2019s-like protein buildup in your brain'],
-    work:['Working 55+ hours/week increases stroke risk by 33%','Japan has a word for death by overwork: "karoshi" \u2014 because it happens that often','Every extra hour of work drops your decision quality by ~5%','After 8 straight hours of work, your cognition is like being slightly drunk'],
-    exercise:['Sitting 6+ hours/day raises mortality risk 40% vs. 4 hours','Walking 30 min/day adds 3-7 years to life expectancy','Muscle is your body\u2019s largest endocrine organ \u2014 not using it shuts down a critical system','Deaths from lack of exercise outnumber deaths from obesity'],
-    diet:['Skipping breakfast raises heart disease risk by 87%','Your body is 60% water \u2014 just 2% dehydration impairs cognition and performance','Your gut is called the "second brain" \u2014 diet directly affects mood and memory','One extra serving of vegetables daily lowers all-cause mortality by 5%'],
-    stress:['Chronic stress shortens telomeres, aging you by ~10 years','Sustained elevated cortisol reduces immune function by 40%','Stress slows wound healing by 40%','Chronic stress damages the heart as much as smoking 5 cigarettes a day'],
-    habit:['20 minutes after quitting smoking, heart rate starts returning to normal','More than 2 cups of coffee a day starts affecting calcium absorption','Alcohol is a Group 1 carcinogen \u2014 same category as asbestos and formaldehyde','E-cigarettes deliver nicotine faster than traditional cigarettes'],
-    emotion:['Loneliness is as harmful as smoking 15 cigarettes a day','Laughing for 20 seconds relieves as much stress as 3 minutes of rowing','People with close social relationships live ~7 years longer','Long-term emotional suppression lowers immunoglobulin A levels']
-  };
-  const worstKey=dims[0]?.key;
-  const factPool=funFacts[worstKey]||funFacts.sleep;
-  const factEl=document.createElement('div');
-  factEl.style.cssText='background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:14px 18px;margin-bottom:14px;font-size:12px;color:var(--dim);line-height:1.7;text-align:center;';
-  factEl.innerHTML=`<span style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:6px;">\uD83D\uDCA1 Did You Know</span>${factPool[Math.floor(Math.random()*factPool.length)]}`;
-  document.getElementById('roadmap')?.parentElement.parentElement.insertBefore(factEl,document.getElementById('roadmap')?.parentElement);
-  // Improvement roadmap
-  const roadmap=document.getElementById('roadmap');roadmap.innerHTML='';
-  const topDim=dims.sort((a,b)=>b.pct-a.pct)[0];
-  const roadmapData=[
-    {t:'\uD83D\uDCC5 Week 1',title:'Build Awareness',desc:`Start tracking your ${topDim.name.replace(/^../,'')} habits. No changes needed yet \u2014 just observe.`,col:'#34d399'},
-    {t:'\uD83D\uDCC5 Weeks 2-4',title:'Tiny Changes',desc:`Each day, do one 5-minute improvement in your ${topDim.name.replace(/^../,'')} dimension. So small you can\u2019t fail.`,col:'#a3e635'},
-    {t:'\uD83D\uDCC5 Months 2-3',title:'Lock In Habits',desc:'Turn your first month\u2019s tiny changes into automatic behaviors. Then start improving a second dimension.',col:'#fbbf24'},
-    {t:'\uD83D\uDCC5 Month 6',title:'Mid-Term Check',desc:`Book a checkup and compare before/after indicators. Expected ${topDim.name.replace(/^../,'')} dimension improvement: ${Math.round(topDim.pct*.2)}%.`,col:'#f59e0b'},
-    {t:'\uD83D\uDCC5 Month 12',title:'Full Transformation',desc:`If you\u2019ve made it here, your sudden death index is projected to drop ${Math.round(score*.25)}-${Math.round(score*.4)} pts. This isn\u2019t a guess \u2014 it\u2019s what many people actually experience.`,col:'#60a5fa'},
-  ];
-  roadmapData.forEach((r,i)=>{
-    roadmap.innerHTML+=`<div style="display:flex;gap:14px;align-items:flex-start;"><div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:${r.col};margin-top:7px;box-shadow:0 0 8px ${r.col}40;"></div><div><div style="font-size:12px;font-weight:700;color:${r.col};margin-bottom:2px;">${r.t} · ${r.title}</div><div style="font-size:12px;color:var(--dim);line-height:1.7;">${r.desc}</div></div></div>`;
-  });
-  // Weekly health challenge
-  const challenges=[
-    {ch:'Put your phone down by 11 PM for 7 straight days',desc:'You don\u2019t have to fall asleep at 11. Just put the phone down. Your melatonin needs 30 minutes of darkness to kick in.',diff:'EASY',dcol:'#34d399'},
-    {ch:'Drink 8 glasses of water every day this week',desc:'Put a big water bottle on your desk. Sip every time you see it. Dehydration is the most overlooked health killer.',diff:'EASY',dcol:'#34d399'},
-    {ch:'Walk 20 minutes every day',desc:'No running. No gym. Just go outside and walk for 20 minutes. The ROI on this is insane.',diff:'MEDIUM',dcol:'#fbbf24'},
-    {ch:'Cook one meal yourself for 5 straight days',desc:'Even if it\u2019s just pasta and a boiled egg. The act of cooking is itself a form of stress relief.',diff:'MEDIUM',dcol:'#fbbf24'},
-    {ch:'10 minutes of complete silence daily \u2014 do nothing',desc:'No phone, no music, no thinking. Let your brain enter its "default mode network" \u2014 the source of creativity and repair.',diff:'HARD',dcol:'#f59e0b'},
-    {ch:'Have one 30-minute deep conversation with a friend this week',desc:'Don\u2019t talk about work or gossip. Talk about how you\u2019re both really feeling. Being understood is the best stress reliever.',diff:'HARD',dcol:'#f59e0b'},
-    {ch:'Track your sleep times and how you feel waking up for 7 days',desc:'Don\u2019t change anything \u2014 just record it. Self-awareness is the first step to change.',diff:'EASY',dcol:'#34d399'},
-    {ch:'Cut your worst habit in half this week',desc:'Don\u2019t quit \u2014 just halve it. 4 coffees become 2. A pack a day becomes half a pack. Sustainable change is real change.',diff:'MEDIUM',dcol:'#fbbf24'},
-  ];
-  const weekIdx=Math.floor(Date.now()/(7*864e5))%challenges.length;
-  const chl=challenges[weekIdx];
-  document.getElementById('weekly-challenge').textContent=chl.ch;
-  document.getElementById('challenge-desc').textContent=chl.desc;
-  const cdEl=document.getElementById('challenge-diff');
-  cdEl.textContent=`Difficulty: ${chl.diff}`;cdEl.style.color=chl.dcol;
-  // Danger leaderboard - top 5 most dangerous answers
-  const dangerBoard=[...Object.entries(ans)].filter(([qi,v])=>v>=2&&Q[parseInt(qi)]).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  if(dangerBoard.length>0&&score>=30){
-    const dbEl=document.createElement('div');
-    dbEl.style.cssText='background:rgba(239,68,68,.02);border:1px solid rgba(239,68,68,.06);border-radius:16px;padding:16px;margin-bottom:14px;';
-    let dbH='<div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.35);margin-bottom:10px;text-transform:uppercase">// YOUR MOST DANGEROUS ANSWERS</div>';
-    dangerBoard.forEach(([qi,v],i)=>{
-      const q=Q[parseInt(qi)];if(!q)return;
-      const col=v>=4?'#ef4444':v>=3?'#f59e0b':'#fbbf24';
-      const medal=['🥇','🥈','🥉','4️⃣','5️⃣'][i]||'';
-      dbH+=`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--card-border);font-size:12px;"><span>${medal}</span><span style="flex:1;color:var(--dim)">${q.text.slice(0,20)}${q.text.length>20?'…':''}</span><span style="font-family:'Space Mono',monospace;font-weight:700;color:${col}">${'💀'.repeat(Math.min(v,5))}</span></div>`;
-    });
-    dbEl.innerHTML=dbH;
-    const statsParent=document.getElementById('session-stats')?.parentElement;
-    if(statsParent)statsParent.parentElement.insertBefore(dbEl,statsParent);
-  }
-  // Checkup reminder
-  const checkupMsgs={
-    low:'Based on your results, we recommend an annual routine physical. Maintain your good habits and monitor baseline indicators regularly.',
-    mid:'Some of your dimensions have entered a range that needs attention. We recommend scheduling a comprehensive physical within 6 months, focusing on:',
-    high:'Multiple indicators show elevated risk. We recommend booking a physical this month \u2014 don\u2019t delay. Priority items to check:',
-    critical:'Urgent: Please schedule a comprehensive physical within one week. Your risk level is past the point of "I\u2019ll get to it later." Must-check items:'
-  };
-  const checkupItems={
-    sleep:['Sleep study (polysomnography)','Thyroid function panel'],
-    work:['EKG','Cervical spine X-ray','Eye exam'],
-    exercise:['Bone density scan','Cardiopulmonary fitness test'],
-    diet:['Lipid panel','Liver function test','Blood glucose'],
-    stress:['Cortisol levels','Blood pressure monitoring'],
-    habit:['Pulmonary function test','Liver ultrasound'],
-    emotion:['Mental health assessment','Sleep quality evaluation']
-  };
-  const ckLevel=score<25?'low':score<50?'mid':score<75?'high':'critical';
-  document.getElementById('checkup-msg').textContent=checkupMsgs[ckLevel];
-  const ckItems=dims.sort((a,b)=>b.pct-a.pct).slice(0,3).flatMap(d=>checkupItems[d.key]||[]).slice(0,5);
-  document.getElementById('checkup-items').textContent=ckItems.length?'Recommended tests: '+ckItems.join(' \u00B7 '):'';
-  // XP calculation - health awareness points
-  let xp=50;// base XP for completing test
-  xp+=Object.values(ans).filter(v=>v<=1).length*5;// safe answers reward
-  xp+=achMatched.length*20;// achievements bonus
-  xp+=matched.length*10;// tags bonus
-  if(score<30)xp+=30;// low risk bonus
-  if(quizStartTime&&(Date.now()-quizStartTime)>120000)xp+=10;// took time thinking
-  const xpLevel=xp<80?1:xp<130?2:xp<180?3:xp<250?4:5;
-  const xpTitle=['','Novice Observer','Health Apprentice','Risk Manager','Wellness Expert','Life Guardian'][xpLevel];
-  try{
-    const totalXP=parseInt(localStorage.getItem('sdi-en-xp')||'0')+xp;
-    localStorage.setItem('sdi-en-xp',String(totalXP));
-  }catch(e){}
-  // Session stats
-  const ssEl=document.getElementById('session-stats');
-  const dangerCount=Object.values(ans).filter(v=>v>=3).length;
-  const safeCount=Object.values(ans).filter(v=>v<=1).length;
-  const totalQ=Object.keys(ans).length;
-  const elapsed2=quizStartTime?Math.round((Date.now()-quizStartTime)/1000):0;
-  const avgPerQ=totalQ>0?(elapsed2/totalQ).toFixed(1):'?';
-  const tagCount=matched.length;
-  const achCount=achMatched.length;
-  const histLen2=(()=>{try{return JSON.parse(localStorage.getItem('sdi-en-history')||'[]').length;}catch(e){return 1;}})();
-  ssEl.innerHTML=[
-    {icon:'❓',label:'Questions answered',val:`${totalQ}`},
-    {icon:'⚡',label:'Avg time',val:`${avgPerQ}s/q`},
-    {icon:'💀',label:'High risk picks',val:`${dangerCount}`},
-    {icon:'✅',label:'Safe picks',val:`${safeCount}`},
-    {icon:'🏷\uFE0F',label:'Tags earned',val:`${tagCount}`},
-    {icon:'🏆',label:'Achievements',val:`${achCount}`},
-    {icon:'📊',label:'Test history',val:`#${histLen2}`},
-    {icon:'🎯',label:'Danger ratio',val:`${totalQ>0?Math.round(dangerCount/totalQ*100):0}%`},
-    {icon:'⭐',label:'Awareness XP',val:`${xp} · Lv${xpLevel}`},
-    {icon:'🎓',label:'Awareness rank',val:xpTitle},
-  ].map(s=>`<div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;padding:10px;"><span style="font-size:16px">${s.icon}</span><div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--accent);margin:4px 0">${s.val}</div><div style="font-size:10px;color:var(--dim)">${s.label}</div></div>`).join('');
   go('sec-result','anim-fade');clearProgress();playReveal(score);
-  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs4b','rs4c','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs7f','rs8','rs9','rs9b','rs10','rs10b','rs11','rs12','rs12b','rs12c','rs12c2','rs12d','rs12e','rs12f','rs13'];
+  const rsIds=['rs0','rs1','rs2','rs6','rs7','rs13'];
   // First few sections animate on timer; rest use Intersection Observer for scroll-reveal
   const timerCount=5;
   rsIds.slice(0,timerCount).forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),300+i*140);});
@@ -3599,7 +3319,7 @@ function stopAmbient(){
 // ════ RESULT SECTION NAVIGATION ════
 (function(){
   const navEl=document.getElementById('res-nav');if(!navEl)return;
-  const labels={'rs0':'Report','rs1':'Score','rs2':'Personality','rs3':'Percentile','rs4':'Vitals','rs6':'Radar','rs7':'Prophecy','rs8':'Doctor','rs9':'Timeline','rs11':'Dimensions','rs12':'Advice','rs13':'Actions'};
+  const labels={'rs0':'Report','rs1':'Score','rs2':'Personality','rs6':'Radar','rs7':'Prophecy','rs13':'Actions'};
   Object.entries(labels).forEach(([id,label])=>{
     const dot=document.createElement('div');dot.className='res-nav-dot';dot.dataset.label=label;dot.dataset.target=id;
     dot.onclick=()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});};

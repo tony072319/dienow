@@ -1220,11 +1220,11 @@ html.light .achievement-name{color:#1a1a2e;}
 #rs1 .res-level { font-size: 28px; font-weight: 900; margin-bottom: 16px; }
 @keyframes bounceIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.3)}100%{transform:scale(1);opacity:1}}
 #rs1 .res-desc { font-size: 17px; line-height: 1.8; max-width: 600px; margin: 0 auto 16px; }
-#rs1 .dim-chips { margin-top: 24px; gap: 10px; }
-#rs1 .dim-chip { font-size: 14px; padding: 8px 16px; }
-#rs1 .fun-tags-label { font-size: 13px; letter-spacing: 4px; }
-#rs1 .fun-tags { margin-top: 12px; gap: 12px; }
-#rs1 .fun-tag { font-size: 16px; padding: 10px 22px; }
+#rs1 .dim-chips { margin-top: 28px; gap: 12px; }
+#rs1 .dim-chip { font-size: 16px; padding: 10px 20px; font-weight: 700; }
+#rs1 .fun-tags-label { font-size: 15px; letter-spacing: 5px; margin-bottom: 14px; }
+#rs1 .fun-tags { margin-top: 16px; gap: 14px; }
+#rs1 .fun-tag { font-size: 18px; padding: 12px 26px; }
 #rs1 .achievements { margin-top: 24px; }
 #rs1 .score-rank { margin-top: 28px; font-size: 14px; }
 #rs1 .score-rank-labels { font-size: 13px; }
@@ -1391,29 +1391,9 @@ html.light .achievement-name{color:#1a1a2e;}
     <div class="rs" id="rs0"><div class="report-header"><div class="report-meta">PATIENT_ID: <span id="rpt-id">—</span><br>DATE: <span id="rpt-date">—</span><br>TIME_ELAPSED: <span id="rpt-time">—</span><br>RISK_DNA: <span id="rpt-dna" style="font-size:11px;letter-spacing:1px;color:var(--dim)">—</span><br>CLASSIFICATION: <span>CONFIDENTIAL</span></div><div class="report-stamp" id="rpt-stamp">CRITICAL</div></div></div>
     <div class="rs" id="rs1"><div class="res-header"><div class="res-grade" id="res-grade">GRADE —</div><div class="score-ring-wrap"><svg class="score-svg" viewBox="0 0 164 164"><circle class="ring-bg" cx="82" cy="82" r="72"/><circle class="ring-fill" id="score-ring" cx="82" cy="82" r="72"/></svg><div class="score-inner"><span class="score-num" id="score-num">0</span><span class="score-lbl">DEATH INDEX</span></div></div><div class="res-level" id="res-level"></div><div class="res-desc" id="res-desc"></div><div class="dim-chips" id="dim-chips"></div><div class="fun-tags-section"><div class="fun-tags-label">// 你的标签</div><div class="fun-tags" id="fun-tags"></div></div><div class="achievements" id="achievements"></div><div class="score-rank"><span>你的位置在全部测试者中</span><div class="score-rank-bar"><div class="score-rank-marker" id="score-rank-marker" style="left:0%"></div></div><div class="score-rank-labels"><span>健康达人</span><span>亚健康</span><span>高危</span><span>极危</span></div></div></div></div>
     <div class="rs" id="rs2"><div class="archetype-card" id="archetype-card"><div class="arch-icon" id="arch-icon"></div><div class="arch-body"><div class="arch-pretitle">你的健康人格</div><div class="arch-name" id="arch-name"></div><div class="arch-desc" id="arch-desc"></div></div><div class="arch-badge" id="arch-badge">TYPE</div></div><div id="arch-traits" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center;"></div><div id="arch-compat" style="font-size:14px;color:var(--dim);text-align:center;margin-top:10px;line-height:1.7;padding:10px;background:var(--card-bg);border-radius:12px;border:1px solid var(--card-border);"></div></div>
-    <div class="rs" id="rs3"><div class="percentile-banner"><div class="pct-bar-wrap"><div class="pct-bar-bg"><div class="pct-bar-fill" id="pct-bar" style="width:0%"></div></div><div class="pct-text" id="pct-text">—</div></div><div class="pct-num" id="pct-num">—</div></div><div class="pct-subs" id="pct-subs"></div></div>
-    <div class="rs" id="rs5"><div class="sec-label" style="color:var(--dim);margin-bottom:10px">// 身体系统风险</div><div class="systems-grid" id="systems-grid"></div></div>
-    <div class="rs" id="rs5b"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 身体风险热力图</div><div class="body-heatmap"><div class="body-svg-wrap"><svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg"><ellipse id="bh-head" class="bh-part" cx="50" cy="18" rx="14" ry="16"/><rect id="bh-torso" class="bh-part" x="30" y="36" width="40" height="50" rx="8"/><rect id="bh-larm" class="bh-part" x="8" y="40" width="18" height="42" rx="8"/><rect id="bh-rarm" class="bh-part" x="74" y="40" width="18" height="42" rx="8"/><rect id="bh-lleg" class="bh-part" x="30" y="90" width="17" height="55" rx="7"/><rect id="bh-rleg" class="bh-part" x="53" y="90" width="17" height="55" rx="7"/><circle id="bh-heart" cx="42" cy="48" r="5" fill="rgba(239,68,68,.15)" stroke="rgba(239,68,68,.3)" stroke-width=".8"><animate attributeName="r" values="5;6;5" dur="1.2s" repeatCount="indefinite"/></circle><ellipse id="bh-stomach" cx="50" cy="66" rx="8" ry="6" fill="rgba(245,158,11,.1)" stroke="rgba(245,158,11,.2)" stroke-width=".8"/><ellipse id="bh-brain" cx="50" cy="14" rx="10" ry="10" fill="rgba(168,85,247,.1)" stroke="rgba(168,85,247,.2)" stroke-width=".8"/></svg></div><div class="body-legend" id="body-legend"></div></div></div>
     <div class="rs" id="rs6"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 各维度风险贡献</div><div class="radar-wrap"><svg id="radar-svg" viewBox="-10 -10 320 320" xmlns="http://www.w3.org/2000/svg"><defs><filter id="r-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="r-fill-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="100%" stop-color="var(--accent)" stop-opacity=".08"/></radialGradient></defs><g id="r-grid-g"></g><g id="r-axes-g"></g><polygon id="r-poly" points="150,150" fill="url(#r-fill-grad)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" filter="url(#r-glow)"/><g id="r-dots-g"></g><g id="r-labels-g"></g></svg></div><div class="contrib-chart" id="contrib-chart"></div></div>
     <div class="section-divider"><span class="sd-skull">💀</span><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg><span class="sd-skull">💀</span></div>
     <div class="rs" id="rs7"><div class="prophecy-card"><div class="sec-label" style="color:#f87171">☠ &nbsp;死亡预言</div><div class="prophecy-text" id="prophecy-text"></div><div class="prophecy-moment" id="prophecy-moment"></div></div></div>
-    <div class="rs" id="rs7b"><div class="obituary-card" id="obituary-card"><div class="sec-label" style="color:var(--dim)">📜 讣告预览 · OBITUARY PREVIEW</div><div class="obituary-text" id="obituary-text"></div><div class="obituary-footer">—— 来自未来的档案</div></div></div>
-    <div class="rs" id="rs7c"><div class="lastwords-card"><div class="lw-quote" id="lw-quote"></div><div class="lw-attr" id="lw-attr"></div></div></div>
-    <div class="rs" id="rs7d"><div class="survival-card"><div class="sec-label" style="color:#34d399;margin-bottom:12px">🌱 如果你从今天开始改变</div><div class="survival-items" id="survival-items"></div><div class="survival-note">以上数据基于流行病学模型估算，每改变一个维度，你的未来都会被重写。</div></div></div>
-    <div class="rs" id="rs7e"><div class="profession-card"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">📊 你的风险相当于</div><div class="profession-items" id="profession-items"></div></div></div>
-    <div class="rs" id="rs7f"><div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 人群对比</div><div id="demo-compare" style="display:flex;flex-direction:column;gap:12px;"></div></div></div>
-    <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
-    <div class="rs" id="rs9"><div class="timeline-card"><div class="sec-label" style="color:#f59e0b;margin-bottom:14px">⏳ 轨迹预测</div><div class="timeline-items" id="timeline-items"></div></div></div>
-    <div class="rs" id="rs9b"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// 风险趋势模拟</div><div class="trend-card"><div class="trend-header"><span class="trend-title">如果维持当前生活方式</span><span class="trend-badge" id="trend-badge">↗ 上升</span></div><svg class="trend-svg" id="trend-svg" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="trend-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs><line x1="0" y1="30" x2="400" y2="30" stroke="rgba(239,68,68,.08)" stroke-dasharray="4,4"/><line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,.04)" stroke-dasharray="4,4"/><line x1="0" y1="90" x2="400" y2="90" stroke="rgba(52,211,153,.08)" stroke-dasharray="4,4"/><text x="395" y="28" text-anchor="end" fill="rgba(239,68,68,.2)" font-size="8">高危</text><text x="395" y="88" text-anchor="end" fill="rgba(52,211,153,.2)" font-size="8">安全</text><path id="trend-area" fill="url(#trend-grad)" d=""/><path id="trend-line" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" d=""/><g id="trend-dots"></g></svg><div class="trend-labels"><span>现在</span><span>3个月</span><span>6个月</span><span>1年</span><span>2年</span></div></div></div>
-    <div class="rs" id="rs10"><div class="priority-card"><div class="priority-label">// 本周最优先做的一件事</div><div class="priority-main" id="priority-main"></div><div class="priority-sub" id="priority-sub"></div></div></div>
-    <div class="section-divider"><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg></div>
-    <div class="rs" id="rs12"><div class="advice-card"><div class="sec-label" style="color:var(--accent);margin-bottom:12px">// 综合改善建议</div><ul class="advice-list" id="advice-list"></ul></div></div>
-    <div class="rs" id="rs12b"><div style="text-align:center;padding:16px 20px;margin-bottom:14px;background:rgba(var(--ar),var(--ag),var(--ab),.03);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.08);border-radius:16px;"><div style="font-size:22px;margin-bottom:6px;">🔮</div><div id="health-fortune" style="font-size:13px;color:var(--dim);line-height:1.7;"></div></div><div class="daily-tip" id="daily-tip" style="background:rgba(var(--ar),var(--ag),var(--ab),.04);border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:var(--dim);margin-bottom:8px;text-transform:uppercase">// 今日一句</div><div id="daily-tip-text" style="font-size:14px;line-height:1.8;color:var(--dim);font-style:italic;"></div></div></div>
-    <div class="rs" id="rs12c"><div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 如果你是……</div><div id="what-if-items" style="display:flex;flex-direction:column;gap:10px;"></div></div></div>
-    <div class="rs" id="rs12c2"><div style="background:linear-gradient(135deg,rgba(52,211,153,.03),rgba(16,185,129,.01));border:1px solid rgba(52,211,153,.1);border-radius:20px;padding:24px;margin-bottom:14px;"><div class="sec-label" style="color:#34d399;margin-bottom:14px">🗺️ 改善路线图</div><div id="roadmap" style="display:flex;flex-direction:column;gap:14px;"></div></div></div>
-    <div class="rs" id="rs12d"><div style="background:linear-gradient(135deg,rgba(var(--ar),var(--ag),var(--ab),.04),rgba(var(--ar),var(--ag),var(--ab),.01));border:1px solid rgba(var(--ar),var(--ag),var(--ab),.12);border-radius:20px;padding:24px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--accent);margin-bottom:14px">🎯 本周健康挑战</div><div id="weekly-challenge" style="font-size:18px;font-weight:700;color:var(--text);line-height:1.6;margin-bottom:10px;"></div><div id="challenge-desc" style="font-size:12px;color:var(--dim);line-height:1.7;"></div><div id="challenge-diff" style="margin-top:12px;font-size:11px;font-weight:600;letter-spacing:1px;"></div></div></div>
-    <div class="rs" id="rs12e"><div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div class="sec-label" style="color:var(--dim);margin-bottom:14px">// 本次测试统计</div><div id="session-stats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"></div></div></div>
-    <div class="rs" id="rs12f"><div style="background:rgba(239,68,68,.02);border:1px solid rgba(239,68,68,.08);border-radius:20px;padding:20px;margin-bottom:14px;text-align:center;"><div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.4);margin-bottom:8px;">⏰ 体检提醒</div><div id="checkup-msg" style="font-size:13px;color:var(--dim);line-height:1.7;"></div><div style="margin-top:12px;font-size:11px;color:var(--dim);font-style:italic;" id="checkup-items"></div></div></div>
     <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 复制结果</button><button class="btn-share" onclick="downloadCard()">📸 下载结果图</button><button class="btn-share" onclick="encodeResultToURL()">🔗 挑战朋友</button><button class="btn-share" onclick="shareToWeibo()">🔴 分享微博</button><button class="btn-share" onclick="shareToTwitter()">🐦 分享Twitter</button><button class="btn-retry" onclick="retryQuiz()">🔄 再测一次</button></div><div class="tip-jar" id="tip-jar"><div style="font-size:11px;font-weight:600;letter-spacing:2px;color:var(--dim);margin-bottom:8px;">觉得好玩？请作者喝杯咖啡 ☕</div><a class="btn-tip" href="https://buymeacoffee.com" target="_blank" rel="noopener">☕ Buy Me a Coffee</a></div><div class="disclaimer">⚕️ 本测试纯属娱乐，不构成任何医学诊断或建议。如有健康疑虑，请咨询专业医疗人员。高分用户建议认真预约体检。</div></div>
   </div>
 </section>
@@ -2873,50 +2853,6 @@ function showResult(){
   if(compatArch){
     document.getElementById('arch-compat').innerHTML=`<span style="font-size:12px;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:6px;">最常见搭配</span>${compatArch.icon} <b style="color:${compatArch.color}">${compatArch.name}</b> — 你们经常出现在同一个办公室里`;
   }
-  const pp=Math.min(98,Math.round(score*.82+Math.random()*5));
-  const pCol=score<30?'#34d399':score<55?'#fbbf24':score<75?'#f59e0b':'#ef4444';
-  const pBar=document.getElementById('pct-bar');pBar.style.background=pCol;pBar.style.width='0%';setTimeout(()=>pBar.style.width=pp+'%',600);
-  const pctNumEl=document.getElementById('pct-num');pctNumEl.style.color=pCol;pctNumEl.textContent='0%';
-  // Animate percentile counter
-  const pctStart=performance.now();
-  (function tickPct(now){const p=Math.min((now-pctStart)/1200,1);const ease=1-Math.pow(1-p,3);pctNumEl.textContent=Math.round(pp*ease)+'%';if(p<1)requestAnimationFrame(tickPct);})(pctStart);
-  document.getElementById('pct-text').textContent=`你比 ${pp}% 的同龄城市白领更接近猝死`;
-  // Age group + city comparison
-  const ageGroup=userAge<25?'18-24':userAge<30?'25-29':userAge<35?'30-34':userAge<40?'35-39':userAge<50?'40-49':'50+';
-  const cityAvg=Math.round(52+Math.random()*8);
-  const ageAvg=Math.round(userAge<25?42:userAge<30?55:userAge<35?60:userAge<40?58:userAge<50?53:48);
-  const worstDim=dims.reduce((a,b)=>b.pct>a.pct?b:a);
-  const worstRank=Math.min(95,Math.round(worstDim.pct*.9+Math.random()*5));
-  const psEl=document.getElementById('pct-subs');
-  psEl.innerHTML=`<div class="pct-sub"><span class="pct-sub-val" style="color:${pCol}">${ageGroup}岁</span><span class="pct-sub-lbl">你的年龄段平均指数 ${ageAvg}</span></div><div class="pct-sub"><span class="pct-sub-val" style="color:${pCol}">${cityAvg}</span><span class="pct-sub-lbl">一线城市打工人平均</span></div><div class="pct-sub"><span class="pct-sub-val" style="color:${dimCol(worstDim.pct)}">TOP ${worstRank}%</span><span class="pct-sub-lbl">${worstDim.name.replace(/^../,'')}维度风险排名</span></div>`;
-  const bA=Math.min(85,Math.round(userAge+score*.28));
-  const wP=dimObj.work||0,sP=dimObj.stress||0;
-  const hL=Math.round(wP*.4+sP*.35+((100-(dimObj.exercise||0))*.25));
-  const hLab=hL<30?'正常':hL<50?'偏高':hL<70?'过载':'危险';const hCol=hL<30?'#34d399':hL<50?'#fbbf24':hL<70?'#f59e0b':'#ef4444';
-  const rLab=score<20?'极强':score<40?'良好':score<60?'一般':score<80?'较弱':'极弱';const rCol=score<40?'#34d399':score<65?'#fbbf24':'#ef4444';
-  const nLab=sP<30?'平稳':sP<50?'偏紧':sP<70?'紧张':'高度紧张';const nCol=sP<30?'#34d399':sP<50?'#fbbf24':sP<70?'#f59e0b':'#ef4444';
-  // Animated vital counters with pop-in
-  const baCol=bA<=userAge?'#34d399':bA<=userAge+8?'#fbbf24':'#ef4444';
-  // Vitals, age comparison, week heat map, risk tags — skipped (sections removed)
-  try{const sys=calcSystems(dims);const sg=document.getElementById('systems-grid');if(sg){sg.innerHTML='';
-  sys.forEach(s=>{const col=s.risk<30?'#34d399':s.risk<55?'#fbbf24':s.risk<75?'#f59e0b':'#ef4444';const st=s.risk<30?'正常':s.risk<55?'偏高':s.risk<75?'风险':'危险';const el=document.createElement('div');el.className='sys-item';el.innerHTML=`<div class="sys-icon">${s.icon}</div><div class="sys-body"><div class="sys-name">${s.name}</div><div class="sys-status" style="color:${col}">${st} · ${s.risk}%</div><div class="sys-note">${s.note}</div></div>`;sg.appendChild(el);});}
-  // Body heatmap
-  const bhMap=[
-    {id:'bh-head',parts:['bh-brain'],label:'🧠 大脑/神经',risk:Math.round((dimObj.stress||0)*.4+(dimObj.emotion||0)*.4+(dimObj.sleep||0)*.2)},
-    {id:'bh-torso',parts:['bh-heart','bh-stomach'],label:'❤️ 心血管',risk:Math.round((dimObj.work||0)*.4+(dimObj.stress||0)*.35+(dimObj.exercise||0)*.25)},
-    {id:null,parts:[],label:'⚗️ 代谢系统',risk:Math.round((dimObj.diet||0)*.4+(dimObj.sleep||0)*.3+(dimObj.habit||0)*.3)},
-    {id:null,parts:['bh-larm','bh-rarm','bh-lleg','bh-rleg'],label:'💪 肌肉骨骼',risk:Math.round((dimObj.exercise||0)*.5+(dimObj.work||0)*.3+(dimObj.stress||0)*.2)},
-  ];
-  const blEl=document.getElementById('body-legend');blEl.innerHTML='';
-  const bhIsLight=document.documentElement.classList.contains('light');
-  bhMap.forEach(b=>{
-    const col=b.risk<30?'#34d399':b.risk<55?'#fbbf24':b.risk<75?'#f59e0b':'#ef4444';
-    const alpha=bhIsLight?(.35+b.risk/100*.5).toFixed(2):(.15+b.risk/100*.5).toFixed(2);
-    const partAlpha=bhIsLight?'99':'40';
-    if(b.id){const el=document.getElementById(b.id);if(el){el.style.fill=col+Math.round(parseFloat(alpha)*255).toString(16).padStart(2,'0');el.style.stroke=col;el.style.strokeWidth=bhIsLight?'2.5':'1';}}
-    b.parts.forEach(pid=>{const pe=document.getElementById(pid);if(pe){pe.style.fill=col+partAlpha;pe.style.stroke=col;pe.style.strokeWidth=bhIsLight?'2':'0.8';}});
-    blEl.innerHTML+=`<div class="body-legend-item"><span class="body-legend-dot" style="background:${col};color:${col}"></span><span class="body-legend-name">${b.label}</span><span class="body-legend-risk" style="color:${col}">${b.risk}%</span></div>`;
-  });
   const cc=document.getElementById('contrib-chart');cc.innerHTML='';
   dims.forEach(d=>{const col=dimCol(d.pct);const el=document.createElement('div');el.className='contrib-row';el.innerHTML=`<span class="contrib-label">${d.name.replace(/^../,'')}</span><div class="contrib-bar-bg"><div class="contrib-bar" style="width:0%;background:${col};color:${col}" data-pct="${d.pct}"></div></div><span class="contrib-val" style="color:${col}">${d.pct}%</span>`;cc.appendChild(el);});
   setTimeout(()=>drawRadar(dims,level.col),200);
@@ -2924,224 +2860,8 @@ function showResult(){
   const pt=score<15?'你的生活方式令人羡慕，也令人费解。如果非要预言：你大概会因为看着身边的人一个个倒下而感到忧郁，而不是自己倒下。继续保持。':(PROPHECY[pKey]||PROPHECY['stress+work']);
   const mo=MOMENTS[pKey]||'';typewriter('prophecy-text',pt,18);
   const mEl=document.getElementById('prophecy-moment');mEl.textContent=mo;mEl.style.display=mo?'block':'none';
-  // Obituary
-  document.getElementById('obituary-text').textContent=genObituary(score,dims,arch,userAge);
-  // Last words
-  const lw=getLastWords(score);
-  document.getElementById('lw-quote').textContent=lw.q;
-  document.getElementById('lw-attr').textContent=lw.a;
-  // Survival bonus (show top 3 worst dims' potential gains)
-  const survEl=document.getElementById('survival-items');survEl.innerHTML='';
-  [...dims].sort((a,b)=>b.pct-a.pct).slice(0,3).forEach(d=>{
-    const sd=SURVIVAL_DATA[d.key];if(!sd)return;
-    survEl.innerHTML+=`<div class="survival-item"><span class="surv-icon">${sd.icon}</span><div class="surv-body"><div class="surv-action">${sd.action}</div><div class="surv-gain" style="color:${sd.col}">${sd.gain}</div></div></div>`;
-  });
-  // Profession comparison
-  const profEl=document.getElementById('profession-items');profEl.innerHTML='';
-  getProfComparison(score).forEach(p=>{
-    const diff=score-p.avg;const cls=Math.abs(diff)<=8?'close':diff>0?'over':'under';
-    const lbl=Math.abs(diff)<=8?'≈ 相近':diff>0?`+${diff} 更高`:`${diff} 更低`;
-    profEl.innerHTML+=`<div class="prof-item"><span class="prof-icon">${p.icon}</span><div class="prof-body"><div class="prof-name">${p.name}</div><div class="prof-risk">典型风险：${p.desc}（平均指数 ${p.avg}）</div></div><span class="prof-match ${cls}">${lbl}</span></div>`;
-  });
-  // Demographic comparison bars
-  const demoEl=document.getElementById('demo-compare');demoEl.innerHTML='';
-  const demos=[
-    {label:'🇨🇳 全国平均',avg:52},{label:'🏙️ 一线城市白领',avg:58},
-    {label:`👤 ${ageGroup}岁同龄人`,avg:ageAvg},{label:'👨‍💻 互联网从业者',avg:65},
-    {label:'🧘 健康达人群体',avg:18},{label:'💀 你的分数',avg:score,isUser:true},
-  ];
-  const isLightMode=document.documentElement.classList.contains('light');
-  demos.forEach(d=>{
-    const col=d.isUser?(score<30?'#34d399':score<60?'#fbbf24':'#ef4444'):(isLightMode?'rgba(0,0,0,.3)':'rgba(255,255,255,.25)');
-    const w=Math.max(5,d.avg)+'%';
-    const bold=d.isUser?'font-weight:700;':'';
-    const labelCol=d.isUser?col:(isLightMode?'#555':'#bbb');
-    const barBg=isLightMode?'rgba(0,0,0,.06)':'rgba(255,255,255,.04)';
-    demoEl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;${bold}"><span style="font-size:12px;color:${labelCol};width:130px;flex-shrink:0;text-align:right;">${d.label}</span><div style="flex:1;height:8px;background:${barBg};border-radius:10px;overflow:hidden;"><div style="height:100%;width:${w};background:${col};border-radius:10px;transition:width 1s cubic-bezier(.25,.8,.25,1);box-shadow:${d.isUser?'0 0 10px '+col+'60':'none'};"></div></div><span style="font-family:'Space Mono',monospace;font-size:11px;color:${col};width:30px;">${d.avg}</span></div>`;
-  });
-  // Doctor note + Rx — skipped (sections removed)
-  }catch(e){console.warn('Skipped removed sections',e);}
-  const tl=document.getElementById('timeline-items');tl.innerHTML='';
-  calcTimeline(score).forEach((t,i)=>{const el=document.createElement('div');el.className='tl-item';el.innerHTML=`<div class="tl-dot" style="border-color:${t.col};color:${t.col}">${i+1}</div><div class="tl-body"><div class="tl-time" style="color:${t.col}">${t.t}</div><div class="tl-text">${t.txt}</div></div>`;tl.appendChild(el);});
-  const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);const p=PRIORITY[worst.key];
-  document.getElementById('priority-main').textContent=p.main;document.getElementById('priority-sub').textContent=p.sub;
-  // Dimension gauges + grid — skipped (sections removed)
-  // Risk trend chart
-  (function drawTrend(){
-    const pts=[],steps=5,W=400,H=120,padY=15;
-    let cur=score;
-    for(let i=0;i<steps;i++){
-      const grow=score>=60?Math.random()*5+2:score>=35?Math.random()*3:-(Math.random()*3+1);
-      cur=Math.max(5,Math.min(98,cur+grow));
-      pts.push(cur);
-    }
-    pts.unshift(score);
-    const xs=pts.map((_,i)=>i/(pts.length-1)*W);
-    const ys=pts.map(v=>padY+(1-v/100)*(H-padY*2));
-    const lineD=xs.map((x,i)=>`${i===0?'M':'L'}${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
-    const areaD=lineD+` L${W},${H} L0,${H} Z`;
-    document.getElementById('trend-line').setAttribute('d',lineD);
-    document.getElementById('trend-area').setAttribute('d',areaD);
-    const dotsG=document.getElementById('trend-dots');dotsG.innerHTML='';
-    const ns='http://www.w3.org/2000/svg';
-    pts.forEach((v,i)=>{
-      const col=v<30?'#34d399':v<55?'#fbbf24':v<75?'#f59e0b':'#ef4444';
-      const c=document.createElementNS(ns,'circle');
-      c.setAttribute('cx',xs[i].toFixed(1));c.setAttribute('cy',ys[i].toFixed(1));
-      c.setAttribute('r','4');c.setAttribute('fill',col);c.setAttribute('stroke',document.documentElement.classList.contains('light')?'#f0f1f4':'#fff');c.setAttribute('stroke-width','1.5');
-      dotsG.appendChild(c);
-      if(i>0){const t=document.createElementNS(ns,'text');t.setAttribute('x',xs[i].toFixed(1));t.setAttribute('y',(ys[i]-10).toFixed(1));t.setAttribute('text-anchor','middle');t.setAttribute('fill',col);t.setAttribute('font-size','9');t.setAttribute('font-weight','bold');t.textContent=Math.round(v);dotsG.appendChild(t);}
-    });
-    const last=pts[pts.length-1];const badge=document.getElementById('trend-badge');
-    if(last<=score){badge.textContent='↘ 下降';badge.classList.add('down');}
-    else{badge.textContent='↗ 上升';badge.classList.remove('down');}
-  })();
-  document.getElementById('advice-list').innerHTML=level.advice.map(a=>`<li>${a}</li>`).join('');
-  // What-if scenarios
-  const whatIfs=[
-    {cond:score>=60,icon:'🏃',title:'每天运动30分钟',effect:`你的指数可能降低 ${Math.round(score*.15)} 分，身体年龄年轻 ${Math.round(score*.06)} 岁`},
-    {cond:score>=40,icon:'😴',title:'每晚11点前入睡',effect:`睡眠维度风险降低约 ${Math.round((dimObj.sleep||0)*.3)}%，恢复力显著提升`},
-    {cond:score>=30,icon:'🥗',title:'规律三餐+减少外卖',effect:`饮食维度改善 ${Math.round((dimObj.diet||0)*.25)}%，代谢系统负担减轻`},
-    {cond:score>=50,icon:'🧘',title:'每天10分钟冥想/深呼吸',effect:`压力维度可降低 ${Math.round((dimObj.stress||0)*.2)}%，神经系统紧张度下降`},
-    {cond:dimObj.work>=50,icon:'⏰',title:'严格执行下班时间',effect:`工作维度风险减少约 ${Math.round((dimObj.work||0)*.3)}%，心血管负荷改善`},
-    {cond:score<25,icon:'🏆',title:'保持现有生活方式',effect:'你已经做得很好了！保持下去，你是别人羡慕的对象'},
-  ].filter(w=>w.cond).slice(0,4);
-  const wifEl=document.getElementById('what-if-items');wifEl.innerHTML='';
-  whatIfs.forEach(w=>{
-    wifEl.innerHTML+=`<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--card-border);"><span style="font-size:24px;flex-shrink:0;">${w.icon}</span><div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">${w.title}</div><div style="font-size:12px;color:var(--dim);line-height:1.6;">${w.effect}</div></div></div>`;
-  });
-  // Health fortune based on score
-  const fortunes={
-    low:['今日健康运势：★★★★★ 你的器官在开派对','签曰：生命力旺盛，阎王看了都皱眉','运势提示：今天适合跑步、吃沙拉、和朋友出去玩','健康签：你是养生界的天选之人，继续保持'],
-    mid:['今日健康运势：★★★☆☆ 还行，但别得意','签曰：身体在观望，你的下一步决定它的态度','运势提示：今天适合早点睡，但你大概率不会','健康签：你在及格线上蹦迪，注意别掉下去'],
-    high:['今日健康运势：★☆☆☆☆ 你的器官在写辞职信','签曰：下下签。建议今天就预约体检','运势提示：今天不适合熬夜、喝酒、生气、加班','健康签：你的身体已经在倒计时了，但还来得及']
-  };
-  const fPool=score<30?fortunes.low:score<65?fortunes.mid:fortunes.high;
-  const fortuneEl=document.getElementById('health-fortune');
-  if(fortuneEl)fortuneEl.textContent=fPool[Math.floor(Math.random()*fPool.length)];
-  // Daily tip based on date seed
-  const dailyTips=['你的身体是唯一一个从出生陪你到死亡的东西，善待它。','每多喝一杯水，你的细胞就多一分感激。','今天走路20分钟，等于给未来的自己存了一笔健康基金。','压力不会自己消失，但你可以学会让它变小。','早睡一小时带来的改变，比你想象的大得多。','你不需要完美的健康习惯，只需要比昨天好一点。','人生不是百米冲刺，是马拉松。配速很重要。','你的身体一直在给你发消息，试着不要已读不回。','健康不是目标，是每天都在做的选择。','如果你现在很累，那不是因为你不够努力，而是因为你太努力了。','情绪不是敌人，忽视情绪才是。','30秒的深呼吸，比10分钟的刷手机更能让你放松。','找一个人说说你最近的感受，这不是软弱，是智慧。','你的价值不等于你的产出。休息是你应得的。','与其完美地计划改变，不如现在就做一件小事。','每天少坐30分钟，一年下来相当于跑了一个半程马拉松的运动量。','慢性脱水会让你的认知能力下降25%——你以为是变笨了，其实只是缺水。','笑一次相当于在跑步机上跑10分钟的有氧效果。多笑几次。','睡前两小时不看屏幕，你的睡眠质量会提升40%以上。','一个拥抱超过20秒，身体会释放催产素，显著降低压力荷尔蒙。'];
-  const dayIdx=Math.floor(Date.now()/864e5)%dailyTips.length;
-  document.getElementById('daily-tip-text').textContent='"'+dailyTips[dayIdx]+'"';
-  // Fun fact based on worst dimension
-  const funFacts={
-    sleep:['每少睡1小时，交通事故风险增加13%','连续17小时不睡觉的认知水平≈血液酒精浓度0.05%','睡眠不足6小时的人，感冒概率是正常睡眠者的4.2倍','长期睡眠不足会让大脑产生类似老年痴呆的蛋白质沉积'],
-    work:['每周工作超过55小时，中风风险增加33%','日本有个词叫"过劳死"（karoshi），因为这件事发生得太频繁了','每多工作1小时，你的决策质量大约下降5%','连续工作8小时后的认知能力≈微醉状态'],
-    exercise:['久坐每天超过6小时的死亡风险比每天4小时高40%','每天步行30分钟，预期寿命增加3-7年','肌肉是人体最大的内分泌器官，不用它等于关闭了一个重要系统','缺乏运动导致的死亡人数 > 肥胖导致的死亡人数'],
-    diet:['不吃早餐的人心脏病风险增加87%','人体60%是水，脱水2%就会影响认知和体能','肠道有"第二大脑"之称，饮食直接影响你的情绪和记忆','每天多吃一份蔬菜，全因死亡率降低5%'],
-    stress:['长期压力会让端粒缩短，相当于加速衰老10年','皮质醇持续偏高会降低免疫力40%','压力会让伤口愈合速度减慢40%','慢性压力对心脏的伤害≈每天抽5支烟'],
-    habit:['戒烟后20分钟心率就开始恢复正常','每天超过2杯咖啡就开始影响钙吸收','酒精是I类致癌物——和石棉、甲醛同级别','电子烟的尼古丁吸收速度比传统香烟更快'],
-    emotion:['孤独对健康的危害≈每天抽15支烟','大笑20秒的减压效果≈划船3分钟','拥有亲密社交关系的人，预期寿命多7年','长期压抑情绪会使免疫球蛋白A水平下降']
-  };
-  const worstKey=dims[0]?.key;
-  const factPool=funFacts[worstKey]||funFacts.sleep;
-  const factEl=document.createElement('div');
-  factEl.style.cssText='background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:14px 18px;margin-bottom:14px;font-size:12px;color:var(--dim);line-height:1.7;text-align:center;';
-  factEl.innerHTML=`<span style="font-size:10px;font-weight:600;letter-spacing:2px;color:var(--dim);display:block;margin-bottom:6px;">💡 你知道吗</span>${factPool[Math.floor(Math.random()*factPool.length)]}`;
-  document.getElementById('roadmap')?.parentElement.parentElement.insertBefore(factEl,document.getElementById('roadmap')?.parentElement);
-  // Improvement roadmap
-  const roadmap=document.getElementById('roadmap');roadmap.innerHTML='';
-  const topDim=dims.sort((a,b)=>b.pct-a.pct)[0];
-  const roadmapData=[
-    {t:'📅 第1周',title:'建立意识',desc:`开始记录你的${topDim.name.replace(/^../,'')}相关习惯。不需要改变，只需要观察。`,col:'#34d399'},
-    {t:'📅 第2-4周',title:'微小改变',desc:`每天在${topDim.name.replace(/^../,'')}维度做一个5分钟的改善行为。小到不可能失败。`,col:'#a3e635'},
-    {t:'📅 第2-3月',title:'习惯固化',desc:'把第一个月的微小改变变成自动行为。然后开始第二个维度的改善。',col:'#fbbf24'},
-    {t:'📅 第6月',title:'中期检查',desc:`预约体检，对比改善前后的指标变化。预计${topDim.name.replace(/^../,'')}维度可改善 ${Math.round(topDim.pct*.2)}%。`,col:'#f59e0b'},
-    {t:'📅 第12月',title:'全面提升',desc:`如果坚持到这里，你的猝死指数预计可降低 ${Math.round(score*.25)}-${Math.round(score*.4)} 分。这不是预测，是很多人的实际经历。`,col:'#60a5fa'},
-  ];
-  roadmapData.forEach((r,i)=>{
-    roadmap.innerHTML+=`<div style="display:flex;gap:14px;align-items:flex-start;"><div style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:${r.col};margin-top:7px;box-shadow:0 0 8px ${r.col}40;"></div><div><div style="font-size:12px;font-weight:700;color:${r.col};margin-bottom:2px;">${r.t} · ${r.title}</div><div style="font-size:12px;color:var(--dim);line-height:1.7;">${r.desc}</div></div></div>`;
-  });
-  // Weekly health challenge
-  const challenges=[
-    {ch:'连续7天晚上11点前放下手机',desc:'不需要11点睡着，只要放下手机。你的褪黑素需要30分钟的暗环境来启动。',diff:'EASY',dcol:'#34d399'},
-    {ch:'这周每天喝8杯水',desc:'在桌上放一个大水杯，每次看到就喝一口。脱水是最容易被忽视的健康杀手。',diff:'EASY',dcol:'#34d399'},
-    {ch:'每天走路20分钟',desc:'不需要跑步，不需要健身房。只是出门走20分钟。这件事的ROI高得离谱。',diff:'MEDIUM',dcol:'#fbbf24'},
-    {ch:'连续5天自己做一顿饭',desc:'哪怕是煮个面+水煮蛋。自己做饭的过程本身就是一种减压方式。',diff:'MEDIUM',dcol:'#fbbf24'},
-    {ch:'每天10分钟完全安静，什么都不做',desc:'不看手机，不听音乐，不想事情。让大脑进入"默认模式网络"——这是创造力和修复的源泉。',diff:'HARD',dcol:'#f59e0b'},
-    {ch:'这周和一个朋友进行一次30分钟的深度对话',desc:'不聊工作，不聊八卦。聊聊彼此最近真实的感受。被理解是最好的减压药。',diff:'HARD',dcol:'#f59e0b'},
-    {ch:'记录7天的睡眠时间和起床感受',desc:'不需要改变什么，只需要记录。自我觉察是改变的第一步。',diff:'EASY',dcol:'#34d399'},
-    {ch:'这周把最主要的不良嗜好减半',desc:'不是戒掉，只是减半。咖啡从4杯变2杯，抽烟从一包变半包。可持续的改变才是真改变。',diff:'MEDIUM',dcol:'#fbbf24'},
-  ];
-  const weekIdx=Math.floor(Date.now()/(7*864e5))%challenges.length;
-  const chl=challenges[weekIdx];
-  document.getElementById('weekly-challenge').textContent=chl.ch;
-  document.getElementById('challenge-desc').textContent=chl.desc;
-  const cdEl=document.getElementById('challenge-diff');
-  cdEl.textContent=`难度：${chl.diff}`;cdEl.style.color=chl.dcol;
-  // Danger leaderboard - top 5 most dangerous answers
-  const dangerBoard=[...Object.entries(ans)].filter(([qi,v])=>v>=2&&Q[parseInt(qi)]).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  if(dangerBoard.length>0&&score>=30){
-    const dbEl=document.createElement('div');
-    dbEl.style.cssText='background:rgba(239,68,68,.02);border:1px solid rgba(239,68,68,.06);border-radius:16px;padding:16px;margin-bottom:14px;';
-    let dbH='<div style="font-size:10px;font-weight:600;letter-spacing:3px;color:rgba(239,68,68,.35);margin-bottom:10px;text-transform:uppercase">// 你最危险的答案</div>';
-    dangerBoard.forEach(([qi,v],i)=>{
-      const q=Q[parseInt(qi)];if(!q)return;
-      const col=v>=4?'#ef4444':v>=3?'#f59e0b':'#fbbf24';
-      const medal=['🥇','🥈','🥉','4️⃣','5️⃣'][i]||'';
-      dbH+=`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--card-border);font-size:12px;"><span>${medal}</span><span style="flex:1;color:var(--dim)">${q.text.slice(0,20)}${q.text.length>20?'…':''}</span><span style="font-family:'Space Mono',monospace;font-weight:700;color:${col}">${'💀'.repeat(Math.min(v,5))}</span></div>`;
-    });
-    dbEl.innerHTML=dbH;
-    const statsParent=document.getElementById('session-stats')?.parentElement;
-    if(statsParent)statsParent.parentElement.insertBefore(dbEl,statsParent);
-  }
-  // Checkup reminder
-  const checkupMsgs={
-    low:'根据你的结果，建议每年进行一次常规体检。保持现有的好习惯，定期监测基线指标。',
-    mid:'你的一些维度已经进入需要关注的范围。建议6个月内安排一次全面体检，重点关注以下项目：',
-    high:'你的多项指标显示较高风险。建议本月内预约体检，不宜延迟。以下是你应该重点检查的项目：',
-    critical:'紧急建议：请在一周内预约全面体检。你的风险水平已经不适合"再等等"。必查项目：'
-  };
-  const checkupItems={
-    sleep:['睡眠多导图检查','甲状腺功能'],
-    work:['心电图','颈椎X光','眼底检查'],
-    exercise:['骨密度检测','心肺功能测试'],
-    diet:['血脂四项','肝功能','血糖'],
-    stress:['皮质醇水平','血压监测'],
-    habit:['肺功能检测','肝脏B超'],
-    emotion:['心理健康评估','睡眠质量评估']
-  };
-  const ckLevel=score<25?'low':score<50?'mid':score<75?'high':'critical';
-  document.getElementById('checkup-msg').textContent=checkupMsgs[ckLevel];
-  const ckItems=dims.sort((a,b)=>b.pct-a.pct).slice(0,3).flatMap(d=>checkupItems[d.key]||[]).slice(0,5);
-  document.getElementById('checkup-items').textContent=ckItems.length?'建议检查：'+ckItems.join(' · '):'';
-  // XP calculation - health awareness points
-  let xp=50;// base XP for completing test
-  xp+=Object.values(ans).filter(v=>v<=1).length*5;// safe answers reward
-  xp+=achMatched.length*20;// achievements bonus
-  xp+=matched.length*10;// tags bonus
-  if(score<30)xp+=30;// low risk bonus
-  if(quizStartTime&&(Date.now()-quizStartTime)>120000)xp+=10;// took time thinking
-  const xpLevel=xp<80?1:xp<130?2:xp<180?3:xp<250?4:5;
-  const xpTitle=['','新手观察者','健康学徒','风险管理师','养生专家','生命守护者'][xpLevel];
-  try{
-    const totalXP=parseInt(localStorage.getItem('sdi-xp')||'0')+xp;
-    localStorage.setItem('sdi-xp',String(totalXP));
-  }catch(e){}
-  // Session stats
-  const ssEl=document.getElementById('session-stats');
-  const dangerCount=Object.values(ans).filter(v=>v>=3).length;
-  const safeCount=Object.values(ans).filter(v=>v<=1).length;
-  const totalQ=Object.keys(ans).length;
-  const elapsed2=quizStartTime?Math.round((Date.now()-quizStartTime)/1000):0;
-  const avgPerQ=totalQ>0?(elapsed2/totalQ).toFixed(1):'?';
-  const tagCount=matched.length;
-  const achCount=achMatched.length;
-  const histLen2=(()=>{try{return JSON.parse(localStorage.getItem('sdi-history')||'[]').length;}catch(e){return 1;}})();
-  ssEl.innerHTML=[
-    {icon:'❓',label:'答题数',val:`${totalQ}题`},
-    {icon:'⚡',label:'平均用时',val:`${avgPerQ}秒/题`},
-    {icon:'💀',label:'高危选项',val:`${dangerCount}个`},
-    {icon:'✅',label:'安全选项',val:`${safeCount}个`},
-    {icon:'🏷️',label:'获得标签',val:`${tagCount}个`},
-    {icon:'🏆',label:'解锁成就',val:`${achCount}个`},
-    {icon:'📊',label:'历史测试',val:`第${histLen2}次`},
-    {icon:'🎯',label:'危险比率',val:`${totalQ>0?Math.round(dangerCount/totalQ*100):0}%`},
-    {icon:'⭐',label:'觉醒XP',val:`${xp} · Lv${xpLevel}`},
-    {icon:'🎓',label:'觉醒等级',val:xpTitle},
-  ].map(s=>`<div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;padding:10px;"><span style="font-size:16px">${s.icon}</span><div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--accent);margin:4px 0">${s.val}</div><div style="font-size:10px;color:var(--dim)">${s.label}</div></div>`).join('');
   go('sec-result','anim-fade');clearProgress();playReveal(score);
-  const rsIds=['rs0','rs1','rs2','rs3','rs4','rs4b','rs4c','rs5','rs5b','rs6','rs7','rs7b','rs7c','rs7d','rs7e','rs7f','rs8','rs9','rs9b','rs10','rs10b','rs11','rs12','rs12b','rs12c','rs12c2','rs12d','rs12e','rs12f','rs13'];
+  const rsIds=['rs0','rs1','rs2','rs6','rs7','rs13'];
   // First few sections animate on timer; rest use Intersection Observer for scroll-reveal
   const timerCount=5;
   rsIds.slice(0,timerCount).forEach((id,i)=>{const el=document.getElementById(id);if(el)setTimeout(()=>el.classList.add('on'),300+i*140);});
@@ -3612,7 +3332,7 @@ function stopAmbient(){
 // ════ RESULT SECTION NAVIGATION ════
 (function(){
   const navEl=document.getElementById('res-nav');if(!navEl)return;
-  const labels={'rs0':'报告','rs1':'评分','rs2':'人格','rs3':'百分位','rs4':'体征','rs6':'雷达图','rs7':'预言','rs8':'医生','rs9':'轨迹','rs11':'维度','rs12':'建议','rs13':'操作'};
+  const labels={'rs0':'报告','rs1':'评分','rs2':'人格','rs6':'雷达图','rs7':'预言','rs13':'操作'};
   Object.entries(labels).forEach(([id,label])=>{
     const dot=document.createElement('div');dot.className='res-nav-dot';dot.dataset.label=label;dot.dataset.target=id;
     dot.onclick=()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});};
