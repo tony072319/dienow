@@ -1220,11 +1220,11 @@ html.light .achievement-name{color:#1a1a2e;}
 #rs1 .res-level { font-size: 28px; font-weight: 900; margin-bottom: 16px; }
 @keyframes bounceIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.3)}100%{transform:scale(1);opacity:1}}
 #rs1 .res-desc { font-size: 17px; line-height: 1.8; max-width: 600px; margin: 0 auto 16px; }
-#rs1 .dim-chips { margin-top: 28px; gap: 12px; }
-#rs1 .dim-chip { font-size: 16px; padding: 10px 20px; font-weight: 700; }
-#rs1 .fun-tags-label { font-size: 15px; letter-spacing: 5px; margin-bottom: 14px; }
-#rs1 .fun-tags { margin-top: 16px; gap: 14px; }
-#rs1 .fun-tag { font-size: 18px; padding: 12px 26px; }
+#rs1 .dim-chips { margin-top: 28px; gap: 14px; }
+#rs1 .dim-chip { font-size: 18px; padding: 12px 24px; font-weight: 700; }
+#rs1 .fun-tags-label { font-size: 16px; letter-spacing: 5px; margin-bottom: 16px; }
+#rs1 .fun-tags { margin-top: 18px; gap: 16px; }
+#rs1 .fun-tag { font-size: 20px; padding: 14px 28px; }
 #rs1 .achievements { margin-top: 24px; }
 #rs1 .score-rank { margin-top: 28px; font-size: 14px; }
 #rs1 .score-rank-labels { font-size: 13px; }
@@ -1342,13 +1342,8 @@ html.light .achievement-name{color:#1a1a2e;}
   <div class="progress-wrap">
     <div class="progress-meta"><span class="p-counter" id="q-counter">01 / 30</span><span class="p-cat" id="q-cat-top"></span></div>
     <div class="pbar-outer"><div class="pbar-inner" id="pbar" style="width:0%"></div></div>
-    <div class="mini-danger" id="mini-danger"><span class="danger-skulls" id="danger-skulls"></span><span id="danger-label"></span></div>
-    <div class="streak-bar" id="streak-bar"><span class="streak-fire">🔥</span><span id="streak-text">Consecutive high-risk answers...</span></div>
-    <div class="q-timer" id="q-timer"><span id="q-timer-text">0s</span><div class="q-timer-bar"><div class="q-timer-fill" id="q-timer-fill" style="width:100%"></div></div></div>
-    <div class="step-dots" id="step-dots"></div>
   </div>
   <div class="card" id="q-card">
-    <div class="danger-meter"><div class="danger-meter-fill" id="danger-meter"></div></div>
     <div class="live-risk-badge" id="lrb"><div class="lrb-dot" id="lrb-dot"></div><span class="lrb-val" id="lrb-val">0%</span></div>
     <div id="branch-flag" style="display:none"><div class="branch-tag">⚡ FOLLOW-UP</div></div>
     <div id="q-scenario" style="display:none" class="scenario-box"></div>
@@ -2219,16 +2214,6 @@ function updateTheme(){
   if(!sc.length)return;
   const pct=(sc.reduce((s,v)=>s+v,0)-sc.length)/(sc.length*4);
   applyTheme(Math.min(pct,1));
-  // Danger meter
-  const danEl=document.getElementById('mini-danger');
-  if(pct>.22){
-    danEl.classList.add('show');
-    const cnt=pct<.4?1:pct<.6?2:pct<.8?3:4;
-    document.getElementById('danger-skulls').textContent='💀'.repeat(cnt);
-    const labs=['','Low Risk','Moderate Risk','High Risk','Extreme Risk'];
-    const lEl=document.getElementById('danger-label');
-    lEl.textContent=labs[cnt];lEl.style.color=pct<.4?'#fbbf24':pct<.6?'#f59e0b':pct<.8?'#ef4444':'#ef4444';
-  }else danEl.classList.remove('show');
   // Live risk badge
   const lrb=document.getElementById('lrb');const lrbVal=Math.round(pct*100);
   if(pct>.1){
@@ -2237,12 +2222,6 @@ function updateTheme(){
     const col=pct<.3?'#34d399':pct<.6?'#fbbf24':pct<.8?'#f59e0b':'#ef4444';
     document.getElementById('lrb-dot').style.background=col;
     document.getElementById('lrb-val').style.color=col;
-  }
-  // Danger meter bar
-  const dmEl=document.getElementById('danger-meter');
-  if(dmEl){
-    dmEl.style.width=Math.round(pct*100)+'%';
-    dmEl.style.background=pct<.3?'#34d399':pct<.5?'#a3e635':pct<.7?'#f59e0b':'#ef4444';
   }
   // Question card danger gradient
   const qCard=document.getElementById('q-card');
@@ -2296,9 +2275,7 @@ function startQuiz(){
   buildFlow();applyTheme(0);clearProgress();
   canv.classList.remove('active');pts=[];dangerPtMode=false;
   document.querySelectorAll('.rs').forEach(e=>e.classList.remove('on'));
-  document.getElementById('mini-danger').classList.remove('show');
-  document.getElementById('lrb').classList.remove('show');
-  document.getElementById('streak-bar').classList.remove('show');
+  document.getElementById('lrb')?.classList.remove('show');
   document.getElementById('res-card').classList.remove('res-card-chromatic','danger-mode');
   document.body.classList.remove('danger-result');
   document.querySelector('.score-ring-wrap')?.classList.remove('extreme');
@@ -2373,21 +2350,6 @@ function renderQ(){
   pbarOuter?.querySelectorAll('.pbar-milestone').forEach(m=>{
     const pos=parseFloat(m.style.left);m.classList.toggle('passed',pbarPct>=pos);
   });
-  // Step dots
-  const dotsEl=document.getElementById('step-dots');
-  if(dotsEl){
-    let html='';let lastCat='';
-    for(let i=0;i<total;i++){
-      const qi2=flow[i],q2=Q[qi2];
-      if(q2.cat!==lastCat&&lastCat)html+='<span class="step-sep"></span>';
-      lastCat=q2.cat;
-      const isDone=ans[qi2]!==undefined;
-      const isDanger=isDone&&(ans[qi2]>=3);
-      const cls=i===fi?'current':isDanger?'danger-done':isDone?'done':'';
-      html+=`<span class="step-dot ${cls}"></span>`;
-    }
-    dotsEl.innerHTML=html;
-  }
   document.getElementById('branch-flag').style.display=q.branch?'block':'none';
   const scBox=document.getElementById('q-scenario');
   if(q.scenario){scBox.textContent=q.scenario;scBox.style.display='block';}else scBox.style.display='none';
@@ -2439,14 +2401,7 @@ function fireDangerFlash(score){
   fl.classList.remove('fire','fire-strong');void fl.offsetWidth;
   fl.classList.add(score>=4?'fire-strong':'fire');
 }
-function updateStreak(){
-  const sb=document.getElementById('streak-bar');
-  if(consecutiveDanger>=2){
-    sb.classList.add('show');
-    const streakMsgs=['','','Consecutive High Risk ×2 — Are you serious','Consecutive High Risk ×3 — The server is nervous for you','Consecutive High Risk ×4 — Maybe call 911 now','Consecutive High Risk ×5+ — System recorded your last words'];
-    document.getElementById('streak-text').textContent=streakMsgs[Math.min(consecutiveDanger,5)];
-  }else sb.classList.remove('show');
-}
+function updateStreak(){}
 function pickGrid(i){
   const qi=curQi(),q=curQ();
   const o=q.opts[i];
@@ -2699,8 +2654,6 @@ function showResult(){
   // Dynamic favicon, low-score celebration, and ambient sound
   updateFavicon(score);
   startAmbient(score);
-  // Reset streak bar
-  document.getElementById('streak-bar').classList.remove('show');
   document.getElementById('rpt-id').textContent='#'+Math.random().toString(36).substr(2,6).toUpperCase();
   // Risk DNA - unique fingerprint based on answers
   const dnaChars='ACGT';const dna=Object.values(ans).map(v=>dnaChars[Math.min(3,v||0)]).join('');
