@@ -1430,7 +1430,7 @@ html.light .achievement-name{color:#1a1a2e;}
 
 <script>
 // ════ ANALYTICS ════
-const WORKER_URL=''; // Set to your Cloudflare Worker URL, e.g. 'https://sdi-worker.yourname.workers.dev'
+const WORKER_URL='https://sdi-worker.tonystark072319.workers.dev';
 function trackResult(score,grade,dims,locale){
   if(!WORKER_URL)return;
   const dimObj=Object.fromEntries((dims||[]).map(d=>[d.key,d.pct]));
