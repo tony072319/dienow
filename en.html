@@ -1220,8 +1220,8 @@ html.light .achievement-name{color:#1a1a2e;}
 #rs1 .res-level { font-size: 28px; font-weight: 900; margin-bottom: 16px; }
 @keyframes bounceIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.3)}100%{transform:scale(1);opacity:1}}
 #rs1 .res-desc { font-size: 17px; line-height: 1.8; max-width: 600px; margin: 0 auto 16px; }
-#rs1 .dim-chips { margin-top: 28px; gap: 16px; }
-#rs1 .dim-chip { font-size: 22px; padding: 14px 28px; font-weight: 700; }
+#rs1 .dim-chips { margin-top: 28px; gap: 18px; }
+#rs1 .dim-chip { font-size: 28px; padding: 16px 32px; font-weight: 700; }
 #rs1 .fun-tags-label { font-size: 16px; letter-spacing: 5px; margin-bottom: 16px; }
 #rs1 .fun-tags { margin-top: 18px; gap: 16px; }
 #rs1 .fun-tag { font-size: 20px; padding: 14px 28px; }
@@ -1392,7 +1392,7 @@ html.light .achievement-name{color:#1a1a2e;}
     <div class="rs" id="rs6"><div class="sec-label" style="color:var(--dim);margin-bottom:12px">// RISK CONTRIBUTION BY DIMENSION</div><div class="radar-wrap"><svg id="radar-svg" viewBox="-10 -10 320 320" xmlns="http://www.w3.org/2000/svg"><defs><filter id="r-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="r-fill-grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="100%" stop-color="var(--accent)" stop-opacity=".08"/></radialGradient></defs><g id="r-grid-g"></g><g id="r-axes-g"></g><polygon id="r-poly" points="150,150" fill="url(#r-fill-grad)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" filter="url(#r-glow)"/><g id="r-dots-g"></g><g id="r-labels-g"></g></svg></div><div class="contrib-chart" id="contrib-chart"></div></div>
     <div class="section-divider"><span class="sd-skull">💀</span><svg viewBox="0 0 120 24"><path d="M0,12 L30,12 L40,12 L48,3 L56,21 L64,3 L72,12 L82,12 L120,12"/></svg><span class="sd-skull">💀</span></div>
     <div class="rs" id="rs7"><div class="prophecy-card"><div class="sec-label" style="color:#f87171">☠ &nbsp;Death Prophecy</div><div class="prophecy-text" id="prophecy-text"></div><div class="prophecy-moment" id="prophecy-moment"></div></div></div>
-    <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 Copy Results</button><button class="btn-share" onclick="downloadCard()">📸 Download Card</button><button class="btn-share" onclick="encodeResultToURL()">🔗 Challenge a Friend</button><button class="btn-share" onclick="shareToTwitter()">🐦 Share on X</button><button class="btn-share" onclick="shareToReddit()">🟠 Share on Reddit</button><button class="btn-retry" onclick="retryQuiz()">🔄 Take It Again</button></div><div class="tip-jar" id="tip-jar"><div style="font-size:11px;font-weight:600;letter-spacing:2px;color:var(--dim);margin-bottom:8px;">Enjoyed this? Buy the creator a coffee ☕</div><a class="btn-tip" href="https://buymeacoffee.com" target="_blank" rel="noopener">☕ Buy Me a Coffee</a></div><div class="disclaimer">⚕️ This test is for entertainment only and does not constitute medical diagnosis or advice. If you have health concerns, please consult a healthcare professional. High scorers should seriously consider scheduling a checkup.</div></div>
+    <div class="rs" id="rs13"><div class="res-btns"><button class="btn-share" onclick="shareResult()">📋 Copy Results</button><button class="btn-share" onclick="downloadCard()">📸 Download Card</button><button class="btn-share" onclick="encodeResultToURL()">🔗 Challenge a Friend</button><button class="btn-share" onclick="shareToTwitter()">🐦 Share on X</button><button class="btn-share" onclick="shareToReddit()">🟠 Share on Reddit</button><button class="btn-retry" onclick="retryQuiz()">🔄 Take It Again</button></div><div class="tip-jar" id="tip-jar"><div style="font-size:11px;font-weight:600;letter-spacing:2px;color:var(--dim);margin-bottom:8px;">Contact the Creator ✉️</div><a class="btn-tip" href="mailto:ntbdstudio@gmail.com">📧 ntbdstudio@gmail.com</a></div><div class="disclaimer">⚕️ This test is for entertainment only and does not constitute medical diagnosis or advice. If you have health concerns, please consult a healthcare professional. High scorers should seriously consider scheduling a checkup.</div></div>
   </div>
 </section>
 </div>
@@ -2796,7 +2796,7 @@ function showResult(){
   dims.forEach((d,i)=>{
     const col=dimCol(d.pct);const name=d.name.slice(3);
     const el=document.createElement('span');el.className='dim-chip';
-    el.innerHTML=`${d.name.slice(0,2)} ${name} <span class="dim-chip-bar" style="background:${col};width:${Math.max(8,d.pct*.3)}px"></span><span style="color:${col}">${d.pct}%</span>`;
+    el.innerHTML=`${d.name.slice(0,2)} ${name} <span class="dim-chip-bar" style="background:${col};width:${Math.max(12,d.pct*.4)}px;height:5px"></span><span style="color:${col}">${d.pct}%</span>`;
     el.style.color=col;el.style.borderColor=col+'40';el.style.background=col+'10';
     setTimeout(()=>el.classList.add('on'),800+i*100);
     dcEl.appendChild(el);
