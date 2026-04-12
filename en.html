@@ -1763,7 +1763,7 @@ const Q=[
   {e:'😤',l:'Slightly winded\nPretty normal',s:1,r:'Not bad'},
   {e:'😮‍💨',l:'Need to stop\nCatch breath',s:2,r:'Your cardio needs more training'},
   {e:'💔',l:'Heart is\nprotesting',s:3,r:'3 floors and this? Time to take it seriously'},
-  {e:'🛗',l:'I take\nthe elevator',s:4,r:'Elevator dependency — also a lifestyle choice'},
+  {e:'🏢',l:'I take\nthe elevator',s:4,r:'Elevator dependency — also a lifestyle choice'},
  ]},
 
 /* 12 meals */
@@ -2897,44 +2897,8 @@ function showResult(){
   const nLab=sP<30?'Stable':sP<50?'Slightly Tight':sP<70?'Tense':'Highly Tense';const nCol=sP<30?'#34d399':sP<50?'#fbbf24':sP<70?'#f59e0b':'#ef4444';
   // Animated vital counters with pop-in
   const baCol=bA<=userAge?'#34d399':bA<=userAge+8?'#fbbf24':'#ef4444';
-  animVital('v-bodyage',bA+' yrs',baCol,0);
-  animVital('v-heart',hLab,hCol,150);
-  animVital('v-recovery',rLab,rCol,300);
-  animVital('v-stress',nLab,nCol,450);
-  // Age vs body age comparison
-  document.getElementById('age-real').textContent=userAge+' yrs';
-  document.getElementById('age-body').textContent=bA+' yrs';
-  const ageBarCol=bA>userAge+10?'#ef4444':bA>userAge+3?'#f59e0b':'#34d399';
-  document.getElementById('age-body').style.color=ageBarCol;
-  document.getElementById('age-body-m').style.borderColor=ageBarCol;
-  document.getElementById('age-body-m').style.background=ageBarCol+'20';
-  setTimeout(()=>{
-    document.getElementById('age-real-m').style.left=Math.min(95,Math.max(5,(userAge-20)/60*100))+'%';
-    document.getElementById('age-body-m').style.left=Math.min(95,Math.max(5,(bA-20)/60*100))+'%';
-  },500);
-  // Week heat map
-  const weekEl=document.getElementById('week-heat');weekEl.innerHTML='';
-  const weekDays=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const weekRisks=[
-    Math.round((dimObj.work||0)*.5+(dimObj.stress||0)*.3+(dimObj.sleep||0)*.2),// Monday
-    Math.round((dimObj.work||0)*.45+(dimObj.stress||0)*.35+(dimObj.sleep||0)*.2),
-    Math.round((dimObj.work||0)*.4+(dimObj.stress||0)*.3+(dimObj.diet||0)*.3),
-    Math.round((dimObj.work||0)*.45+(dimObj.stress||0)*.3+(dimObj.exercise||0)*.25),
-    Math.round((dimObj.work||0)*.3+(dimObj.stress||0)*.25+(dimObj.habit||0)*.45),// Friday
-    Math.round((dimObj.habit||0)*.4+(dimObj.diet||0)*.3+(dimObj.sleep||0)*.3),// Saturday
-    Math.round((dimObj.sleep||0)*.3+(dimObj.emotion||0)*.35+(dimObj.stress||0)*.35),// Sunday
-  ];
-  weekDays.forEach((d,i)=>{
-    const r=weekRisks[i];
-    const col=r<30?'#34d399':r<50?'#fbbf24':r<70?'#f59e0b':'#ef4444';
-    const isLightW=document.documentElement.classList.contains('light');
-    const alpha=isLightW?(.3+r/100*.5).toFixed(2):(.1+r/100*.5).toFixed(2);
-    const emoji=r>=70?'💀':r>=50?'⚠':r>=30?'😐':'✅';
-    weekEl.innerHTML+=`<div class="week-day"><div class="week-day-box" style="background:${col}${Math.round(parseFloat(alpha)*255).toString(16).padStart(2,'0')};border-color:${col}${isLightW?'80':'40'}">${emoji}</div><span class="week-day-label">${d}</span></div>`;
-  });
-  const tags=document.getElementById('risk-tags');tags.innerHTML='';
-  dims.forEach((d,i)=>{const tier=d.pct>=65?'high':d.pct>=40?'med':'low';if(tier==='low'&&score<25)return;const lbl=RISK_TAGS[d.key]?.[tier];if(lbl){const el=document.createElement('div');el.className=`rtag ${tier}`;el.textContent=lbl;el.style.animationDelay=(i*.08)+'s';tags.appendChild(el);}});
-  const sys=calcSystems(dims);const sg=document.getElementById('systems-grid');sg.innerHTML='';
+  // Vitals, age comparison, week heat map, risk tags — skipped (sections removed)
+  try{const sys=calcSystems(dims);const sg=document.getElementById('systems-grid');if(sg){sg.innerHTML='';
   sys.forEach(s=>{const col=s.risk<30?'#34d399':s.risk<55?'#fbbf24':s.risk<75?'#f59e0b':'#ef4444';const st=s.risk<30?'Normal':s.risk<55?'Elevated':s.risk<75?'At Risk':'Danger';const el=document.createElement('div');el.className='sys-item';el.innerHTML=`<div class="sys-icon">${s.icon}</div><div class="sys-body"><div class="sys-name">${s.name}</div><div class="sys-status" style="color:${col}">${st} · ${s.risk}%</div><div class="sys-note">${s.note}</div></div>`;sg.appendChild(el);});
   // Body heatmap
   const bhMap=[
@@ -2995,40 +2959,13 @@ function showResult(){
     const barBg=isLightMode?'rgba(0,0,0,.06)':'rgba(255,255,255,.04)';
     demoEl.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;${bold}"><span style="font-size:12px;color:${labelCol};width:130px;flex-shrink:0;text-align:right;">${d.label}</span><div style="flex:1;height:8px;background:${barBg};border-radius:10px;overflow:hidden;"><div style="height:100%;width:${w};background:${col};border-radius:10px;transition:width 1s cubic-bezier(.25,.8,.25,1);box-shadow:${d.isUser?'0 0 10px '+col+'60':'none'};"></div></div><span style="font-family:'Space Mono',monospace;font-size:11px;color:${col};width:30px;">${d.avg}</span></div>`;
   });
-  // Animated typing for doctor note
-  (function(){
-    const el=document.getElementById('doctor-text');
-    const text=getDoctorNote(score,dims,arch);
-    el.textContent='';el.classList.add('type-cursor');
-    let i=0;const speed=25;
-    function typeChar(){
-      if(i<text.length){el.textContent+=text[i];i++;setTimeout(typeChar,speed+(Math.random()*20-10));}
-      else{el.classList.remove('type-cursor');}
-    }
-    // Start typing when section becomes visible
-    const obs=new IntersectionObserver(entries=>{
-      if(entries[0].isIntersecting){typeChar();obs.disconnect();}
-    },{threshold:.3});
-    obs.observe(el.closest('.rs')||el);
-  })();
-  const rxEl=document.getElementById('rx-items');rxEl.innerHTML='';
-  getRx(dims).forEach((r,i)=>{rxEl.innerHTML+=`<div class="rx-item"><span class="rx-num">${i+1}</span><span><b style="color:var(--accent)">${r.dim}：</b>${r.rx}</span></div>`;});
+  // Doctor note + Rx — skipped (sections removed)
+  }catch(e){console.warn('Skipped removed sections',e);}
   const tl=document.getElementById('timeline-items');tl.innerHTML='';
   calcTimeline(score).forEach((t,i)=>{const el=document.createElement('div');el.className='tl-item';el.innerHTML=`<div class="tl-dot" style="border-color:${t.col};color:${t.col}">${i+1}</div><div class="tl-body"><div class="tl-time" style="color:${t.col}">${t.t}</div><div class="tl-text">${t.txt}</div></div>`;tl.appendChild(el);});
   const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);const p=PRIORITY[worst.key];
   document.getElementById('priority-main').textContent=p.main;document.getElementById('priority-sub').textContent=p.sub;
-  // Dimension gauge rings
-  const ggEl=document.getElementById('dim-gauge-grid');ggEl.innerHTML='';
-  dims.forEach((d,i)=>{
-    const col=dimCol(d.pct);const circ=2*Math.PI*30;const emoji=d.name.slice(0,2);
-    const name=d.name.match(/[\u4e00-\u9fff]+/)?.[0]||d.key;
-    const el=document.createElement('div');el.className='dim-gauge';
-    el.innerHTML=`<div class="dim-gauge-ring"><svg viewBox="0 0 76 76"><circle class="gauge-bg" cx="38" cy="38" r="30"/><circle class="gauge-fill" cx="38" cy="38" r="30" stroke="${col}" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" data-target="${circ-(d.pct/100)*circ}"/></svg><div class="dim-gauge-val" style="color:${col}">${d.pct}%</div></div><span class="dim-gauge-emoji">${emoji}</span><span class="dim-gauge-name">${name}</span>`;
-    ggEl.appendChild(el);
-  });
-  setTimeout(()=>{document.querySelectorAll('.gauge-fill').forEach(g=>{g.style.strokeDashoffset=g.dataset.target;});},500);
-  const grid=document.getElementById('dims-grid');grid.innerHTML='';
-  dims.forEach(d=>{const col=dimCol(d.pct);const tier=d.pct>=65?'high':d.pct>=30?'mid':'low';const desc=DIM_DESC[d.key]?.[tier]||'';const el=document.createElement('div');el.className='dim-item';el.innerHTML=`<div class="dim-name">${d.name}</div><div class="dim-bar-bg"><div class="dim-bar" style="width:0%;background:${col}" data-pct="${d.pct}"></div></div><div class="dim-footer"><span class="dim-pct" style="color:${col}">${d.pct}%</span><span class="dim-status">${dimStatus(d.pct)}</span></div><div class="dim-expand">${desc?`<div class="dim-desc">${desc}</div>`:''}<ul class="dim-tips">${(d.tips||[]).map(t=>`<li>${t}</li>`).join('')}</ul></div>`;el.onclick=()=>el.classList.toggle('expanded');grid.appendChild(el);});
+  // Dimension gauges + grid — skipped (sections removed)
   // Risk trend chart
   (function drawTrend(){
     const pts=[],steps=5,W=400,H=120,padY=15;
