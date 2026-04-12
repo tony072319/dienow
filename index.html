@@ -845,8 +845,6 @@ html.light .dim-gauge .gauge-bg{stroke:rgba(0,0,0,.1)!important;}
 html.light .contrib-bar-bg{background:rgba(0,0,0,.1)!important;}
 html.light .pbar-outer{background:rgba(0,0,0,.08)!important;}
 html.light .danger-meter{background:rgba(0,0,0,.06)!important;}
-html.light #trading-card>div{background:linear-gradient(135deg,#f8f9fc,#f0f1f6)!important;border-color:rgba(0,0,0,.15)!important;box-shadow:0 4px 24px rgba(0,0,0,.1),0 0 0 1px rgba(0,0,0,.05)!important;}
-html.light #trading-card{color:#1a1a2e;}
 html.light .card{box-shadow:0 1px 3px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.04)!important;}
 html.light .score-lbl{color:rgba(0,0,0,.55)!important;}
 html.light .ring-bg{stroke:rgba(0,0,0,.12)!important;}
@@ -1205,7 +1203,6 @@ html.light .achievement-name{color:#1a1a2e;}
 #rs0, #rs3, #rs4, #rs4b, #rs4c, #rs5, #rs5b, #rs7b, #rs7c, #rs7d, #rs7e, #rs7f,
 #rs8, #rs9, #rs9b, #rs10, #rs10b, #rs11, #rs12, #rs12b, #rs12c, #rs12c2, #rs12d, #rs12e, #rs12f,
 .section-divider,
-#fortune-cookie, #tarot-card, #trading-card, #movie-rating, #final-verdict,
 #grade-card, #q-grades, #breathing-widget, #streak-badge-el, #comp-time,
 #streak-indicator, #retry-hint, #survival-countdown,
 #danger-badge, #fact-card { display: none !important; }
@@ -1352,9 +1349,7 @@ html.light .achievement-name{color:#1a1a2e;}
   <div class="card" id="q-card">
     <div class="danger-meter"><div class="danger-meter-fill" id="danger-meter"></div></div>
     <div class="live-risk-badge" id="lrb"><div class="lrb-dot" id="lrb-dot"></div><span class="lrb-val" id="lrb-val">0%</span></div>
-    <div class="q-num" id="q-num">01</div>
     <div id="branch-flag" style="display:none"><div class="branch-tag">⚡ FOLLOW-UP</div></div>
-    <div class="q-cat" id="q-cat"></div>
     <div id="q-scenario" style="display:none" class="scenario-box"></div>
     <div class="q-text" id="q-text"></div>
     <div id="q-body"></div>
@@ -2355,9 +2350,7 @@ function renderQ(){
   const qi=curQi(),q=curQ(),total=flow.length;
   document.getElementById('q-counter').textContent=String(fi+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
   document.getElementById('q-cat-top').textContent=q.cat;
-  document.getElementById('q-cat').textContent=q.cat;
   document.getElementById('q-text').textContent=q.text;
-  document.getElementById('q-num').textContent=String(fi+1).padStart(2,'0');
   const pbarPct=Math.round(fi/total*100);
   document.getElementById('pbar').style.width=pbarPct+'%';
   // Progress bar milestones (one per category boundary)
@@ -4375,104 +4368,8 @@ function updateFavicon(score){
   };
 })();
 
-// ════ "HEALTH FORTUNE COOKIE" ════
-(function(){
-  const obs=new MutationObserver(()=>{
-    const sec=document.getElementById('sec-result');
-    if(!sec?.classList.contains('active'))return;
-    obs.disconnect();
-    setTimeout(()=>{
-      if(document.getElementById('fortune-cookie'))return;
-      const score=calcScore();
-      const fortunes=[
-        {range:[0,25],msgs:['你的身体是台好机器，继续保养！','健康是最好的投资，你做到了。','按这个节奏，长命百岁不是梦。']},
-        {range:[25,45],msgs:['小问题不改，大病来得快。','你站在健康的及格线上，别往下掉。','现在改还来得及，再拖就不好说了。']},
-        {range:[45,65],msgs:['你的身体正在发出黄色预警。','如果身体能说话，它现在在大声抱怨。','你正在用健康透支快乐，利息很高。']},
-        {range:[65,80],msgs:['你的身体已经在写投诉信了。','再不改变，你的器官们要罢工了。','你不是在玩火，你已经着火了。']},
-        {range:[80,101],msgs:['你的身体已经开始倒计时了。','ICU的床位正在向你招手。','你活着就是个奇迹，请珍惜。']},
-      ];
-      const group=fortunes.find(f=>score>=f.range[0]&&score<f.range[1])||fortunes[2];
-      const fortune=group.msgs[Math.floor(Math.random()*group.msgs.length)];
-      const el=document.createElement('div');
-      el.id='fortune-cookie';
-      el.className='rs on';
-      el.style.cursor='pointer';
-      el.innerHTML=`<div style="text-align:center;padding:16px 0;">
-        <div style="font-size:52px;transition:transform .5s cubic-bezier(.34,1.56,.64,1);" id="cookie-emoji">🥠</div>
-        <div style="font-size:15px;font-weight:700;letter-spacing:3px;color:var(--dim);margin:12px 0 6px;">健康签语饼</div>
-        <div id="fortune-text" style="font-size:16px;color:var(--text);line-height:1.8;max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .5s;opacity:0;max-width:400px;margin:0 auto;">「${fortune}」</div>
-        <div id="fortune-hint" style="font-size:13px;color:var(--dim);margin-top:6px;">点击打开</div>
-      </div>`;
-      el.addEventListener('click',function(){
-        const emoji=document.getElementById('cookie-emoji');
-        const text=document.getElementById('fortune-text');
-        const hint=document.getElementById('fortune-hint');
-        if(emoji)emoji.style.transform='scale(1.3) rotate(15deg)';
-        setTimeout(()=>{
-          if(emoji)emoji.textContent='📜';
-          if(emoji)emoji.style.transform='scale(1)';
-          if(text){text.style.maxHeight='80px';text.style.opacity='1';}
-          if(hint)hint.style.display='none';
-        },300);
-      },{once:true});
-      const target=document.getElementById('rs0')?.parentNode;
-      if(target){
-        const sections=target.querySelectorAll('.rs');
-        const insertBefore=sections[Math.min(9,sections.length-1)];
-        if(insertBefore)target.insertBefore(el,insertBefore);
-        else target.appendChild(el);
-      }
-    },4000);
-  });
-  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
-})();
 
 
-// ════ "HEALTH MOVIE RATING" ════
-(function(){
-  const obs=new MutationObserver(()=>{
-    const sec=document.getElementById('sec-result');
-    if(!sec?.classList.contains('active'))return;
-    obs.disconnect();
-    setTimeout(()=>{
-      if(document.getElementById('movie-rating'))return;
-      const score=calcScore();
-      const ratings=[
-        {range:[0,15],stars:5,genre:'治愈系',title:'《养生达人的日常》',review:'一部温馨的健康纪录片，主角的生活方式令人羡慕。'},
-        {range:[15,30],stars:4,genre:'喜剧',title:'《差不多先生的健康生活》',review:'轻松愉快，虽有小瑕疵但整体氛围积极向上。'},
-        {range:[30,50],stars:3,genre:'悬疑',title:'《体检报告迷踪》',review:'剧情渐入佳境，主角开始发现一些令人不安的线索。'},
-        {range:[50,70],stars:2,genre:'惊悚',title:'《身体发出的求救信号》',review:'紧张刺激，每一个器官都在呐喊，建议胆小勿看。'},
-        {range:[70,85],stars:1,genre:'灾难片',title:'《器官大逃亡》',review:'高度紧张，主角的身体已经开始上演末日景象。'},
-        {range:[85,101],stars:0.5,genre:'恐怖片',title:'《猝死来了》',review:'年度最恐怖作品，建议观影前签好免责声明。'},
-      ];
-      const r=ratings.find(r=>score>=r.range[0]&&score<r.range[1])||ratings[3];
-      const starsHTML='★'.repeat(Math.floor(r.stars))+(r.stars%1?'½':'')+'☆'.repeat(5-Math.ceil(r.stars));
-      const el=document.createElement('div');
-      el.id='movie-rating';
-      el.className='rs on';
-      el.innerHTML=`<div style="display:flex;gap:18px;align-items:flex-start;">
-        <div style="width:80px;height:110px;background:var(--card-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:38px;flex-shrink:0;border:1px solid var(--card-border);">🎬</div>
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;">${r.title}</div>
-          <div style="font-size:14px;color:#f59e0b;letter-spacing:2px;margin-bottom:6px;">${starsHTML}</div>
-          <div style="display:flex;gap:8px;margin-bottom:8px;">
-            <span style="font-size:12px;background:rgba(var(--ar),var(--ag),var(--ab),.06);padding:3px 10px;border-radius:6px;color:var(--dim);font-weight:500;">${r.genre}</span>
-            <span style="font-size:12px;background:rgba(239,68,68,.08);padding:3px 10px;border-radius:6px;color:#ef4444;font-weight:500;">${score>=50?'R级':'PG-13'}</span>
-          </div>
-          <div style="font-size:14px;color:var(--dim);line-height:1.7;">${r.review}</div>
-        </div>
-      </div>`;
-      const target=document.getElementById('rs0')?.parentNode;
-      if(target){
-        const sections=target.querySelectorAll('.rs');
-        const insertBefore=sections[Math.min(8,sections.length-1)];
-        if(insertBefore)target.insertBefore(el,insertBefore);
-        else target.appendChild(el);
-      }
-    },3800);
-  });
-  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
-})();
 
 // ════ RESULT PAGE: PROGRESSIVE NUMBER COUNTER ════
 (function(){
@@ -4516,146 +4413,7 @@ function updateFavicon(score){
   }
 })();
 
-// ════ "HEALTH TAROT CARD" ════
-(function(){
-  const obs=new MutationObserver(()=>{
-    const sec=document.getElementById('sec-result');
-    if(!sec?.classList.contains('active'))return;
-    obs.disconnect();
-    setTimeout(()=>{
-      if(document.getElementById('tarot-card'))return;
-      const score=calcScore();
-      const tarots=[
-        {range:[0,20],card:'星星 ⭐',num:'XVII',meaning:'希望与疗愈',advice:'你正走在正确的健康之路上，继续保持内心的平静与身体的和谐。',color:'#4ade80'},
-        {range:[20,35],card:'力量 🦁',num:'VIII',meaning:'意志与耐力',advice:'你有维持健康的力量，但需要更多的自律来发挥它。内在的平衡是关键。',color:'#60a5fa'},
-        {range:[35,50],card:'命运之轮 🎡',num:'X',meaning:'变化与循环',advice:'你的健康正处于转折点。接下来的选择将决定轮盘转向哪个方向。',color:'#f59e0b'},
-        {range:[50,65],card:'月亮 🌙',num:'XVIII',meaning:'迷惘与不安',advice:'你的身体在黑暗中摸索，很多问题被忽视了。是时候正视内心的恐惧。',color:'#f97316'},
-        {range:[65,80],card:'高塔 🏰',num:'XVI',meaning:'崩塌与警示',advice:'旧有的不良习惯正在瓦解你的健康根基。这张牌警告你：改变迫在眉睫。',color:'#ef4444'},
-        {range:[80,101],card:'死神 💀',num:'XIII',meaning:'终结与重生',advice:'别慌——死神牌意味着旧模式必须死去。你的生活方式需要彻底重生。',color:'#dc2626'},
-      ];
-      const tarot=tarots.find(t=>score>=t.range[0]&&score<t.range[1])||tarots[3];
-      const el=document.createElement('div');
-      el.id='tarot-card';
-      el.className='rs on';
-      el.style.cursor='pointer';
-      const isLight=document.documentElement.classList.contains('light');
-      const frontBg=isLight?'linear-gradient(135deg,#e8e0f0,#d5c8e8)':'linear-gradient(135deg,#1a1040,#2d1b69)';
-      const backBg=isLight?'linear-gradient(135deg,#ddd5ea,#c8b8e0)':'linear-gradient(135deg,#0d0d1a,#1a1040)';
-      const hintCol=isLight?'rgba(0,0,0,.35)':'rgba(255,255,255,.3)';
-      const cardTextCol=isLight?'#1a1a2e':'#fff';
-      const adviceCol=isLight?'rgba(0,0,0,.6)':'rgba(255,255,255,.55)';
-      el.innerHTML=`<div style="width:280px;max-width:100%;margin:0 auto;background:${frontBg};border:2px solid ${tarot.color}44;border-radius:18px;padding:28px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.15);cursor:pointer;transition:all .4s ease;position:relative;overflow:hidden;" id="tarot-front">
-        <div style="font-size:12px;letter-spacing:5px;color:${tarot.color};font-weight:600;${isLight?'':'opacity:.6;'}">HEALTH TAROT</div>
-        <div style="font-size:64px;margin:20px 0;">🔮</div>
-        <div style="font-size:13px;color:${hintCol};">点击翻牌</div>
-      </div>
-      <div id="tarot-back" style="display:none;width:280px;max-width:100%;margin:0 auto;background:${backBg};border:2px solid ${tarot.color};border-radius:18px;padding:28px;text-align:center;box-shadow:0 8px 32px ${tarot.color}33;animation:fadeUp .5s ease;">
-        <div style="font-size:13px;color:${tarot.color};letter-spacing:4px;font-family:serif;">${tarot.num}</div>
-        <div style="font-size:22px;font-weight:700;color:${cardTextCol};margin:12px 0 8px;">${tarot.card}</div>
-        <div style="font-size:14px;color:${tarot.color};margin-bottom:12px;">${tarot.meaning}</div>
-        <div style="width:50px;height:1px;background:${tarot.color}44;margin:0 auto 12px;"></div>
-        <div style="font-size:14px;color:${adviceCol};line-height:1.9;">${tarot.advice}</div>
-      </div>`;
-      el.addEventListener('click',()=>{
-        const front=document.getElementById('tarot-front');
-        const back=document.getElementById('tarot-back');
-        if(front&&back){
-          if(front.style.display!=='none'){front.style.display='none';back.style.display='block';}
-          else{front.style.display='block';back.style.display='none';}
-        }
-      });
-      const target=document.getElementById('rs0')?.parentNode;
-      if(target){
-        const sections=target.querySelectorAll('.rs');
-        const insertBefore=sections[Math.min(10,sections.length-1)];
-        if(insertBefore)target.insertBefore(el,insertBefore);
-        else target.appendChild(el);
-      }
-    },4800);
-  });
-  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
-})();
 
-// ════ "HEALTH TRADING CARD" (COLLECTIBLE) ════
-(function(){
-  const obs=new MutationObserver(()=>{
-    const sec=document.getElementById('sec-result');
-    if(!sec?.classList.contains('active'))return;
-    obs.disconnect();
-    setTimeout(()=>{
-      if(document.getElementById('trading-card'))return;
-      const score=calcScore();
-      const dims=calcDims();
-      const worst=dims.reduce((a,b)=>b.pct>a.pct?b:a);
-      const best=dims.reduce((a,b)=>a.pct<b.pct?a:b);
-      const age=parseInt(document.getElementById('age-input')?.value)||28;
-      // Rarity based on score uniqueness
-      const rarities=[
-        {range:[0,10],name:'传说',color:'#f59e0b',bg:'linear-gradient(135deg,#4a3800,#1a1400)',lightBg:'linear-gradient(135deg,#fef3c7,#fde68a)',border:'#f59e0b'},
-        {range:[10,25],name:'史诗',color:'#a855f7',bg:'linear-gradient(135deg,#2d1a4a,#1a0f2e)',lightBg:'linear-gradient(135deg,#f3e8ff,#e9d5ff)',border:'#a855f7'},
-        {range:[25,50],name:'稀有',color:'#3b82f6',bg:'linear-gradient(135deg,#1a2a4a,#0f1a2e)',lightBg:'linear-gradient(135deg,#dbeafe,#bfdbfe)',border:'#3b82f6'},
-        {range:[50,75],name:'普通',color:'#6b7280',bg:'linear-gradient(135deg,#1a1a24,#0f0f17)',lightBg:'linear-gradient(135deg,#f3f4f6,#e5e7eb)',border:'#6b7280'},
-        {range:[75,101],name:'危险',color:'#ef4444',bg:'linear-gradient(135deg,#2a1010,#1a0808)',lightBg:'linear-gradient(135deg,#fee2e2,#fecaca)',border:'#ef4444'},
-      ];
-      const rarity=rarities.find(r=>score>=r.range[0]&&score<r.range[1])||rarities[3];
-      // Stats
-      const hp=Math.max(1,100-score);
-      const atk=Math.round(worst.pct*0.8);
-      const def=Math.round((100-best.pct)*0.6);
-      const spd=Math.round(50+Math.random()*30);
-      const serialNum=`#${String(Math.floor(Math.random()*9000+1000)).padStart(4,'0')}`;
-      const isLight=document.documentElement.classList.contains('light');
-      const cardBg=isLight?rarity.lightBg:rarity.bg;
-      const cardTextCol=isLight?'#1a1a2e':'#fff';
-      const subTextCol=isLight?'rgba(0,0,0,.45)':'rgba(255,255,255,.5)';
-      const avatarBg=isLight?`rgba(0,0,0,.06)`:'rgba(0,0,0,.3)';
-      const statBg=isLight?'rgba(0,0,0,.04)':'rgba(255,255,255,.06)';
-      const el=document.createElement('div');
-      el.id='trading-card';
-      el.className='rs on';
-      el.innerHTML=`<div style="width:360px;max-width:100%;margin:0 auto;background:${cardBg};border:2px solid ${rarity.border};border-radius:18px;padding:24px;box-shadow:0 8px 32px ${rarity.border}22;position:relative;overflow:hidden;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-          <div style="font-size:14px;color:${rarity.color};font-weight:800;letter-spacing:3px;">${rarity.name}</div>
-          <div style="font-size:12px;color:${subTextCol};font-family:'Space Mono',monospace;">${serialNum}</div>
-        </div>
-        <div style="text-align:center;padding:24px 0;background:${avatarBg};border-radius:14px;margin-bottom:16px;">
-          <div style="font-size:56px;">💀</div>
-          <div style="font-size:16px;font-weight:700;color:${cardTextCol};margin-top:10px;">${age}岁测试者</div>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
-          <div style="text-align:center;background:${statBg};padding:12px 8px;border-radius:10px;border:1px solid ${statBg};">
-            <div style="font-size:22px;font-weight:900;color:#ef4444;">${hp}</div>
-            <div style="font-size:11px;color:${subTextCol};font-weight:700;margin-top:4px;">HP</div>
-          </div>
-          <div style="text-align:center;background:${statBg};padding:12px 8px;border-radius:10px;border:1px solid ${statBg};">
-            <div style="font-size:22px;font-weight:900;color:#f59e0b;">${atk}</div>
-            <div style="font-size:11px;color:${subTextCol};font-weight:700;margin-top:4px;">ATK</div>
-          </div>
-          <div style="text-align:center;background:${statBg};padding:12px 8px;border-radius:10px;border:1px solid ${statBg};">
-            <div style="font-size:22px;font-weight:900;color:#3b82f6;">${def}</div>
-            <div style="font-size:11px;color:${subTextCol};font-weight:700;margin-top:4px;">DEF</div>
-          </div>
-          <div style="text-align:center;background:${statBg};padding:12px 8px;border-radius:10px;border:1px solid ${statBg};">
-            <div style="font-size:22px;font-weight:900;color:#4ade80;">${spd}</div>
-            <div style="font-size:11px;color:${subTextCol};font-weight:700;margin-top:4px;">SPD</div>
-          </div>
-        </div>
-        <div style="font-size:14px;color:${subTextCol};line-height:1.8;">
-          <b style="color:${rarity.color};">特技:</b> ${worst.name.split(' ')[1]}弱化 · ${best.name.split(' ')[1]}防御<br>
-          <b style="color:${rarity.color};">属性:</b> 猝死指数 ${score} · 综合战力 ${hp+def+spd}
-        </div>
-      </div>`;
-      const target=document.getElementById('rs0')?.parentNode;
-      if(target){
-        const sections=target.querySelectorAll('.rs');
-        const insertBefore=sections[Math.min(12,sections.length-1)];
-        if(insertBefore)target.insertBefore(el,insertBefore);
-        else target.appendChild(el);
-      }
-    },5200);
-  });
-  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
-})();
 
 // ════ PERFORMANCE: LAZY LOAD RESULT SECTIONS ════
 (function(){
@@ -4760,40 +4518,6 @@ function updateFavicon(score){
   obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
 
-// ════ "FINAL VERDICT" DRAMATIC REVEAL ════
-(function(){
-  const obs=new MutationObserver(()=>{
-    const sec=document.getElementById('sec-result');
-    if(!sec?.classList.contains('active'))return;
-    obs.disconnect();
-    setTimeout(()=>{
-      if(document.getElementById('final-verdict'))return;
-      const score=calcScore();
-      const verdicts=[
-        {range:[0,15],text:'无罪释放',sub:'法庭认为你的生活方式无可指摘。',icon:'⚖️',color:'#4ade80'},
-        {range:[15,30],text:'缓期执行',sub:'有一些小问题，但你还有很长的路要走。',icon:'⚖️',color:'#60a5fa'},
-        {range:[30,50],text:'有期徒刑',sub:'你的身体判你"健康有期徒刑"，刑期取决于你的改变。',icon:'⚖️',color:'#f59e0b'},
-        {range:[50,70],text:'重刑犯',sub:'你的生活方式已经构成了对身体的"严重伤害罪"。',icon:'⚖️',color:'#f97316'},
-        {range:[70,85],text:'无期徒刑',sub:'除非立即上诉（改变习惯），否则你的健康将被终身监禁。',icon:'⚖️',color:'#ef4444'},
-        {range:[85,101],text:'死刑判决',sub:'法庭最终裁定……不过别怕，这个判决可以上诉——从现在开始改变。',icon:'⚖️',color:'#dc2626'},
-      ];
-      const v=verdicts.find(v=>score>=v.range[0]&&score<v.range[1])||verdicts[3];
-      const el=document.createElement('div');
-      el.id='final-verdict';
-      el.className='rs on';
-      el.innerHTML=`<div style="text-align:center;padding:16px 0;">
-        <div style="font-size:9px;letter-spacing:4px;color:var(--dim);margin-bottom:8px;">─── 最 终 裁 决 ───</div>
-        <div style="font-size:28px;margin-bottom:4px;">${v.icon}</div>
-        <div style="font-size:20px;font-weight:900;color:${v.color};letter-spacing:3px;margin-bottom:8px;">${v.text}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.45);line-height:1.8;max-width:280px;margin:0 auto;">${v.sub}</div>
-        <div style="width:60px;height:1px;background:rgba(255,255,255,.06);margin:12px auto 0;"></div>
-      </div>`;
-      const target=document.getElementById('rs0')?.parentNode;
-      if(target)target.appendChild(el);
-    },6500);
-  });
-  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
-})();
 
 // ════ SMART SCROLL RESTORATION ════
 (function(){
