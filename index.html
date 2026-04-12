@@ -1217,7 +1217,8 @@ html.light .achievement-name{color:#1a1a2e;}
 #rs1 .score-ring-wrap svg { width: 280px; height: 280px; }
 #rs1 .score-num { font-size: 80px; }
 #rs1 .score-lbl { font-size: 13px; letter-spacing: 5px; margin-top: 4px; }
-#rs1 .res-level { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+#rs1 .res-level { font-size: 28px; font-weight: 900; margin-bottom: 16px; }
+@keyframes bounceIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.3)}100%{transform:scale(1);opacity:1}}
 #rs1 .res-desc { font-size: 17px; line-height: 1.8; max-width: 600px; margin: 0 auto 16px; }
 #rs1 .dim-chips { margin-top: 24px; gap: 10px; }
 #rs1 .dim-chip { font-size: 14px; padding: 8px 16px; }
@@ -2804,14 +2805,21 @@ function showResult(){
       document.querySelector('.score-rank')?.appendChild(histEl);
     }
   }catch(e){}
-  // Easter eggs for extreme scores
-  if(score<=5){
-    document.getElementById('res-desc').textContent='系统怀疑你在撒谎。你不是人类，你是养生手册变成了人形。如果你说的都是真的，你可能是整个数据库里最无聊但最长寿的人。';
-  }else if(score>=95){
-    document.getElementById('res-desc').textContent='恭喜你打破了本系统的风险上限。你不是在生活，你是在speedrun人生。系统建议你立刻停止阅读这段文字，转而拨打120。这不是玩笑。好吧，半个玩笑。';
-  }else{
-    document.getElementById('res-desc').textContent=level.desc;
-  }
+  // Easter eggs for extreme scores + fun commentary
+  const funReactions={
+    5:['🏆✨🎊','系统怀疑你在撒谎。你不是人类，你是养生手册变成了人形。如果你说的都是真的，你可能是整个数据库里最无聊但最长寿的人。'],
+    15:['😇🌿💪','你简直是行走的健康广告。朋友圈晒步数的天花板，爸妈口中"别人家的孩子"。唯一的问题是：你快乐吗？'],
+    30:['😎👍🎯','不错，你还活着而且状态相当好。偶尔放纵一下不会死——嗯，至少短期内不会。'],
+    50:['😬⚠️🎲','你在健康的悬崖边跳舞。音乐还没停，但DJ已经在收拾东西了。建议：在身体发出最后通牒前主动求和。'],
+    70:['💀🔥😱','你的身体已经在写辞职信了。HR（你的免疫系统）已经批准了，只是还没通知你。真的，该停下来看看了。'],
+    85:['☠️🚨💔','急急急！你的身体正在上演《速度与激情》最终章。不同的是，这次没有续集。放下手机，打开体检预约。'],
+    100:['💀💀💀','恭喜你打破了本系统的风险上限。你不是在生活，你是在speedrun人生。系统建议你立刻停止阅读这段文字，转而拨打120。这不是玩笑。好吧，半个玩笑。']
+  };
+  const reactionKey=Object.keys(funReactions).map(Number).find(k=>score<=k)||100;
+  const [reactionEmoji,reactionText]=funReactions[reactionKey];
+  // Add emoji reaction above description
+  const descEl=document.getElementById('res-desc');
+  descEl.innerHTML=`<div style="font-size:42px;margin-bottom:12px;letter-spacing:8px;animation:bounceIn .6s">${reactionEmoji}</div><div>${reactionText}</div>`;
   // Dimension summary chips
   const dcEl=document.getElementById('dim-chips');dcEl.innerHTML='';
   dims.forEach((d,i)=>{

@@ -1220,7 +1220,8 @@ html.light .achievement-name{color:#1a1a2e;}
 #rs1 .score-ring-wrap svg { width: 280px; height: 280px; }
 #rs1 .score-num { font-size: 80px; }
 #rs1 .score-lbl { font-size: 13px; letter-spacing: 5px; margin-top: 4px; }
-#rs1 .res-level { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+#rs1 .res-level { font-size: 28px; font-weight: 900; margin-bottom: 16px; }
+@keyframes bounceIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.3)}100%{transform:scale(1);opacity:1}}
 #rs1 .res-desc { font-size: 17px; line-height: 1.8; max-width: 600px; margin: 0 auto 16px; }
 #rs1 .dim-chips { margin-top: 24px; gap: 10px; }
 #rs1 .dim-chip { font-size: 14px; padding: 8px 16px; }
@@ -2805,14 +2806,20 @@ function showResult(){
       document.querySelector('.score-rank')?.appendChild(histEl);
     }
   }catch(e){}
-  // Easter eggs for extreme scores
-  if(score<=5){
-    document.getElementById('res-desc').textContent='The system suspects you\u2019re lying. You\u2019re not human \u2014 you\u2019re a wellness handbook that gained sentience. If everything you said is true, you\u2019re probably the most boring but longest-lived person in our entire database.';
-  }else if(score>=95){
-    document.getElementById('res-desc').textContent='Congratulations, you\u2019ve broken this system\u2019s risk ceiling. You\u2019re not living \u2014 you\u2019re speedrunning life. We strongly recommend you stop reading this and call 911 instead. This is not a joke. Okay, half a joke.';
-  }else{
-    document.getElementById('res-desc').textContent=level.desc;
-  }
+  // Fun score reactions
+  const funReactions={
+    5:['\uD83C\uDFC6\u2728\uD83C\uDF8A','The system suspects you\u2019re lying. You\u2019re not human \u2014 you\u2019re a wellness handbook that gained sentience. Probably the most boring but longest-lived person in our database.'],
+    15:['\uD83D\uDE07\uD83C\uDF3F\uD83D\uDCAA','You\u2019re basically a walking health ad. The ceiling of step-count bragging. Your mom\u2019s proudest achievement. Only question: are you actually happy?'],
+    30:['\uD83D\uDE0E\uD83D\uDC4D\uD83C\uDFAF','Not bad, you\u2019re alive and doing pretty well. The occasional indulgence won\u2019t kill you \u2014 well, at least not in the short term.'],
+    50:['\uD83D\uDE2C\u26A0\uFE0F\uD83C\uDFB2','You\u2019re dancing on the edge of a health cliff. The music hasn\u2019t stopped yet, but the DJ is packing up. Suggestion: make peace with your body before it sends an ultimatum.'],
+    70:['\uD83D\uDC80\uD83D\uDD25\uD83D\uDE31','Your body is already writing its resignation letter. HR (your immune system) has approved it \u2014 they just haven\u2019t told you yet. Seriously, time to pump the brakes.'],
+    85:['\u2620\uFE0F\uD83D\uDEA8\uD83D\uDC94','URGENT! Your body is starring in Fast & Furious: The Final Chapter. Unlike the movies, there\u2019s no sequel. Put down the phone, open a doctor\u2019s appointment.'],
+    100:['\uD83D\uDC80\uD83D\uDC80\uD83D\uDC80','Congratulations, you\u2019ve broken this system\u2019s risk ceiling. You\u2019re not living \u2014 you\u2019re speedrunning life. We recommend you stop reading and call 911 instead. Not a joke. Okay, half a joke.']
+  };
+  const reactionKey=Object.keys(funReactions).map(Number).find(k=>score<=k)||100;
+  const [reactionEmoji,reactionText]=funReactions[reactionKey];
+  const descEl=document.getElementById('res-desc');
+  descEl.innerHTML=`<div style="font-size:42px;margin-bottom:12px;letter-spacing:8px;animation:bounceIn .6s">${reactionEmoji}</div><div>${reactionText}</div>`;
   // Dimension summary chips
   const dcEl=document.getElementById('dim-chips');dcEl.innerHTML='';
   dims.forEach((d,i)=>{
