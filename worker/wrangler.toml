@@ -5,4 +5,4 @@ compatibility_date = "2024-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "sdi-db"
-database_id = "REPLACE_WITH_YOUR_DATABASE_ID"
+database_id = "a692c8b3-eb80-494c-867f-0b148ce3a82f"
