@@ -1,0 +1,2994 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sudden Death Index — Clinical Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  :root{
+    --ink:#0b0b0c;
+    --ink-2:#151518;
+    --ink-3:#1e1e22;
+    --line:#2a2a30;
+    --line-soft:#1a1a1f;
+    --bone:#efe9dc;
+    --bone-2:#d8d0bd;
+    --muted:#8a8478;
+    --red:#e5372b;       /* caution / critical */
+    --red-deep:#8a1a12;
+    --ekg:#7affb3;       /* monitor green */
+    --amber:#f3b84b;
+    --shadow: 0 1px 0 rgba(255,255,255,.03), 0 30px 60px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--bone);
+    font-family:"Space Grotesk","Inter",Helvetica,Arial,sans-serif;
+    font-feature-settings:"ss01","ss02","cv11";
+    -webkit-font-smoothing:antialiased;
+  }
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1b0606 0%, transparent 60%),
+      radial-gradient(900px 500px at 85% 110%, #0d1a13 0%, transparent 55%),
+      var(--ink);
+    min-height:100vh;
+  }
+  .mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+  .serif{font-family:"Instrument Serif","Times New Roman",serif; font-style:italic}
+
+  /* scanline / grain overlay */
+  .fx-scan{position:fixed;inset:0;pointer-events:none;z-index:80;mix-blend-mode:overlay;opacity:.35;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 3px);
+  }
+  .fx-vignette{position:fixed;inset:0;pointer-events:none;z-index:79;
+    box-shadow:inset 0 0 240px 40px rgba(0,0,0,.8);
+  }
+  .fx-grain{position:fixed;inset:0;pointer-events:none;z-index:78;opacity:.06;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* scaffolding */
+  .page{max-width:1280px;margin:0 auto;padding:28px 40px 80px;position:relative;z-index:1}
+  .rule{height:1px;background:var(--line);width:100%}
+  .rule-bone{height:1px;background:rgba(239,233,220,.18)}
+  .tick-row{display:flex;gap:6px}
+  .tick{width:6px;height:14px;background:var(--line)}
+
+  /* top chrome */
+  .chrome{display:flex;align-items:center;justify-content:space-between;gap:24px;
+    padding:10px 0;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .chrome .dot{width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block;margin-right:8px;box-shadow:0 0 0 3px rgba(229,55,43,.15)}
+  .chrome .grp{display:flex;align-items:center;gap:18px}
+  .chrome .pill{border:1px solid var(--line);padding:4px 8px;color:var(--bone-2)}
+
+  /* buttons */
+  .btn{border:1px solid var(--bone);background:transparent;color:var(--bone);padding:14px 22px;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;
+    transition:transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+    display:inline-flex;align-items:center;gap:10px}
+  .btn:hover{background:var(--bone);color:var(--ink)}
+  .btn.red{background:var(--red);border-color:var(--red);color:#fff}
+  .btn.red:hover{background:#ff5347;border-color:#ff5347;color:#fff}
+  .btn.ghost{border-color:var(--line);color:var(--bone-2)}
+  .btn.ghost:hover{border-color:var(--bone);background:transparent;color:var(--bone)}
+
+  /* ===== LANDING ===== */
+  .hero{display:grid;grid-template-columns: 1.1fr .9fr; gap:48px;padding-top:44px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+  .title{
+    font-family:"Space Grotesk";font-weight:700;font-size:clamp(56px, 9vw, 132px);
+    line-height:.88;letter-spacing:-.03em;margin:18px 0 10px;color:var(--bone);
+  }
+  .title .amp{font-family:"Instrument Serif";font-style:italic;font-weight:400;color:var(--red)}
+  .title .smaller{font-size:.55em;color:var(--bone-2);letter-spacing:-.01em}
+  .lede{font-family:"Instrument Serif";font-style:italic;font-size:28px;line-height:1.25;color:var(--bone-2);max-width:34ch}
+  .kpi{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);margin-top:32px}
+  .kpi>div{padding:18px 20px 20px;border-right:1px solid var(--line)}
+  .kpi>div:last-child{border-right:0}
+  .kpi .n{font-family:"Space Grotesk";font-weight:700;font-size:44px;letter-spacing:-.02em}
+  .kpi .n .u{font-size:14px;color:var(--muted);margin-left:4px}
+  .kpi .l{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+  /* right-side monitor panel */
+  .panel{border:1px solid var(--line);background:linear-gradient(180deg,#0e0e10,#0a0a0c);
+    box-shadow:var(--shadow);padding:0;position:relative;overflow:hidden}
+  .panel-hd{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);
+    font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .panel-hd .live::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ekg);margin-right:6px;
+    box-shadow:0 0 8px var(--ekg);animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .ekg{height:200px;position:relative;background:
+    linear-gradient(180deg, rgba(122,255,179,.04), transparent 80%),
+    repeating-linear-gradient(0deg, rgba(122,255,179,.05) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(90deg, rgba(122,255,179,.05) 0 1px, transparent 1px 16px)
+  }
+  .ekg svg{position:absolute;inset:0;width:100%;height:100%}
+  .ekg-path{stroke:var(--ekg);stroke-width:1.5;fill:none;filter:drop-shadow(0 0 6px rgba(122,255,179,.6))}
+  .ekg-trail{stroke:var(--ekg);stroke-width:1.5;fill:none;opacity:.25}
+
+  .vitals{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--line)}
+  .vitals>div{padding:12px 14px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .vitals>div:nth-child(2n){border-right:0}
+  .vitals>div:nth-last-child(-n+2){border-bottom:0}
+  .vitals .l{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+  .vitals .v{font-family:"IBM Plex Mono",monospace;font-size:22px;color:var(--bone);margin-top:4px}
+  .vitals .v em{color:var(--red);font-style:normal}
+
+  .stamp{
+    position:absolute;right:-10px;top:18px;transform:rotate(6deg);
+    border:2px solid var(--red);color:var(--red);
+    padding:8px 14px;font-family:"IBM Plex Mono",monospace;font-weight:600;letter-spacing:.24em;font-size:12px;
+    background:rgba(0,0,0,.3);
+  }
+
+  /* age picker */
+  .age-row{display:flex;align-items:stretch;border:1px solid var(--line);margin-top:24px;background:#0d0d0f}
+  .age-row .lbl{padding:14px 18px;border-right:1px solid var(--line);font-family:"IBM Plex Mono",monospace;font-size:11px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center}
+  .age-row input{flex:1;background:transparent;border:0;outline:0;color:var(--bone);font-family:"Space Grotesk";font-weight:700;
+    font-size:36px;padding:4px 18px;letter-spacing:-.02em}
+  .age-row .btns{display:flex;flex-direction:column;border-left:1px solid var(--line)}
+  .age-row .btns button{background:transparent;border:0;color:var(--bone-2);padding:0 14px;cursor:pointer;font-size:12px;
+    border-bottom:1px solid var(--line)}
+  .age-row .btns button:last-child{border-bottom:0}
+  .age-row .btns button:hover{background:var(--ink-3);color:var(--bone)}
+
+  /* dimensions */
+  .dims{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:56px}
+  .dim{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 18px;background:linear-gradient(180deg,#0e0e10,#0a0a0c);
+    display:flex;flex-direction:column;gap:10px;min-height:170px}
+  .dim .k{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+  .dim h4{margin:0;font-family:"Space Grotesk";font-size:22px;font-weight:600;letter-spacing:-.01em}
+  .dim p{margin:0;font-family:"Instrument Serif";font-style:italic;font-size:15px;color:var(--bone-2);line-height:1.35}
+  .dim .q{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted);margin-top:auto;letter-spacing:.15em;text-transform:uppercase}
+  .dim .bars{display:flex;gap:3px;align-items:flex-end;height:18px;margin-top:6px}
+  .dim .bars span{width:4px;background:var(--bone-2);opacity:.5}
+
+  /* testimonials */
+  .quotes{margin-top:56px}
+  .quotes .head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:18px}
+  .quotes .head h3{margin:0;font-family:"Space Grotesk";font-size:28px;font-weight:600;letter-spacing:-.01em}
+  .quotes .head .m{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .quote{border:1px solid var(--line);padding:18px;background:#0d0d0f;display:flex;flex-direction:column;gap:12px;min-height:180px}
+  .quote .score{display:flex;justify-content:space-between;align-items:baseline;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase}
+  .quote .score em{font-style:normal;font-size:28px;font-family:"Space Grotesk";font-weight:700;color:var(--bone);letter-spacing:-.02em}
+  .quote .score .g{color:var(--red)}
+  .quote blockquote{margin:0;font-family:"Instrument Serif";font-style:italic;font-size:20px;line-height:1.28;color:var(--bone)}
+  .quote cite{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+  /* footer */
+  footer{margin-top:72px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;
+    font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+  /* ===== QUIZ ===== */
+  .quiz-wrap{min-height:calc(100vh - 60px);display:flex;align-items:stretch;flex-direction:column}
+  .qtop{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;border-bottom:1px solid var(--line);padding:14px 0}
+  .qtop .mono{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .qtop .center{font-family:"IBM Plex Mono";font-size:11px;letter-spacing:.22em;color:var(--bone-2);text-transform:uppercase;text-align:center}
+  .qtop .right{text-align:right}
+  .progress{height:2px;background:var(--line);position:relative;margin-top:0}
+  .progress .fill{position:absolute;left:0;top:0;bottom:0;background:var(--red);transition:width .4s ease}
+  .ticks{display:grid;grid-template-columns:repeat(30,1fr);gap:2px;margin-top:10px}
+  .ticks span{height:10px;background:var(--line)}
+  .ticks span.done{background:var(--bone-2)}
+  .ticks span.cur{background:var(--red)}
+
+  .qbody{display:grid;grid-template-columns: 1fr 380px; gap:48px;padding:60px 0 40px;flex:1}
+  .qnum{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.3em;color:var(--red);text-transform:uppercase}
+  .qtitle{font-family:"Space Grotesk";font-weight:600;font-size:clamp(34px,4.2vw,56px);line-height:1.05;letter-spacing:-.02em;margin:14px 0 8px;text-wrap:balance}
+  .qsub{font-family:"Instrument Serif";font-style:italic;font-size:22px;color:var(--bone-2);max-width:50ch;line-height:1.3}
+
+  .opts{margin-top:38px;display:flex;flex-direction:column;gap:10px;max-width:760px}
+  .opt{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:14px;
+    border:1px solid var(--line);padding:18px 20px;background:#0c0c0e;cursor:pointer;
+    transition:transform .12s ease,border-color .12s ease,background .12s ease}
+  .opt:hover{border-color:var(--bone-2);background:#121215;transform:translateX(2px)}
+  .opt.sel{border-color:var(--red);background:rgba(229,55,43,.07)}
+  .opt .k{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);letter-spacing:.15em;border:1px solid var(--line);
+    width:34px;height:34px;display:grid;place-items:center}
+  .opt.sel .k{border-color:var(--red);color:var(--red)}
+  .opt .txt{font-family:"Space Grotesk";font-size:18px;color:var(--bone);font-weight:500}
+  .opt .risk{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;
+    border-left:1px solid var(--line);padding-left:12px}
+  .opt .risk .bar{display:inline-flex;gap:2px;margin-left:8px;vertical-align:middle}
+  .opt .risk .bar i{width:5px;height:10px;background:var(--line);display:inline-block}
+  .opt .risk .bar i.on{background:var(--red)}
+
+  .qside{border:1px solid var(--line);padding:0;background:#0b0b0d;align-self:start;position:sticky;top:20px}
+  .qside .hd{padding:10px 14px;border-bottom:1px solid var(--line);font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between}
+  .qside .body{padding:18px}
+  .qside h5{margin:0 0 8px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .qside .chapterN{font-family:"Space Grotesk";font-weight:700;font-size:54px;line-height:1;letter-spacing:-.02em}
+  .qside .chapterN small{font-size:16px;color:var(--muted);font-weight:500;letter-spacing:0;margin-left:4px}
+  .qside .chapterT{font-family:"Instrument Serif";font-style:italic;font-size:22px;margin-top:6px}
+  .qside .list{margin-top:18px;border-top:1px solid var(--line)}
+  .qside .list .it{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--line-soft);font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+  .qside .list .it.cur{color:var(--red)}
+  .qside .list .it.done{color:var(--bone-2)}
+  .qside .list .it.todo{color:var(--muted)}
+  .qside .list .it .tag{opacity:.7}
+
+  .qfoot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:18px 0;gap:16px}
+  .qfoot .hint{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+  .qfoot .kbd{border:1px solid var(--line);padding:2px 6px;margin:0 2px;color:var(--bone-2)}
+
+  .riskmeter{display:flex;align-items:center;gap:10px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .riskmeter .rail{width:180px;height:6px;background:var(--line);position:relative;overflow:hidden}
+  .riskmeter .rail i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--ekg),var(--amber) 60%,var(--red));transition:width .5s ease}
+
+  /* ===== SCAN ===== */
+  .scan-wrap{min-height:80vh;display:grid;place-items:center;padding-top:60px}
+  .scan-card{border:1px solid var(--line);padding:44px 56px;width:min(900px,100%);background:#0b0b0d;position:relative}
+  .scan-card .scan-line{position:absolute;left:0;right:0;height:60px;background:linear-gradient(180deg,rgba(229,55,43,.0),rgba(229,55,43,.18),rgba(229,55,43,0));
+    top:0;animation:scan 2.2s linear infinite}
+  @keyframes scan{0%{top:-10%}100%{top:100%}}
+  .scan-card h2{margin:0;font-family:"Space Grotesk";font-weight:700;font-size:46px;letter-spacing:-.02em}
+  .scan-card .s{font-family:"Instrument Serif";font-style:italic;color:var(--bone-2);font-size:22px;margin-top:8px}
+  .scan-log{margin-top:28px;border-top:1px solid var(--line);padding-top:14px;font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--bone-2);min-height:180px;line-height:1.5}
+  .scan-log .ln{display:flex;justify-content:space-between}
+  .scan-log .ln em{color:var(--ekg);font-style:normal}
+  .scan-pbar{margin-top:24px;height:3px;background:var(--line);position:relative;overflow:hidden}
+  .scan-pbar i{position:absolute;left:0;top:0;bottom:0;background:var(--red);transition:width .2s linear}
+  .scan-pct{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-top:8px}
+
+  /* ===== RESULT ===== */
+  .rhead{display:grid;grid-template-columns: 1.3fr 1fr;gap:40px;align-items:end;border-bottom:1px solid var(--line);padding:22px 0 28px}
+  .rhead .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+  .rhead h1{margin:6px 0 0;font-family:"Space Grotesk";font-weight:700;font-size:clamp(56px,7vw,112px);letter-spacing:-.03em;line-height:.9}
+  .rhead h1 em{font-family:"Instrument Serif";font-style:italic;color:var(--red);font-weight:400}
+  .rhead .meta{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 24px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--bone-2)}
+  .rhead .meta div{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:4px 0}
+  .rhead .meta .muted{color:var(--muted)}
+
+  .rmain{display:grid;grid-template-columns: 1.2fr .8fr;gap:32px;margin-top:28px}
+  .score-card{border:1px solid var(--line);padding:28px 28px 24px;background:linear-gradient(180deg,#0f0d0d,#0a0a0c);position:relative;overflow:hidden}
+  .score-card .stamp-big{position:absolute;right:-20px;top:30px;transform:rotate(8deg);
+    border:3px double var(--red);color:var(--red);padding:12px 22px;font-family:"IBM Plex Mono";font-weight:600;letter-spacing:.3em;font-size:14px;background:rgba(0,0,0,.2)}
+  .score-card .l{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+  .score-main{display:flex;align-items:flex-end;gap:14px;margin-top:8px}
+  .score-main .n{font-family:"Space Grotesk";font-weight:700;font-size:180px;line-height:.85;letter-spacing:-.04em;color:var(--bone)}
+  .score-main .over{font-family:"IBM Plex Mono";font-size:14px;color:var(--muted);letter-spacing:.2em;margin-bottom:24px}
+  .grade-row{display:flex;gap:8px;margin-top:14px}
+  .grade-row .g{flex:1;border:1px solid var(--line);padding:8px 10px 10px;text-align:center;font-family:"IBM Plex Mono";font-size:10px;color:var(--muted);letter-spacing:.2em}
+  .grade-row .g em{display:block;font-family:"Space Grotesk";font-weight:700;font-size:22px;color:var(--bone);font-style:normal;margin-bottom:2px;letter-spacing:-.01em}
+  .grade-row .g.cur{border-color:var(--red);background:rgba(229,55,43,.08)}
+  .grade-row .g.cur em{color:var(--red)}
+
+  .dist{margin-top:26px}
+  .dist .l{font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+  .dist .rail{position:relative;height:14px;border:1px solid var(--line);background:#0c0c0f}
+  .dist .seg{position:absolute;top:0;bottom:0;border-right:1px solid var(--line-soft)}
+  .dist .seg.a{left:0;width:25%;background:rgba(122,255,179,.1)}
+  .dist .seg.b{left:25%;width:25%;background:rgba(239,233,220,.05)}
+  .dist .seg.c{left:50%;width:25%;background:rgba(243,184,75,.1)}
+  .dist .seg.d{left:75%;width:25%;background:rgba(229,55,43,.12);border-right:0}
+  .dist .marker{position:absolute;top:-10px;bottom:-10px;width:2px;background:var(--red);box-shadow:0 0 10px var(--red)}
+  .dist .marker::before{content:"YOU";position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.2em;color:var(--red)}
+  .dist .legend{display:grid;grid-template-columns:repeat(4,1fr);font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.16em;color:var(--muted);margin-top:8px;text-transform:uppercase}
+
+  /* radar-ish dimension chart */
+  .dim-chart{border:1px solid var(--line);background:#0b0b0d;padding:22px;align-self:start}
+  .dim-chart h4{margin:0 0 14px;font-family:"IBM Plex Mono";font-size:11px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+  .dim-chart .row{display:grid;grid-template-columns:120px 1fr 40px;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line-soft)}
+  .dim-chart .row:last-child{border-bottom:0}
+  .dim-chart .name{font-family:"Space Grotesk";font-size:14px;color:var(--bone)}
+  .dim-chart .val{font-family:"IBM Plex Mono";font-size:12px;color:var(--bone-2);text-align:right}
+  .dim-chart .bar{height:10px;background:var(--line-soft);position:relative}
+  .dim-chart .bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--ekg),var(--amber) 55%,var(--red))}
+
+  /* persona / tags / prophecy */
+  .rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:32px}
+  .block{border:1px solid var(--line);padding:22px;background:#0b0b0d}
+  .block .l{font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+  .block h3{margin:6px 0 0;font-family:"Space Grotesk";font-weight:600;font-size:26px;letter-spacing:-.01em}
+  .block p{font-family:"Instrument Serif";font-style:italic;font-size:18px;color:var(--bone-2);line-height:1.35;margin:10px 0 0}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .tag{font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.18em;padding:4px 8px;border:1px solid var(--line);text-transform:uppercase;color:var(--bone-2)}
+  .tag.red{border-color:var(--red);color:var(--red)}
+
+  .prophecy{border:1px solid var(--red);padding:28px;background:linear-gradient(180deg,rgba(229,55,43,.06),rgba(229,55,43,0));margin-top:32px}
+  .prophecy .l{font-family:"IBM Plex Mono";font-size:11px;letter-spacing:.24em;color:var(--red);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .prophecy .l::before{content:"";width:10px;height:10px;background:var(--red);display:inline-block}
+  .prophecy h2{margin:10px 0 6px;font-family:"Instrument Serif";font-style:italic;font-weight:400;font-size:48px;color:var(--bone);letter-spacing:-.01em;line-height:1.05}
+  .prophecy .sig{font-family:"Instrument Serif";font-style:italic;font-size:20px;color:var(--bone-2);margin-top:10px;line-height:1.4;max-width:60ch}
+  .prophecy .meta{display:flex;gap:24px;margin-top:18px;font-family:"IBM Plex Mono";font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+
+  .actions{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap}
+  .disclaimer{margin-top:30px;border-top:1px solid var(--line);padding-top:16px;font-family:"IBM Plex Mono";font-size:11px;color:var(--muted);letter-spacing:.14em;line-height:1.7}
+
+  /* ===== TWEAKS ===== */
+  .tweaks{position:fixed;right:22px;bottom:22px;z-index:200;border:1px solid var(--line);background:#0a0a0c;width:280px;
+    box-shadow:var(--shadow);font-family:"IBM Plex Mono";font-size:11px;color:var(--bone-2)}
+  .tweaks .t-hd{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+  .tweaks .t-hd .close{cursor:pointer;color:var(--bone-2)}
+  .tweaks .t-body{padding:14px 12px;display:flex;flex-direction:column;gap:14px}
+  .tweaks .row{display:flex;flex-direction:column;gap:6px}
+  .tweaks .row label{font-size:10px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+  .tweaks .pills{display:flex;gap:6px;flex-wrap:wrap}
+  .tweaks .pill{border:1px solid var(--line);padding:5px 8px;cursor:pointer;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-2)}
+  .tweaks .pill.on{border-color:var(--red);color:var(--red);background:rgba(229,55,43,.08)}
+  .tweaks input[type=range]{accent-color:var(--red)}
+
+  /* glitch for danger-combo */
+  .flash{position:fixed;inset:0;z-index:150;pointer-events:none;background:rgba(229,55,43,.0);transition:background .25s ease}
+  .flash.on{background:rgba(229,55,43,.18)}
+
+  /* view switcher (top) */
+  .view-switch{display:flex;gap:2px;border:1px solid var(--line)}
+  .view-switch button{background:transparent;border:0;color:var(--muted);padding:6px 10px;font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+  .view-switch button.on{background:var(--bone);color:var(--ink)}
+
+  @media (max-width: 1080px){
+    .hero{grid-template-columns:1fr;gap:30px}
+    .qbody{grid-template-columns:1fr}
+    .qside{position:static}
+    .rmain{grid-template-columns:1fr}
+    .rgrid{grid-template-columns:1fr}
+    .dims{grid-template-columns:repeat(2,1fr)}
+    .qgrid{grid-template-columns:1fr}
+  }
+
+  ::selection{background:var(--red);color:#fff}
+
+  /* utility reveal */
+  .fade-in{animation:fi .5s ease both}
+  @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="fx-grain"></div>
+<div class="fx-scan"></div>
+<div class="fx-vignette"></div>
+<div id="flash" class="flash"></div>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useMemo } = React;
+
+/* ---------------- TWEAK DEFAULTS (persisted) ---------------- */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "palette": "ink-red",
+  "intensity": 2,
+  "tone": "cheeky",
+  "showTweaks": true
+}/*EDITMODE-END*/;
+
+/* ---------------- DATA ---------------- */
+const CATEGORIES = [
+  { id:"sleep",   name:"Sleep Habits",     line:"Every night quietly shapes tomorrow.",      count:4, icon:"SLP" },
+  { id:"work",    name:"Work Intensity",   line:"The body keeps the calendar's score.",      count:4, icon:"WRK" },
+  { id:"exercise",name:"Exercise",         line:"Motion is the antidote you keep deferring.",count:3, icon:"MVT" },
+  { id:"diet",    name:"Diet",             line:"You are what you almost cooked.",           count:4, icon:"DIE" },
+  { id:"stress",  name:"Stress Level",     line:"Cortisol is a slow, patient editor.",       count:4, icon:"STR" },
+  { id:"habits",  name:"Bad Habits",       line:"Small compounding sins.",                   count:3, icon:"VCE" },
+  { id:"emotion", name:"Emotional State",  line:"The quietest organ is the one that breaks.",count:4, icon:"MND" }
+];
+
+const QUESTIONS = [
+  // SLEEP (4)
+  { c:"sleep", q:"How many hours did you sleep last night?", sub:"Not including the ceiling-staring.",
+    opts:[
+      {t:"8+ hours, woke up rested", r:0},
+      {t:"7–8 hours, mostly okay", r:1},
+      {t:"6–7 hours, running on fumes", r:2},
+      {t:"5–6 hours, coffee is a personality", r:3},
+      {t:"Under 5 hours", r:4},
+      {t:"What is sleep", r:5},
+    ]},
+  { c:"sleep", q:"When do you usually go to bed?", sub:"On a typical weeknight.",
+    opts:[
+      {t:"Before 10:30 PM", r:0},
+      {t:"10:30 – 11:30 PM", r:1},
+      {t:"11:30 PM – 12:30 AM", r:2},
+      {t:"12:30 – 2:00 AM", r:3},
+      {t:"2:00 – 4:00 AM", r:4},
+      {t:"Sunrise is my sleep cue", r:5},
+    ]},
+  { c:"sleep", q:"How often do you wake up feeling rested?",
+    opts:[
+      {t:"Almost every morning", r:0},
+      {t:"Most weekdays", r:1},
+      {t:"A few times a week", r:2},
+      {t:"Only on weekends", r:3},
+      {t:"I forget what rested feels like", r:4},
+      {t:"Never. Tired is my baseline.", r:5},
+    ]},
+  { c:"sleep", q:"How often do you use your phone in bed?",
+    opts:[
+      {t:"Never. Phone stays out of the room.", r:0},
+      {t:"Rarely, briefly", r:1},
+      {t:"Sometimes, 10–20 minutes", r:2},
+      {t:"Often, 30–60 minutes of scrolling", r:3},
+      {t:"Until I pass out mid-video", r:4},
+      {t:"My phone is my sleep schedule", r:5},
+    ]},
+
+  // WORK (4)
+  { c:"work", q:"How many hours do you work per week?", sub:"Include the 'quick checks' at midnight.",
+    opts:[
+      {t:"Under 35", r:0},
+      {t:"35–45", r:1},
+      {t:"45–55", r:2},
+      {t:"55–65", r:3},
+      {t:"65–80", r:4},
+      {t:"80+ / 996 / 007", r:5},
+    ]},
+  { c:"work", q:"How often do you work on weekends?",
+    opts:[
+      {t:"Never", r:0},
+      {t:"Once a month", r:1},
+      {t:"Two weekends a month", r:2},
+      {t:"Most weekends, briefly", r:3},
+      {t:"Every weekend, for hours", r:4},
+      {t:"Weekends are a corporate myth", r:5},
+    ]},
+  { c:"work", q:"Do you check work messages after dinner?",
+    opts:[
+      {t:"Never. Phone is off.", r:0},
+      {t:"Rarely, only emergencies", r:1},
+      {t:"A few nights a week", r:2},
+      {t:"Most nights", r:3},
+      {t:"Continuously until sleep", r:4},
+      {t:"I reply at 2am and call it 'dedication'", r:5},
+    ]},
+  { c:"work", q:"When did you last take a real vacation?",
+    opts:[
+      {t:"In the last 3 months", r:0},
+      {t:"This year, technically", r:1},
+      {t:"Over a year ago", r:2},
+      {t:"2+ years ago", r:3},
+      {t:"I took PTO and answered Slack the whole time", r:4},
+      {t:"Vacation is for other people", r:5},
+    ]},
+
+  // EXERCISE (3)
+  { c:"exercise", q:"How often do you exercise?", sub:"Walking to the fridge doesn't count.",
+    opts:[
+      {t:"5+ times / week", r:0},
+      {t:"3–4 times / week", r:1},
+      {t:"1–2 times / week", r:2},
+      {t:"A few times per month", r:3},
+      {t:"Once a quarter, aspirationally", r:4},
+      {t:"My gym is a museum membership", r:5},
+    ]},
+  { c:"exercise", q:"How many steps do you take on an average day?",
+    opts:[
+      {t:"10k+", r:0},
+      {t:"7–10k", r:1},
+      {t:"4–7k", r:2},
+      {t:"2–4k", r:3},
+      {t:"Under 2k", r:4},
+      {t:"My step counter has given up", r:5},
+    ]},
+  { c:"exercise", q:"How long can you run without stopping?",
+    opts:[
+      {t:"30+ minutes, easy", r:0},
+      {t:"15–30 minutes", r:1},
+      {t:"5–15 minutes", r:2},
+      {t:"A block or two", r:3},
+      {t:"Only if chased", r:4},
+      {t:"Running is for people with knees", r:5},
+    ]},
+
+  // DIET (4)
+  { c:"diet", q:"Your last meal was mostly…",
+    opts:[
+      {t:"Vegetables, whole grains, lean protein", r:0},
+      {t:"Home-cooked, balanced-ish", r:1},
+      {t:"Takeout, could be worse", r:2},
+      {t:"Fried / fast food", r:3},
+      {t:"Instant noodles + something brown", r:4},
+      {t:"Energy drink counts, right?", r:5},
+    ]},
+  { c:"diet", q:"How often do you eat vegetables?",
+    opts:[
+      {t:"Every meal", r:0},
+      {t:"Most meals", r:1},
+      {t:"Once a day", r:2},
+      {t:"A few times a week", r:3},
+      {t:"Fries count, right?", r:4},
+      {t:"Ketchup is my leafy green", r:5},
+    ]},
+  { c:"diet", q:"How much water do you drink per day?",
+    opts:[
+      {t:"2L+ consistently", r:0},
+      {t:"1.5–2L", r:1},
+      {t:"About 1L", r:2},
+      {t:"A few glasses", r:3},
+      {t:"Only when I remember", r:4},
+      {t:"Coffee is basically water", r:5},
+    ]},
+  { c:"diet", q:"How often do you eat past 10pm?",
+    opts:[
+      {t:"Almost never", r:0},
+      {t:"Rarely", r:1},
+      {t:"Weekly", r:2},
+      {t:"A few nights a week", r:3},
+      {t:"Most nights", r:4},
+      {t:"Dinner is a midnight ritual", r:5},
+    ]},
+
+  // STRESS (4)
+  { c:"stress", q:"On a scale of 1–10, how stressed are you right now?",
+    opts:[
+      {t:"1–2 · Calm", r:0},
+      {t:"3–4 · Fine", r:1},
+      {t:"5–6 · Buzzing", r:2},
+      {t:"7–8 · Clenched jaw", r:3},
+      {t:"9 · Heart palpitations", r:4},
+      {t:"10 · I'm taking this to avoid email", r:5},
+    ]},
+  { c:"stress", q:"How often do you feel overwhelmed?",
+    opts:[
+      {t:"Rarely", r:0},
+      {t:"Occasionally", r:1},
+      {t:"Weekly", r:2},
+      {t:"A few times a week", r:3},
+      {t:"Daily", r:4},
+      {t:"'Overwhelmed' is my resting state", r:5},
+    ]},
+  { c:"stress", q:"How well do you manage deadlines?",
+    opts:[
+      {t:"Calmly, with room to spare", r:0},
+      {t:"On time, mild panic", r:1},
+      {t:"Last minute but done", r:2},
+      {t:"Late, with apologies", r:3},
+      {t:"Three all-nighters per deadline", r:4},
+      {t:"Deadlines are suggestions shouted at me", r:5},
+    ]},
+  { c:"stress", q:"How often do you grind your teeth or clench your jaw?",
+    opts:[
+      {t:"Never", r:0},
+      {t:"Rarely noticed", r:1},
+      {t:"Sometimes at night", r:2},
+      {t:"Most nights", r:3},
+      {t:"Daily, conscious", r:4},
+      {t:"My dentist is a therapist", r:5},
+    ]},
+
+  // HABITS (3)
+  { c:"habits", q:"Do you smoke or vape?",
+    opts:[
+      {t:"Never", r:0},
+      {t:"Quit years ago", r:1},
+      {t:"Quit recently", r:2},
+      {t:"Occasionally / social", r:3},
+      {t:"Daily, but 'not that much'", r:4},
+      {t:"I have a brand loyalty", r:5},
+    ]},
+  { c:"habits", q:"How much alcohol do you drink per week?",
+    opts:[
+      {t:"None", r:0},
+      {t:"1–2 drinks total", r:1},
+      {t:"3–5 drinks", r:2},
+      {t:"6–10 drinks", r:3},
+      {t:"11–20 drinks", r:4},
+      {t:"I stopped counting in college", r:5},
+    ]},
+  { c:"habits", q:"How much caffeine do you consume daily?",
+    opts:[
+      {t:"None or tea", r:0},
+      {t:"One coffee", r:1},
+      {t:"Two coffees", r:2},
+      {t:"3–4 coffees", r:3},
+      {t:"5+ coffees and an energy drink", r:4},
+      {t:"My blood is 40% espresso", r:5},
+    ]},
+
+  // EMOTION (4)
+  { c:"emotion", q:"How often do you feel genuinely happy?",
+    opts:[
+      {t:"Most days", r:0},
+      {t:"Several times a week", r:1},
+      {t:"Once a week, if lucky", r:2},
+      {t:"Monthly, on a good month", r:3},
+      {t:"I remember happiness as a concept", r:4},
+      {t:"Define 'feel'", r:5},
+    ]},
+  { c:"emotion", q:"How connected do you feel to people close to you?",
+    opts:[
+      {t:"Deeply connected", r:0},
+      {t:"Mostly good", r:1},
+      {t:"Fine, could be better", r:2},
+      {t:"Distant lately", r:3},
+      {t:"Pretty isolated", r:4},
+      {t:"Emotionally offline", r:5},
+    ]},
+  { c:"emotion", q:"How often do you laugh out loud?",
+    opts:[
+      {t:"Every day", r:0},
+      {t:"Most days", r:1},
+      {t:"A few times a week", r:2},
+      {t:"Weekly", r:3},
+      {t:"Rarely, mostly at memes", r:4},
+      {t:"My laugh has been archived", r:5},
+    ]},
+  { c:"emotion", q:"When did you last take a full day just for yourself?",
+    opts:[
+      {t:"This week", r:0},
+      {t:"This month", r:1},
+      {t:"A couple months ago", r:2},
+      {t:"Over 6 months ago", r:3},
+      {t:"Over a year ago", r:4},
+      {t:"I cannot remember such a day", r:5},
+    ]},
+  // ADDITIONAL
+  { c:"exercise", q:"How often do you stretch or do mobility work?",
+    opts:[
+      {t:"Daily", r:0},
+      {t:"A few times a week", r:1},
+      {t:"Weekly", r:2},
+      {t:"Monthly", r:3},
+      {t:"Rarely", r:4},
+      {t:"My hip flexors are a cautionary tale", r:5},
+    ]},
+  { c:"habits", q:"How often do you skip breakfast?",
+    opts:[
+      {t:"Never", r:0},
+      {t:"Rarely", r:1},
+      {t:"1–2 days a week", r:2},
+      {t:"Most weekdays", r:3},
+      {t:"Every day", r:4},
+      {t:"My first meal is at 4pm", r:5},
+    ]},
+  { c:"stress", q:"How often do you take 10+ minutes of silence to yourself?",
+    opts:[
+      {t:"Daily", r:0},
+      {t:"Most days", r:1},
+      {t:"A few times a week", r:2},
+      {t:"Weekly", r:3},
+      {t:"Rarely", r:4},
+      {t:"Silence scares me", r:5},
+    ]},
+  { c:"work", q:"How often do you skip meals because of work?",
+    opts:[
+      {t:"Never", r:0},
+      {t:"Rarely", r:1},
+      {t:"Weekly", r:2},
+      {t:"A few times a week", r:3},
+      {t:"Most weekdays", r:4},
+      {t:"Lunch is a concept I've outgrown", r:5},
+    ]},
+];
+
+/* grade + score */
+function calcScore(answers){
+  const total = answers.reduce((a,b)=>a+(b?.r||0),0);
+  const max = QUESTIONS.length * 5;
+  return Math.round((total/max) * 99);
+}
+function gradeOf(score){
+  if (score < 20) return { g:"A", label:"Immortal-lite", tint:"var(--ekg)" };
+  if (score < 40) return { g:"B", label:"Lightly Cooked", tint:"var(--ekg)" };
+  if (score < 60) return { g:"C", label:"Sub-healthy", tint:"var(--amber)" };
+  if (score < 80) return { g:"D", label:"High Risk", tint:"var(--red)" };
+  return { g:"F", label:"Critical", tint:"var(--red)" };
+}
+function dimensionBreakdown(answers){
+  const agg = {};
+  CATEGORIES.forEach(c=>agg[c.id]={sum:0,n:0});
+  answers.forEach((a,i)=>{
+    const c = QUESTIONS[i].c;
+    agg[c].sum += a?.r || 0; agg[c].n++;
+  });
+  return CATEGORIES.map(c=>({
+    id:c.id, name:c.name,
+    pct: agg[c.id].n ? Math.round((agg[c.id].sum / (agg[c.id].n*5)) * 100) : 0
+  }));
+}
+
+/* ---------------- APP ---------------- */
+function App(){
+  const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
+  const [view, setView] = useState("landing"); // landing | quiz | scan | result
+  const [age, setAge] = useState(28);
+  const [qi, setQi] = useState(0);
+  const [answers, setAnswers] = useState(()=>Array(QUESTIONS.length).fill(null));
+  const [combo, setCombo] = useState(0);
+
+  // persist playback position
+  useEffect(()=>{
+    try{
+      const st = JSON.parse(localStorage.getItem("sdi")||"null");
+      // Only restore age (user preference). Always start on the landing page —
+      // resuming a mid-scan or mid-result state is confusing on refresh.
+      if (st && typeof st.age === "number") setAge(st.age);
+      // Clear stale quiz state so a broken schema never blocks the landing.
+      if (!st || !Array.isArray(st.answers) || st.answers.length !== QUESTIONS.length){
+        localStorage.removeItem("sdi");
+      }
+    }catch{}
+  },[]);
+  useEffect(()=>{
+    try{ localStorage.setItem("sdi", JSON.stringify({view,qi,answers,age})); }catch{}
+  },[view,qi,answers,age]);
+
+  // Edit-mode protocol
+  useEffect(()=>{
+    const onMsg = (e)=>{
+      if (!e.data || typeof e.data!=="object") return;
+      if (e.data.type==="__activate_edit_mode") setTweaks(t=>({...t, showTweaks:true}));
+      if (e.data.type==="__deactivate_edit_mode") setTweaks(t=>({...t, showTweaks:false}));
+    };
+    window.addEventListener("message", onMsg);
+    try{ window.parent.postMessage({type:"__edit_mode_available"}, "*"); }catch{}
+    return ()=>window.removeEventListener("message", onMsg);
+  },[]);
+  const setTweak = (k,v)=>{
+    setTweaks(t=>{
+      const next={...t,[k]:v};
+      try{ window.parent.postMessage({type:"__edit_mode_set_keys", edits:{[k]:v}}, "*"); }catch{}
+      return next;
+    });
+  };
+
+  // palette vars
+  useEffect(()=>{
+    const pal = {
+      "ink-red":   { red:"#e5372b", ekg:"#7affb3", amber:"#f3b84b", bone:"#efe9dc" },
+      "obit":      { red:"#7a0b0b", ekg:"#556b3b", amber:"#c7b98f", bone:"#f3ecdd" },
+      "hazard":    { red:"#ff2a2a", ekg:"#00ff66", amber:"#ffd166", bone:"#e5e5e5" },
+      "cyber":     { red:"#ff00aa", ekg:"#00e5ff", amber:"#ffffff", bone:"#ffffff" }
+    }[tweaks.palette] || {};
+    const r = document.documentElement;
+    if (pal.red) r.style.setProperty("--red", pal.red);
+    if (pal.ekg) r.style.setProperty("--ekg", pal.ekg);
+    if (pal.amber) r.style.setProperty("--amber", pal.amber);
+    if (pal.bone) r.style.setProperty("--bone", pal.bone);
+  }, [tweaks.palette]);
+
+  // intensity → show/hide scanline
+  useEffect(()=>{
+    document.querySelector(".fx-scan").style.opacity = tweaks.intensity===0 ? 0 : tweaks.intensity===1 ? .15 : tweaks.intensity===2 ? .35 : .55;
+    document.querySelector(".fx-grain").style.opacity = tweaks.intensity===0 ? 0 : 0.06;
+    document.querySelector(".fx-vignette").style.opacity = tweaks.intensity===3 ? 1 : 0.7;
+  }, [tweaks.intensity]);
+
+  // detect 3-combo for flash
+  useEffect(()=>{
+    if (combo>=3){
+      const el = document.getElementById("flash");
+      el.classList.add("on");
+      const t = setTimeout(()=>el.classList.remove("on"), 380);
+      return ()=>clearTimeout(t);
+    }
+  },[combo]);
+
+  const begin = ()=>{ setQi(0); setAnswers(Array(QUESTIONS.length).fill(null)); setCombo(0); setView("quiz"); };
+  const pick = (r)=>{
+    const next = [...answers]; next[qi] = {r};
+    setAnswers(next);
+    setCombo(c=> r>=3 ? c+1 : 0);
+    // advance
+    setTimeout(()=>{
+      if (qi < QUESTIONS.length-1) setQi(qi+1);
+      else setView("scan");
+    }, 220);
+  };
+  const goTo = (i)=> i>=0 && i<QUESTIONS.length && setQi(i);
+
+  const score = useMemo(()=>calcScore(answers.map(a=>a|| {r:2})),[answers]); // placeholder before done
+  const finalAnswers = answers.map(a=>a||{r:2});
+  const finalScore = calcScore(finalAnswers);
+
+  return (
+    <>
+      {view==="landing" && <Landing age={age} setAge={setAge} begin={begin} setView={setView} />}
+      {view==="quiz" && <Quiz qi={qi} setQi={setQi} answers={answers} pick={pick} combo={combo} tone={tweaks.tone} />}
+      {view==="scan" && <Scan onDone={()=>setView("result")} />}
+      {view==="result" && <Result score={finalScore} answers={finalAnswers} age={age} tone={tweaks.tone} restart={()=>{setView("landing");}} />}
+      {tweaks.showTweaks && <Tweaks t={tweaks} set={setTweak} view={view} setView={setView} />}
+    </>
+  );
+}
+
+/* ---------------- LANDING ---------------- */
+function Landing({age,setAge,begin,setView}){
+  const [now, setNow] = useState(Date.now());
+  const [hover, setHover] = useState(false);
+  const [tickerFeed, setTickerFeed] = useState([]);
+  const [previewScore, setPreviewScore] = useState(72);
+  const [scoreDir, setScoreDir] = useState(1);
+  const [miniCombo, setMiniCombo] = useState(0);
+
+  useEffect(()=>{ const i = setInterval(()=>setNow(Date.now()),1000); return ()=>clearInterval(i); },[]);
+
+  // Live activity feed ticker
+  useEffect(()=>{
+    const names = ["Anon","Tyler","Mei","Dev","Rohan","Sasha","Jun","Priya","Alex","Chen","Mike","Sara","Kai","Jo","Riley"];
+    const acts = [
+      (n,s)=> `${n} scored ${s} · graded ${gradeLetter(s)}`,
+      (n,s)=> `${n} got "Candle Burning Both Ends" · ${s}`,
+      (n,s)=> `${n} challenged 3 friends after scoring ${s}`,
+      (n,s)=> `${n} deleted Slack · index ${s}`,
+      (n,s)=> `${n} booked a checkup · ${s}`,
+      (n,s)=> `${n} took the test 3x · still ${s}`,
+    ];
+    const mk = ()=>({
+      id: Math.random(),
+      text: acts[Math.floor(Math.random()*acts.length)](
+        names[Math.floor(Math.random()*names.length)],
+        Math.floor(Math.random()*80)+15
+      ),
+      t: Date.now()
+    });
+    setTickerFeed(Array.from({length:5}).map(mk));
+    const id = setInterval(()=>{
+      setTickerFeed(f=>[mk(), ...f].slice(0,5));
+    }, 2200);
+    return ()=>clearInterval(id);
+  },[]);
+
+  // Score oscillation on preview card
+  useEffect(()=>{
+    const id = setInterval(()=>{
+      setPreviewScore(s=>{
+        let next = s + scoreDir * (Math.random()*6);
+        if (next>92){ setScoreDir(-1); next=92; }
+        if (next<35){ setScoreDir(1); next=35; }
+        return Math.round(next);
+      });
+    }, 900);
+    return ()=>clearInterval(id);
+  },[scoreDir]);
+
+  function gradeLetter(s){ return s<20?"A":s<40?"B":s<60?"C":s<80?"D":"F"; }
+
+  const since = Date.now() - age*365.25*24*3600*1000;
+  const diff = Math.max(0, now - since);
+  const secs = Math.floor(diff/1000);
+  const Y = Math.floor(secs / (365.25*24*3600));
+  const D = Math.floor((secs % (365.25*24*3600)) / (24*3600));
+  const H = Math.floor((secs % (24*3600)) / 3600);
+  const M = Math.floor((secs % 3600)/60);
+  const S = secs % 60;
+
+  const pGrade = gradeLetter(previewScore);
+  const pTint = previewScore>=60 ? "var(--red)" : previewScore>=40 ? "var(--amber)" : "var(--ekg)";
+
+  return (
+    <div className="page">
+      <header className="chrome">
+        <div className="grp">
+          <span><span className="dot"></span>SUDDEN DEATH INDEX · v18.0</span>
+          <span className="pill">CLINICAL EDITION</span>
+          <span className="pill" style={{color:"var(--ekg)",borderColor:"rgba(122,255,179,.3)"}}>● LIVE</span>
+        </div>
+        <div className="grp">
+          <span>8,247 TESTED TODAY</span>
+          <span className="pill">EN · 中</span>
+        </div>
+      </header>
+
+      {/* HERO — playful, huge type, sticker-y */}
+      <section style={{paddingTop:64, position:"relative"}}>
+        {/* floating stickers */}
+        <div style={{position:"absolute",top:40,right:"38%",transform:"rotate(-8deg)",
+          border:"2px solid var(--red)",color:"var(--red)",padding:"6px 12px",
+          fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",fontWeight:600,
+          background:"rgba(0,0,0,.4)"}}>⚠ NOT FDA APPROVED</div>
+        <div style={{position:"absolute",top:140,right:"14%",transform:"rotate(12deg)",
+          border:"2px dashed var(--ekg)",color:"var(--ekg)",padding:"6px 12px",
+          fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",fontWeight:600,
+          background:"rgba(0,0,0,.4)"}}>★ GOES VIRAL AT WORK</div>
+
+        <div className="eyebrow" style={{marginBottom:10}}>
+          Form 09-B · Voluntary Mortality Self-Assessment · <span style={{color:"var(--red)"}}>NSFW (Not Safe For Wellness)</span>
+        </div>
+
+        <h1 style={{
+          margin:"0 0 14px",
+          fontFamily:"Space Grotesk",fontWeight:700,
+          fontSize:"clamp(72px, 13vw, 200px)",lineHeight:.82,letterSpacing:"-.04em",
+          textWrap:"balance"
+        }}>
+          <span>How close</span>{" "}
+          <span style={{fontFamily:"Instrument Serif",fontStyle:"italic",color:"var(--red)",fontWeight:400}}>are</span>{" "}
+          <span>you to</span><br/>
+          <span style={{
+            background:"linear-gradient(180deg, var(--red), #8a1a12)",
+            WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",
+            textShadow:"0 0 60px rgba(229,55,43,.3)"
+          }}>dying today</span>
+          <span style={{color:"var(--red)"}}>?</span>
+        </h1>
+
+        <div style={{display:"grid",gridTemplateColumns:"1.5fr 1fr",gap:48,alignItems:"start",marginTop:14}}>
+          <div>
+            <p style={{fontFamily:"Instrument Serif",fontStyle:"italic",fontSize:"clamp(22px,2.4vw,32px)",lineHeight:1.25,color:"var(--bone-2)",maxWidth:"36ch",margin:"0 0 28px"}}>
+              Answer 30 uncomfortably specific questions. Get your Death Index, a grade, a made-up persona, and a first-draft obituary. <span style={{color:"var(--bone)"}}>Dare your group chat.</span>
+            </p>
+
+            {/* Giant BEGIN button — the fun one */}
+            <div
+              className="big-cta"
+              onMouseEnter={()=>setHover(true)}
+              onMouseLeave={()=>setHover(false)}
+              onClick={begin}
+              role="button"
+              style={{
+                cursor:"pointer",
+                border:"2px solid var(--red)",
+                background:hover ? "var(--red)" : "transparent",
+                color:hover ? "#fff" : "var(--red)",
+                padding:"22px 28px",
+                display:"grid",gridTemplateColumns:"auto 1fr auto",alignItems:"center",gap:24,
+                transition:"all .18s ease",
+                transform: hover ? "translate(-2px,-2px)" : "none",
+                boxShadow: hover ? "6px 6px 0 var(--red-deep)" : "4px 4px 0 rgba(229,55,43,.35)",
+                maxWidth:640
+              }}
+            >
+              <div style={{fontFamily:"Space Grotesk",fontWeight:700,fontSize:64,lineHeight:1,letterSpacing:"-.03em"}}>▶</div>
+              <div>
+                <div style={{fontFamily:"Space Grotesk",fontWeight:700,fontSize:32,letterSpacing:"-.02em",lineHeight:1}}>Begin Assessment</div>
+                <div style={{fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".2em",textTransform:"uppercase",marginTop:6,opacity:.85}}>
+                  30 questions · 5 min · results instantly shareable
+                </div>
+              </div>
+              <div style={{fontFamily:"IBM Plex Mono",fontSize:14,letterSpacing:".2em",opacity:.8}}>
+                {hover ? "LET'S GO →" : "FREE"}
+              </div>
+            </div>
+
+            {/* Age + mini meter */}
+            <div className="age-row" style={{marginTop:20,maxWidth:640}}>
+              <div className="lbl">Your Age</div>
+              <input type="number" value={age} onChange={e=>setAge(Math.max(12,Math.min(100,Number(e.target.value)||0)))} min="12" max="100"/>
+              <div className="btns">
+                <button onClick={()=>setAge(a=>Math.min(100,a+1))}>▲</button>
+                <button onClick={()=>setAge(a=>Math.max(12,a-1))}>▼</button>
+              </div>
+              <div style={{padding:"14px 18px",borderLeft:"1px solid var(--line)",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".18em",textTransform:"uppercase",color:"var(--muted)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
+                <span>Alive for</span>
+                <span style={{color:"var(--bone)",fontSize:14,letterSpacing:".1em",marginTop:2}}>{pad(Y,2)}y {pad(D,3)}d {pad(H,2)}:{pad(M,2)}:<em style={{color:"var(--red)",fontStyle:"normal"}}>{pad(S,2)}</em></span>
+              </div>
+            </div>
+
+            {/* Stat row — playful */}
+            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:0,marginTop:32,border:"1px solid var(--line)"}}>
+              {[
+                {n:"2.4M", l:"Tests Taken"},
+                {n:"58", l:"Global Avg"},
+                {n:"97", l:"All-Time Peak"},
+                {n:"3.2×", l:"Avg Shares"},
+              ].map((s,i)=>(
+                <div key={i} style={{padding:"18px 16px",borderRight:i<3?"1px solid var(--line)":"0",background:"#0d0d0f"}}>
+                  <div style={{fontFamily:"Space Grotesk",fontWeight:700,fontSize:36,letterSpacing:"-.02em",lineHeight:1}}>{s.n}</div>
+                  <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--muted)",textTransform:"uppercase",marginTop:6}}>{s.l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* SHAREABLE CARD PREVIEW */}
+          <div style={{position:"relative"}}>
+            <div style={{
+              position:"absolute",top:-18,right:-14,transform:"rotate(8deg)",
+              fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",fontWeight:600,
+              border:"2px solid var(--bone)",color:"var(--bone)",padding:"5px 10px",
+              background:"var(--ink)",zIndex:2
+            }}>PREVIEW · YOUR CARD</div>
+
+            <div style={{
+              border:"1px solid var(--line)",
+              background:"linear-gradient(180deg, #120a0a, #0a0a0c)",
+              padding:24,position:"relative",overflow:"hidden",
+              boxShadow:"12px 12px 0 rgba(229,55,43,.18), 0 30px 60px rgba(0,0,0,.6)",
+              transform:"rotate(-1.5deg)"
+            }}>
+              {/* scanline on card */}
+              <div style={{position:"absolute",inset:0,pointerEvents:"none",opacity:.25,
+                background:"repeating-linear-gradient(0deg,rgba(122,255,179,.08) 0 1px,transparent 1px 3px)"}}/>
+
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",borderBottom:"1px solid var(--line)",paddingBottom:8}}>
+                <span style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase"}}>SDI · DEATH FILE</span>
+                <span style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--red)",textTransform:"uppercase"}}>⬤ CONFIDENTIAL</span>
+              </div>
+
+              <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase",marginTop:14}}>SUDDEN DEATH INDEX</div>
+              <div style={{display:"flex",alignItems:"flex-end",gap:10,marginTop:2}}>
+                <div style={{
+                  fontFamily:"Space Grotesk",fontWeight:700,
+                  fontSize:130,lineHeight:.85,letterSpacing:"-.04em",
+                  color:pTint,
+                  textShadow:`0 0 30px ${pTint}`,
+                  transition:"color .3s ease"
+                }}>{previewScore}</div>
+                <div style={{fontFamily:"IBM Plex Mono",fontSize:12,color:"var(--muted)",letterSpacing:".2em",marginBottom:20}}>/ 99</div>
+              </div>
+
+              {/* Grade strip */}
+              <div style={{display:"flex",gap:4,marginTop:6}}>
+                {["A","B","C","D","F"].map(g=>(
+                  <div key={g} style={{
+                    flex:1,border:"1px solid var(--line)",padding:"6px 4px",textAlign:"center",
+                    fontFamily:"Space Grotesk",fontWeight:700,fontSize:18,
+                    background: g===pGrade ? pTint : "transparent",
+                    color: g===pGrade ? "var(--ink)" : "var(--muted)",
+                    borderColor: g===pGrade ? pTint : "var(--line)",
+                    transition:"all .3s ease"
+                  }}>{g}</div>
+                ))}
+              </div>
+
+              <div style={{fontFamily:"Instrument Serif",fontStyle:"italic",fontSize:20,marginTop:14,color:"var(--bone)",lineHeight:1.25}}>
+                "{previewScore>=75?"The Candle Burning Both Ends":previewScore>=55?"Functional Wreckage":previewScore>=35?"Lightly Overcooked":"Suspiciously Well-Rested"}"
+              </div>
+
+              {/* mini radar-bar */}
+              <div style={{marginTop:16,display:"grid",gap:6}}>
+                {[["Sleep",82],["Work",91],["Diet",64],["Stress",77]].map(([n,v])=>(
+                  <div key={n} style={{display:"grid",gridTemplateColumns:"60px 1fr 32px",gap:10,alignItems:"center"}}>
+                    <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".16em",color:"var(--muted)",textTransform:"uppercase"}}>{n}</div>
+                    <div style={{height:6,background:"var(--line-soft)",position:"relative"}}>
+                      <div style={{position:"absolute",inset:0,right:`${100-v}%`,background:"linear-gradient(90deg,var(--ekg),var(--amber) 55%,var(--red))"}}/>
+                    </div>
+                    <div style={{fontFamily:"IBM Plex Mono",fontSize:10,color:"var(--bone-2)",textAlign:"right"}}>{v}%</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{display:"flex",justifyContent:"space-between",marginTop:16,paddingTop:10,borderTop:"1px dashed var(--line)",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".16em",color:"var(--muted)",textTransform:"uppercase"}}>
+                <span>sdi.clinic</span><span>#{(previewScore*113).toString(36).toUpperCase().slice(0,5)}</span>
+              </div>
+            </div>
+
+            {/* Share row */}
+            <div style={{marginTop:14,display:"flex",gap:8,flexWrap:"wrap"}}>
+              {[
+                {l:"📸 Download", c:"var(--bone)"},
+                {l:"🐦 Tweet", c:"var(--bone-2)"},
+                {l:"📋 Copy", c:"var(--bone-2)"},
+                {l:"🔗 Challenge", c:"var(--red)"}
+              ].map((b,i)=>(
+                <div key={i} style={{
+                  border:`1px solid ${b.c==='var(--red)'?'var(--red)':'var(--line)'}`,
+                  color:b.c,
+                  padding:"8px 12px",fontFamily:"IBM Plex Mono",fontSize:10,
+                  letterSpacing:".18em",textTransform:"uppercase",cursor:"pointer"
+                }}>{b.l}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* LIVE ACTIVITY FEED */}
+      <section style={{marginTop:72,border:"1px solid var(--line)",background:"#0b0b0d"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:"1px solid var(--line)"}}>
+          <span style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".24em",color:"var(--muted)",textTransform:"uppercase"}}>
+            <span style={{display:"inline-block",width:6,height:6,borderRadius:"50%",background:"var(--ekg)",marginRight:8,boxShadow:"0 0 8px var(--ekg)",animation:"pulse 1.4s infinite"}}></span>
+            Live Feed · Right Now
+          </span>
+          <span style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--bone-2)",textTransform:"uppercase"}}>Updates every 2s</span>
+        </div>
+        <div style={{padding:"10px 16px",minHeight:160,display:"flex",flexDirection:"column",gap:4,overflow:"hidden"}}>
+          {tickerFeed.map((t,i)=>(
+            <div key={t.id} className="fade-in" style={{
+              display:"grid",gridTemplateColumns:"80px 1fr auto",gap:14,alignItems:"center",
+              padding:"6px 0",borderBottom: i<tickerFeed.length-1 ? "1px dashed var(--line-soft)" : "0",
+              opacity: 1 - i*0.15,
+              fontFamily:"IBM Plex Mono",fontSize:13
+            }}>
+              <span style={{fontSize:10,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase"}}>+{Math.floor((Date.now()-t.t)/1000)}s ago</span>
+              <span style={{color:"var(--bone)"}}>{t.text}</span>
+              <span style={{fontSize:10,letterSpacing:".22em",color:"var(--red)"}}>▶ JOIN</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* HOW IT FEELS — 3 steps with big energy */}
+      <section style={{marginTop:72}}>
+        <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",borderBottom:"1px solid var(--line)",paddingBottom:10}}>
+          <div>
+            <div className="eyebrow">§01 · How it goes</div>
+            <h2 style={{margin:"6px 0 0",fontFamily:"Space Grotesk",fontWeight:600,fontSize:48,letterSpacing:"-.02em"}}>Three stages of self-realization.</h2>
+          </div>
+          <span style={{fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase"}}>Total time · 5 min</span>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20,marginTop:24}}>
+          {[
+            {n:"01",t:"Confess",e:"😇",c:"var(--ekg)",d:"30 gently invasive questions. Keyboard shortcuts for the committed. No account, no email — your secrets die with us (and the internet)."},
+            {n:"02",t:"Get scanned",e:"🩻",c:"var(--amber)",d:"A fake medical report is generated in real time with heart rate, risk DNA, and at least three judgmental stamps. It loads on purpose."},
+            {n:"03",t:"Post & panic",e:"💀",c:"var(--red)",d:"Download a shareable card, send it to the group chat, and watch your colleagues argue about whose sleep is worse. Schedule a checkup. Maybe."}
+          ].map((s,i)=>(
+            <div key={i} style={{border:"1px solid var(--line)",padding:24,background:"#0b0b0d",position:"relative",overflow:"hidden"}}>
+              <div style={{position:"absolute",right:-10,top:-30,fontSize:180,opacity:.08,fontFamily:"Space Grotesk",fontWeight:700,color:s.c}}>{s.n}</div>
+              <div style={{fontSize:48,marginBottom:14}}>{s.e}</div>
+              <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:s.c,textTransform:"uppercase"}}>Stage {s.n}</div>
+              <h3 style={{margin:"4px 0 10px",fontFamily:"Space Grotesk",fontWeight:600,fontSize:32,letterSpacing:"-.02em"}}>{s.t}.</h3>
+              <p style={{margin:0,fontFamily:"Instrument Serif",fontStyle:"italic",fontSize:17,color:"var(--bone-2)",lineHeight:1.35}}>{s.d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* DIMENSIONS */}
+      <section style={{marginTop:72}}>
+        <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",borderBottom:"1px solid var(--line)",paddingBottom:10}}>
+          <div>
+            <div className="eyebrow">§02 · Coverage</div>
+            <h2 style={{margin:"6px 0 0",fontFamily:"Space Grotesk",fontWeight:600,fontSize:48,letterSpacing:"-.02em"}}>Seven ways you're quietly cooking yourself.</h2>
+          </div>
+          <span style={{fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase"}}>30 items · 7 dimensions</span>
+        </div>
+        <div className="dims">
+          {CATEGORIES.map(c=>(
+            <div className="dim" key={c.id}>
+              <div className="k">// {c.icon}</div>
+              <h4>{c.name}</h4>
+              <p>{c.line}</p>
+              <div className="bars">
+                {Array.from({length:16}).map((_,i)=><span key={i} style={{height: 4 + ((i*7)%14)}}/>)}
+              </div>
+              <div className="q">{c.count} questions</div>
+            </div>
+          ))}
+          <div className="dim" style={{justifyContent:"space-between",background:"linear-gradient(180deg,#1a0a0a,#0a0a0c)",borderColor:"var(--red)"}}>
+            <div className="k" style={{color:"var(--red)"}}>// THE FINALE</div>
+            <h4>Your Death File</h4>
+            <p>Score · grade · persona · dimension radar · a prewritten obituary nobody asked for. Screenshot-ready.</p>
+            <div className="q" style={{color:"var(--red)"}}>1 viral card</div>
+          </div>
+        </div>
+      </section>
+
+      {/* QUOTES — Twitter/IG style cards */}
+      <section className="quotes">
+        <div className="head">
+          <h3>People absolutely cannot stop posting this.</h3>
+          <span className="m">// verified entries</span>
+        </div>
+        <div className="qgrid">
+          {[
+            {q:"Cut my alarms from 15 to 3 the night I took this. Progress.", who:"Product Manager · FAANG", s:78, h:"@wakingthedead"},
+            {q:"Got S-tier but the test must be broken. I'm exhausted.", who:"Certified Wellness Influencer", s:12, h:"@kale_enjoyer"},
+            {q:"Got an F. Sent it to my mom. She stopped asking about grandkids and started asking about my blood pressure.", who:"Freelancer", s:91, h:"@contract_work"},
+            {q:"Took it 3 times, score kept going up. Because I was up at 3am taking it.", who:"Grad Student", s:65, h:"@phd_eventually"},
+            {q:"Tagged me 'Caffeine Dependency Syndrome' while I was reading results with my 4th cold brew.", who:"Frontend Developer", s:74, h:"@div_soup"},
+            {q:"The death prophecy section was so accurate I almost called a lawyer.", who:"Startup CTO", s:83, h:"@exit_strategy"},
+          ].map((t,i)=>(
+            <div className="quote" key={i} style={{transform:`rotate(${(i%3-1)*0.6}deg)`}}>
+              <div className="score">
+                <span>{t.h}</span>
+                <em style={{color: t.s>=75?"var(--red)":t.s>=40?"var(--amber)":"var(--ekg)"}}>{t.s}<span style={{fontSize:11,color:"var(--muted)",marginLeft:4,letterSpacing:".2em"}}>/99</span></em>
+              </div>
+              <blockquote>"{t.q}"</blockquote>
+              <cite>— {t.who}</cite>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FINAL CTA — can't escape */}
+      <section style={{marginTop:72,padding:"48px 0",borderTop:"2px solid var(--red)",borderBottom:"2px solid var(--red)",position:"relative",overflow:"hidden"}}>
+        <div style={{position:"absolute",inset:0,background:"radial-gradient(600px 300px at 30% 50%, rgba(229,55,43,.12), transparent 70%)",pointerEvents:"none"}}/>
+        <div style={{display:"grid",gridTemplateColumns:"1fr auto",alignItems:"center",gap:32,position:"relative"}}>
+          <div>
+            <div className="eyebrow" style={{color:"var(--red)",marginBottom:10}}>§ FINAL CHANCE</div>
+            <h2 style={{margin:0,fontFamily:"Space Grotesk",fontWeight:700,fontSize:"clamp(44px,6vw,84px)",letterSpacing:"-.03em",lineHeight:.95}}>
+              Stop stalling.<br/>
+              <span style={{fontFamily:"Instrument Serif",fontStyle:"italic",fontWeight:400,color:"var(--red)"}}>Take the test.</span>
+            </h2>
+            <p style={{fontFamily:"Instrument Serif",fontStyle:"italic",fontSize:22,color:"var(--bone-2)",marginTop:12,maxWidth:"50ch"}}>
+              You're already procrastinating something else. Make this the one you finish.
+            </p>
+          </div>
+          <button className="btn red" onClick={begin} style={{padding:"28px 42px",fontSize:14}}>
+            ▶ BEGIN · 5 MIN
+          </button>
+        </div>
+      </section>
+
+      <footer>
+        <span>© SDI CLINIC · NOT A MEDICAL DEVICE</span>
+        <span>ntbdstudio@gmail.com</span>
+        <span>PRESS ▶ TO BEGIN</span>
+      </footer>
+    </div>
+  );
+}
+
+function pad(n,w){ return String(n).padStart(w,"0"); }
+
+/* ---------------- EKG SVG ---------------- */
+function EKG(){
+  const [t, setT] = useState(0);
+  useEffect(()=>{ let raf; const f=()=>{ setT(x=>x+1); raf=requestAnimationFrame(f); }; raf=requestAnimationFrame(f); return ()=>cancelAnimationFrame(raf); },[]);
+  // one heart-beat pattern, scroll across
+  const pts = [];
+  const W = 800, H = 200;
+  const step = 4;
+  for(let x=0;x<W;x+=step){
+    const phase = ((x + t*1.6) % 200);
+    let y = H/2;
+    if (phase>80 && phase<86) y = H/2 - 8;
+    else if (phase>=86 && phase<92) y = H/2 + 12;
+    else if (phase>=92 && phase<98) y = H/2 - 60;
+    else if (phase>=98 && phase<104) y = H/2 + 30;
+    else if (phase>=104 && phase<112) y = H/2 - 6;
+    else y = H/2 + (Math.sin((x+t)*.08)*2);
+    pts.push(x+","+y);
+  }
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
+      <polyline className="ekg-trail" points={pts.join(" ")}/>
+      <polyline className="ekg-path" points={pts.join(" ")}/>
+    </svg>
+  );
+}
+
+/* ---------------- QUIZ ---------------- */
+function Quiz({qi,setQi,answers,pick,combo,tone}){
+  const q = QUESTIONS[qi];
+  const cat = CATEGORIES.find(c=>c.id===q.c);
+  const sel = answers[qi]?.r;
+  const riskNow = answers.filter(Boolean).reduce((a,b)=>a+b.r,0);
+  const riskPct = Math.min(100, Math.round((riskNow/(QUESTIONS.length*5))*100));
+
+  useEffect(()=>{
+    const onKey = (e)=>{
+      if (e.key==="ArrowLeft" || e.key==="Backspace"){ e.preventDefault(); setQi(Math.max(0,qi-1)); }
+      else if (e.key==="ArrowRight" || e.key==="Enter"){ e.preventDefault(); if (sel!=null) setQi(Math.min(QUESTIONS.length-1,qi+1)); }
+      else if (/^[1-6]$/.test(e.key)){ const n=Number(e.key)-1; if (q.opts[n]) pick(q.opts[n].r); }
+    };
+    window.addEventListener("keydown",onKey);
+    return ()=>window.removeEventListener("keydown",onKey);
+  },[qi,sel,q]);
+
+  return (
+    <div className="page fade-in" key={qi}>
+      <header className="chrome">
+        <div className="grp">
+          <span><span className="dot"></span>SDI · CLINICAL EDITION</span>
+          <span className="pill">SESSION · LIVE</span>
+        </div>
+        <div className="grp">
+          {combo>=3 && <span style={{color:"var(--red)"}}>⚠ DANGER COMBO ×{combo}</span>}
+          <span>Q {pad(qi+1,2)} / {QUESTIONS.length}</span>
+        </div>
+      </header>
+
+      <div className="qtop">
+        <div className="mono">CHAPTER {pad(CATEGORIES.findIndex(c=>c.id===q.c)+1,2)} · {cat.name.toUpperCase()}</div>
+        <div className="center">§ {pad(qi+1,2)} / {pad(QUESTIONS.length,2)} · {Math.round(((qi+1)/QUESTIONS.length)*100)}%</div>
+        <div className="mono right">FOLLOW-UP · AUTO</div>
+      </div>
+      <div className="progress"><div className="fill" style={{width:`${((qi+1)/QUESTIONS.length)*100}%`}}/></div>
+      <div className="ticks">
+        {QUESTIONS.map((_,i)=>(
+          <span key={i} className={ i<qi?"done": i===qi?"cur":""}/>
+        ))}
+      </div>
+
+      <div className="qbody">
+        <div>
+          <div className="qnum">// {q.c.toUpperCase()} · Q{pad(qi+1,2)}</div>
+          <h2 className="qtitle">{q.q}</h2>
+          {q.sub && <p className="qsub">{q.sub}</p>}
+
+          <QuestionInput q={q} qi={qi} sel={sel} pick={pick}/>
+        </div>
+
+        <aside className="qside">
+          <div className="hd"><span>CHAPTER CONTEXT</span><span>AUTO</span></div>
+          <div className="body">
+            <h5>Dimension</h5>
+            <div className="chapterN">{pad(CATEGORIES.findIndex(c=>c.id===q.c)+1,2)}<small>/07</small></div>
+            <div className="chapterT">{cat.name}</div>
+            <p style={{margin:"10px 0 0",fontFamily:"Instrument Serif",fontStyle:"italic",color:"var(--bone-2)",fontSize:16,lineHeight:1.35}}>{cat.line}</p>
+
+            <div className="list">
+              {CATEGORIES.map((c,i)=>{
+                const done = QUESTIONS.slice(0,qi).some(x=>x.c===c.id);
+                const cur = c.id===q.c;
+                const cls = cur?"cur":done?"done":"todo";
+                return <div key={c.id} className={"it "+cls}>
+                  <span>{cur?"▶ ":done?"✓ ":"• "}{c.name}</span>
+                  <span className="tag">{c.count} Q</span>
+                </div>;
+              })}
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div className="qfoot">
+        <div className="riskmeter">
+          <span>Cumulative Risk</span>
+          <div className="rail"><i style={{width:`${riskPct}%`}}/></div>
+          <span style={{color:"var(--bone-2)"}}>{riskPct}%</span>
+        </div>
+        <div className="hint">
+          <span className="kbd">1–6</span> select · <span className="kbd">←</span> previous · <span className="kbd">Enter / →</span> next
+        </div>
+        <div style={{display:"flex",gap:8}}>
+          <button className="btn ghost" onClick={()=>setQi(Math.max(0,qi-1))}>← Previous</button>
+          <button className="btn" onClick={()=>{ if(sel!=null) setQi(Math.min(QUESTIONS.length-1,qi+1)); }} disabled={sel==null}>Next →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+/* ---------------- QUESTION INPUT (varied UI per category) ---------------- */
+function QuestionInput({q, qi, sel, pick}){
+  const variant = pickVariant(q, qi);
+  const P = { q, qi, sel, pick };
+  switch(variant){
+    case "clock":       return <ClockInput {...P}/>;
+    case "weekgrid":    return <WeekGridInput {...P}/>;
+    case "phonescroll": return <PhoneScrollInput {...P}/>;
+    case "workhours":   return <WorkHoursInput {...P}/>;
+    case "weekends":    return <WeekendsInput {...P}/>;
+    case "notifstack":  return <NotifStackInput {...P}/>;
+    case "sincebar":    return <SinceBarInput {...P}/>;
+    case "ladder":      return <LadderInput {...P}/>;
+    case "stepcount":   return <StepCountInput {...P}/>;
+    case "tracklap":    return <TrackLapInput {...P}/>;
+    case "plate":       return <PlateInput {...P}/>;
+    case "glass":       return <GlassInput {...P}/>;
+    case "latedial":    return <LateDialInput {...P}/>;
+    case "pressure":    return <PressureInput {...P}/>;
+    case "hourglass":   return <HourglassInput {...P}/>;
+    case "tally":       return <TallyInput {...P}/>;
+    case "nodes":       return <NodesInput {...P}/>;
+    case "meter":       return <MeterInput {...P}/>;
+    case "dial":        return <DialInput {...P}/>;
+    case "grid":        return <GridInput {...P}/>;
+    case "slider":      return <SliderInput {...P}/>;
+    case "tower":       return <TowerInput {...P}/>;
+    case "cards":       return <CardInput {...P}/>;
+    default:            return <ListInput {...P}/>;
+  }
+}
+function pickVariant(q, qi){
+  // Each question has a bespoke UI matched to its subject.
+  const byQi = [
+    "clock",       // 01 hours slept  → HourArc
+    "clock",       // 02 bedtime → BedtimeClock
+    "weekgrid",    // 03 wake rested
+    "phonescroll", // 04 phone in bed
+    "workhours",   // 05 hours per week
+    "weekends",    // 06 work weekends
+    "notifstack",  // 07 messages after dinner
+    "sincebar",    // 08 last vacation
+    "ladder",      // 09 exercise frequency
+    "stepcount",   // 10 steps per day
+    "tracklap",    // 11 run without stopping
+    "plate",       // 12 last meal
+    "plate",       // 13 vegetables
+    "glass",       // 14 water
+    "latedial",    // 15 eat past 10pm
+    "pressure",    // 16 stress 1–10
+    "weekgrid",    // 17 overwhelmed
+    "hourglass",   // 18 deadlines
+    "weekgrid",    // 19 teeth grinding
+    "tally",       // 20 smoke/vape
+    "tally",       // 21 alcohol
+    "tally",       // 22 caffeine
+    "weekgrid",    // 23 happy
+    "nodes",       // 24 connected
+    "weekgrid",    // 25 laugh
+    "sincebar",    // 26 full day for self
+    "ladder",      // 27 stretch
+    "weekgrid",    // 28 skip breakfast
+    "meter",       // 29 silence
+    "weekgrid",    // 30 skip meals for work
+  ];
+  return byQi[qi] || "list";
+}
+
+/* Default list (the original) */
+function ListInput({q, sel, pick}){
+  return (
+    <div className="opts">
+      {q.opts.map((o,i)=>(
+        <div key={i} className={"opt"+(sel===o.r?" sel":"")} onClick={()=>pick(o.r)}>
+          <div className="k">{i+1}</div>
+          <div className="txt">{o.t}</div>
+          <div className="risk">RISK
+            <span className="bar">
+              {Array.from({length:5}).map((_,b)=><i key={b} className={b<o.r?"on":""}/>)}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* Dial — stress 1–10 style */
+function DialInput({q, sel, pick}){
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"320px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{position:"relative",width:320,height:320}}>
+        <svg viewBox="0 0 200 200" style={{width:"100%",height:"100%"}}>
+          <circle cx="100" cy="100" r="90" fill="none" stroke="var(--line)" strokeWidth="1"/>
+          <circle cx="100" cy="100" r="76" fill="#0d0d0f" stroke="var(--line)" strokeWidth="1"/>
+          {q.opts.map((o,i)=>{
+            const a = (-Math.PI/2) + (i / (q.opts.length-1)) * Math.PI * 1.5;
+            const x1 = 100 + Math.cos(a)*78, y1 = 100 + Math.sin(a)*78;
+            const x2 = 100 + Math.cos(a)*90, y2 = 100 + Math.sin(a)*90;
+            const color = i>=4 ? "var(--red)" : i>=2 ? "var(--amber)" : "var(--ekg)";
+            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={sel===o.r?3:1.5}/>;
+          })}
+          {sel!=null && (()=>{
+            const idx = q.opts.findIndex(o=>o.r===sel);
+            const a = (-Math.PI/2) + (idx / (q.opts.length-1)) * Math.PI * 1.5;
+            const x = 100 + Math.cos(a)*60, y = 100 + Math.sin(a)*60;
+            return <g>
+              <line x1="100" y1="100" x2={x} y2={y} stroke="var(--red)" strokeWidth="3"/>
+              <circle cx="100" cy="100" r="6" fill="var(--red)"/>
+              <circle cx={x} cy={y} r="4" fill="var(--red)"/>
+            </g>;
+          })()}
+        </svg>
+        <div style={{position:"absolute",inset:0,display:"grid",placeItems:"center",pointerEvents:"none"}}>
+          <div style={{textAlign:"center"}}>
+            <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".24em",color:"var(--muted)",textTransform:"uppercase"}}>Level</div>
+            <div style={{fontFamily:"Space Grotesk",fontWeight:700,fontSize:72,color:sel!=null?"var(--red)":"var(--bone-2)",lineHeight:1}}>{sel!=null?sel:"–"}</div>
+          </div>
+        </div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:6}}>
+        {q.opts.map((o,i)=>(
+          <div key={i} className={"opt"+(sel===o.r?" sel":"")} onClick={()=>pick(o.r)} style={{padding:"12px 16px"}}>
+            <div className="k">{i+1}</div>
+            <div className="txt">{o.t}</div>
+            <div className="risk">LV <span style={{color:o.r>=4?"var(--red)":o.r>=2?"var(--amber)":"var(--ekg)"}}>{o.r}</span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Grid — habits */
+function GridInput({q, sel, pick}){
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
+      {q.opts.map((o,i)=>{
+        const tint = o.r>=4 ? "var(--red)" : o.r>=2 ? "var(--amber)" : "var(--ekg)";
+        return (
+          <div key={i} className={"opt"+(sel===o.r?" sel":"")} onClick={()=>pick(o.r)}
+            style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:10,minHeight:140,padding:"16px 18px",gridTemplateColumns:"none"}}>
+            <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase"}}>OPT {String(i+1).padStart(2,"0")}</div>
+            <div style={{fontFamily:"Space Grotesk",fontWeight:700,fontSize:44,color:tint,lineHeight:.9,letterSpacing:"-.03em"}}>{"●".repeat(o.r+1)}</div>
+            <div className="txt" style={{marginTop:"auto"}}>{o.t}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* Slider (generic numeric) */
+function SliderInput({q, sel, pick}){
+  return (
+    <div style={{marginTop:28}}>
+      <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--muted)",textTransform:"uppercase",marginBottom:10}}>
+        <span>Safer</span><span>Deadlier</span>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:`repeat(${q.opts.length},1fr)`,gap:2}}>
+        {q.opts.map((o,i)=>(
+          <div key={i} className={"opt"+(sel===o.r?" sel":"")} onClick={()=>pick(o.r)}
+            style={{textAlign:"center",padding:"18px 8px",flexDirection:"column",gridTemplateColumns:"none",alignItems:"center"}}>
+            <div style={{fontFamily:"Space Grotesk",fontWeight:700,fontSize:30,color: sel===o.r?"var(--red)":"var(--bone)"}}>{i+1}</div>
+            <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".15em",color:"var(--muted)",marginTop:4,textTransform:"uppercase"}}>{o.t}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Clock — sleep: real clock for bedtime; hour-arc for hours-slept */
+function ClockInput({q, sel, pick}){
+  const isBedtime = /bed/i.test(q.q);
+  if (isBedtime) return <BedtimeClock q={q} sel={sel} pick={pick}/>;
+  return <HourArc q={q} sel={sel} pick={pick}/>;
+}
+
+/* HourArc — gauge from 0 to 10+ hours; highlights range + ghost-highlights on hover */
+function HourArc({q, sel, pick}){
+  const [hov, setHov] = useState(null);
+  const rangesByQ = {
+    "hours": [[8,10],[7,8],[6,7],[5,6],[3,5],[0,3]],
+    "rested":[[7,7],[6,6],[5,5],[3,3],[1,1],[0,0]],
+    "phone": [[0,0],[1,1],[2,2],[4,4],[6,6],[8,8]],
+  };
+  const key = /rested/i.test(q.q) ? "rested" : /phone/i.test(q.q) ? "phone" : "hours";
+  const ranges = rangesByQ[key];
+  const MAX = 10, W=360, H=220, cx=180, cy=200, R=140;
+  const pt = (hr, r=R)=>{ const a = Math.PI - (hr/MAX)*Math.PI; return [cx + Math.cos(a)*r, cy - Math.sin(a)*r]; };
+  const arcPath = (h1,h2,r=R)=>{
+    const [x1,y1]=pt(h1,r), [x2,y2]=pt(h2,r);
+    return `M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`;
+  };
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null ? hov : selIdx;
+  const activeR = hov!=null ? q.opts[hov].r : sel;
+  const tintOf = (r)=> r>=4?"var(--red)":r>=2?"var(--amber)":"var(--ekg)";
+
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+      <div>
+        <svg viewBox={`0 0 ${W} ${H}`} width="360" height="220">
+          <path d={arcPath(0,MAX,R)} stroke="var(--line)" strokeWidth="14" fill="none"/>
+          {Array.from({length:MAX+1}).map((_,i)=>{
+            const [x1,y1] = pt(i, R-14); const [x2,y2] = pt(i, R+14);
+            const major = i%2===0;
+            return <g key={i}>
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={major?"var(--bone-2)":"var(--muted)"} strokeWidth={major?1.2:0.8}/>
+              {major && (()=>{ const [lx,ly]=pt(i, R+28); return <text x={lx} y={ly+3} fontSize="10" fill="var(--muted)" fontFamily="IBM Plex Mono" textAnchor="middle" letterSpacing="1">{i===MAX?"10+":i}</text>; })()}
+            </g>;
+          })}
+          {activeIdx>=0 && (()=>{
+            const [lo,hi] = ranges[activeIdx];
+            const tint = tintOf(activeR);
+            const opacity = hov!=null && hov!==selIdx ? 0.55 : 0.95;
+            const mid = (lo+hi)/2 || lo;
+            const [nx,ny] = pt(mid, R+2);
+            return <g style={{transition:"all .2s ease"}}>
+              <path d={arcPath(lo, Math.max(hi, lo+0.15), R)} stroke={tint} strokeWidth="14" fill="none" opacity={opacity}/>
+              <line x1={cx} y1={cy} x2={nx} y2={ny} stroke={tint} strokeWidth="2.5" opacity={opacity}/>
+              <circle cx={cx} cy={cy} r="5" fill={tint}/>
+              <circle cx={nx} cy={ny} r="4" fill={tint}/>
+            </g>;
+          })()}
+          <text x={cx} y={cy-54} textAnchor="middle" fontSize="11" fill="var(--muted)" fontFamily="IBM Plex Mono" letterSpacing="2">HOURS</text>
+          <text x={cx} y={cy-14} textAnchor="middle" fontSize="46" fontWeight="700" fontFamily="Space Grotesk" fill={activeR!=null ? tintOf(activeR) : "var(--bone-2)"} letterSpacing="-1">
+            {activeIdx>=0 ? (()=>{ const [lo,hi]=ranges[activeIdx]; return lo===hi?`${lo}`:`${lo}–${hi===MAX?"10+":hi}`; })() : "—"}
+          </text>
+        </svg>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--muted)",textTransform:"uppercase",padding:"0 20px",marginTop:-4}}>
+          <span>None</span><span style={{color:"var(--ekg)"}}>Healthy</span>
+        </div>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:6}}>
+        {q.opts.map((o,i)=>(
+          <div key={i} className={"opt"+(sel===o.r?" sel":"")}
+            onClick={()=>pick(o.r)}
+            onMouseEnter={()=>setHov(i)}
+            onMouseLeave={()=>setHov(null)}
+            style={{padding:"12px 16px"}}>
+            <div className="k">{i+1}</div>
+            <div className="txt">{o.t}</div>
+            <div className="risk"><span className="bar">
+              {Array.from({length:5}).map((_,b)=><i key={b} className={b<o.r?"on":""}/>)}
+            </span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* BedtimeClock — real clock, hand previews on hover and commits on click */
+function BedtimeClock({q, sel, pick}){
+  const [hov, setHov] = useState(null);
+  const times = [22.0, 23.0, 24.0, 25.25, 27.0, 29.0];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null ? hov : selIdx;
+  const activeT = activeIdx>=0 ? times[activeIdx] : null;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = activeR==null ? "var(--bone-2)" : activeR>=4 ? "var(--red)" : activeR>=2 ? "var(--amber)" : "var(--ekg)";
+  const ghost = hov!=null && hov!==selIdx;
+
+  const hand = (t)=>{
+    if (t==null) return null;
+    const h = (t%12) + ((t-Math.floor(t)));
+    const a = (-Math.PI/2) + (h/12) * Math.PI*2;
+    return { x: 100 + Math.cos(a)*62, y: 100 + Math.sin(a)*62, angle:a };
+  };
+  const h = hand(activeT);
+  const fmt = (t)=>{
+    if (t==null) return "—";
+    const hh = Math.floor(t)%24; const mm = Math.round((t-Math.floor(t))*60);
+    const am = hh<12 ? "AM" : "PM";
+    const hh12 = hh===0?12: hh>12?hh-12:hh;
+    return `${hh12}:${String(mm).padStart(2,"0")} ${am}`;
+  };
+
+  // Clickable zones on the clock face — clicking near an option's hour picks it
+  const zones = q.opts.map((o,i)=>{
+    const t = times[i];
+    const hh = (t%12) + ((t-Math.floor(t)));
+    const a = (-Math.PI/2) + (hh/12) * Math.PI*2;
+    return { i, x: 100+Math.cos(a)*78, y: 100+Math.sin(a)*78, r:o.r, a };
+  });
+
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"340px 1fr",gap:40,alignItems:"center"}}>
+      <svg viewBox="0 0 200 200" width="340" height="340">
+        <defs>
+          <radialGradient id="face" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#141416"/>
+            <stop offset="100%" stopColor="#0a0a0c"/>
+          </radialGradient>
+          <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(229,55,43,.25)"/>
+            <stop offset="70%" stopColor="rgba(229,55,43,0)"/>
+          </radialGradient>
+        </defs>
+        {/* night shade: upper half = PM/evening safer; lower half = AM/danger */}
+        <circle cx="100" cy="100" r="94" fill="url(#face)" stroke="var(--line)"/>
+        <path d="M 100 100 L 100 8 A 92 92 0 0 1 192 100 Z" fill="rgba(122,255,179,.03)"/>
+        <path d="M 100 100 L 192 100 A 92 92 0 0 1 100 192 Z" fill="rgba(229,55,43,.05)"/>
+        <path d="M 100 100 L 100 192 A 92 92 0 0 1 8 100 Z" fill="rgba(229,55,43,.08)"/>
+        <circle cx="100" cy="100" r="88" fill="none" stroke="var(--line-soft)"/>
+        {/* tick marks */}
+        {Array.from({length:60}).map((_,i)=>{
+          const a = (i/60)*Math.PI*2;
+          const r1 = i%5===0?80:84, r2=90;
+          const x1 = 100+Math.cos(a)*r1, y1 = 100+Math.sin(a)*r1;
+          const x2 = 100+Math.cos(a)*r2, y2 = 100+Math.sin(a)*r2;
+          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={i%5===0?"var(--bone-2)":"var(--muted)"} strokeWidth={i%5===0?1.2:0.5}/>;
+        })}
+        {/* numerals */}
+        {[12,1,2,3,4,5,6,7,8,9,10,11].map((n,i)=>{
+          const a = (i/12)*Math.PI*2 - Math.PI/2;
+          const x = 100+Math.cos(a)*68, y = 100+Math.sin(a)*68;
+          return <text key={n} x={x} y={y+4} fontSize="11" fontWeight="600" fontFamily="Space Grotesk" fill="var(--bone-2)" textAnchor="middle">{n}</text>;
+        })}
+
+        {/* option zones on clock (click to pick) */}
+        {zones.map(z=>(
+          <g key={z.i} style={{cursor:"pointer"}}
+             onMouseEnter={()=>setHov(z.i)} onMouseLeave={()=>setHov(null)} onClick={()=>pick(z.r)}>
+            <circle cx={z.x} cy={z.y} r="10"
+              fill={selIdx===z.i?"var(--red)":"rgba(0,0,0,.4)"}
+              stroke={selIdx===z.i?"var(--red)":hov===z.i?tint:"var(--line)"} strokeWidth="1.5"/>
+            <text x={z.x} y={z.y+3.5} fontSize="9" textAnchor="middle"
+              fill={selIdx===z.i?"#fff":"var(--bone-2)"} fontFamily="IBM Plex Mono" fontWeight="600">{z.i+1}</text>
+          </g>
+        ))}
+
+        {/* glow under hand */}
+        {h && !ghost && <circle cx="100" cy="100" r="96" fill="url(#glow)"/>}
+
+        {/* hand */}
+        {h && <g style={{transition:"all .2s ease"}}>
+          <line x1="100" y1="100" x2={h.x} y2={h.y} stroke={tint} strokeWidth={ghost?2:3} opacity={ghost?0.55:1} strokeLinecap="round"/>
+          <circle cx="100" cy="100" r="5" fill={tint}/>
+          <circle cx={h.x} cy={h.y} r="4" fill={tint}/>
+        </g>}
+
+        <text x="100" y="146" textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="10" fill="var(--muted)" letterSpacing="3">{ghost ? "PREVIEW" : "BEDTIME"}</text>
+        <text x="100" y="168" textAnchor="middle" fontFamily="Space Grotesk" fontSize="22" fontWeight="700" fill={tint} letterSpacing="-.5">{fmt(activeT)}</text>
+      </svg>
+
+      <div style={{display:"flex",flexDirection:"column",gap:6}}>
+        {q.opts.map((o,i)=>(
+          <div key={i} className={"opt"+(sel===o.r?" sel":"")}
+            onClick={()=>pick(o.r)}
+            onMouseEnter={()=>setHov(i)}
+            onMouseLeave={()=>setHov(null)}
+            style={{padding:"12px 16px"}}>
+            <div className="k">{i+1}</div>
+            <div className="txt">{o.t}</div>
+            <div className="risk"><span className="bar">
+              {Array.from({length:5}).map((_,b)=><i key={b} className={b<o.r?"on":""}/>)}
+            </span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
+/* Shared helper: right-side option list with hover tracking */
+function OptsList({q, sel, pick, onHover, width, compact}){
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:compact?4:6,width:width||"auto"}}>
+      {q.opts.map((o,i)=>(
+        <div key={i} className={"opt"+(sel===o.r?" sel":"")}
+          onClick={()=>pick(o.r)}
+          onMouseEnter={()=>onHover && onHover(i)}
+          onMouseLeave={()=>onHover && onHover(null)}
+          style={{padding:compact?"10px 14px":"12px 16px"}}>
+          <div className="k">{i+1}</div>
+          <div className="txt">{o.t}</div>
+          <div className="risk"><span className="bar">
+            {Array.from({length:5}).map((_,b)=><i key={b} className={b<o.r?"on":""}/>)}
+          </span></div>
+        </div>
+      ))}
+    </div>
+  );
+}
+const tintFor = (r)=> r==null ? "var(--bone-2)" : r>=4 ? "var(--red)" : r>=2 ? "var(--amber)" : "var(--ekg)";
+
+/* WeekGrid — 7-day calendar grid. Highlights N days from a per-question mapping. */
+function WeekGridInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  // map option index → { count:int(0..7), mode:"day"|"night", label, good }
+  // good=true means a HIGH option count is healthy (e.g. rested days, exercise days, happy days); false means count represents BAD events (overwhelmed days, teeth-grinding nights)
+  // For each known question, define a shape.
+  const MAPS = {
+    // "wake up rested": [7,5,3,1,0,0] rested days/week; good=true
+    rested: { counts:[7,5,3,1,0,0], mode:"day",   label:"RESTED DAYS",     good:true  },
+    overwhelm:{counts:[0,1,2,3,5,7],mode:"day",   label:"OVERWHELMED",     good:false },
+    grind:  { counts:[0,1,2,4,6,7], mode:"night", label:"CLENCHED NIGHTS", good:false },
+    happy:  { counts:[7,5,2,1,0,0], mode:"day",   label:"HAPPY DAYS",      good:true  },
+    laugh:  { counts:[7,5,3,1,0,0], mode:"day",   label:"LAUGH DAYS",      good:true  },
+    skipBk: { counts:[0,1,2,4,5,7], mode:"day",   label:"SKIPPED BREAKFAST", good:false },
+    skipWk: { counts:[0,1,2,3,5,5], mode:"day",   label:"SKIPPED @ WORK",  good:false },
+  };
+  const key = qi===2 ? "rested" : qi===16 ? "overwhelm" : qi===18 ? "grind"
+            : qi===22 ? "happy" : qi===24 ? "laugh" : qi===27 ? "skipBk"
+            : qi===29 ? "skipWk" : "rested";
+  const m = MAPS[key];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null ? hov : selIdx;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const count = activeIdx>=0 ? m.counts[activeIdx] : 0;
+  const ghost = hov!=null && hov!==selIdx;
+  // which days to highlight: weekdays first for "day", or "most nights" fills from right etc
+  const order = m.mode==="night" ? [0,1,2,3,4,5,6] : [0,1,2,3,4,5,6]; // Mon..Sun, fill left to right
+  const days = ["M","T","W","T","F","S","S"];
+  const tint = tintFor(activeR);
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{border:"1px solid var(--line)",padding:"20px 18px",background:"#0c0c0f"}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
+          <span>TYPICAL WEEK</span><span style={{color:tint}}>{m.label}</span>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:6}}>
+          {days.map((d,i)=>{
+            const on = order.slice(0,count).includes(i);
+            const isNightGood = m.mode==="night";
+            const bg = on ? (m.good?"var(--ekg)":tint) : "#16161a";
+            const op = on ? (ghost?0.6:0.95) : 1;
+            return (
+              <div key={i} style={{
+                aspectRatio:"1",
+                border:"1px solid "+(on?(m.good?"var(--ekg)":tint):"var(--line)"),
+                background:on ? (m.good?"rgba(122,255,179,.15)":"rgba(229,55,43,.18)") : "#0f0f12",
+                color: on ? (m.good?"var(--ekg)":tint) : "var(--muted)",
+                display:"flex",alignItems:"center",justifyContent:"center",
+                fontFamily:"IBM Plex Mono",fontSize:13,fontWeight:600,
+                opacity:op, transition:"all .18s ease",
+                position:"relative",
+              }}>
+                {d}
+                {on && m.mode==="night" && <span style={{position:"absolute",top:3,right:4,fontSize:8}}>☾</span>}
+              </div>
+            );
+          })}
+        </div>
+        <div style={{marginTop:18,display:"flex",alignItems:"baseline",justifyContent:"space-between"}}>
+          <div style={{fontFamily:"Space Grotesk",fontSize:40,fontWeight:700,color:tint,letterSpacing:"-1px",lineHeight:1}}>
+            {activeIdx>=0 ? count : "—"}<span style={{fontSize:16,color:"var(--muted)",fontWeight:400,marginLeft:4}}>/ 7</span>
+          </div>
+          <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--muted)"}}>{ghost?"PREVIEW":"DAYS"}</div>
+        </div>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* PhoneScroll — phone silhouette, scroll-time timeline drops into screen */
+function PhoneScrollInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  const mins = [0, 3, 15, 45, 120, 360];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null ? hov : selIdx;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const m = activeIdx>=0 ? mins[activeIdx] : 0;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  const pct = Math.min(1, m/360);
+  const fmt = (x)=> x===0 ? "—" : x<60 ? x+"m" : Math.floor(x/60)+"h "+(x%60? (x%60)+"m":"");
+  // Feed items: avatar letters + line widths (designed content, not icons)
+  const feed = [
+    {u:"@mira_j",   t:"another 4am reminder that —"},
+    {u:"@_kai",     t:"thread: the 37 reasons I"},
+    {u:"@ghost.fm", t:"new drop — midnight only"},
+    {u:"@tom_was",  t:"hot take on sleep hygiene"},
+    {u:"@ella.r",   t:"wait until you see slide 6"},
+    {u:"@bk.post",  t:"last post before I log off"},
+    {u:"@the_kid",  t:"this changed my whole week"},
+    {u:"@nora.w",   t:"why am I still awake"},
+  ];
+  // how many feed items are "loaded/scrolled past" — grows with minutes
+  const SHOWN = Math.min(feed.length, Math.round(pct * feed.length * 1.2));
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"240px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{display:"flex",justifyContent:"center"}}>
+        <svg viewBox="0 0 220 420" width="220" height="400">
+          <defs>
+            <clipPath id="phonescreen"><rect x="22" y="56" width="176" height="320" rx="4"/></clipPath>
+            <linearGradient id="scrollfade" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stopColor="#050507" stopOpacity="0"/>
+              <stop offset="1" stopColor="#050507" stopOpacity="1"/>
+            </linearGradient>
+          </defs>
+          {/* Body */}
+          <rect x="8" y="8" width="204" height="404" rx="30" fill="#0a0a0c" stroke="var(--line)" strokeWidth="1.5"/>
+          <rect x="14" y="14" width="192" height="392" rx="26" fill="#050507" stroke="var(--line-soft)"/>
+          {/* Side buttons */}
+          <rect x="6" y="90" width="3" height="34" rx="1" fill="#18181c"/>
+          <rect x="6" y="138" width="3" height="54" rx="1" fill="#18181c"/>
+          <rect x="211" y="110" width="3" height="70" rx="1" fill="#18181c"/>
+          {/* Notch + speaker */}
+          <rect x="82" y="24" width="56" height="18" rx="9" fill="#0a0a0c"/>
+          <circle cx="126" cy="33" r="3" fill="#16161a"/>
+          <circle cx="114" cy="33" r="1.2" fill="#1f1f24"/>
+          {/* Status bar */}
+          <text x="32" y="52" fontFamily="IBM Plex Mono" fontSize="9" fill="var(--bone)" letterSpacing="1">2:47</text>
+          <g transform="translate(172,46)">
+            <rect x="0" y="0" width="14" height="6" rx="1" fill="none" stroke="var(--bone-2)" strokeWidth="0.8"/>
+            <rect x="1" y="1" width="10" height="4" fill="var(--bone-2)"/>
+          </g>
+          <circle cx="162" cy="49" r="1.2" fill="var(--bone-2)"/>
+          <circle cx="158" cy="49" r="1.2" fill="var(--bone-2)"/>
+          <circle cx="154" cy="49" r="1.2" fill="var(--bone-2)"/>
+          {/* Screen content */}
+          <g clipPath="url(#phonescreen)">
+            <rect x="22" y="56" width="176" height="320" fill="#08080a"/>
+            {/* App header */}
+            <rect x="22" y="56" width="176" height="28" fill="#0c0c0f"/>
+            <circle cx="34" cy="70" r="5" fill={tint} opacity="0.9"/>
+            <text x="44" y="73" fontFamily="Space Grotesk" fontSize="10" fontWeight="700" fill="var(--bone)" letterSpacing="0.5">feed</text>
+            <circle cx="182" cy="70" r="2" fill="var(--bone-2)"/>
+            <circle cx="176" cy="70" r="2" fill="var(--bone-2)"/>
+            <circle cx="170" cy="70" r="2" fill="var(--bone-2)"/>
+            {/* Feed items — stack downward, count grows with pct */}
+            {Array.from({length:SHOWN}).map((_,i)=>{
+              const y = 92 + i*38;
+              return (
+                <g key={i} opacity={ghost?0.65:0.95}>
+                  <rect x="28" y={y} width="164" height="34" fill="#0c0c0f" stroke="var(--line)" strokeWidth="0.5"/>
+                  <circle cx="38" cy={y+10} r="5" fill={i%3===0?tint:"#222228"} opacity="0.9"/>
+                  <text x="48" y={y+12} fontFamily="IBM Plex Mono" fontSize="7" fill="var(--bone)">{feed[i%feed.length].u}</text>
+                  <text x="48" y={y+23} fontFamily="Space Grotesk" fontSize="7.5" fill="var(--bone-2)">{feed[i%feed.length].t}</text>
+                  <rect x="48" y={y+26} width={80 - (i%3)*10} height="1" fill="var(--line)"/>
+                </g>
+              );
+            })}
+            {/* bottom fade */}
+            <rect x="22" y="330" width="176" height="46" fill="url(#scrollfade)"/>
+            {/* Time-spent readout as HUD overlay */}
+            <rect x="56" y="340" width="108" height="24" rx="3" fill="#0a0a0c" stroke={tint} strokeOpacity={activeIdx>=0?0.6:0.2} strokeWidth="1"/>
+            <text x="110" y="356" textAnchor="middle" fontFamily="Space Grotesk" fontSize="12" fontWeight="700" fill={tint}>{fmt(m)}</text>
+          </g>
+          {/* Home indicator */}
+          <rect x="82" y="394" width="56" height="3" rx="1.5" fill="#1a1a1f"/>
+        </svg>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* WorkHours — big hour meter 0..100; red line at 40 */
+function WorkHoursInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  const hrs = [32, 40, 50, 60, 72, 90];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const h = activeIdx>=0 ? hrs[activeIdx] : 0;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  const pct = h/100;
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{border:"1px solid var(--line)",padding:22,background:"#0c0c0f"}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
+          <span>WEEKLY HOURS</span><span>REF · 40</span>
+        </div>
+        <div style={{fontFamily:"Space Grotesk",fontSize:72,fontWeight:700,color:tint,letterSpacing:"-3px",lineHeight:1}}>
+          {activeIdx>=0 ? h : "—"}<span style={{fontSize:18,color:"var(--muted)",marginLeft:6,fontWeight:400}}>h</span>
+        </div>
+        <div style={{position:"relative",marginTop:18,height:10,background:"#16161a",border:"1px solid var(--line)"}}>
+          <div style={{position:"absolute",left:"40%",top:-3,bottom:-3,width:1,background:"var(--bone-2)"}}/>
+          <div style={{position:"absolute",left:0,top:0,bottom:0,width:(pct*100)+"%",background:tint,opacity:ghost?0.55:1,transition:"width .25s"}}/>
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:9,color:"var(--muted)",marginTop:6,letterSpacing:".2em"}}>
+          <span>0</span><span>40 — LEGAL FT</span><span>100+</span>
+        </div>
+        <div style={{marginTop:16,display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,fontFamily:"IBM Plex Mono",fontSize:10,color:"var(--muted)",letterSpacing:".15em"}}>
+          <div>DAILY · <span style={{color:tint}}>{(h/5).toFixed(1)}h</span></div>
+          <div>DAYS@8 · <span style={{color:tint}}>{(h/8).toFixed(1)}</span></div>
+          <div>OVER · <span style={{color:tint}}>{Math.max(0,h-40)}h</span></div>
+        </div>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* Weekends — four weekend blocks, shade how many were "worked" */
+function WeekendsInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  const worked = [0, 1, 2, 3, 4, 4]; // out of 4 weekends/month
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const n = activeIdx>=0 ? worked[activeIdx] : 0;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{border:"1px solid var(--line)",padding:22,background:"#0c0c0f"}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
+          <span>MONTH · 4 WEEKENDS</span><span style={{color:tint}}>WORKED · {n}</span>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
+          {Array.from({length:4}).map((_,i)=>{
+            const on = i < n;
+            return (
+              <div key={i} style={{
+                border:"1px solid "+(on?tint:"var(--line)"),
+                background:on?"rgba(229,55,43,.12)":"#0f0f12",
+                padding:"14px 10px",
+                opacity:ghost?0.6:1,
+                transition:"all .2s",
+              }}>
+                <div style={{fontFamily:"IBM Plex Mono",fontSize:9,color:"var(--muted)",letterSpacing:".2em",marginBottom:8}}>WK {i+1}</div>
+                <div style={{display:"flex",gap:4}}>
+                  {["S","S"].map((d,j)=>(
+                    <div key={j} style={{
+                      flex:1,aspectRatio:"1",display:"flex",alignItems:"center",justifyContent:"center",
+                      background:on?tint:"#16161a",
+                      color:on?"#0a0a0c":"var(--muted)",
+                      fontFamily:"IBM Plex Mono",fontWeight:700,fontSize:11,
+                    }}>{d}</div>
+                  ))}
+                </div>
+                {on && <div style={{marginTop:8,fontFamily:"IBM Plex Mono",fontSize:9,color:tint,letterSpacing:".2em"}}>LAPTOP OPEN</div>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* NotifStack — Slack/Mail notifications stacked */
+function NotifStackInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  const counts = [0, 1, 3, 6, 12, 24];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const n = activeIdx>=0 ? counts[activeIdx] : 0;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  const apps    = ["SLACK","MAIL","TEAMS","SMS","SLACK","CAL"];
+  const senders = ["@manager","@pm","@client","oncall","@ceo","@director"];
+  const msgs    = ["quick q?","are you around","catching up","p0 incident","pls ack","sync 7am"];
+  const SLOTS = 6;
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"start"}}>
+      <div style={{border:"1px solid var(--line)",padding:22,background:"#0c0c0f",height:420,display:"flex",flexDirection:"column"}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
+          <span>PHONE · 20:47</span><span style={{color:tint}}>{n} NEW</span>
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:6,flex:1}}>
+          {Array.from({length:SLOTS}).map((_,i)=>{
+            const visible = i < Math.min(SLOTS, n);
+            return (
+              <div key={i} style={{
+                border:"1px solid "+(visible?"var(--line)":"transparent"),
+                background:visible?"#111114":"transparent",
+                padding:"10px 12px",
+                opacity: visible ? ((ghost?0.55:1) * (1 - i*0.08)) : 0,
+                transition:"opacity .22s ease, background .22s ease, border-color .22s ease",
+                minHeight:56,
+                pointerEvents:"none",
+              }}>
+                <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:9,color:"var(--muted)",letterSpacing:".2em",marginBottom:4}}>
+                  <span style={{color:tint}}>■ {apps[i%apps.length]}</span><span>now</span>
+                </div>
+                <div style={{fontFamily:"Space Grotesk",fontSize:13,color:"var(--bone)",fontWeight:600}}>{senders[i%senders.length]}</div>
+                <div style={{fontFamily:"Space Grotesk",fontSize:12,color:"var(--muted)"}}>"{msgs[i%msgs.length]}"</div>
+              </div>
+            );
+          })}
+          <div style={{height:16,fontFamily:"IBM Plex Mono",fontSize:10,color:tint,letterSpacing:".2em",textAlign:"center",opacity:n>SLOTS?1:0,transition:"opacity .2s"}}>
+            + {Math.max(0,n-SLOTS)} more
+          </div>
+          <div style={{position:"absolute",fontFamily:"IBM Plex Mono",fontSize:11,color:"var(--ekg)",letterSpacing:".2em",opacity:n===0&&activeIdx>=0?1:0,transition:"opacity .2s",alignSelf:"center",pointerEvents:"none",marginTop:80}}>
+            · NO NEW NOTIFICATIONS ·
+          </div>
+        </div>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+function SinceBarInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  // months since for Q08 vacation: 1.5 / 8 / 18 / 30 / 10 (PTO but working) / 60
+  // for Q26 full day self: similar shape
+  const months = qi===7 ? [1.5, 8, 18, 30, 10, 60] : [0.25, 1, 3, 8, 14, 48];
+  const labels = qi===7
+    ? ["~6 WEEKS","~8 MONTHS","~1.5 YRS","~2.5 YRS","PTO—WORKING","~5 YRS"]
+    : ["~THIS WK","~1 MO","~3 MO","~8 MO","~14 MO","~4 YRS"];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const m = activeIdx>=0 ? months[activeIdx] : 0;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  const MAX = 60;
+  const pct = Math.min(1, m/MAX);
+  // tick positions: now, 3mo, 1yr, 2yr, 5yr
+  const ticks = [{m:0,l:"NOW"},{m:3,l:"3 MO"},{m:12,l:"1 YR"},{m:24,l:"2 YR"},{m:60,l:"5 YR"}];
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"420px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{border:"1px solid var(--line)",padding:24,background:"#0c0c0f"}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:18}}>
+          <span>TIME SINCE</span><span style={{color:tint}}>{activeIdx>=0?labels[activeIdx]:"—"}</span>
+        </div>
+        <div style={{position:"relative",height:60,marginBottom:20}}>
+          <div style={{position:"absolute",left:0,right:0,top:"50%",height:1,background:"var(--line)"}}/>
+          {ticks.map(t=>(
+            <div key={t.l} style={{position:"absolute",left:(t.m/MAX*100)+"%",top:"50%",transform:"translate(-50%,-50%)"}}>
+              <div style={{width:1,height:12,background:"var(--bone-2)",margin:"0 auto"}}/>
+              <div style={{position:"absolute",top:14,left:"50%",transform:"translateX(-50%)",fontFamily:"IBM Plex Mono",fontSize:9,color:"var(--muted)",letterSpacing:".15em",whiteSpace:"nowrap"}}>{t.l}</div>
+            </div>
+          ))}
+          {activeIdx>=0 && <div style={{position:"absolute",left:(pct*100)+"%",top:"50%",transform:"translate(-50%,-50%)",transition:"left .3s cubic-bezier(.2,.8,.2,1)"}}>
+            <div style={{width:3,height:40,background:tint,opacity:ghost?0.55:1}}/>
+            <div style={{position:"absolute",top:-22,left:"50%",transform:"translateX(-50%)",fontFamily:"Space Grotesk",fontSize:14,fontWeight:700,color:tint,whiteSpace:"nowrap"}}>
+              {m<1?"weeks":m<12?Math.round(m)+"mo":(m/12).toFixed(1)+"yr"}
+            </div>
+          </div>}
+          {/* danger zone */}
+          <div style={{position:"absolute",left:"20%",right:0,top:"50%",transform:"translateY(-50%)",height:3,background:"rgba(229,55,43,.2)"}}/>
+        </div>
+        <div style={{marginTop:24,fontFamily:"IBM Plex Mono",fontSize:10,color:"var(--muted)",letterSpacing:".2em"}}>
+          HEALTH RECOMMENDATION · <span style={{color:"var(--ekg)"}}>≤ 6 MONTHS</span>
+        </div>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* StepCount — digital pedometer */
+function StepCountInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  const steps = [12500, 8500, 5500, 3000, 1500, 600];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const s = activeIdx>=0 ? steps[activeIdx] : 0;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  const digits = String(s).padStart(5,"0").split("");
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{border:"1px solid var(--line)",padding:22,background:"#0c0c0f"}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
+          <span>PEDOMETER</span><span>TODAY</span>
+        </div>
+        <div style={{display:"flex",gap:6,justifyContent:"center",margin:"10px 0"}}>
+          {digits.map((d,i)=>(
+            <div key={i} style={{
+              width:50,height:74,border:"1px solid var(--line)",background:"#050507",
+              display:"flex",alignItems:"center",justifyContent:"center",
+              fontFamily:"Space Grotesk",fontSize:44,fontWeight:700,letterSpacing:"-1px",
+              color:activeIdx>=0?tint:"var(--bone-2)",opacity:ghost?0.55:1,
+            }}>{activeIdx>=0?d:"—"}</div>
+          ))}
+        </div>
+        <div style={{marginTop:14,display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,color:"var(--muted)",letterSpacing:".2em"}}>
+          <span>GOAL · 10,000</span>
+          <span style={{color:tint}}>{activeIdx>=0?Math.round(s/10000*100)+"%":"—"}</span>
+        </div>
+        <div style={{marginTop:6,height:6,background:"#16161a",border:"1px solid var(--line)",position:"relative"}}>
+          <div style={{position:"absolute",left:0,top:0,bottom:0,width:Math.min(100,s/10000*100)+"%",background:tint,opacity:ghost?0.55:1,transition:"width .3s"}}/>
+        </div>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* TrackLap — running track, lap progress shows how far you can run */
+function TrackLapInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  // meters per option: 30min→5km / 15-30→2.5km / 5-15→1km / block→200m / chased→50m / none→0
+  const dist = [5000, 2500, 1000, 200, 50, 0];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const d = activeIdx>=0 ? dist[activeIdx] : 0;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  // Track outer: W=320 H=180 (rounded rectangle). Path perimeter ~= 800 (one lap)
+  const LAP = 400;
+  const laps = d / LAP; // number of laps
+  const trackPath = "M 50 30 L 270 30 A 60 60 0 0 1 270 150 L 50 150 A 60 60 0 0 1 50 30 Z";
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{border:"1px solid var(--line)",padding:20,background:"#0c0c0f"}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:10}}>
+          <span>TRACK · 400M</span><span style={{color:tint}}>BEFORE STOPPING</span>
+        </div>
+        <svg viewBox="0 0 320 180" width="320" height="180">
+          <path d={trackPath} fill="none" stroke="var(--line)" strokeWidth="22"/>
+          <path d={trackPath} fill="none" stroke="#111114" strokeWidth="20"/>
+          <path d={trackPath} fill="none" stroke="var(--muted)" strokeWidth="1" strokeDasharray="4 4"/>
+          {/* progress: dash based on laps */}
+          <path d={trackPath} fill="none" stroke={tint} strokeWidth="4"
+            strokeDasharray={`${Math.min(800, d*800/LAP)} 9999`}
+            opacity={ghost?0.55:1}
+            style={{transition:"stroke-dasharray .4s"}}/>
+          <text x="160" y="92" textAnchor="middle" fontFamily="Space Grotesk" fontSize="28" fontWeight="700" fill={tint}>
+            {activeIdx>=0 ? (d>=1000 ? (d/1000).toFixed(1)+"km" : d+"m") : "—"}
+          </text>
+          <text x="160" y="110" textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="9" fill="var(--muted)" letterSpacing="3">{activeIdx>=0?laps.toFixed(1)+" LAPS":""}</text>
+        </svg>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* Plate — circular plate composition */
+function PlateInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  // Q12 last meal, Q13 vegetables
+  // For each option: [veg%, grain%, protein%, junk%]
+  const mealComp = [
+    [50,25,25,0],[35,25,30,10],[20,20,25,35],[10,20,15,55],[5,40,5,50],[0,10,0,90],
+  ];
+  const vegComp = [
+    [60,20,20,0],[45,25,25,5],[30,25,25,20],[20,20,15,45],[10,15,10,65],[0,10,5,85],
+  ];
+  const comp = qi===11 ? mealComp : vegComp;
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const c = activeIdx>=0 ? comp[activeIdx] : [0,0,0,0];
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const ghost = hov!=null && hov!==selIdx;
+  const COLORS = ["var(--ekg)","var(--amber)","#6FB1C9","var(--red)"];
+  const LABELS = ["VEG","GRAIN","PROTEIN","JUNK"];
+  // Draw pie on a circular plate
+  let acc = 0;
+  const arcs = c.map((v,i)=>{
+    const startA = acc/100*Math.PI*2 - Math.PI/2;
+    const endA = (acc+v)/100*Math.PI*2 - Math.PI/2;
+    acc += v;
+    if (v===0) return null;
+    const large = v>50?1:0;
+    const r=70;
+    const x1=100+Math.cos(startA)*r, y1=100+Math.sin(startA)*r;
+    const x2=100+Math.cos(endA)*r, y2=100+Math.sin(endA)*r;
+    return {d:`M 100 100 L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`, fill:COLORS[i], label:LABELS[i], v};
+  });
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{border:"1px solid var(--line)",padding:20,background:"#0c0c0f"}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:10}}>
+          <span>PLATE · COMPOSITION</span><span>{activeIdx>=0?"ANALYZED":"—"}</span>
+        </div>
+        <svg viewBox="0 0 200 200" width="260" height="260" style={{display:"block",margin:"0 auto"}}>
+          <circle cx="100" cy="100" r="82" fill="#0a0a0c" stroke="var(--line)"/>
+          <circle cx="100" cy="100" r="72" fill="#111114" stroke="var(--line-soft)"/>
+          {arcs.filter(Boolean).map((a,i)=>(
+            <path key={i} d={a.d} fill={a.fill} opacity={ghost?0.5:0.9}/>
+          ))}
+          <circle cx="100" cy="100" r="18" fill="#0c0c0f" stroke="var(--line)"/>
+        </svg>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginTop:12}}>
+          {LABELS.map((l,i)=>(
+            <div key={l} style={{textAlign:"center",fontFamily:"IBM Plex Mono",fontSize:9,letterSpacing:".15em"}}>
+              <div style={{width:"100%",height:4,background:COLORS[i],opacity:c[i]?0.9:0.3,marginBottom:4}}/>
+              <div style={{color:"var(--muted)"}}>{l}</div>
+              <div style={{color:c[i]?COLORS[i]:"var(--muted)",fontWeight:600,fontFamily:"Space Grotesk",fontSize:14}}>{c[i]}%</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* Glass — stack of 8 glasses filling */
+function GlassInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  // liters per option
+  const liters = [2.2, 1.75, 1.0, 0.5, 0.2, 0];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const L = activeIdx>=0 ? liters[activeIdx] : 0;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  const glasses = 8; // 250ml each = 2L
+  const filled = L / 0.25; // fractional glasses filled
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"420px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{border:"1px solid var(--line)",padding:20,background:"#0c0c0f"}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
+          <span>HYDRATION · 8×250ML</span><span style={{color:tint}}>{activeIdx>=0?L.toFixed(2)+"L":"—"}</span>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(8,1fr)",gap:6,alignItems:"end",minHeight:120}}>
+          {Array.from({length:glasses}).map((_,i)=>{
+            const fill = Math.max(0, Math.min(1, filled - i));
+            return (
+              <div key={i} style={{border:"1px solid var(--line)",height:100,position:"relative",background:"#0a0a0c",transition:"all .2s",opacity:ghost?0.6:1}}>
+                <div style={{position:"absolute",left:0,right:0,bottom:0,height:(fill*100)+"%",background:"linear-gradient(to top, "+tint+", rgba(255,255,255,.08))",opacity:0.85}}/>
+                <div style={{position:"absolute",left:0,right:0,bottom:0,height:"2px",background:tint}}/>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{marginTop:12,display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:9,color:"var(--muted)",letterSpacing:".18em"}}>
+          <span>0L</span><span style={{color:"var(--ekg)"}}>RECOMMEND · 2L</span><span>2L</span>
+        </div>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* LateDial — 24h dial with "after 10pm" danger arc */
+function LateDialInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  // frequency per week eating past 10pm
+  const freq = [0, 0.5, 1, 3, 5, 7];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const n = activeIdx>=0 ? freq[activeIdx] : 0;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  // 24h dial: 0 at top, 12 at bottom. Danger zone = 22h→6h (clockwise across top).
+  const angleFor = (h)=> (-Math.PI/2) + (h/24)*Math.PI*2;
+  const pt = (h, r)=>{ const a = angleFor(h); return [100+Math.cos(a)*r, 100+Math.sin(a)*r]; };
+  const arc = (h1, h2, r)=>{
+    // clockwise
+    const [x1,y1] = pt(h1, r); const [x2,y2] = pt(h2, r);
+    const span = ((h2-h1)+24)%24;
+    const large = span>12?1:0;
+    return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
+  };
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"320px 1fr",gap:40,alignItems:"center"}}>
+      <svg viewBox="0 0 200 200" width="320" height="320">
+        <circle cx="100" cy="100" r="88" fill="#0b0b0d" stroke="var(--line)"/>
+        <circle cx="100" cy="100" r="82" fill="none" stroke="var(--line-soft)"/>
+        {/* danger arc 22→6 */}
+        <path d={arc(22, 6, 76)} fill="none" stroke="rgba(229,55,43,.22)" strokeWidth="16"/>
+        {/* tick marks per hour */}
+        {Array.from({length:24}).map((_,i)=>{
+          const major = i%6===0;
+          const [x1,y1]=pt(i,major?72:78), [x2,y2]=pt(i,86);
+          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={major?"var(--bone-2)":"var(--muted)"} strokeWidth={major?1.2:.5}/>;
+        })}
+        {/* labels: 00,06,12,18 */}
+        {[0,6,12,18].map(h=>{
+          const [x,y]=pt(h,64);
+          return <text key={h} x={x} y={y+3} textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="10" fill="var(--bone-2)" letterSpacing="1">{String(h).padStart(2,"0")}</text>;
+        })}
+        {/* 22h marker */}
+        {(()=>{ const [x,y]=pt(22,92); return <text x={x} y={y+3} textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="9" fill="var(--red)">22</text>; })()}
+        {/* plate icons on danger arc based on freq (show n dots around 22-2am) */}
+        {activeIdx>=0 && Array.from({length:Math.min(7, Math.round(n))}).map((_,i)=>{
+          const h = 22 + (i*0.5);
+          const [x,y] = pt(h, 76);
+          return <circle key={i} cx={x} cy={y} r="4" fill={tint} opacity={ghost?0.55:0.95}/>;
+        })}
+        <text x="100" y="96" textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="10" fill="var(--muted)" letterSpacing="3">LATE MEALS / WK</text>
+        <text x="100" y="122" textAnchor="middle" fontFamily="Space Grotesk" fontSize="32" fontWeight="700" fill={tint}>{activeIdx>=0?(n<1?n:Math.round(n)):"—"}</text>
+        <text x="100" y="138" textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="9" fill="var(--muted)" letterSpacing="2">PAST 10PM</text>
+      </svg>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* Pressure — stress gauge, needle from 0 to 10 */
+function PressureInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  const vals = [1.5, 3.5, 5.5, 7.5, 9, 10];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const v = activeIdx>=0 ? vals[activeIdx] : null;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  // semicircle 180→0
+  const angleFor = (x)=> Math.PI - (x/10)*Math.PI;
+  const pt = (x, r)=>{ const a = angleFor(x); return [130+Math.cos(a)*r, 160-Math.sin(a)*r]; };
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"300px 1fr",gap:40,alignItems:"center"}}>
+      <svg viewBox="0 0 260 200" width="300" height="230">
+        {/* colored semicircle zones */}
+        {[[0,3,"var(--ekg)"],[3,6,"var(--amber)"],[6,8,"#ff8a3d"],[8,10,"var(--red)"]].map(([a,b,c],i)=>{
+          const [x1,y1]=pt(a,100),[x2,y2]=pt(b,100);
+          return <path key={i} d={`M ${x1} ${y1} A 100 100 0 0 1 ${x2} ${y2}`} stroke={c} strokeWidth="20" fill="none" opacity="0.85"/>;
+        })}
+        {/* tick marks every 1 */}
+        {Array.from({length:11}).map((_,i)=>{
+          const [x1,y1]=pt(i,82),[x2,y2]=pt(i,96);
+          const major = i%2===0;
+          return <g key={i}>
+            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--bone-2)" strokeWidth={major?1.2:0.7}/>
+            {major && (()=>{ const [lx,ly]=pt(i,114); return <text x={lx} y={ly+3} fontSize="10" fill="var(--bone-2)" fontFamily="IBM Plex Mono" textAnchor="middle">{i}</text>; })()}
+          </g>;
+        })}
+        {/* needle */}
+        {v!=null && (()=>{ const [nx,ny]=pt(v,94); return <g style={{transition:"all .3s cubic-bezier(.2,.8,.2,1)"}}>
+          <line x1="130" y1="160" x2={nx} y2={ny} stroke={tint} strokeWidth="3" opacity={ghost?0.55:1}/>
+          <circle cx="130" cy="160" r="8" fill={tint}/>
+        </g>; })()}
+        <text x="130" y="188" textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="10" fill="var(--muted)" letterSpacing="3">CORTISOL PRESSURE</text>
+        <text x="130" y="150" textAnchor="middle" fontFamily="Space Grotesk" fontSize="38" fontWeight="700" fill={tint} style={{transition:"fill .2s"}}>{v!=null?v.toFixed(1):"—"}</text>
+      </svg>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* Hourglass — sand level = panic level for deadlines */
+function HourglassInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  // how much sand has FALLEN out (0=plenty of time, 1=ran out)
+  const fallen = [0.1, 0.35, 0.6, 0.8, 0.95, 1.0];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const f = activeIdx>=0 ? fallen[activeIdx] : 0;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  const top = 1-f; // fraction left on top
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{display:"flex",justifyContent:"center"}}>
+        <svg viewBox="0 0 200 280" width="260" height="280">
+          {/* frame */}
+          <rect x="36" y="20" width="128" height="4" fill="var(--bone-2)"/>
+          <rect x="36" y="256" width="128" height="4" fill="var(--bone-2)"/>
+          {/* hourglass outline */}
+          <path d="M 48 24 L 152 24 L 110 140 L 152 256 L 48 256 L 90 140 Z" fill="none" stroke="var(--line)" strokeWidth="1.5"/>
+          <path d="M 48 24 L 152 24 L 110 140 L 152 256 L 48 256 L 90 140 Z" fill="#0c0c0f" opacity="0.7"/>
+          {/* top sand */}
+          <clipPath id="topClip"><path d="M 50 26 L 150 26 L 109 138 L 91 138 Z"/></clipPath>
+          <rect x="0" y={26 + (1-top)*112} width="200" height={top*112} fill={tint} opacity={ghost?0.55:0.9} clipPath="url(#topClip)"/>
+          {/* falling stream */}
+          {f<1 && f>0 && <rect x="99" y="138" width="2" height="8" fill={tint} opacity={ghost?0.55:0.9}/>}
+          {/* bottom sand */}
+          <clipPath id="botClip"><path d="M 91 142 L 109 142 L 150 254 L 50 254 Z"/></clipPath>
+          <rect x="0" y={254 - f*112} width="200" height={f*112} fill={tint} opacity={ghost?0.55:0.9} clipPath="url(#botClip)"/>
+          <text x="100" y="276" textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="10" fill={tint} letterSpacing="3">{activeIdx>=0?Math.round(f*100)+"% GONE":"—"}</text>
+        </svg>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* Tally — units per week (cigarettes/drinks/coffees) drawn as tally marks */
+function TallyInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  // qi: 19=cigs/day, 20=drinks/wk, 22=coffees/day (adjust if 0-indexed differently — using same mapping as before)
+  const cfg = qi===19 ? { counts:[0,0,0,1,7,20], label:"CIG / DAY",      unit:"cigarettes", kind:"cig" }
+            : qi===20 ? { counts:[0,1,4,8,16,30], label:"DRINKS / WEEK", unit:"drinks",     kind:"drink" }
+            :           { counts:[0,1,2,3,6,10], label:"COFFEES / DAY",  unit:"coffees",    kind:"coffee" };
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const n = activeIdx>=0 ? cfg.counts[activeIdx] : 0;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  const CAP = 12;
+  const shown = Math.min(n, CAP);
+  const rowLen = 6;
+  const liquid = cfg.kind==="coffee" ? "#6a3e1a" : cfg.kind==="drink" ? "#8b1a2d" : "#2a2a2e";
+  const ember  = "#ff6b2b";
+
+  const renderCup = (i) => {
+    if (cfg.kind==="coffee") {
+      return (
+        <g key={i} transform={`translate(${(i%rowLen)*50 + 4}, ${Math.floor(i/rowLen)*56 + 6})`}>
+          {/* steam */}
+          <path d="M 12 -6 Q 14 -10 12 -14 Q 10 -18 12 -22" stroke={tint} strokeWidth="1.2" fill="none" opacity="0.4"/>
+          <path d="M 22 -4 Q 24 -8 22 -12 Q 20 -16 22 -20" stroke={tint} strokeWidth="1.2" fill="none" opacity="0.25"/>
+          {/* saucer */}
+          <ellipse cx="18" cy="44" rx="18" ry="3" fill="#16161a"/>
+          {/* cup body */}
+          <path d="M 4 6 L 32 6 L 30 40 Q 30 44 26 44 L 10 44 Q 6 44 6 40 Z" fill="#0f0f12" stroke="var(--line)"/>
+          {/* handle */}
+          <path d="M 32 14 Q 40 14 40 24 Q 40 34 32 34" fill="none" stroke="var(--line)" strokeWidth="1.5"/>
+          {/* liquid */}
+          <path d="M 6 10 L 30 10 L 28.5 38 Q 28.5 40 26 40 L 10 40 Q 7.5 40 7.5 38 Z" fill={liquid} opacity={ghost?0.6:0.95}/>
+          <ellipse cx="18" cy="10" rx="12" ry="2.4" fill="#3a1f0c" opacity={ghost?0.55:0.85}/>
+        </g>
+      );
+    } else if (cfg.kind==="drink") {
+      return (
+        <g key={i} transform={`translate(${(i%rowLen)*44 + 6}, ${Math.floor(i/rowLen)*60 + 4})`}>
+          {/* wine glass */}
+          <path d="M 4 0 L 28 0 Q 28 18 16 26 Q 4 18 4 0 Z" fill="#0b0b0d" stroke="var(--line)" strokeWidth="1"/>
+          {/* wine */}
+          <path d="M 6 2 L 26 2 Q 26 16 16 23 Q 6 16 6 2 Z" fill={liquid} opacity={ghost?0.6:0.9}/>
+          <ellipse cx="16" cy="3" rx="9" ry="1.5" fill="#c4162d" opacity={ghost?0.4:0.7}/>
+          {/* stem */}
+          <line x1="16" y1="26" x2="16" y2="44" stroke="var(--line)" strokeWidth="1.2"/>
+          {/* base */}
+          <ellipse cx="16" cy="46" rx="10" ry="2" fill="#0f0f12" stroke="var(--line)" strokeWidth="1"/>
+        </g>
+      );
+    } else {
+      // cigarette — horizontal stick with ember and smoke
+      return (
+        <g key={i} transform={`translate(${(i%rowLen)*50 + 4}, ${Math.floor(i/rowLen)*28 + 10})`}>
+          {/* smoke */}
+          <path d="M 2 4 Q 0 -2 4 -6 Q 8 -10 2 -14" stroke={tint} strokeWidth="1.2" fill="none" opacity="0.35"/>
+          {/* filter */}
+          <rect x="30" y="2" width="10" height="8" fill="#c4a97a" stroke="#6f5a38" strokeWidth="0.6"/>
+          <line x1="33" y1="2" x2="33" y2="10" stroke="#6f5a38" strokeWidth="0.5"/>
+          <line x1="36" y1="2" x2="36" y2="10" stroke="#6f5a38" strokeWidth="0.5"/>
+          {/* paper */}
+          <rect x="4" y="3" width="26" height="6" fill="#e8e4d8" stroke="#8a867a" strokeWidth="0.5"/>
+          {/* ember */}
+          <rect x="1" y="3" width="4" height="6" fill={ember}/>
+          <rect x="0" y="4" width="2" height="4" fill="#ffd36b"/>
+        </g>
+      );
+    }
+  };
+
+  const gridH = Math.max(1, Math.ceil(shown/rowLen)) * (cfg.kind==="cig"?28:cfg.kind==="drink"?60:56) + 30;
+
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"420px 1fr",gap:40,alignItems:"center"}}>
+      <div style={{border:"1px solid var(--line)",padding:22,background:"#0c0c0f",minHeight:260,display:"flex",flexDirection:"column"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:16}}>
+          <span>{cfg.label}</span>
+          <span style={{fontFamily:"Space Grotesk",fontSize:34,fontWeight:700,color:tint,letterSpacing:"-1px",lineHeight:1}}>
+            {activeIdx>=0 ? (n>CAP ? CAP+"+" : n) : "—"}
+            <span style={{fontSize:10,fontFamily:"IBM Plex Mono",color:"var(--muted)",marginLeft:6,fontWeight:400,letterSpacing:".2em"}}>{cfg.unit}</span>
+          </span>
+        </div>
+        <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",minHeight:140}}>
+          {activeIdx<0 ? (
+            <div style={{fontFamily:"IBM Plex Mono",fontSize:11,color:"var(--muted)",letterSpacing:".25em"}}>
+              HOVER / SELECT AN OPTION →
+            </div>
+          ) : n===0 ? (
+            <div style={{textAlign:"center"}}>
+              <div style={{fontFamily:"Space Grotesk",fontSize:54,color:"var(--ekg)",lineHeight:1}}>∅</div>
+              <div style={{fontFamily:"IBM Plex Mono",fontSize:10,color:"var(--ekg)",letterSpacing:".25em",marginTop:8}}>· NONE · CLEAN ·</div>
+            </div>
+          ) : (
+            <svg viewBox={`0 0 ${rowLen*50} ${gridH}`} width="320" height={gridH+20} style={{maxHeight:160,overflow:"visible"}}>
+              {Array.from({length:shown}).map((_,i)=>renderCup(i))}
+              {n>CAP && (
+                <text x={rowLen*50/2} y={gridH} textAnchor="middle" fontFamily="Space Grotesk" fontSize="14" fontWeight="700" fill={tint}>
+                  + {n-CAP} more
+                </text>
+              )}
+            </svg>
+          )}
+        </div>
+      </div>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* Nodes — network of people dots; connectivity decreases with option */
+function NodesInput({q, qi, sel, pick}){
+  const [hov, setHov] = useState(null);
+  // fraction of connections drawn vs a reference (0..1); 0=deep, 1=offline
+  const disconnect = [0.05, 0.2, 0.4, 0.6, 0.85, 1.0];
+  const selIdx = q.opts.findIndex(o=>o.r===sel);
+  const activeIdx = hov!=null?hov:selIdx;
+  const d = activeIdx>=0 ? disconnect[activeIdx] : 1;
+  const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
+  const tint = tintFor(activeR);
+  const ghost = hov!=null && hov!==selIdx;
+  // 6 nodes around center
+  const R = 60, cx=100, cy=100;
+  const nodes = Array.from({length:6}).map((_,i)=>{
+    const a = (i/6)*Math.PI*2 - Math.PI/2;
+    return { x: cx+Math.cos(a)*R, y: cy+Math.sin(a)*R };
+  });
+  const edges = [];
+  nodes.forEach((n,i)=> edges.push({from:{x:cx,y:cy}, to:n, i}));
+  const live = Math.round(edges.length * (1-d));
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"280px 1fr",gap:40,alignItems:"center"}}>
+      <svg viewBox="0 0 200 200" width="280" height="280">
+        <circle cx={cx} cy={cy} r="92" fill="#0b0b0d" stroke="var(--line)"/>
+        {edges.map((e,i)=>(
+          <line key={i} x1={e.from.x} y1={e.from.y} x2={e.to.x} y2={e.to.y}
+            stroke={i<live?tint:"var(--line)"} strokeWidth={i<live?2:1}
+            opacity={i<live?(ghost?0.55:0.9):0.5}
+            strokeDasharray={i<live?"":"3 3"}/>
+        ))}
+        {nodes.map((n,i)=>(
+          <g key={i}>
+            <circle cx={n.x} cy={n.y} r="9" fill={i<live?tint:"#18181c"} stroke={i<live?tint:"var(--line)"} strokeWidth="1.5" opacity={ghost?0.7:1}/>
+          </g>
+        ))}
+        <circle cx={cx} cy={cy} r="14" fill={activeIdx>=0?tint:"var(--bone-2)"} stroke="#0a0a0c" strokeWidth="2"/>
+        <text x={cx} y={cy+4} textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="9" fill="#0a0a0c" fontWeight="700">YOU</text>
+        <text x={cx} y={178} textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="10" fill="var(--muted)" letterSpacing="3">LIVE LINKS · {activeIdx>=0?live:"—"}/6</text>
+      </svg>
+      <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
+    </div>
+  );
+}
+
+/* Cards — diet; big flip cards */
+function CardInput({q, sel, pick}){
+  const icons = ["🥗","🍳","🥡","🍔","🍜","⚡"];
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
+      {q.opts.map((o,i)=>(
+        <div key={i} className={"opt"+(sel===o.r?" sel":"")} onClick={()=>pick(o.r)}
+          style={{display:"flex",flexDirection:"column",minHeight:160,padding:"18px 18px 14px",gridTemplateColumns:"none",gap:8,alignItems:"stretch"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div style={{fontSize:38,lineHeight:1}}>{icons[i]||"·"}</div>
+            <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--muted)"}}>0{i+1}</div>
+          </div>
+          <div className="txt" style={{fontSize:16}}>{o.t}</div>
+          <div style={{marginTop:"auto",display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".18em",color:"var(--muted)",textTransform:"uppercase",paddingTop:10,borderTop:"1px dashed var(--line-soft)"}}>
+            <span>Risk</span>
+            <span style={{color:o.r>=4?"var(--red)":o.r>=2?"var(--amber)":"var(--ekg)"}}>{"●".repeat(o.r+1)}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* Meter — emotion */
+function MeterInput({q, sel, pick}){
+  const labels = ["GREAT","GOOD","OK","LOW","DARK","VOID"];
+  return (
+    <div style={{marginTop:28,border:"1px solid var(--line)",background:"#0c0c0f",padding:18}}>
+      <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase"}}>
+        <span>Emotional state</span><span>{sel!=null ? labels[sel] : "—"}</span>
+      </div>
+      <div style={{position:"relative",height:60,margin:"18px 0",background:"linear-gradient(90deg,var(--ekg),var(--amber) 50%,var(--red))",border:"1px solid var(--line)"}}>
+        {q.opts.map((o,i)=>{
+          const left = (i/(q.opts.length-1))*100;
+          return <div key={i} onClick={()=>pick(o.r)} style={{position:"absolute",left:`calc(${left}% - 14px)`,top:-8,bottom:-8,width:28,cursor:"pointer"}}>
+            <div style={{width:28,height:76,border:sel===o.r?"2px solid #fff":"1px solid rgba(0,0,0,.35)",background:sel===o.r?"rgba(0,0,0,.3)":"transparent",display:"grid",placeItems:"center"}}>
+              <div style={{width:3,height:60,background:sel===o.r?"#fff":"rgba(0,0,0,.5)"}}/>
+            </div>
+          </div>;
+        })}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:`repeat(${q.opts.length},1fr)`,gap:6,marginTop:10}}>
+        {q.opts.map((o,i)=>(
+          <div key={i} onClick={()=>pick(o.r)} style={{padding:"10px 8px",border:"1px solid "+(sel===o.r?"var(--red)":"var(--line)"),background:sel===o.r?"rgba(229,55,43,.08)":"transparent",cursor:"pointer",textAlign:"center"}}>
+            <div style={{fontFamily:"IBM Plex Mono",fontSize:9,letterSpacing:".18em",color:"var(--muted)",textTransform:"uppercase"}}>{labels[i]}</div>
+            <div style={{fontFamily:"Space Grotesk",fontSize:14,color:"var(--bone)",marginTop:4}}>{o.t}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Tower — work hours stacked */
+function TowerInput({q, sel, pick}){
+  return (
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:`repeat(${q.opts.length},1fr)`,gap:8,alignItems:"end",minHeight:320}}>
+      {q.opts.map((o,i)=>{
+        const h = 80 + i*40;
+        const chosen = sel===o.r;
+        const tint = o.r>=4 ? "var(--red)" : o.r>=2 ? "var(--amber)" : "var(--ekg)";
+        return (
+          <div key={i} onClick={()=>pick(o.r)} style={{cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <div style={{
+              width:"100%",height:h,
+              background:chosen?tint:"#0d0d0f",
+              border:"1px solid "+(chosen?tint:"var(--line)"),
+              boxShadow:chosen?`0 0 24px ${tint}`:"none",
+              display:"flex",flexDirection:"column",justifyContent:"flex-end",alignItems:"center",padding:"10px 6px",
+              transition:"all .2s ease"
+            }}>
+              <div style={{fontFamily:"Space Grotesk",fontWeight:700,fontSize:30,color:chosen?"var(--ink)":"var(--bone)",lineHeight:1}}>{i+1}</div>
+            </div>
+            <div style={{marginTop:10,fontFamily:"Space Grotesk",fontSize:13,color:chosen?"var(--red)":"var(--bone-2)",textAlign:"center",lineHeight:1.25,minHeight:38}}>{o.t}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* Ladder — exercise */
+function LadderInput({q, sel, pick}){
+  return (
+    <div style={{marginTop:24,display:"flex",flexDirection:"column",gap:4}}>
+      {q.opts.slice().reverse().map((o,rev)=>{
+        const i = q.opts.length-1-rev;
+        const chosen = sel===o.r;
+        const tint = o.r>=4 ? "var(--red)" : o.r>=2 ? "var(--amber)" : "var(--ekg)";
+        return (
+          <div key={i} onClick={()=>pick(o.r)} style={{
+            display:"grid",gridTemplateColumns:"80px 1fr auto",alignItems:"center",gap:16,
+            padding:"14px 18px",
+            border:"1px solid "+(chosen?"var(--red)":"var(--line)"),
+            background:chosen?"rgba(229,55,43,.08)":"#0c0c0e",
+            cursor:"pointer",
+            marginLeft: rev * 12
+          }}>
+            <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--muted)",textTransform:"uppercase"}}>RUNG {String(i+1).padStart(2,"0")}</div>
+            <div style={{fontFamily:"Space Grotesk",fontSize:18,color:"var(--bone)"}}>{o.t}</div>
+            <div style={{fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".18em",color:tint,textTransform:"uppercase"}}>
+              {o.r>=4?"CRITICAL":o.r>=2?"CAUTION":"SAFE"}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ---------------- SCAN ---------------- */
+function Scan({onDone}){
+  const [p, setP] = useState(0);
+  const [lines, setLines] = useState([]);
+  const LOG = [
+    ["SYS","bootstrapping risk engine v18.0"],
+    ["NET","contacting peer cohort ......... 8,247 subjects"],
+    ["MOD","loading sleep deprivation model"],
+    ["MOD","loading cortisol diffusion model"],
+    ["MOD","loading diet-entropy estimator"],
+    ["CRN","running actuarial pass · 3 of 3"],
+    ["PRO","drafting death file ............ ok"],
+    ["SIG","signing prescription ........... ok"],
+  ];
+  const onDoneRef = useRef(onDone);
+  useEffect(()=>{ onDoneRef.current = onDone; }, [onDone]);
+  useEffect(()=>{
+    // Time-based scan (robust against setInterval throttling in bg tabs).
+    const DUR = 3000; // total scan time
+    const start = performance.now();
+    let i = 0, done = false, raf;
+    const tick = (now) => {
+      const elapsed = now - start;
+      const p = Math.min(100, Math.round((elapsed/DUR) * 100));
+      setP(p);
+      while (i < LOG.length && p > (i+1)*(100/(LOG.length+1))) {
+        setLines(l => [...l, LOG[i]]);
+        i++;
+      }
+      if (p >= 100 && !done) {
+        done = true;
+        setTimeout(() => { onDoneRef.current && onDoneRef.current(); }, 500);
+        return;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    // Hard safety: if rAF ever pauses long enough, force finish after 8s wall time.
+    const safety = setTimeout(() => {
+      if (!done) {
+        done = true;
+        setP(100);
+        setLines(LOG);
+        setTimeout(() => { onDoneRef.current && onDoneRef.current(); }, 300);
+      }
+    }, 8000);
+    return () => { cancelAnimationFrame(raf); clearTimeout(safety); };
+  },[]);
+  return (
+    <div className="page scan-wrap">
+      <div className="scan-card">
+        <div className="scan-line"/>
+        <div className="eyebrow">§03 · Processing</div>
+        <h2>Generating your death file.</h2>
+        <div className="s">Calculating your fate trajectory based on thirty small admissions.</div>
+        <div className="scan-log">
+          {lines.map(([k,v],i)=>(
+            <div className="ln" key={i}>
+              <span>[{k}]</span><em>{v}</em>
+            </div>
+          ))}
+        </div>
+        <div className="scan-pbar"><i style={{width:p+"%"}}/></div>
+        <div className="scan-pct"><span>SCANNING VITALS</span><span>{p}%</span></div>
+        <button
+          onClick={()=>{ onDoneRef.current && onDoneRef.current(); }}
+          style={{
+            marginTop:24,
+            background: p>=100 ? "var(--red)" : "transparent",
+            color: p>=100 ? "#fff" : "var(--muted)",
+            border:"1px solid "+(p>=100?"var(--red)":"var(--line)"),
+            padding:"12px 20px",
+            fontFamily:"IBM Plex Mono", fontSize:11, letterSpacing:".22em",
+            cursor:"pointer", width:"100%",
+            transition:"all .25s",
+          }}>
+          {p>=100 ? "→ OPEN DEATH FILE" : "WORKING · PLEASE WAIT"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- RESULT ---------------- */
+function Result({score, answers, age, tone, restart}){
+  const g = gradeOf(score);
+  const dims = dimensionBreakdown(answers);
+  const topDim = [...dims].sort((a,b)=>b.pct-a.pct)[0];
+  const prophecy = useMemo(()=> writeProphecy(score, topDim, age, tone), [score, topDim, age, tone]);
+  const tags = useMemo(()=> buildTags(dims, score), [dims, score]);
+  const percentile = Math.min(99, Math.max(1, Math.round(score * 0.92 + 5)));
+  const bodyAge = Math.round(age + (score-50)*0.25);
+
+  return (
+    <div className="page fade-in">
+      <header className="chrome">
+        <div className="grp">
+          <span><span className="dot"></span>DEATH FILE · GENERATED</span>
+          <span className="pill">SDI · v18.0</span>
+        </div>
+        <div className="grp">
+          <span>FILE #SDI-{(Date.now()%900000+100000)}</span>
+          <span className="pill">CONFIDENTIAL</span>
+        </div>
+      </header>
+
+      <div className="rhead">
+        <div>
+          <div className="k">PATIENT REPORT · FORM 09-B</div>
+          <h1>Your Death<br/><em>File.</em></h1>
+        </div>
+        <div className="meta">
+          <div><span className="muted">PATIENT_ID</span><span>SDI-{(age*7919).toString(16).toUpperCase().slice(0,6)}</span></div>
+          <div><span className="muted">DATE</span><span>2026 · 04 · 21</span></div>
+          <div><span className="muted">TIME_ELAPSED</span><span>04:58</span></div>
+          <div><span className="muted">RISK_DNA</span><span>{riskDNA(answers)}</span></div>
+          <div><span className="muted">CLASSIFICATION</span><span style={{color:"var(--red)"}}>CRITICAL</span></div>
+          <div><span className="muted">SIGNED</span><span>Dr. NTBD</span></div>
+        </div>
+      </div>
+
+      <div className="rmain">
+        <div>
+          <div className="score-card">
+            <div className="l">Sudden Death Index</div>
+            <div className="score-main">
+              <div className="n">{score}</div>
+              <div className="over">/ 99</div>
+            </div>
+            <div className="grade-row">
+              {["A","B","C","D","F"].map(gr=>(
+                <div key={gr} className={"g"+(gr===g.g?" cur":"")}>
+                  <em>{gr}</em>
+                  {gr==="A"?"HEALTHY":gr==="B"?"FINE":gr==="C"?"SUB-OK":gr==="D"?"HIGH":"CRITICAL"}
+                </div>
+              ))}
+            </div>
+            <div className="stamp-big">GRADE · {g.g}</div>
+
+            <div className="dist">
+              <div className="l">Your position vs. 8,247 subjects today</div>
+              <div className="rail">
+                <div className="seg a"/><div className="seg b"/><div className="seg c"/><div className="seg d"/>
+                <div className="marker" style={{left:`calc(${percentile}% - 1px)`}}/>
+              </div>
+              <div className="legend">
+                <span>HEALTHY</span><span>SUB-HEALTHY</span><span>HIGH RISK</span><span>CRITICAL</span>
+              </div>
+              <div className="mono" style={{fontSize:11,letterSpacing:".18em",color:"var(--muted)",marginTop:12,textTransform:"uppercase"}}>
+                You scored higher than <span style={{color:"var(--red)"}}>{percentile}%</span> of subjects. Body age est. <span style={{color:"var(--red)"}}>{bodyAge}</span> · Chronological {age}.
+              </div>
+            </div>
+          </div>
+
+          {/* prophecy */}
+          <div className="prophecy">
+            <div className="l">Death Prophecy · Draft</div>
+            <h2>"{prophecy.headline}"</h2>
+            <div className="sig">{prophecy.body}</div>
+            <div className="meta">
+              <span>Likely cause · {prophecy.cause}</span>
+              <span>ETA · {prophecy.eta}</span>
+              <span>Supervising · Dr. NTBD</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div className="dim-chart">
+            <h4>// Risk Contribution by Dimension</h4>
+            {dims.map(d=>(
+              <div className="row" key={d.id}>
+                <div className="name">{d.name}</div>
+                <div className="bar"><i style={{width:d.pct+"%"}}/></div>
+                <div className="val">{d.pct}%</div>
+              </div>
+            ))}
+          </div>
+          <div className="block" style={{marginTop:24}}>
+            <div className="l">// YOUR HEALTH PERSONA</div>
+            <h3>{personaOf(topDim, score)}</h3>
+            <p>"{personaLine(topDim, score)}"</p>
+            <div className="tags">
+              {tags.map((t,i)=><span key={i} className={"tag "+(t.red?"red":"")}>{t.label}</span>)}
+            </div>
+          </div>
+          <div className="block" style={{marginTop:16}}>
+            <div className="l">// PRESCRIPTION</div>
+            <ul className="mono" style={{padding:0,margin:"12px 0 0",listStyle:"none",fontSize:13,color:"var(--bone-2)",lineHeight:1.8}}>
+              <li>℞ Sleep before 23:30 · 5 nights/week</li>
+              <li>℞ Step outside for 30 minutes daily</li>
+              <li>℞ Two meals without a screen</li>
+              <li style={{color:"var(--red)"}}>℞ Do not open Slack after 22:00</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="actions">
+        <button className="btn red">📸 Download Card</button>
+        <button className="btn">📋 Copy Results</button>
+        <button className="btn">🔗 Challenge a Friend</button>
+        <button className="btn ghost">🐦 Share on X</button>
+        <button className="btn ghost">🟠 Share on Reddit</button>
+        <button className="btn ghost" onClick={restart}>🔄 Take It Again</button>
+      </div>
+
+      <div className="disclaimer">
+        // DISCLAIMER — This assessment is for entertainment only and does not constitute medical diagnosis or advice.
+        If you have genuine health concerns, please consult a licensed healthcare professional. High scorers should
+        seriously consider scheduling a check-up. We are not a clinic. We just dress like one.
+      </div>
+
+      <footer style={{marginTop:22}}>
+        <span>© SDI CLINIC · ntbdstudio@gmail.com</span>
+        <span>FILE GENERATED · {new Date().toISOString().slice(0,19).replace("T"," ")}</span>
+        <span>PRESS ↻ TO RETAKE</span>
+      </footer>
+    </div>
+  );
+}
+
+function riskDNA(ans){
+  return ans.map(a=> "ABCDEF"[Math.min(5,a.r)] ).join("").slice(0,8);
+}
+function personaOf(top, score){
+  if (score>=80) return "The Candle Burning Both Ends";
+  if (score>=60) return "The Functional Wreckage";
+  if (score>=40) return top.name + " Aficionado";
+  if (score>=20) return "The Dormant Risk";
+  return "The Suspiciously Healthy";
+}
+function personaLine(top,score){
+  if (score>=80) return "Charming, productive, and statistically inadvisable. A living TED talk on deferred maintenance.";
+  if (score>=60) return "Running on borrowed sleep and inherited optimism. Functional, but barely.";
+  if (score>=40) return "You're mostly fine, except for one dimension that keeps waving its arms.";
+  if (score>=20) return "Quietly alive. A rarity. Please document your secret.";
+  return "Your vitals are so clean we assume you're lying. Or a monk.";
+}
+function buildTags(dims, score){
+  const t = [];
+  dims.forEach(d=>{
+    if (d.pct>=70) t.push({label:d.name.toUpperCase()+" · CRIT", red:true});
+    else if (d.pct>=50) t.push({label:d.name.toUpperCase()+" · RISK"});
+  });
+  if (score>=80) t.push({label:"CANDIDATE FOR VACATION", red:true});
+  if (score<=30) t.push({label:"SUSPICIOUSLY WELL-RESTED"});
+  t.push({label:"FILE · FORM 09-B"});
+  return t.slice(0,6);
+}
+function writeProphecy(score, topDim, age, tone){
+  const grim = tone==="grim", mild = tone==="wellness";
+  const heads = {
+    sleep: "A Tuesday at 3:14 AM, finally.",
+    work:  "Collapsed mid-standup. Ironically on-camera.",
+    exercise: "Chased a bus. Lost.",
+    diet: "A final cheeseburger. Unwitnessed.",
+    stress: "At the desk, mid-email.",
+    habits: "Outlived by your lighter.",
+    emotion: "Quietly, in a beige room."
+  };
+  const cause = {
+    sleep:"Chronic insomnia", work:"Occupational exhaustion", exercise:"Cardiac deconditioning",
+    diet:"Metabolic syndrome", stress:"Cortisol cascade", habits:"The obvious", emotion:"Untreated sorrow"
+  }[topDim.id] || "Undetermined";
+  const eta = score>=80 ? "Soon, if you're being honest" : score>=60 ? "Middle age, if nothing changes" : score>=40 ? "A long way off" : "Distant · with good habits";
+  const body = mild
+    ? "You're doing okay. Make one small change this week and the forecast improves. Really."
+    : grim
+    ? `${age + Math.max(2, 80 - score)} years old. A small room, a drawn blind, and a phone still on Do Not Disturb. The notifications keep arriving anyway.`
+    : `${age + Math.max(2, 80 - score)} years old. Friends and colleagues remember you as 'always online.' A moment of silence, then three Slack reactions.`;
+  return { headline: heads[topDim.id]||"Quietly, mid-task.", body, cause, eta };
+}
+
+/* ---------------- TWEAKS PANEL ---------------- */
+function Tweaks({t,set,view,setView}){
+  const [open,setOpen] = useState(true);
+  if (!open) return (
+    <div className="tweaks" style={{width:"auto"}}>
+      <div className="t-hd" onClick={()=>setOpen(true)} style={{cursor:"pointer"}}>⚙ TWEAKS <span>+</span></div>
+    </div>
+  );
+  return (
+    <div className="tweaks">
+      <div className="t-hd">
+        <span>⚙ TWEAKS</span>
+        <span className="close" onClick={()=>setOpen(false)}>–</span>
+      </div>
+      <div className="t-body">
+        <div className="row">
+          <label>Jump to screen</label>
+          <div className="pills">
+            {["landing","quiz","scan","result"].map(v=>(
+              <div key={v} className={"pill"+(view===v?" on":"")} onClick={()=>setView(v)}>{v}</div>
+            ))}
+          </div>
+        </div>
+        <div className="row">
+          <label>Palette</label>
+          <div className="pills">
+            {[
+              ["ink-red","Ink · Red"],
+              ["obit","Obituary"],
+              ["hazard","Hazard"],
+              ["cyber","Cyber"]
+            ].map(([v,n])=>(
+              <div key={v} className={"pill"+(t.palette===v?" on":"")} onClick={()=>set("palette",v)}>{n}</div>
+            ))}
+          </div>
+        </div>
+        <div className="row">
+          <label>Horror Intensity · {["off","low","medium","high"][t.intensity]}</label>
+          <input type="range" min="0" max="3" step="1" value={t.intensity} onChange={e=>set("intensity",Number(e.target.value))}/>
+        </div>
+        <div className="row">
+          <label>Copy Tone</label>
+          <div className="pills">
+            {[
+              ["cheeky","Cheeky"],
+              ["grim","Grim"],
+              ["wellness","Wellness"]
+            ].map(([v,n])=>(
+              <div key={v} className={"pill"+(t.tone===v?" on":"")} onClick={()=>set("tone",v)}>{n}</div>
+            ))}
+          </div>
+        </div>
+        <div className="row">
+          <label>Restart</label>
+          <div className="pills">
+            <div className="pill" onClick={()=>{ try{ localStorage.removeItem("sdi"); }catch{}; location.reload(); }}>Reset state</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
