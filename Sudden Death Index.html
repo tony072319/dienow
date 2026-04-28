@@ -335,9 +335,28 @@
     .rgrid{grid-template-columns:1fr}
     .dims{grid-template-columns:repeat(2,1fr)}
     .qgrid{grid-template-columns:1fr}
+    .rhead{grid-template-columns:1fr;gap:20px}
+    .rhead .meta{grid-template-columns:1fr}
+    .actions{flex-direction:column}
+    .actions .btn{width:100%;justify-content:center}
+  }
+  @media (max-width: 600px){
+    .page{padding:16px 16px 60px}
+    .chrome{flex-wrap:wrap;gap:8px;font-size:10px}
+    .dims{grid-template-columns:1fr}
+    .score-main .n{font-size:120px}
+    .prophecy h2{font-size:32px}
+    .opt{grid-template-columns:34px 1fr;padding:14px 16px}
+    .opt .risk{display:none}
+    .qfoot{flex-wrap:wrap;gap:10px}
+    .qfoot .hint{display:none}
+    .tweaks{left:10px;right:10px;width:auto}
   }
 
   ::selection{background:var(--red);color:#fff}
+
+  /* toast */
+  .toast-v2{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:999;background:var(--bone);color:var(--ink);padding:12px 24px;font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;box-shadow:0 8px 30px rgba(0,0,0,.5)}
 
   /* utility reveal */
   .fade-in{animation:fi .5s ease both}
@@ -695,6 +714,14 @@ function App(){
   const [qi, setQi] = useState(0);
   const [answers, setAnswers] = useState(()=>Array(QUESTIONS.length).fill(null));
   const [combo, setCombo] = useState(0);
+  const [challengeScore, setChallengeScore] = useState(null);
+
+  // Parse challenge mode from URL
+  useEffect(()=>{
+    const params = new URLSearchParams(window.location.search);
+    const cs = parseInt(params.get('challenge'));
+    if(cs>=0 && cs<=99) setChallengeScore(cs);
+  },[]);
 
   // persist playback position
   useEffect(()=>{
@@ -754,6 +781,9 @@ function App(){
     document.querySelector(".fx-vignette").style.opacity = tweaks.intensity===3 ? 1 : 0.7;
   }, [tweaks.intensity]);
 
+  // scroll to top on view change
+  useEffect(()=>{ window.scrollTo({top:0,behavior:"smooth"}); },[view]);
+
   // detect 3-combo for flash
   useEffect(()=>{
     if (combo>=3){
@@ -765,6 +795,7 @@ function App(){
   },[combo]);
 
   const begin = ()=>{ setQi(0); setAnswers(Array(QUESTIONS.length).fill(null)); setCombo(0); setView("quiz"); };
+  const restart = ()=>{ setQi(0); setAnswers(Array(QUESTIONS.length).fill(null)); setCombo(0); setView("landing"); };
   const pick = (r)=>{
     const next = [...answers]; next[qi] = {r};
     setAnswers(next);
@@ -777,23 +808,23 @@ function App(){
   };
   const goTo = (i)=> i>=0 && i<QUESTIONS.length && setQi(i);
 
-  const score = useMemo(()=>calcScore(answers.map(a=>a|| {r:2})),[answers]); // placeholder before done
+  const score = useMemo(()=>calcScore(answers.map(a=>a|| {r:2})),[answers]);
   const finalAnswers = answers.map(a=>a||{r:2});
   const finalScore = calcScore(finalAnswers);
 
   return (
     <>
-      {view==="landing" && <Landing age={age} setAge={setAge} begin={begin} setView={setView} />}
+      {view==="landing" && <Landing age={age} setAge={setAge} begin={begin} setView={setView} challengeScore={challengeScore} />}
       {view==="quiz" && <Quiz qi={qi} setQi={setQi} answers={answers} pick={pick} combo={combo} tone={tweaks.tone} />}
       {view==="scan" && <Scan onDone={()=>setView("result")} />}
-      {view==="result" && <Result score={finalScore} answers={finalAnswers} age={age} tone={tweaks.tone} restart={()=>{setView("landing");}} />}
+      {view==="result" && <Result score={finalScore} answers={finalAnswers} dims={dimensionBreakdown(finalAnswers)} age={age} tone={tweaks.tone} restart={restart} />}
       {tweaks.showTweaks && <Tweaks t={tweaks} set={setTweak} view={view} setView={setView} />}
     </>
   );
 }
 
 /* ---------------- LANDING ---------------- */
-function Landing({age,setAge,begin,setView}){
+function Landing({age,setAge,begin,setView,challengeScore}){
   const [now, setNow] = useState(Date.now());
   const [hover, setHover] = useState(false);
   const [tickerFeed, setTickerFeed] = useState([]);
@@ -870,8 +901,18 @@ function Landing({age,setAge,begin,setView}){
         </div>
       </header>
 
+      {challengeScore!=null && (
+        <div style={{marginTop:20,border:"2px solid var(--red)",padding:"18px 24px",background:"rgba(229,55,43,.08)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:20}}>
+          <div>
+            <div style={{fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",color:"var(--red)",textTransform:"uppercase"}}>⚠ CHALLENGE MODE</div>
+            <div style={{fontFamily:"Space Grotesk",fontWeight:600,fontSize:24,marginTop:4}}>Your friend scored <span style={{color:"var(--red)"}}>{challengeScore}</span>/99. Can you beat them?</div>
+          </div>
+          <button className="btn red" onClick={begin} style={{whiteSpace:"nowrap"}}>▶ ACCEPT CHALLENGE</button>
+        </div>
+      )}
+
       {/* HERO — playful, huge type, sticker-y */}
-      <section style={{paddingTop:64, position:"relative"}}>
+      <section style={{paddingTop:challengeScore!=null?32:64, position:"relative"}}>
         {/* floating stickers */}
         <div style={{position:"absolute",top:40,right:"38%",transform:"rotate(-8deg)",
           border:"2px solid var(--red)",color:"var(--red)",padding:"6px 12px",
@@ -2735,25 +2776,127 @@ function Scan({onDone}){
 }
 
 /* ---------------- RESULT ---------------- */
-function Result({score, answers, age, tone, restart}){
+function Result({score, answers, dims, age, tone, restart}){
   const g = gradeOf(score);
-  const dims = dimensionBreakdown(answers);
   const topDim = [...dims].sort((a,b)=>b.pct-a.pct)[0];
+  const secondDim = [...dims].sort((a,b)=>b.pct-a.pct)[1];
   const prophecy = useMemo(()=> writeProphecy(score, topDim, age, tone), [score, topDim, age, tone]);
   const tags = useMemo(()=> buildTags(dims, score), [dims, score]);
   const percentile = Math.min(99, Math.max(1, Math.round(score * 0.92 + 5)));
   const bodyAge = Math.round(age + (score-50)*0.25);
+  const [copied, setCopied] = useState(false);
+  const [toast, setToast] = useState("");
+  const fileId = useMemo(()=>"SDI-"+(age*7919).toString(16).toUpperCase().slice(0,6),[age]);
+  const dna = useMemo(()=>riskDNA(answers),[answers]);
+  const now = new Date();
+  const dateStr = `${now.getFullYear()} · ${pad(now.getMonth()+1,2)} · ${pad(now.getDate(),2)}`;
+
+  // Analytics
+  useEffect(()=>{
+    const WORKER_URL='https://sdi-worker.tonystark072319.workers.dev';
+    if(!WORKER_URL)return;
+    const dimObj=Object.fromEntries(dims.map(d=>[d.id,d.pct]));
+    const payload={score,grade:g.g,dims:{sleep:dimObj.sleep,work:dimObj.work,exercise:dimObj.exercise,diet:dimObj.diet,stress:dimObj.stress,habit:dimObj.habits,emotion:dimObj.emotion},archetype:personaOf(topDim,score).slice(0,32),locale:'en',age_bucket:age<18?'<18':age<25?'18-24':age<35?'25-34':age<45?'35-44':age<55?'45-54':'55+',completion_sec:null,challenge_score:null};
+    fetch(WORKER_URL+'/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true}).catch(()=>{});
+  },[]);
+
+  // Dynamic prescriptions based on top risk dimensions
+  const prescriptions = useMemo(()=>{
+    const rx = {
+      sleep:["℞ Lights off by 23:00 · 5 nights/week","℞ No screens 20 min before bed","℞ Phone out of arm's reach at night"],
+      work:["℞ No work messages after 21:00","℞ Take a real lunch break — away from desk","℞ One full weekend day offline per week"],
+      exercise:["℞ Walk 30 minutes daily — no exceptions","℞ Target 6,000 steps/day minimum","℞ Schedule one workout with a friend this week"],
+      diet:["℞ Drink 6 glasses of water today","℞ Two meals without delivery this week","℞ No caffeine after 14:00"],
+      stress:["℞ 10 minutes of silence daily","℞ Write down 3 good things before bed","℞ Book a massage or checkup this month"],
+      habits:["℞ Cut your worst habit in half today","℞ Set a daily screen time limit","℞ Replace one bad habit with a 5-min walk"],
+      emotion:["℞ Text a friend you haven't talked to","℞ Allow yourself to do nothing for one evening","℞ If something's weighing on you — write it down"],
+    };
+    const sorted = [...dims].sort((a,b)=>b.pct-a.pct);
+    const result = [];
+    for(const d of sorted){
+      const tips = rx[d.id]||[];
+      for(const t of tips){ if(result.length<4) result.push({text:t,crit:d.pct>=70}); }
+    }
+    return result.slice(0,4);
+  },[dims]);
+
+  const showToast = (msg)=>{ setToast(msg); setTimeout(()=>setToast(""),2500); };
+
+  const copyResults = ()=>{
+    const text = `☠️ SUDDEN DEATH INDEX · DEATH FILE\n\nScore: ${score}/99 · Grade: ${g.g} · ${g.label}\nPersona: "${personaOf(topDim,score)}"\n\n${dims.map(d=>`${d.name}: ${d.pct}%`).join('\n')}\n\nRisk DNA: ${dna}\nBody Age: ${bodyAge} (Actual: ${age})\n\n"${prophecy.headline}"\n${prophecy.body}\n\n→ Take yours: dienow.vercel.app/v2`;
+    navigator.clipboard.writeText(text).then(()=>showToast("Copied to clipboard ✓")).catch(()=>showToast("Copy failed"));
+  };
+
+  const shareToX = ()=>{
+    const text = encodeURIComponent(`My Sudden Death Index: ${score}/99 (Grade ${g.g}) 💀\nPersona: "${personaOf(topDim,score)}"\n\nTake yours →`);
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent('https://dienow.vercel.app/v2')}`, '_blank');
+  };
+
+  const shareToReddit = ()=>{
+    const title = encodeURIComponent(`My Sudden Death Index: ${score}/99 (Grade ${g.g}) — How close are you to dying today?`);
+    window.open(`https://reddit.com/submit?url=${encodeURIComponent('https://dienow.vercel.app/v2')}&title=${title}`, '_blank');
+  };
+
+  const challengeFriend = ()=>{
+    const url = `https://dienow.vercel.app/v2?challenge=${score}`;
+    navigator.clipboard.writeText(url).then(()=>showToast("Challenge link copied ✓")).catch(()=>showToast("Copy failed"));
+  };
+
+  const downloadCard = ()=>{
+    const c = document.createElement('canvas');
+    c.width=1200; c.height=630;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle='#0b0b0c'; ctx.fillRect(0,0,1200,630);
+    ctx.fillStyle='#1a0808'; ctx.fillRect(0,0,1200,4);
+    ctx.fillStyle='#e5372b'; ctx.fillRect(0,0,1200,4);
+    ctx.font='bold 11px monospace'; ctx.fillStyle='#8a8478'; ctx.letterSpacing='3px';
+    ctx.fillText('SDI · CLINICAL EDITION · DEATH FILE',40,40);
+    ctx.fillText(fileId,40,60);
+    ctx.font='bold 160px "Arial Black",sans-serif'; ctx.fillStyle='#efe9dc';
+    ctx.fillText(score,40,220);
+    ctx.font='24px monospace'; ctx.fillStyle='#8a8478';
+    ctx.fillText('/ 99',280,210);
+    ctx.font='bold 48px sans-serif'; ctx.fillStyle=g.tint;
+    ctx.fillText('GRADE · '+g.g,40,290);
+    ctx.font='italic 28px Georgia,serif'; ctx.fillStyle='#d8d0bd';
+    ctx.fillText('"'+personaOf(topDim,score)+'"',40,340);
+    ctx.font='italic 20px Georgia,serif'; ctx.fillStyle='#8a8478';
+    const propText = '"'+prophecy.headline+'"';
+    ctx.fillText(propText,40,390);
+    let dy=440;
+    dims.forEach(d=>{
+      ctx.font='12px monospace'; ctx.fillStyle='#8a8478';
+      ctx.fillText(d.name.toUpperCase(),40,dy);
+      ctx.fillStyle='#1e1e22'; ctx.fillRect(180,dy-10,600,14);
+      const tint=d.pct>=70?'#e5372b':d.pct>=40?'#f3b84b':'#7affb3';
+      ctx.fillStyle=tint; ctx.fillRect(180,dy-10,d.pct*6,14);
+      ctx.fillStyle='#d8d0bd'; ctx.font='12px monospace';
+      ctx.fillText(d.pct+'%',800,dy);
+      dy+=28;
+    });
+    ctx.font='11px monospace'; ctx.fillStyle='#8a8478';
+    ctx.fillText('dienow.vercel.app/v2',40,610);
+    ctx.fillText('RISK DNA · '+dna,400,610);
+    ctx.fillText('BODY AGE · '+bodyAge,800,610);
+    const link=document.createElement('a');
+    link.download='death-file-'+score+'.png';
+    link.href=c.toDataURL('image/png');
+    link.click();
+    showToast("Card downloaded ✓");
+  };
 
   return (
     <div className="page fade-in">
+      {toast && <div style={{position:"fixed",bottom:30,left:"50%",transform:"translateX(-50%)",zIndex:999,background:"var(--bone)",color:"var(--ink)",padding:"12px 24px",fontFamily:"IBM Plex Mono",fontSize:12,letterSpacing:".18em",textTransform:"uppercase",boxShadow:"0 8px 30px rgba(0,0,0,.5)"}}>{toast}</div>}
+
       <header className="chrome">
         <div className="grp">
-          <span><span className="dot"></span>DEATH FILE · GENERATED</span>
+          <span style={{cursor:"pointer"}} onClick={restart}><span className="dot"></span>SUDDEN DEATH INDEX</span>
           <span className="pill">SDI · v18.0</span>
         </div>
         <div className="grp">
-          <span>FILE #SDI-{(Date.now()%900000+100000)}</span>
-          <span className="pill">CONFIDENTIAL</span>
+          <span>FILE #{fileId}</span>
+          <span className="pill" style={{cursor:"pointer"}} onClick={restart}>← HOME</span>
         </div>
       </header>
 
@@ -2763,11 +2906,11 @@ function Result({score, answers, age, tone, restart}){
           <h1>Your Death<br/><em>File.</em></h1>
         </div>
         <div className="meta">
-          <div><span className="muted">PATIENT_ID</span><span>SDI-{(age*7919).toString(16).toUpperCase().slice(0,6)}</span></div>
-          <div><span className="muted">DATE</span><span>2026 · 04 · 21</span></div>
-          <div><span className="muted">TIME_ELAPSED</span><span>04:58</span></div>
-          <div><span className="muted">RISK_DNA</span><span>{riskDNA(answers)}</span></div>
-          <div><span className="muted">CLASSIFICATION</span><span style={{color:"var(--red)"}}>CRITICAL</span></div>
+          <div><span className="muted">PATIENT_ID</span><span>{fileId}</span></div>
+          <div><span className="muted">DATE</span><span>{dateStr}</span></div>
+          <div><span className="muted">BODY_AGE</span><span style={{color:bodyAge>age?"var(--red)":"var(--ekg)"}}>{bodyAge}</span></div>
+          <div><span className="muted">RISK_DNA</span><span>{dna}</span></div>
+          <div><span className="muted">CLASSIFICATION</span><span style={{color:score>=60?"var(--red)":score>=40?"var(--amber)":"var(--ekg)"}}>{g.label.toUpperCase()}</span></div>
           <div><span className="muted">SIGNED</span><span>Dr. NTBD</span></div>
         </div>
       </div>
@@ -2777,7 +2920,7 @@ function Result({score, answers, age, tone, restart}){
           <div className="score-card">
             <div className="l">Sudden Death Index</div>
             <div className="score-main">
-              <div className="n">{score}</div>
+              <div className="n" style={{color:g.tint}}>{score}</div>
               <div className="over">/ 99</div>
             </div>
             <div className="grade-row">
@@ -2800,7 +2943,7 @@ function Result({score, answers, age, tone, restart}){
                 <span>HEALTHY</span><span>SUB-HEALTHY</span><span>HIGH RISK</span><span>CRITICAL</span>
               </div>
               <div className="mono" style={{fontSize:11,letterSpacing:".18em",color:"var(--muted)",marginTop:12,textTransform:"uppercase"}}>
-                You scored higher than <span style={{color:"var(--red)"}}>{percentile}%</span> of subjects. Body age est. <span style={{color:"var(--red)"}}>{bodyAge}</span> · Chronological {age}.
+                You scored higher than <span style={{color:"var(--red)"}}>{percentile}%</span> of subjects. Body age est. <span style={{color:bodyAge>age?"var(--red)":"var(--ekg)"}}>{bodyAge}</span> · Chronological {age}.
               </div>
             </div>
           </div>
@@ -2825,7 +2968,7 @@ function Result({score, answers, age, tone, restart}){
               <div className="row" key={d.id}>
                 <div className="name">{d.name}</div>
                 <div className="bar"><i style={{width:d.pct+"%"}}/></div>
-                <div className="val">{d.pct}%</div>
+                <div className="val" style={{color:d.pct>=70?"var(--red)":d.pct>=50?"var(--amber)":"var(--bone-2)"}}>{d.pct}%</div>
               </div>
             ))}
           </div>
@@ -2838,23 +2981,20 @@ function Result({score, answers, age, tone, restart}){
             </div>
           </div>
           <div className="block" style={{marginTop:16}}>
-            <div className="l">// PRESCRIPTION</div>
+            <div className="l">// PRESCRIPTION · Based on your {topDim.name} & {secondDim.name} scores</div>
             <ul className="mono" style={{padding:0,margin:"12px 0 0",listStyle:"none",fontSize:13,color:"var(--bone-2)",lineHeight:1.8}}>
-              <li>℞ Sleep before 23:30 · 5 nights/week</li>
-              <li>℞ Step outside for 30 minutes daily</li>
-              <li>℞ Two meals without a screen</li>
-              <li style={{color:"var(--red)"}}>℞ Do not open Slack after 22:00</li>
+              {prescriptions.map((rx,i)=><li key={i} style={rx.crit?{color:"var(--red)"}:undefined}>{rx.text}</li>)}
             </ul>
           </div>
         </div>
       </div>
 
       <div className="actions">
-        <button className="btn red">📸 Download Card</button>
-        <button className="btn">📋 Copy Results</button>
-        <button className="btn">🔗 Challenge a Friend</button>
-        <button className="btn ghost">🐦 Share on X</button>
-        <button className="btn ghost">🟠 Share on Reddit</button>
+        <button className="btn red" onClick={downloadCard}>📸 Download Card</button>
+        <button className="btn" onClick={copyResults}>📋 Copy Results</button>
+        <button className="btn" onClick={challengeFriend}>🔗 Challenge a Friend</button>
+        <button className="btn ghost" onClick={shareToX}>🐦 Share on X</button>
+        <button className="btn ghost" onClick={shareToReddit}>🟠 Share on Reddit</button>
         <button className="btn ghost" onClick={restart}>🔄 Take It Again</button>
       </div>
 
@@ -2866,8 +3006,8 @@ function Result({score, answers, age, tone, restart}){
 
       <footer style={{marginTop:22}}>
         <span>© SDI CLINIC · ntbdstudio@gmail.com</span>
-        <span>FILE GENERATED · {new Date().toISOString().slice(0,19).replace("T"," ")}</span>
-        <span>PRESS ↻ TO RETAKE</span>
+        <span>FILE GENERATED · {now.toISOString().slice(0,19).replace("T"," ")}</span>
+        <span style={{cursor:"pointer"}} onClick={restart}>← BACK TO HOME</span>
       </footer>
     </div>
   );
