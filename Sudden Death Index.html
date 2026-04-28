@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
 <style>
@@ -348,6 +348,7 @@
     .prophecy h2{font-size:32px}
     .opt{grid-template-columns:34px 1fr;padding:14px 16px}
     .opt .risk{display:none}
+    .qbody>div:first-child svg{max-width:200px;max-height:200px;margin:0 auto;display:block}
     .qfoot{flex-wrap:wrap;gap:10px}
     .qfoot .hint{display:none}
     .tweaks{left:10px;right:10px;width:auto}
@@ -815,7 +816,7 @@ function App(){
   return (
     <>
       {view==="landing" && <Landing age={age} setAge={setAge} begin={begin} setView={setView} challengeScore={challengeScore} />}
-      {view==="quiz" && <Quiz qi={qi} setQi={setQi} answers={answers} pick={pick} combo={combo} tone={tweaks.tone} />}
+      {view==="quiz" && <Quiz qi={qi} setQi={setQi} answers={answers} pick={pick} combo={combo} tone={tweaks.tone} onFinish={()=>setView("scan")} />}
       {view==="scan" && <Scan onDone={()=>setView("result")} />}
       {view==="result" && <Result score={finalScore} answers={finalAnswers} dims={dimensionBreakdown(finalAnswers)} age={age} tone={tweaks.tone} restart={restart} />}
       {tweaks.showTweaks && <Tweaks t={tweaks} set={setTweak} view={view} setView={setView} />}
@@ -1272,22 +1273,29 @@ function EKG(){
 }
 
 /* ---------------- QUIZ ---------------- */
-function Quiz({qi,setQi,answers,pick,combo,tone}){
+function Quiz({qi,setQi,answers,pick,combo,tone,onFinish}){
   const q = QUESTIONS[qi];
   const cat = CATEGORIES.find(c=>c.id===q.c);
   const sel = answers[qi]?.r;
   const riskNow = answers.filter(Boolean).reduce((a,b)=>a+b.r,0);
   const riskPct = Math.min(100, Math.round((riskNow/(QUESTIONS.length*5))*100));
+  const isLast = qi >= QUESTIONS.length-1;
+  const allDone = answers.every(a=>a!=null);
+
+  const advance = ()=>{
+    if(isLast && sel!=null){ onFinish(); }
+    else if(sel!=null){ setQi(Math.min(QUESTIONS.length-1,qi+1)); }
+  };
 
   useEffect(()=>{
     const onKey = (e)=>{
       if (e.key==="ArrowLeft" || e.key==="Backspace"){ e.preventDefault(); setQi(Math.max(0,qi-1)); }
-      else if (e.key==="ArrowRight" || e.key==="Enter"){ e.preventDefault(); if (sel!=null) setQi(Math.min(QUESTIONS.length-1,qi+1)); }
+      else if (e.key==="ArrowRight" || e.key==="Enter"){ e.preventDefault(); advance(); }
       else if (/^[1-6]$/.test(e.key)){ const n=Number(e.key)-1; if (q.opts[n]) pick(q.opts[n].r); }
     };
     window.addEventListener("keydown",onKey);
     return ()=>window.removeEventListener("keydown",onKey);
-  },[qi,sel,q]);
+  },[qi,sel,q,isLast]);
 
   return (
     <div className="page fade-in" key={qi}>
@@ -1357,7 +1365,11 @@ function Quiz({qi,setQi,answers,pick,combo,tone}){
         </div>
         <div style={{display:"flex",gap:8}}>
           <button className="btn ghost" onClick={()=>setQi(Math.max(0,qi-1))}>← Previous</button>
-          <button className="btn" onClick={()=>{ if(sel!=null) setQi(Math.min(QUESTIONS.length-1,qi+1)); }} disabled={sel==null}>Next →</button>
+          {isLast ? (
+            <button className="btn red" onClick={advance} disabled={sel==null} style={{animation:allDone?"pulse 1.4s infinite":"none"}}>☠ See Death File</button>
+          ) : (
+            <button className="btn" onClick={advance} disabled={sel==null}>Next →</button>
+          )}
         </div>
       </div>
     </div>
@@ -1455,7 +1467,7 @@ function ListInput({q, sel, pick}){
 /* Dial — stress 1–10 style */
 function DialInput({q, sel, pick}){
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"320px 1fr",gap:40,alignItems:"center"}}>
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:32,alignItems:"center"}}>
       <div style={{position:"relative",width:320,height:320}}>
         <svg viewBox="0 0 200 200" style={{width:"100%",height:"100%"}}>
           <circle cx="100" cy="100" r="90" fill="none" stroke="var(--line)" strokeWidth="1"/>
@@ -1568,7 +1580,7 @@ function HourArc({q, sel, pick}){
   return (
     <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
       <div>
-        <svg viewBox={`0 0 ${W} ${H}`} width="360" height="220">
+        <svg viewBox={`0 0 ${W} ${H}`} width="260" height="160">
           <path d={arcPath(0,MAX,R)} stroke="var(--line)" strokeWidth="14" fill="none"/>
           {Array.from({length:MAX+1}).map((_,i)=>{
             const [x1,y1] = pt(i, R-14); const [x2,y2] = pt(i, R+14);
@@ -2313,8 +2325,8 @@ function LateDialInput({q, qi, sel, pick}){
     return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
   };
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"320px 1fr",gap:40,alignItems:"center"}}>
-      <svg viewBox="0 0 200 200" width="320" height="320">
+    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:32,alignItems:"center"}}>
+      <svg viewBox="0 0 200 200" width="260" height="260">
         <circle cx="100" cy="100" r="88" fill="#0b0b0d" stroke="var(--line)"/>
         <circle cx="100" cy="100" r="82" fill="none" stroke="var(--line-soft)"/>
         {/* danger arc 22→6 */}
