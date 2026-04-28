@@ -375,6 +375,19 @@
 <script type="text/babel" data-presets="react">
 const { useState, useEffect, useRef, useMemo } = React;
 
+class ErrorBoundary extends React.Component {
+  constructor(props){ super(props); this.state = { error: null }; }
+  static getDerivedStateFromError(e){ return { error: e }; }
+  render(){
+    if(this.state.error) return React.createElement('div',{className:'page',style:{padding:40,color:'#e5372b',fontFamily:'monospace'}},
+      React.createElement('h2',null,'Something went wrong'),
+      React.createElement('pre',{style:{color:'#efe9dc',fontSize:13,whiteSpace:'pre-wrap'}},String(this.state.error)),
+      React.createElement('button',{className:'btn red',style:{marginTop:20},onClick:()=>{this.setState({error:null});try{localStorage.removeItem('sdi')}catch{};location.reload();}},'↻ Reload')
+    );
+    return this.props.children;
+  }
+}
+
 /* ---------------- TWEAK DEFAULTS (persisted) ---------------- */
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "palette": "ink-red",
@@ -801,24 +814,23 @@ function App(){
     const next = [...answers]; next[qi] = {r};
     setAnswers(next);
     setCombo(c=> r>=3 ? c+1 : 0);
-    // advance
     setTimeout(()=>{
       if (qi < QUESTIONS.length-1) setQi(qi+1);
-      else setView("scan");
+      else { console.log("[SDI] quiz complete, switching to result"); setView("result"); }
     }, 220);
   };
   const goTo = (i)=> i>=0 && i<QUESTIONS.length && setQi(i);
 
-  const score = useMemo(()=>calcScore(answers.map(a=>a|| {r:2})),[answers]);
-  const finalAnswers = answers.map(a=>a||{r:2});
-  const finalScore = calcScore(finalAnswers);
+  const finalAnswers = useMemo(()=>answers.map(a=>a||{r:2}),[answers]);
+  const finalScore = useMemo(()=>calcScore(finalAnswers),[finalAnswers]);
+  const dims = useMemo(()=>dimensionBreakdown(finalAnswers),[finalAnswers]);
 
   return (
     <>
       {view==="landing" && <Landing age={age} setAge={setAge} begin={begin} setView={setView} challengeScore={challengeScore} />}
-      {view==="quiz" && <Quiz qi={qi} setQi={setQi} answers={answers} pick={pick} combo={combo} tone={tweaks.tone} onFinish={()=>setView("scan")} />}
+      {view==="quiz" && <Quiz qi={qi} setQi={setQi} answers={answers} pick={pick} combo={combo} tone={tweaks.tone} onFinish={()=>{console.log("[SDI] onFinish called");setView("result");}} />}
       {view==="scan" && <Scan onDone={()=>setView("result")} />}
-      {view==="result" && <Result score={finalScore} answers={finalAnswers} dims={dimensionBreakdown(finalAnswers)} age={age} tone={tweaks.tone} restart={restart} />}
+      {view==="result" && <Result score={finalScore} answers={finalAnswers} dims={dims} age={age} tone={tweaks.tone} restart={restart} />}
       {tweaks.showTweaks && <Tweaks t={tweaks} set={setTweak} view={view} setView={setView} />}
     </>
   );
@@ -2306,7 +2318,7 @@ function GlassInput({q, qi, sel, pick}){
 /* LateDial — 24h dial with "after 10pm" danger arc */
 function LateDialInput({q, qi, sel, pick}){
   const [hov, setHov] = useState(null);
-  // frequency per week eating past 10pm
+  const labels = ["Never","Rarely","1×/wk","3×/wk","5×/wk","Daily"];
   const freq = [0, 0.5, 1, 3, 5, 7];
   const selIdx = q.opts.findIndex(o=>o.r===sel);
   const activeIdx = hov!=null?hov:selIdx;
@@ -2314,46 +2326,30 @@ function LateDialInput({q, qi, sel, pick}){
   const activeR = activeIdx>=0 ? q.opts[activeIdx].r : null;
   const tint = tintFor(activeR);
   const ghost = hov!=null && hov!==selIdx;
-  // 24h dial: 0 at top, 12 at bottom. Danger zone = 22h→6h (clockwise across top).
-  const angleFor = (h)=> (-Math.PI/2) + (h/24)*Math.PI*2;
-  const pt = (h, r)=>{ const a = angleFor(h); return [100+Math.cos(a)*r, 100+Math.sin(a)*r]; };
-  const arc = (h1, h2, r)=>{
-    // clockwise
-    const [x1,y1] = pt(h1, r); const [x2,y2] = pt(h2, r);
-    const span = ((h2-h1)+24)%24;
-    const large = span>12?1:0;
-    return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
-  };
   return (
     <div style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:32,alignItems:"center"}}>
-      <svg viewBox="0 0 200 200" width="260" height="260">
-        <circle cx="100" cy="100" r="88" fill="#0b0b0d" stroke="var(--line)"/>
-        <circle cx="100" cy="100" r="82" fill="none" stroke="var(--line-soft)"/>
-        {/* danger arc 22→6 */}
-        <path d={arc(22, 6, 76)} fill="none" stroke="rgba(229,55,43,.22)" strokeWidth="16"/>
-        {/* tick marks per hour */}
-        {Array.from({length:24}).map((_,i)=>{
-          const major = i%6===0;
-          const [x1,y1]=pt(i,major?72:78), [x2,y2]=pt(i,86);
-          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={major?"var(--bone-2)":"var(--muted)"} strokeWidth={major?1.2:.5}/>;
-        })}
-        {/* labels: 00,06,12,18 */}
-        {[0,6,12,18].map(h=>{
-          const [x,y]=pt(h,64);
-          return <text key={h} x={x} y={y+3} textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="10" fill="var(--bone-2)" letterSpacing="1">{String(h).padStart(2,"0")}</text>;
-        })}
-        {/* 22h marker */}
-        {(()=>{ const [x,y]=pt(22,92); return <text x={x} y={y+3} textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="9" fill="var(--red)">22</text>; })()}
-        {/* plate icons on danger arc based on freq (show n dots around 22-2am) */}
-        {activeIdx>=0 && Array.from({length:Math.min(7, Math.round(n))}).map((_,i)=>{
-          const h = 22 + (i*0.5);
-          const [x,y] = pt(h, 76);
-          return <circle key={i} cx={x} cy={y} r="4" fill={tint} opacity={ghost?0.55:0.95}/>;
-        })}
-        <text x="100" y="96" textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="10" fill="var(--muted)" letterSpacing="3">LATE MEALS / WK</text>
-        <text x="100" y="122" textAnchor="middle" fontFamily="Space Grotesk" fontSize="32" fontWeight="700" fill={tint}>{activeIdx>=0?(n<1?n:Math.round(n)):"—"}</text>
-        <text x="100" y="138" textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="9" fill="var(--muted)" letterSpacing="2">PAST 10PM</text>
-      </svg>
+      <div style={{textAlign:"center"}}>
+        {/* Week grid — 7 day boxes */}
+        <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase",marginBottom:12}}>MEALS PAST 10PM THIS WEEK</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4}}>
+          {["M","T","W","T","F","S","S"].map((d,i)=>{
+            const active = i < Math.round(n);
+            return <div key={i} style={{
+              border:"1px solid "+(active?tint:"var(--line)"),
+              background:active?"rgba(229,55,43,.12)":"#0b0b0d",
+              padding:"10px 0",textAlign:"center",transition:"all .2s",
+              opacity:ghost?.6:1
+            }}>
+              <div style={{fontFamily:"IBM Plex Mono",fontSize:9,color:"var(--muted)",letterSpacing:".15em"}}>{d}</div>
+              <div style={{fontSize:active?22:16,marginTop:4,opacity:active?1:.3}}>{active?"🍽️":"·"}</div>
+            </div>;
+          })}
+        </div>
+        <div style={{marginTop:16,fontFamily:"Space Grotesk",fontWeight:700,fontSize:48,color:tint,lineHeight:1,transition:"color .2s"}}>{activeIdx>=0?Math.round(n):"—"}</div>
+        <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--muted)",textTransform:"uppercase",marginTop:4}}>
+          {activeIdx>=0?labels[activeIdx]:"SELECT BELOW"} · PAST 10PM
+        </div>
+      </div>
       <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
     </div>
   );
@@ -2789,6 +2785,7 @@ function Scan({onDone}){
 
 /* ---------------- RESULT ---------------- */
 function Result({score, answers, dims, age, tone, restart}){
+  console.log("[SDI] Result rendering, score:", score, "dims:", dims?.length);
   const g = gradeOf(score);
   const topDim = [...dims].sort((a,b)=>b.pct-a.pct)[0];
   const secondDim = [...dims].sort((a,b)=>b.pct-a.pct)[1];
@@ -3140,7 +3137,7 @@ function Tweaks({t,set,view,setView}){
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBoundary><App/></ErrorBoundary>);
 </script>
 </body>
 </html>
