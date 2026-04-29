@@ -17,16 +17,16 @@
     --ink:#fff7f2;
     --ink-2:#fff0e8;
     --ink-3:#ffe8dd;
-    --line:#f0e0d6;
-    --line-soft:#f5ebe5;
-    --bone:#3d3029;
-    --bone-2:#6b5b51;
-    --muted:#b0a59b;
-    --red:#ff6b8a;
-    --red-deep:#e5406b;
-    --ekg:#6cd9a0;
-    --amber:#ffb347;
-    --shadow: 0 4px 20px rgba(0,0,0,.06);
+    --line:#e8d5c8;
+    --line-soft:#f0e2d8;
+    --bone:#2a1f18;
+    --bone-2:#4a3d34;
+    --muted:#8a7c70;
+    --red:#ff4d73;
+    --red-deep:#d6325a;
+    --ekg:#3cbf78;
+    --amber:#e89c2d;
+    --shadow: 0 4px 20px rgba(0,0,0,.08);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--ink);color:var(--bone);
@@ -77,7 +77,7 @@
   .hero{display:grid;grid-template-columns: 1.1fr .9fr; gap:48px;padding-top:44px}
   .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
   .title{
-    font-family:"Space Grotesk";font-weight:700;font-size:clamp(56px, 9vw, 132px);
+    font-family:"ZCOOL KuaiLe","Noto Sans SC",sans-serif;font-weight:700;font-size:clamp(56px, 9vw, 132px);
     line-height:.88;letter-spacing:-.03em;margin:18px 0 10px;color:var(--bone);
   }
   .title .amp{font-family:"Instrument Serif";font-style:italic;font-weight:400;color:var(--red)}
@@ -148,7 +148,7 @@
   /* testimonials */
   .quotes{margin-top:56px}
   .quotes .head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:18px}
-  .quotes .head h3{margin:0;font-family:"Space Grotesk";font-size:28px;font-weight:600;letter-spacing:-.01em}
+  .quotes .head h3{margin:0;font-family:"ZCOOL KuaiLe","Noto Sans SC",sans-serif;font-size:28px;font-weight:600;letter-spacing:-.01em}
   .quotes .head .m{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
   .qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
   .quote{border:2px solid var(--line);padding:18px;background:#fff;display:flex;flex-direction:column;gap:12px;min-height:180px;border-radius:14px}
@@ -177,7 +177,7 @@
 
   .qbody{display:grid;grid-template-columns: 1fr 380px; gap:48px;padding:60px 0 40px;flex:1}
   .qnum{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.3em;color:var(--red);text-transform:uppercase}
-  .qtitle{font-family:"Space Grotesk";font-weight:600;font-size:clamp(34px,4.2vw,56px);line-height:1.05;letter-spacing:-.02em;margin:14px 0 8px;text-wrap:balance}
+  .qtitle{font-family:"Noto Sans SC","Space Grotesk",sans-serif;font-weight:600;font-size:clamp(34px,4.2vw,56px);line-height:1.05;letter-spacing:-.02em;margin:14px 0 8px;text-wrap:balance}
   .qsub{font-family:"Instrument Serif";font-style:italic;font-size:22px;color:var(--bone-2);max-width:50ch;line-height:1.3}
 
   .opts{margin-top:38px;display:flex;flex-direction:column;gap:10px;max-width:760px}
@@ -224,7 +224,7 @@
   .scan-card .scan-line{position:absolute;left:0;right:0;height:60px;background:linear-gradient(180deg,rgba(255,107,138,.0),rgba(255,107,138,.18),rgba(255,107,138,0));
     top:0;animation:scan 2.2s linear infinite}
   @keyframes scan{0%{top:-10%}100%{top:100%}}
-  .scan-card h2{margin:0;font-family:"Space Grotesk";font-weight:700;font-size:46px;letter-spacing:-.02em}
+  .scan-card h2{margin:0;font-family:"ZCOOL KuaiLe","Noto Sans SC",sans-serif;font-weight:700;font-size:46px;letter-spacing:-.02em}
   .scan-card .s{font-family:"Instrument Serif";font-style:italic;color:var(--bone-2);font-size:22px;margin-top:8px}
   .scan-log{margin-top:28px;border-top:1px solid var(--line);padding-top:14px;font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--bone-2);min-height:180px;line-height:1.5}
   .scan-log .ln{display:flex;justify-content:space-between}
@@ -236,8 +236,8 @@
   /* ===== RESULT ===== */
   .rhead{display:grid;grid-template-columns: 1.3fr 1fr;gap:40px;align-items:end;border-bottom:1px solid var(--line);padding:22px 0 28px}
   .rhead .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
-  .rhead h1{margin:6px 0 0;font-family:"Space Grotesk";font-weight:700;font-size:clamp(56px,7vw,112px);letter-spacing:-.03em;line-height:.9}
-  .rhead h1 em{font-family:"Instrument Serif";font-style:italic;color:var(--red);font-weight:400}
+  .rhead h1{margin:6px 0 0;font-family:"ZCOOL KuaiLe","Noto Sans SC",sans-serif;font-weight:700;font-size:clamp(56px,7vw,112px);letter-spacing:-.03em;line-height:.9;color:var(--red-deep)}
+  .rhead h1 em{font-family:"ZCOOL KuaiLe","Noto Sans SC",sans-serif;font-style:normal;color:var(--red);font-weight:400}
   .rhead .meta{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 24px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--bone-2)}
   .rhead .meta div{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:4px 0}
   .rhead .meta .muted{color:var(--muted)}
@@ -258,12 +258,12 @@
 
   .dist{margin-top:26px}
   .dist .l{font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
-  .dist .rail{position:relative;height:14px;border:1px solid var(--line);background:#0c0c0f}
+  .dist .rail{position:relative;height:14px;border:1px solid var(--line);background:#f5ebe5;border-radius:4px;overflow:hidden}
   .dist .seg{position:absolute;top:0;bottom:0;border-right:1px solid var(--line-soft)}
-  .dist .seg.a{left:0;width:25%;background:rgba(122,255,179,.1)}
-  .dist .seg.b{left:25%;width:25%;background:rgba(239,233,220,.05)}
-  .dist .seg.c{left:50%;width:25%;background:rgba(243,184,75,.1)}
-  .dist .seg.d{left:75%;width:25%;background:rgba(255,107,138,.12);border-right:0}
+  .dist .seg.a{left:0;width:25%;background:rgba(60,191,120,.2)}
+  .dist .seg.b{left:25%;width:25%;background:rgba(200,180,160,.15)}
+  .dist .seg.c{left:50%;width:25%;background:rgba(232,156,45,.2)}
+  .dist .seg.d{left:75%;width:25%;background:rgba(255,77,115,.18);border-right:0}
   .dist .marker{position:absolute;top:-10px;bottom:-10px;width:2px;background:var(--red);box-shadow:0 0 10px var(--red)}
   .dist .marker::before{content:"YOU";position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.2em;color:var(--red)}
   .dist .legend{display:grid;grid-template-columns:repeat(4,1fr);font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.16em;color:var(--muted);margin-top:8px;text-transform:uppercase}
@@ -282,7 +282,7 @@
   .rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:32px}
   .block{border:2px solid var(--line);padding:22px;background:#fff;border-radius:16px;box-shadow:var(--shadow)}
   .block .l{font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
-  .block h3{margin:6px 0 0;font-family:"Space Grotesk";font-weight:600;font-size:26px;letter-spacing:-.01em}
+  .block h3{margin:6px 0 0;font-family:"ZCOOL KuaiLe","Noto Sans SC",sans-serif;font-weight:600;font-size:26px;letter-spacing:-.01em;color:var(--red)}
   .block p{font-family:"Instrument Serif";font-style:italic;font-size:18px;color:var(--bone-2);line-height:1.35;margin:10px 0 0}
   .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
   .tag{font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.18em;padding:4px 8px;border:1px solid var(--line);text-transform:uppercase;color:var(--bone-2)}
@@ -291,7 +291,7 @@
   .prophecy{border:2px solid var(--red);padding:28px;background:linear-gradient(180deg,rgba(255,107,138,.08),rgba(255,107,138,0));margin-top:32px;border-radius:16px}
   .prophecy .l{font-family:"IBM Plex Mono";font-size:11px;letter-spacing:.24em;color:var(--red);text-transform:uppercase;display:flex;align-items:center;gap:8px}
   .prophecy .l::before{content:"";width:10px;height:10px;background:var(--red);display:inline-block}
-  .prophecy h2{margin:10px 0 6px;font-family:"Instrument Serif";font-style:italic;font-weight:400;font-size:48px;color:var(--bone);letter-spacing:-.01em;line-height:1.05}
+  .prophecy h2{margin:10px 0 6px;font-family:"ZCOOL KuaiLe","Noto Sans SC",sans-serif;font-style:normal;font-weight:400;font-size:48px;color:var(--bone);letter-spacing:-.01em;line-height:1.05}
   .prophecy .sig{font-family:"Instrument Serif";font-style:italic;font-size:20px;color:var(--bone-2);margin-top:10px;line-height:1.4;max-width:60ch}
   .prophecy .meta{display:flex;gap:24px;margin-top:18px;font-family:"IBM Plex Mono";font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
 
