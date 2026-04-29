@@ -395,6 +395,57 @@
     .steps-grid{grid-template-columns:1fr!important}
     .float-sticker{display:none!important}
     .big-cta{grid-template-columns:auto 1fr!important;gap:14px!important;padding:16px 20px!important}
+    /* responsive SVGs - shrink fixed-size visualizations */
+    svg[width][height]{max-width:100%!important;height:auto!important}
+    .qbody>div:first-child{display:flex;flex-direction:column;align-items:center}
+    .qbody>div:first-child > div{width:100%;max-width:340px}
+    .opts{max-width:100%}
+    .opt{font-size:14px}
+    .opt .txt{font-size:14px}
+    .opt .k{width:28px;height:28px;font-size:11px}
+    .qside{margin-top:20px}
+    .qtop{grid-template-columns:1fr;gap:8px;text-align:center}
+    .qtop .right{text-align:center}
+    .ticks{grid-template-columns:repeat(15,1fr)}
+    .ticks span{height:6px}
+    .qside .chapterN{font-size:40px}
+    .qside .chapterT{font-size:18px}
+    .quotes .head{flex-wrap:wrap}
+    .quotes .head h3{font-size:22px}
+    .qgrid{gap:10px}
+    .panel-hd{flex-wrap:wrap;gap:6px}
+    .vitals{grid-template-columns:1fr}
+    .vitals>div{border-right:0!important;border-bottom:1px solid var(--line)}
+    .scan-pct{font-size:10px}
+    .scan-log{font-size:11px;min-height:120px}
+    .toast-v2{left:10px;right:10px;transform:none;width:auto}
+    .stamp{font-size:11px;padding:6px 10px;right:-4px;top:14px}
+    .score-card .stamp-big{font-size:13px;padding:8px 14px;right:-10px;top:18px}
+    .disclaimer{font-size:11px;letter-spacing:.05em;line-height:1.6}
+    .dim{padding:14px 12px;min-height:auto}
+    .dim h4{font-size:18px}
+    .dim p{font-size:13px}
+    h2{word-break:break-word}
+    .preview-card-inner{transform:none!important;padding:18px!important;box-shadow:0 4px 16px rgba(0,0,0,.4)!important}
+    .preview-card{margin-top:24px}
+    .feed-row{grid-template-columns:54px 1fr auto!important;gap:8px!important;font-size:11px!important}
+    .feed-row span{font-size:11px!important}
+    .quiz-viz-row{grid-template-columns:1fr!important;gap:20px!important}
+    .quiz-viz-row > div:first-child{margin:0 auto;max-width:280px;width:100%}
+    .quiz-viz-row > div:first-child svg{width:100%!important;height:auto!important;max-width:280px}
+  }
+  @media (max-width: 380px){
+    .page{padding:12px 12px 50px}
+    .hero{padding-top:16px}
+    .lede{font-size:20px}
+    .score-main .n{font-size:64px}
+    .grade-row .g em{font-size:18px}
+    .grade-row .g{padding:6px 4px 8px;font-size:9px}
+    .opt{padding:12px 14px;grid-template-columns:28px 1fr}
+    .opt .txt{font-size:13px}
+    .qtitle{font-size:clamp(20px,6vw,32px)!important}
+    .scan-card{padding:18px 14px}
+    .scan-card h2{font-size:24px}
   }
 
   ::selection{background:var(--red);color:#fff}
@@ -1069,7 +1120,7 @@ function Landing({age,setAge,begin,setView,challengeScore}){
           </div>
 
           {/* SHAREABLE CARD PREVIEW */}
-          <div style={{position:"relative"}}>
+          <div className="preview-card" style={{position:"relative"}}>
             <div style={{
               position:"absolute",top:-18,right:-14,transform:"rotate(8deg)",
               fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",fontWeight:600,
@@ -1077,7 +1128,7 @@ function Landing({age,setAge,begin,setView,challengeScore}){
               background:"var(--ink)",zIndex:2
             }}>PREVIEW · YOUR CARD</div>
 
-            <div style={{
+            <div className="preview-card-inner" style={{
               border:"1px solid var(--line)",
               background:"linear-gradient(180deg, #120a0a, #0a0a0c)",
               padding:24,position:"relative",overflow:"hidden",
@@ -1095,9 +1146,9 @@ function Landing({age,setAge,begin,setView,challengeScore}){
 
               <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase",marginTop:14}}>SUDDEN DEATH INDEX</div>
               <div style={{display:"flex",alignItems:"flex-end",gap:10,marginTop:2}}>
-                <div style={{
+                <div className="preview-score" style={{
                   fontFamily:"Space Grotesk",fontWeight:700,
-                  fontSize:130,lineHeight:.85,letterSpacing:"-.04em",
+                  fontSize:"clamp(72px,16vw,130px)",lineHeight:.85,letterSpacing:"-.04em",
                   color:pTint,
                   textShadow:`0 0 30px ${pTint}`,
                   transition:"color .3s ease"
@@ -1172,7 +1223,7 @@ function Landing({age,setAge,begin,setView,challengeScore}){
         </div>
         <div style={{padding:"10px 16px",minHeight:160,display:"flex",flexDirection:"column",gap:4,overflow:"hidden"}}>
           {tickerFeed.map((t,i)=>(
-            <div key={t.id} className="fade-in" style={{
+            <div key={t.id} className="fade-in feed-row" style={{
               display:"grid",gridTemplateColumns:"80px 1fr auto",gap:14,alignItems:"center",
               padding:"6px 0",borderBottom: i<tickerFeed.length-1 ? "1px dashed var(--line-soft)" : "0",
               opacity: 1 - i*0.15,
@@ -1522,7 +1573,7 @@ function ListInput({q, sel, pick}){
 /* Dial — stress 1–10 style */
 function DialInput({q, sel, pick}){
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:32,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:32,alignItems:"center"}}>
       <div style={{position:"relative",width:320,height:320}}>
         <svg viewBox="0 0 200 200" style={{width:"100%",height:"100%"}}>
           <circle cx="100" cy="100" r="90" fill="none" stroke="var(--line)" strokeWidth="1"/>
@@ -1633,7 +1684,7 @@ function HourArc({q, sel, pick}){
   const tintOf = (r)=> r>=4?"var(--red)":r>=2?"var(--amber)":"var(--ekg)";
 
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
       <div>
         <svg viewBox={`0 0 ${W} ${H}`} width="260" height="160">
           <path d={arcPath(0,MAX,R)} stroke="var(--line)" strokeWidth="14" fill="none"/>
@@ -1721,7 +1772,7 @@ function BedtimeClock({q, sel, pick}){
   });
 
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"340px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"340px 1fr",gap:40,alignItems:"center"}}>
       <svg viewBox="0 0 200 200" width="340" height="340">
         <defs>
           <radialGradient id="face" cx="50%" cy="50%" r="50%">
@@ -1852,7 +1903,7 @@ function WeekGridInput({q, qi, sel, pick}){
   const days = ["M","T","W","T","F","S","S"];
   const tint = tintFor(activeR);
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
       <div style={{border:"1px solid var(--line)",padding:"20px 18px",background:"#0c0c0f"}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
           <span>TYPICAL WEEK</span><span style={{color:tint}}>{m.label}</span>
@@ -1918,7 +1969,7 @@ function PhoneScrollInput({q, qi, sel, pick}){
   // how many feed items are "loaded/scrolled past" — grows with minutes
   const SHOWN = Math.min(feed.length, Math.round(pct * feed.length * 1.2));
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"240px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"240px 1fr",gap:40,alignItems:"center"}}>
       <div style={{display:"flex",justifyContent:"center"}}>
         <svg viewBox="0 0 220 420" width="220" height="400">
           <defs>
@@ -1998,7 +2049,7 @@ function WorkHoursInput({q, qi, sel, pick}){
   const ghost = hov!=null && hov!==selIdx;
   const pct = h/100;
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
       <div style={{border:"1px solid var(--line)",padding:22,background:"#0c0c0f"}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
           <span>WEEKLY HOURS</span><span>REF · 40</span>
@@ -2035,7 +2086,7 @@ function WeekendsInput({q, qi, sel, pick}){
   const tint = tintFor(activeR);
   const ghost = hov!=null && hov!==selIdx;
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
       <div style={{border:"1px solid var(--line)",padding:22,background:"#0c0c0f"}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
           <span>MONTH · 4 WEEKENDS</span><span style={{color:tint}}>WORKED · {n}</span>
@@ -2088,7 +2139,7 @@ function NotifStackInput({q, qi, sel, pick}){
   const msgs    = ["quick q?","are you around","catching up","p0 incident","pls ack","sync 7am"];
   const SLOTS = 6;
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"start"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"start"}}>
       <div style={{border:"1px solid var(--line)",padding:22,background:"#0c0c0f",height:420,display:"flex",flexDirection:"column"}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
           <span>PHONE · 20:47</span><span style={{color:tint}}>{n} NEW</span>
@@ -2146,7 +2197,7 @@ function SinceBarInput({q, qi, sel, pick}){
   // tick positions: now, 3mo, 1yr, 2yr, 5yr
   const ticks = [{m:0,l:"NOW"},{m:3,l:"3 MO"},{m:12,l:"1 YR"},{m:24,l:"2 YR"},{m:60,l:"5 YR"}];
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"420px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"420px 1fr",gap:40,alignItems:"center"}}>
       <div style={{border:"1px solid var(--line)",padding:24,background:"#0c0c0f"}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:18}}>
           <span>TIME SINCE</span><span style={{color:tint}}>{activeIdx>=0?labels[activeIdx]:"—"}</span>
@@ -2189,7 +2240,7 @@ function StepCountInput({q, qi, sel, pick}){
   const ghost = hov!=null && hov!==selIdx;
   const digits = String(s).padStart(5,"0").split("");
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
       <div style={{border:"1px solid var(--line)",padding:22,background:"#0c0c0f"}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
           <span>PEDOMETER</span><span>TODAY</span>
@@ -2233,7 +2284,7 @@ function TrackLapInput({q, qi, sel, pick}){
   const laps = d / LAP; // number of laps
   const trackPath = "M 50 30 L 270 30 A 60 60 0 0 1 270 150 L 50 150 A 60 60 0 0 1 50 30 Z";
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
       <div style={{border:"1px solid var(--line)",padding:20,background:"#0c0c0f"}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:10}}>
           <span>TRACK · 400M</span><span style={{color:tint}}>BEFORE STOPPING</span>
@@ -2291,7 +2342,7 @@ function PlateInput({q, qi, sel, pick}){
     return {d:`M 100 100 L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`, fill:COLORS[i], label:LABELS[i], v};
   });
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
       <div style={{border:"1px solid var(--line)",padding:20,background:"#0c0c0f"}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:10}}>
           <span>PLATE · COMPOSITION</span><span>{activeIdx>=0?"ANALYZED":"—"}</span>
@@ -2333,7 +2384,7 @@ function GlassInput({q, qi, sel, pick}){
   const glasses = 8; // 250ml each = 2L
   const filled = L / 0.25; // fractional glasses filled
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"420px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"420px 1fr",gap:40,alignItems:"center"}}>
       <div style={{border:"1px solid var(--line)",padding:20,background:"#0c0c0f"}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
           <span>HYDRATION · 8×250ML</span><span style={{color:tint}}>{activeIdx>=0?L.toFixed(2)+"L":"—"}</span>
@@ -2370,7 +2421,7 @@ function LateDialInput({q, qi, sel, pick}){
   const tint = tintFor(activeR);
   const ghost = hov!=null && hov!==selIdx;
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:32,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:32,alignItems:"center"}}>
       <div style={{textAlign:"center"}}>
         {/* Week grid — 7 day boxes */}
         <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase",marginBottom:12}}>MEALS PAST 10PM THIS WEEK</div>
@@ -2412,7 +2463,7 @@ function PressureInput({q, qi, sel, pick}){
   const angleFor = (x)=> Math.PI - (x/10)*Math.PI;
   const pt = (x, r)=>{ const a = angleFor(x); return [130+Math.cos(a)*r, 160-Math.sin(a)*r]; };
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"300px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"300px 1fr",gap:40,alignItems:"center"}}>
       <svg viewBox="0 0 260 200" width="300" height="230">
         {/* colored semicircle zones */}
         {[[0,3,"var(--ekg)"],[3,6,"var(--amber)"],[6,8,"#ff8a3d"],[8,10,"var(--red)"]].map(([a,b,c],i)=>{
@@ -2454,7 +2505,7 @@ function HourglassInput({q, qi, sel, pick}){
   const ghost = hov!=null && hov!==selIdx;
   const top = 1-f; // fraction left on top
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:40,alignItems:"center"}}>
       <div style={{display:"flex",justifyContent:"center"}}>
         <svg viewBox="0 0 200 280" width="260" height="280">
           {/* frame */}
@@ -2553,7 +2604,7 @@ function TallyInput({q, qi, sel, pick}){
   const gridH = Math.max(1, Math.ceil(shown/rowLen)) * (cfg.kind==="cig"?28:cfg.kind==="drink"?60:56) + 30;
 
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"420px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"420px 1fr",gap:40,alignItems:"center"}}>
       <div style={{border:"1px solid var(--line)",padding:22,background:"#0c0c0f",minHeight:260,display:"flex",flexDirection:"column"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:16}}>
           <span>{cfg.label}</span>
@@ -2610,7 +2661,7 @@ function NodesInput({q, qi, sel, pick}){
   nodes.forEach((n,i)=> edges.push({from:{x:cx,y:cy}, to:n, i}));
   const live = Math.round(edges.length * (1-d));
   return (
-    <div style={{marginTop:24,display:"grid",gridTemplateColumns:"280px 1fr",gap:40,alignItems:"center"}}>
+    <div className="quiz-viz-row" style={{marginTop:24,display:"grid",gridTemplateColumns:"280px 1fr",gap:40,alignItems:"center"}}>
       <svg viewBox="0 0 200 200" width="280" height="280">
         <circle cx={cx} cy={cy} r="92" fill="#0b0b0d" stroke="var(--line)"/>
         {edges.map((e,i)=>(
