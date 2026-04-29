@@ -30,6 +30,10 @@
   ],
   "rewrites": [
     {
+      "source": "/v2/cn",
+      "destination": "/v2-cn.html"
+    },
+    {
       "source": "/v2",
       "destination": "/Sudden Death Index.html"
     },
@@ -42,7 +46,7 @@
       "destination": "/en.html"
     },
     {
-      "source": "/((?!en|v2).*)",
+      "source": "/((?!en|v2)(?!v2-cn).*)",
       "destination": "/index.html"
     }
   ]

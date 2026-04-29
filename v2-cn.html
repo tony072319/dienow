@@ -1140,23 +1140,23 @@ function Landing({age,setAge,begin,setView,challengeScore}){
       <section style={{marginTop:72}}>
         <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",borderBottom:"1px solid var(--line)",paddingBottom:10}}>
           <div>
-            <div className="eyebrow">§01 · How it goes</div>
-            <h2 style={{margin:"6px 0 0",fontFamily:"Space Grotesk",fontWeight:600,fontSize:48,letterSpacing:"-.02em"}}>Three stages of self-realization.</h2>
+            <div className="eyebrow">§01 · 流程</div>
+            <h2 style={{margin:"6px 0 0",fontFamily:"ZCOOL KuaiLe",fontWeight:600,fontSize:40,letterSpacing:"-.02em"}}>自我认知的三个阶段~</h2>
           </div>
-          <span style={{fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase"}}>Total time · 5 min</span>
+          <span style={{fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase"}}>总时长 · 5分钟</span>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20,marginTop:24}}>
           {[
-            {n:"01",t:"Confess",e:"😇",c:"var(--ekg)",d:"30 gently invasive questions. Keyboard shortcuts for the committed. No account, no email — your secrets die with us (and the internet)."},
-            {n:"02",t:"Get scanned",e:"🩻",c:"var(--amber)",d:"A fake medical report is generated in real time with heart rate, risk DNA, and at least three judgmental stamps. It loads on purpose."},
-            {n:"03",t:"Post & panic",e:"💀",c:"var(--red)",d:"Download a shareable card, send it to the group chat, and watch your colleagues argue about whose sleep is worse. Schedule a checkup. Maybe."}
+            {n:"01",t:"坦白",e:"😇",c:"var(--ekg)",d:"30个温柔入侵的问题。支持键盘快捷键。不需要账号，不需要邮箱——你的秘密跟着我们（和互联网）一起消失~"},
+            {n:"02",t:"扫描",e:"🩻",c:"var(--amber)",d:"一份假的体检报告会实时生成，有心率、风险DNA，还有至少三个评判性的印章。加载是故意的~"},
+            {n:"03",t:"发到群聊",e:"💕",c:"var(--red)",d:"下载一张分享卡片，发到群聊，看同事们争论谁的睡眠更差。预约一次体检。也许吧~"}
           ].map((s,i)=>(
-            <div key={i} style={{border:"1px solid var(--line)",padding:24,background:"#fff8f4",position:"relative",overflow:"hidden"}}>
-              <div style={{position:"absolute",right:-10,top:-30,fontSize:180,opacity:.08,fontFamily:"Space Grotesk",fontWeight:700,color:s.c}}>{s.n}</div>
+            <div key={i} style={{border:"2px solid var(--line)",padding:24,background:"#fff8f4",position:"relative",overflow:"hidden",borderRadius:16}}>
+              <div style={{position:"absolute",right:-10,top:-30,fontSize:180,opacity:.08,fontFamily:"ZCOOL KuaiLe",fontWeight:700,color:s.c}}>{s.n}</div>
               <div style={{fontSize:48,marginBottom:14}}>{s.e}</div>
-              <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:s.c,textTransform:"uppercase"}}>Stage {s.n}</div>
-              <h3 style={{margin:"4px 0 10px",fontFamily:"Space Grotesk",fontWeight:600,fontSize:32,letterSpacing:"-.02em"}}>{s.t}.</h3>
-              <p style={{margin:0,fontFamily:"Instrument Serif",fontStyle:"italic",fontSize:17,color:"var(--bone-2)",lineHeight:1.35}}>{s.d}</p>
+              <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:s.c,textTransform:"uppercase"}}>第 {s.n} 步</div>
+              <h3 style={{margin:"4px 0 10px",fontFamily:"ZCOOL KuaiLe",fontWeight:600,fontSize:28,letterSpacing:"-.02em"}}>{s.t}</h3>
+              <p style={{margin:0,fontFamily:"Noto Sans SC",fontSize:15,color:"var(--bone-2)",lineHeight:1.5}}>{s.d}</p>
             </div>
           ))}
         </div>
@@ -1166,10 +1166,10 @@ function Landing({age,setAge,begin,setView,challengeScore}){
       <section style={{marginTop:72}}>
         <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",borderBottom:"1px solid var(--line)",paddingBottom:10}}>
           <div>
-            <div className="eyebrow">§02 · Coverage</div>
-            <h2 style={{margin:"6px 0 0",fontFamily:"Space Grotesk",fontWeight:600,fontSize:48,letterSpacing:"-.02em"}}>Seven ways you're quietly cooking yourself.</h2>
+            <div className="eyebrow">§02 · 覆盖范围</div>
+            <h2 style={{margin:"6px 0 0",fontFamily:"ZCOOL KuaiLe",fontWeight:600,fontSize:40,letterSpacing:"-.02em"}}>你悄悄折磨自己的七种方式~</h2>
           </div>
-          <span style={{fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase"}}>30 items · 7 dimensions</span>
+          <span style={{fontFamily:"IBM Plex Mono",fontSize:11,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase"}}>30题 · 7个维度</span>
         </div>
         <div className="dims">
           {CATEGORIES.map(c=>(
@@ -1180,14 +1180,14 @@ function Landing({age,setAge,begin,setView,challengeScore}){
               <div className="bars">
                 {Array.from({length:16}).map((_,i)=><span key={i} style={{height: 4 + ((i*7)%14)}}/>)}
               </div>
-              <div className="q">{c.count} questions</div>
+              <div className="q">{c.count} 题</div>
             </div>
           ))}
           <div className="dim" style={{justifyContent:"space-between",background:"linear-gradient(180deg,#ffe8e0,#fff7f2)",borderColor:"var(--red)"}}>
-            <div className="k" style={{color:"var(--red)"}}>// THE FINALE</div>
-            <h4>Your Death File</h4>
-            <p>Score · grade · persona · dimension radar · a prewritten obituary nobody asked for. Screenshot-ready.</p>
-            <div className="q" style={{color:"var(--red)"}}>1 viral card</div>
+            <div className="k" style={{color:"var(--red)"}}>// 终局</div>
+            <h4>你的健康档案</h4>
+            <p>得分 · 等级 · 人设 · 维度雷达 · 一份没人要求的预写讣告。截图就可以发~</p>
+            <div className="q" style={{color:"var(--red)"}}>1张传播卡片</div>
           </div>
         </div>
       </section>
@@ -1195,17 +1195,17 @@ function Landing({age,setAge,begin,setView,challengeScore}){
       {/* QUOTES — Twitter/IG style cards */}
       <section className="quotes">
         <div className="head">
-          <h3>People absolutely cannot stop posting this.</h3>
-          <span className="m">// verified entries</span>
+          <h3>大家疯狂转发停不下来~</h3>
+          <span className="m">// 真实评价</span>
         </div>
         <div className="qgrid">
           {[
-            {q:"Cut my alarms from 15 to 3 the night I took this. Progress.", who:"Product Manager · FAANG", s:78, h:"@wakingthedead"},
-            {q:"Got S-tier but the test must be broken. I'm exhausted.", who:"Certified Wellness Influencer", s:12, h:"@kale_enjoyer"},
-            {q:"Got an F. Sent it to my mom. She stopped asking about grandkids and started asking about my blood pressure.", who:"Freelancer", s:91, h:"@contract_work"},
-            {q:"Took it 3 times, score kept going up. Because I was up at 3am taking it.", who:"Grad Student", s:65, h:"@phd_eventually"},
-            {q:"Tagged me 'Caffeine Dependency Syndrome' while I was reading results with my 4th cold brew.", who:"Frontend Developer", s:74, h:"@div_soup"},
-            {q:"The death prophecy section was so accurate I almost called a lawyer.", who:"Startup CTO", s:83, h:"@exit_strategy"},
+            {q:"做完当晚就把闹钟从15个减到3个了。进步！", who:"产品经理 · 大厂", s:78, h:"@早起困难户"},
+            {q:"得了S级，但测试一定有bug。我明明很累。", who:"养生博主", s:12, h:"@爱吃沙拉"},
+            {q:"得了F。发给了我妈。她不问对象了，开始问我血压。", who:"自由职业者", s:91, h:"@接单中"},
+            {q:"测了3次，分数越来越高。因为我凌晨3点在测。", who:"研究生", s:65, h:"@博士在读"},
+            {q:"标记我'咖啡因依赖症'时我正在喝第四杯冰美式。", who:"前端开发", s:74, h:"@div对不齐"},
+            {q:"健康预言部分准到我差点打电话给律师。", who:"创业CEO", s:83, h:"@退出策略"},
           ].map((t,i)=>(
             <div className="quote" key={i} style={{transform:`rotate(${(i%3-1)*0.6}deg)`}}>
               <div className="score">
@@ -1224,13 +1224,13 @@ function Landing({age,setAge,begin,setView,challengeScore}){
         <div style={{position:"absolute",inset:0,background:"radial-gradient(600px 300px at 30% 50%, rgba(255,107,138,.12), transparent 70%)",pointerEvents:"none"}}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr auto",alignItems:"center",gap:32,position:"relative"}}>
           <div>
-            <div className="eyebrow" style={{color:"var(--red)",marginBottom:10}}>§ FINAL CHANCE</div>
-            <h2 style={{margin:0,fontFamily:"Space Grotesk",fontWeight:700,fontSize:"clamp(44px,6vw,84px)",letterSpacing:"-.03em",lineHeight:.95}}>
-              Stop stalling.<br/>
-              <span style={{fontFamily:"Instrument Serif",fontStyle:"italic",fontWeight:400,color:"var(--red)"}}>Take the test.</span>
+            <div className="eyebrow" style={{color:"var(--red)",marginBottom:10}}>§ 最后机会</div>
+            <h2 style={{margin:0,fontFamily:"ZCOOL KuaiLe",fontWeight:700,fontSize:"clamp(36px,5vw,72px)",letterSpacing:"-.02em",lineHeight:.95}}>
+              别犹豫了~<br/>
+              <span style={{color:"var(--red)"}}>来测一下吧！</span>
             </h2>
-            <p style={{fontFamily:"Instrument Serif",fontStyle:"italic",fontSize:22,color:"var(--bone-2)",marginTop:12,maxWidth:"50ch"}}>
-              You're already procrastinating something else. Make this the one you finish.
+            <p style={{fontFamily:"Noto Sans SC",fontSize:20,color:"var(--bone-2)",marginTop:12,maxWidth:"50ch",lineHeight:1.5}}>
+              你已经在拖延别的事情了。就让这个成为你完成的那一件吧~
             </p>
           </div>
           <button className="btn red" onClick={begin} style={{padding:"28px 42px",fontSize:14}}>
@@ -1240,7 +1240,7 @@ function Landing({age,setAge,begin,setView,challengeScore}){
       </section>
 
       <footer>
-        <span>© SDI CLINIC · NOT A MEDICAL DEVICE</span>
+        <span>© 猝死指数诊所 · 非医疗器械</span>
         <span>ntbdstudio@gmail.com</span>
         <span>PRESS ▶ TO BEGIN</span>
       </footer>
@@ -1726,7 +1726,7 @@ function BedtimeClock({q, sel, pick}){
           <circle cx={h.x} cy={h.y} r="4" fill={tint}/>
         </g>}
 
-        <text x="100" y="146" textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="10" fill="var(--muted)" letterSpacing="3">{ghost ? "PREVIEW" : "BEDTIME"}</text>
+        <text x="100" y="146" textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="10" fill="var(--muted)" letterSpacing="3">{ghost ? "预览" : "就寝"}</text>
         <text x="100" y="168" textAnchor="middle" fontFamily="Space Grotesk" fontSize="22" fontWeight="700" fill={tint} letterSpacing="-.5">{fmt(activeT)}</text>
       </svg>
 
@@ -1780,13 +1780,13 @@ function WeekGridInput({q, qi, sel, pick}){
   // For each known question, define a shape.
   const MAPS = {
     // "wake up rested": [7,5,3,1,0,0] rested days/week; good=true
-    rested: { counts:[7,5,3,1,0,0], mode:"day",   label:"RESTED DAYS",     good:true  },
-    overwhelm:{counts:[0,1,2,3,5,7],mode:"day",   label:"OVERWHELMED",     good:false },
-    grind:  { counts:[0,1,2,4,6,7], mode:"night", label:"CLENCHED NIGHTS", good:false },
-    happy:  { counts:[7,5,2,1,0,0], mode:"day",   label:"HAPPY DAYS",      good:true  },
-    laugh:  { counts:[7,5,3,1,0,0], mode:"day",   label:"LAUGH DAYS",      good:true  },
-    skipBk: { counts:[0,1,2,4,5,7], mode:"day",   label:"SKIPPED BREAKFAST", good:false },
-    skipWk: { counts:[0,1,2,3,5,5], mode:"day",   label:"SKIPPED @ WORK",  good:false },
+    rested: { counts:[7,5,3,1,0,0], mode:"day",   label:"休息好的天数",     good:true  },
+    overwhelm:{counts:[0,1,2,3,5,7],mode:"day",   label:"喘不过气",     good:false },
+    grind:  { counts:[0,1,2,4,6,7], mode:"night", label:"咬紧牙关的夜",   good:false },
+    happy:  { counts:[7,5,2,1,0,0], mode:"day",   label:"开心的天数",      good:true  },
+    laugh:  { counts:[7,5,3,1,0,0], mode:"day",   label:"大笑的天数",      good:true  },
+    skipBk: { counts:[0,1,2,4,5,7], mode:"day",   label:"跳过早餐", good:false },
+    skipWk: { counts:[0,1,2,3,5,5], mode:"day",   label:"工作跳餐",  good:false },
   };
   const key = qi===2 ? "rested" : qi===16 ? "overwhelm" : qi===18 ? "grind"
             : qi===22 ? "happy" : qi===24 ? "laugh" : qi===27 ? "skipBk"
@@ -1805,7 +1805,7 @@ function WeekGridInput({q, qi, sel, pick}){
     <div style={{marginTop:24,display:"grid",gridTemplateColumns:"360px 1fr",gap:40,alignItems:"center"}}>
       <div style={{border:"1px solid var(--line)",padding:"20px 18px",background:"#fff8f4"}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",marginBottom:14}}>
-          <span>TYPICAL WEEK</span><span style={{color:tint}}>{m.label}</span>
+          <span>一周概况</span><span style={{color:tint}}>{m.label}</span>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:6}}>
           {days.map((d,i)=>{
@@ -1834,7 +1834,7 @@ function WeekGridInput({q, qi, sel, pick}){
           <div style={{fontFamily:"Space Grotesk",fontSize:40,fontWeight:700,color:tint,letterSpacing:"-1px",lineHeight:1}}>
             {activeIdx>=0 ? count : "—"}<span style={{fontSize:16,color:"var(--muted)",fontWeight:400,marginLeft:4}}>/ 7</span>
           </div>
-          <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--muted)"}}>{ghost?"PREVIEW":"DAYS"}</div>
+          <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--muted)"}}>{ghost?"预览":"天数"}</div>
         </div>
       </div>
       <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
@@ -2323,7 +2323,7 @@ function LateDialInput({q, qi, sel, pick}){
     <div style={{marginTop:24,display:"grid",gridTemplateColumns:"260px 1fr",gap:32,alignItems:"center"}}>
       <div style={{textAlign:"center"}}>
         {/* Week grid — 7 day boxes */}
-        <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase",marginBottom:12}}>MEALS PAST 10PM THIS WEEK</div>
+        <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".22em",color:"var(--muted)",textTransform:"uppercase",marginBottom:12}}>本周10点后的宵夜</div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4}}>
           {["M","T","W","T","F","S","S"].map((d,i)=>{
             const active = i < Math.round(n);
@@ -2340,7 +2340,7 @@ function LateDialInput({q, qi, sel, pick}){
         </div>
         <div style={{marginTop:16,fontFamily:"Space Grotesk",fontWeight:700,fontSize:48,color:tint,lineHeight:1,transition:"color .2s"}}>{activeIdx>=0?Math.round(n):"—"}</div>
         <div style={{fontFamily:"IBM Plex Mono",fontSize:10,letterSpacing:".2em",color:"var(--muted)",textTransform:"uppercase",marginTop:4}}>
-          {activeIdx>=0?labels[activeIdx]:"SELECT BELOW"} · PAST 10PM
+          {activeIdx>=0?labels[activeIdx]:"请选择"} · 晚10点后
         </div>
       </div>
       <OptsList q={q} sel={sel} pick={pick} onHover={setHov}/>
@@ -2745,9 +2745,9 @@ function Scan({onDone}){
     <div className="page scan-wrap">
       <div className="scan-card">
         <div className="scan-line"/>
-        <div className="eyebrow">§03 · Processing</div>
-        <h2>Generating your death file.</h2>
-        <div className="s">Calculating your fate trajectory based on thirty small admissions.</div>
+        <div className="eyebrow">§03 · 处理中</div>
+        <h2>正在生成你的健康档案~</h2>
+        <div className="s">根据三十个小承认计算你的命运轨迹。</div>
         <div className="scan-log">
           {lines.map(([k,v],i)=>(
             <div className="ln" key={i}>
@@ -2756,7 +2756,7 @@ function Scan({onDone}){
           ))}
         </div>
         <div className="scan-pbar"><i style={{width:p+"%"}}/></div>
-        <div className="scan-pct"><span>SCANNING VITALS</span><span>{p}%</span></div>
+        <div className="scan-pct"><span>扫描健康数据</span><span>{p}%</span></div>
         <button
           onClick={()=>{ onDoneRef.current && onDoneRef.current(); }}
           style={{
@@ -2769,7 +2769,7 @@ function Scan({onDone}){
             cursor:"pointer", width:"100%",
             transition:"all .25s",
           }}>
-          {p>=100 ? "→ OPEN DEATH FILE" : "WORKING · PLEASE WAIT"}
+          {p>=100 ? "→ 打开健康档案" : "处理中 · 请稍候"}
         </button>
       </div>
     </div>
@@ -3081,7 +3081,7 @@ function Tweaks({t,set,view,setView}){
       </div>
       <div className="t-body">
         <div className="row">
-          <label>Jump to screen</label>
+          <label>跳转到</label>
           <div className="pills">
             {["landing","quiz","scan","result"].map(v=>(
               <div key={v} className={"pill"+(view===v?" on":"")} onClick={()=>setView(v)}>{v}</div>
@@ -3089,7 +3089,7 @@ function Tweaks({t,set,view,setView}){
           </div>
         </div>
         <div className="row">
-          <label>Palette</label>
+          <label>配色</label>
           <div className="pills">
             {[
               ["ink-red","Ink · Red"],
@@ -3102,25 +3102,25 @@ function Tweaks({t,set,view,setView}){
           </div>
         </div>
         <div className="row">
-          <label>Horror Intensity · {["off","low","medium","high"][t.intensity]}</label>
+          <label>氛围强度 · {["关","低","中","高"][t.intensity]}</label>
           <input type="range" min="0" max="3" step="1" value={t.intensity} onChange={e=>set("intensity",Number(e.target.value))}/>
         </div>
         <div className="row">
-          <label>Copy Tone</label>
+          <label>文案风格</label>
           <div className="pills">
             {[
-              ["cheeky","Cheeky"],
-              ["grim","Grim"],
-              ["wellness","Wellness"]
+              ["cheeky","调皮"],
+              ["grim","严肃"],
+              ["wellness","养生"]
             ].map(([v,n])=>(
               <div key={v} className={"pill"+(t.tone===v?" on":"")} onClick={()=>set("tone",v)}>{n}</div>
             ))}
           </div>
         </div>
         <div className="row">
-          <label>Restart</label>
+          <label>重置</label>
           <div className="pills">
-            <div className="pill" onClick={()=>{ try{ localStorage.removeItem("sdi"); }catch{}; location.reload(); }}>Reset state</div>
+            <div className="pill" onClick={()=>{ try{ localStorage.removeItem("sdi"); }catch{}; location.reload(); }}>清除数据</div>
           </div>
         </div>
       </div>
